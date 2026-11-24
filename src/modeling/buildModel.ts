@@ -107,7 +107,8 @@ export async function buildModel(
   opts?: RunScriptFacadeOptions,
 ): Promise<BuiltModel> {
   const kernel = resolveKernel(input.kernel);
-  await initOcct();
+  // The native SMLib kernel never loads OpenCASCADE.
+  if (kernel !== 'smlib-native') await initOcct();
   const run = await runScript(input, opts);
   const model = await builtModelFromRun(run, session => createLowerer(kernel, session), input.code);
   return withRebuild(model, input, opts);

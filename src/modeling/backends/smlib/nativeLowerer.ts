@@ -1,0 +1,292 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 CrispCAD contributors
+//
+// Native SMLib lowerer: compiles feature records straight to SMLib solids
+// (SmlibBackend) with no OpenCASCADE reference, cross-check or STEP round trip.
+// A feature kind or option this lowerer does not implement is an explicit
+// `recompute.kernel.unsupported-feature` error; nothing falls back silently.
+import type { FeatureLowerer, LowerResult, ResolvedInputs, ShapeBackend } from '../../../kernel/backends/backend';
+import { SmlibBackend } from '../../../kernel/backends/smlib/smlibBackend';
+import type { RuntimeMesh } from '../../../kernel/backends/runtimeMesh';
+import type { CompilerDiagnostic } from '../../../shared/diagnostics/diagnostic';
+import { withNextAction } from '../../../shared/diagnostics/diagnostic';
+import type { FeatureRecord } from '../../../shared/intent/featureRecord';
+import type { FeatureKind, Vec3 } from '../../../shared/intent/types';
+import type { BackendTarget } from '../../../shared/types/backendTarget';
+import { loadSmlib } from './runtime';
+
+type Smlib = typeof import('@classcad/smlibwasm');
+type Part = InstanceType<Smlib['Part']>;
+type Sketch = ReturnType<Smlib['makeFace']>;
+type Edge = InstanceType<Smlib['Edge']>;
+type Face = InstanceType<Smlib['Face']>;
+
+class Unsupported extends Error {}
+
+/** A lowered 2D sketch: consumed by extrude/revolve/loft/sweep, not a solid. */
+export class SmlibSketchBackend implements ShapeBackend {
+  readonly target: BackendTarget = 'export-smlib';
+  readonly sketch: Sketch;
+  readonly closed: boolean;
+  constructor(sketch: Sketch, closed: boolean) {
+    this.sketch = sketch;
+    this.closed = closed;
+  }
+  private flat(): never { throw new Unsupported('A sketch is a profile, not a solid; extrude, revolve, loft or sweep it first.'); }
+  translate(): ShapeBackend { return this.flat(); }
+  rotate(): ShapeBackend { return this.flat(); }
+  scale(): ShapeBackend { return this.flat(); }
+  union(): ShapeBackend { return this.flat(); }
+  subtract(): ShapeBackend { return this.flat(); }
+  intersect(): ShapeBackend { return this.flat(); }
+  splitByPlane(): [ShapeBackend, ShapeBackend] { return this.flat(); }
+  boundingBox(): { min: Vec3; max: Vec3 } { const b = this.sketch.bbox(); return { min: [b.min.x, b.min.y, b.min.z], max: [b.max.x, b.max.y, b.max.z] }; }
+  volume(): number { return 0; }
+  surfaceArea(): number { return this.sketch.area; }
+  massProperties(): never { return this.flat(); }
+  isEmpty(): boolean { return true; }
+  solidComponents(): readonly ShapeBackend[] { return []; }
+  getMesh(): RuntimeMesh { return { positions: new Float32Array(), normals: new Float32Array(), indices: new Uint32Array() }; }
+  exportSTL(): Uint8Array { return this.flat(); }
+  exportSTEP(): Uint8Array { return this.flat(); }
+}
+
+/** Feature kinds this lowerer builds natively. */
+export const NATIVE_SMLIB_KINDS: readonly FeatureKind[] = [
+  'box', 'cylinder', 'sphere', 'sketch', 'extrude', 'revolve', 'loft', 'sweep',
+  'boolean', 'fillet', 'chamfer', 'shell', 'hole', 'holes', 'pattern', 'mirror',
+];
+
+const word = (p: { expression: string } | undefined) => (p?.expression ?? '').replace(/['"]/g, '');
+const num = (v: unknown): number => (typeof v === 'number' ? v : (v as { evaluated: number }).evaluated);
+const CANONICAL_NORMALS: Record<string, Vec3> = { top: [0, 0, 1], bottom: [0, 0, -1], right: [1, 0, 0], left: [-1, 0, 0], back: [0, 1, 0], front: [0, -1, 0] };
+
+export class NativeSmlibLowerer implements FeatureLowerer {
+  readonly target: BackendTarget = 'export-smlib';
+  readonly supports: ReadonlySet<FeatureKind> = new Set(NATIVE_SMLIB_KINDS);
+
+  async lower(r: FeatureRecord, inputs: ResolvedInputs): Promise<LowerResult> {
+    const sm = await loadSmlib();
+    try {
+      if (!this.supports.has(r.kind)) throw new Unsupported(`Feature '${r.kind}' has no native SMLib implementation yet.`);
+      let shape = this.build(sm, r, inputs);
+      if (!(shape instanceof SmlibSketchBackend)) shape = this.applyTransforms(shape, r);
+      else if (r.transforms.length) throw new Unsupported('Transforms on a sketch are not supported natively; transform the solid instead.');
+      return { shape, diagnostics: [] };
+    } catch (e) {
+      const unsupported = e instanceof Unsupported;
+      const diagnostic: CompilerDiagnostic = withNextAction({
+        target: this.target,
+        featureId: r.id,
+        severity: 'error',
+        code: unsupported ? 'recompute.kernel.unsupported-feature' : 'recompute.lowering.exception',
+        message: unsupported ? (e as Error).message : `SMLib could not build ${r.kind}: ${e instanceof Error ? e.message : String(e)}`,
+        hint: unsupported
+          ? "Change the model, or select kernel: 'occt' explicitly (OpenCASCADE is LGPL-2.1)."
+          : 'Read the kernel message; check dimensions and inputs.',
+      });
+      return { shape: undefined as unknown as ShapeBackend, diagnostics: [diagnostic] };
+    }
+  }
+
+  private solid(sm: Smlib, part: Part): SmlibBackend { return new SmlibBackend(sm, part); }
+
+  private input(inputs: ResolvedInputs, key: string): SmlibBackend {
+    const shape = inputs.byKey[key];
+    if (!(shape instanceof SmlibBackend)) throw new Unsupported(`Input '${key}' is not a native SMLib solid.`);
+    return shape;
+  }
+
+  private sketchOf(inputs: ResolvedInputs, key = 'sketch'): SmlibSketchBackend {
+    const shape = inputs.byKey[key];
+    if (!(shape instanceof SmlibSketchBackend)) throw new Unsupported(`Input '${key}' is not a native sketch profile.`);
+    return shape;
+  }
+
+  private build(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): ShapeBackend {
+    const p = (name: string) => num(r.params[name]);
+    switch (r.kind) {
+      case 'box': {
+        const part = sm.Box(p('x'), p('y'), p('z'));
+        return this.solid(sm, p('centered') > 0.5 ? part : part.translate([p('x') / 2, p('y') / 2, p('z') / 2]));
+      }
+      case 'cylinder': return this.solid(sm, sm.Cylinder(p('r'), p('h')).translate([0, 0, p('h') / 2]));
+      case 'sphere': return this.solid(sm, sm.Sphere(p('r')));
+      case 'sketch': return this.sketch(sm, r);
+      case 'extrude': return this.extrude(sm, r, inputs);
+      case 'revolve': {
+        const profile = this.sketchOf(inputs).sketch;
+        // Sketch x is the radius and sketch y the height: map sketch Y onto world Z, revolve about Z.
+        const upright = profile.rotate(sm.Axis.X, 90);
+        return this.solid(sm, sm.revolve(upright, sm.Axis.Z, p('angleDeg')));
+      }
+      case 'loft': {
+        if (r.params.twistDeg && p('twistDeg') !== 0) throw new Unsupported('Twisted lofts are not supported natively.');
+        if (Array.isArray(r.metadata?.rails) && r.metadata.rails.length) throw new Unsupported('Lofts with rails are not supported natively.');
+        const keys = Object.keys(inputs.byKey).filter(k => /^sketch_\d+$/.test(k)).sort((a, b) => Number(a.slice(7)) - Number(b.slice(7)));
+        const planes = r.metadata?.planes as { plane?: string; origin?: unknown[] }[] | undefined;
+        if (planes?.some(pl => pl.plane && pl.plane !== 'XY')) throw new Unsupported('Loft sections on planes other than XY are not supported natively.');
+        const sections = keys.map((k, i) => {
+          const origin = planes?.length === keys.length ? (planes[i].origin ?? [0, 0, 0]).map(num) : planes?.length === keys.length - 1 ? (i === 0 ? [0, 0, 0] : (planes[i - 1].origin ?? [0, 0, 0]).map(num)) : [0, 0, i * p('spacing')];
+          return this.sketchOf(inputs, k).sketch.translate(origin as Vec3);
+        });
+        return this.solid(sm, sm.loft(sections, { ruled: p('ruled') > 0.5 }));
+      }
+      case 'sweep': {
+        const rail = r.metadata?.rail as unknown[][] | undefined;
+        if (!Array.isArray(rail) || rail.length < 2 || r.metadata?.spine !== 'polyline') throw new Unsupported('Only straight-segment (polyline) sweep rails are supported natively.');
+        const points = rail.map(pt => pt.map(num) as Vec3);
+        const path = points.length === 2 ? sm.Line(points[0], points[1]) : sm.Polyline(points);
+        return this.solid(sm, sm.sweep(this.sketchOf(inputs).sketch, path));
+      }
+      case 'boolean': {
+        const op = word(r.params.op);
+        let acc = this.input(inputs, 'base').part;
+        for (const key of Object.keys(inputs.byKey).filter(k => k.startsWith('cutter_')).sort()) {
+          const tool = this.input(inputs, key).part;
+          acc = op === 'union' ? acc.fuse(tool) : op === 'difference' ? acc.cut(tool) : op === 'intersection' ? acc.intersect(tool) : (() => { throw new Unsupported(`Boolean '${op}' is not supported natively.`); })();
+        }
+        return this.solid(sm, acc);
+      }
+      case 'fillet': case 'chamfer': {
+        if (r.metadata?.variable || (r.metadata?.continuity && r.metadata.continuity !== 'G1')) throw new Unsupported('Variable or G2 fillets are not supported natively.');
+        const base = this.input(inputs, 'base').part;
+        const edges = this.edges(base, r);
+        const size = r.kind === 'fillet' ? p('radius') : p('distance');
+        return this.solid(sm, r.kind === 'fillet' ? sm.fillet(edges, size, { propagate: false }) : sm.chamfer(edges, size));
+      }
+      case 'shell': {
+        const base = this.input(inputs, 'base').part;
+        const openings = Object.keys(r.inputs).filter(k => k === 'face' || /^face_\d+$/.test(k)).map(k => this.face(base, r, k));
+        return this.solid(sm, sm.shell(base, -p('thickness'), openings.length ? openings : null));
+      }
+      case 'hole': case 'holes': return this.holes(sm, r, inputs);
+      case 'pattern': return this.pattern(sm, r, inputs);
+      case 'mirror': {
+        const base = this.input(inputs, 'base');
+        const normal = this.planeNormal(r.metadata?.plane);
+        return this.solid(sm, base.part.fuse(base.reflect(normal.normal, normal.origin).part));
+      }
+    }
+    throw new Unsupported(`Feature '${r.kind}' has no native SMLib implementation yet.`);
+  }
+
+  private sketch(sm: Smlib, r: FeatureRecord): SmlibSketchBackend {
+    if (typeof r.metadata?.textContent === 'string') throw new Unsupported('Text sketches are not supported natively yet.');
+    const commands = r.metadata?.commands as { kind: string; [k: string]: unknown }[] | undefined;
+    if (!Array.isArray(commands) || !commands.length) throw new Unsupported('Sketch has no path commands.');
+    const at = (c: Record<string, unknown>, x: string, y: string): Vec3 => [num(c[x]), num(c[y]), 0];
+    let pen: Vec3 = [0, 0, 0], start = pen, closed = false;
+    const edges: Edge[] = [];
+    for (const c of commands) {
+      if (c.kind === 'moveTo') { if (edges.length) throw new Unsupported('Sketches with several loops are not supported natively yet.'); pen = start = at(c, 'x', 'y'); continue; }
+      if (c.kind === 'lineTo') { const next = at(c, 'x', 'y'); edges.push(sm.Line(pen, next)); pen = next; continue; }
+      if (c.kind === 'threePointsArc') { const next = at(c, 'x', 'y'); edges.push(sm.ThreePointArc(pen, at(c, 'midX', 'midY'), next)); pen = next; continue; }
+      if (c.kind === 'radiusArc') { const next = at(c, 'x', 'y'); edges.push(sm.RadiusArc(pen, next, num(c.radius))); pen = next; continue; }
+      if (c.kind === 'sagittaArc') { const next = at(c, 'x', 'y'); edges.push(sm.SagittaArc(pen, next, num(c.sagitta))); pen = next; continue; }
+      if (c.kind === 'spline' && !c.startTangent && !c.endTangent && !c.tension) {
+        const pts = (c.points as Record<string, unknown>[]).map(pt => at(pt, 'x', 'y'));
+        edges.push(sm.Spline(pen, ...pts)); pen = pts.at(-1)!; continue;
+      }
+      if (c.kind === 'close') { closed = true; if (Math.hypot(pen[0] - start[0], pen[1] - start[1]) > 1e-9) edges.push(sm.Line(pen, start)); pen = start; continue; }
+      throw new Unsupported(`Sketch command '${c.kind}' is not supported natively yet.`);
+    }
+    if (!closed) throw new Unsupported('Open sketch paths are not supported natively yet.');
+    return new SmlibSketchBackend(sm.makeFace(new sm.Wire(edges)), closed);
+  }
+
+  private extrude(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
+    const p = (name: string) => num(r.params[name]);
+    if (r.params.twistAngle && p('twistAngle') !== 0) throw new Unsupported('Twisted extrusions are not supported natively.');
+    if (r.params.taperDeg && p('taperDeg') !== 0) throw new Unsupported('Tapered extrusions are not supported natively.');
+    if (inputs.byKey.sketch) return this.solid(sm, sm.extrude(this.sketchOf(inputs).sketch, p('depth')));
+    if (Array.isArray(r.metadata?.points)) return this.solid(sm, sm.extrude(sm.Polygon(...(r.metadata.points as unknown[][]).map(pt => [num(pt[0]), num(pt[1])] as [number, number]), { align: null }), p('depth')));
+    if (r.params.w && r.params.h) return this.solid(sm, sm.extrude(sm.Rectangle(p('w'), p('h')), p('height')));
+    if (r.params.r && r.params.height) return this.solid(sm, sm.extrude(sm.Circle(p('r')), p('height')));
+    throw new Unsupported('This extrusion profile is not supported natively.');
+  }
+
+  /** Planar face of `base` matching a canonical selector (top/bottom/left/right/front/back). */
+  private face(base: Part, r: FeatureRecord, key: string): Face {
+    const ref = (r.inputs[key] as { ref?: { kind?: string; face?: string } } | undefined)?.ref;
+    if (ref?.kind !== 'canonical' || !ref.face || !CANONICAL_NORMALS[ref.face]) throw new Unsupported(`Face selector ${JSON.stringify(ref)} is not supported natively; use top/bottom/left/right/front/back.`);
+    const n = CANONICAL_NORMALS[ref.face];
+    const extreme = (f: Face) => { const c = f.center(); return c.x * n[0] + c.y * n[1] + c.z * n[2]; };
+    const candidates = [...base.faces()].filter(f => { const d = f.normalAt(); return d.x * n[0] + d.y * n[1] + d.z * n[2] > 1 - 1e-9; });
+    if (!candidates.length) throw new Unsupported(`No planar ${ref.face} face found.`);
+    return candidates.sort((a, b) => extreme(b) - extreme(a))[0];
+  }
+
+  private edges(base: Part, r: FeatureRecord): Edge[] {
+    if (r.inputs.face) return [...this.face(base, r, 'face').edges()];
+    const edgeRef = (r.inputs.edges as { ref?: { kind?: string; query?: { edges?: string } } } | undefined)?.ref;
+    if (!edgeRef) return [...base.edges()];
+    if (edgeRef.kind === 'query' && typeof edgeRef.query?.edges === 'string' && CANONICAL_NORMALS[edgeRef.query.edges]) {
+      return [...this.face(base, { ...r, inputs: { ...r.inputs, face: { kind: 'face', featureId: '', ref: { kind: 'canonical', face: edgeRef.query.edges } } } } as FeatureRecord, 'face').edges()];
+    }
+    throw new Unsupported(`Edge selector ${JSON.stringify(edgeRef)} is not supported natively; select all edges or a canonical face's edges.`);
+  }
+
+  private holes(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
+    const p = (name: string) => num(r.params[name]);
+    const target = this.input(inputs, 'target').part;
+    const face = this.face(target, r, 'face'), c = face.center(), nrm = face.normalAt();
+    if (Math.abs(nrm.z) < 1 - 1e-9) throw new Unsupported('Native holes are drilled from top or bottom faces only.');
+    const box = target.bbox(), through = r.params.depthMode !== undefined && p('depthMode') === 0;
+    const span = box.max.z - box.min.z + 2;
+    const positions = r.kind === 'holes' ? (r.metadata?.positions as { u: unknown; v: unknown }[]).map(q => [num(q.u), num(q.v)]) : [[p('u'), p('v')]];
+    const down = nrm.z > 0 ? -1 : 1;
+    let acc = target;
+    for (const [u, v] of positions) {
+      const x = c.x + u, y = c.y + v * (nrm.z > 0 ? 1 : -1);
+      const depth = through ? span : p('depth');
+      const drill = (radius: number, length: number) => sm.Cylinder(radius, length + 1).translate([x, y, c.z + down * (length - 1) / 2]);
+      acc = acc.cut(drill(p('diameter') / 2, depth));
+      if (r.params.counterboreDiameter) acc = acc.cut(drill(p('counterboreDiameter') / 2, p('counterboreDepth')));
+      if (r.params.countersinkDiameter) throw new Unsupported('Countersinks are not supported natively yet.');
+    }
+    return this.solid(sm, acc);
+  }
+
+  private pattern(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
+    const base = this.input(inputs, 'base').part;
+    const spec = r.metadata?.pattern as Record<string, unknown> | undefined;
+    const copies: Part[] = [];
+    if (spec?.kind === 'circular') {
+      const count = num(spec.count), angle = num(spec.angleDeg ?? 360), axis = (spec.axis as unknown[] ?? [0, 0, 1]).map(num) as Vec3;
+      const step = Math.abs(angle - 360) < 1e-9 ? 360 / count : angle / Math.max(1, count - 1);
+      for (let i = 0; i < count; i++) copies.push(i === 0 ? base : base.rotate(new sm.Axis([0, 0, 0], axis), i * step));
+    } else if (spec?.kind === 'linear' || spec?.kind === 'grid') {
+      const axes = spec.kind === 'linear' ? [spec] : [spec.x, spec.y].filter(Boolean);
+      let offsets: Vec3[] = [[0, 0, 0]];
+      for (const a of axes as Record<string, unknown>[]) {
+        const dir = (a.direction as unknown[]).map(num), len = Math.hypot(...dir), count = num(a.count), spacing = num(a.spacing);
+        offsets = offsets.flatMap(o => Array.from({ length: count }, (_, i) => o.map((v, k) => v + dir[k] / len * spacing * i) as Vec3));
+      }
+      for (const o of offsets) copies.push(o.every(v => v === 0) ? base : base.translate(o));
+    } else throw new Unsupported(`Pattern ${JSON.stringify(spec?.kind)} is not supported natively.`);
+    return this.solid(sm, copies.reduce((a, b) => a.fuse(b)));
+  }
+
+  private planeNormal(plane: unknown): { normal: Vec3; origin: Vec3 } {
+    const spec = typeof plane === 'string' ? { plane, offset: 0 } : (plane as { plane: string; offset?: number } | undefined);
+    const normal: Vec3 | undefined = spec?.plane === 'xy' ? [0, 0, 1] : spec?.plane === 'xz' ? [0, 1, 0] : spec?.plane === 'yz' ? [1, 0, 0] : undefined;
+    if (!normal) throw new Unsupported(`Mirror plane ${JSON.stringify(plane)} is not supported natively.`);
+    const offset = num(spec!.offset ?? 0);
+    return { normal, origin: normal.map(c => c * offset) as Vec3 };
+  }
+
+  private applyTransforms(shape: ShapeBackend, r: FeatureRecord): ShapeBackend {
+    let out = shape as SmlibBackend;
+    for (const t of r.transforms) {
+      if (t.op === 'translate') out = out.translate(t.vec.x.evaluated, t.vec.y.evaluated, t.vec.z.evaluated) as SmlibBackend;
+      else if (t.op === 'rotateAxis') out = out.rotate([t.axis.x.evaluated, t.axis.y.evaluated, t.axis.z.evaluated], t.degrees.evaluated, t.pivot ? [t.pivot.x.evaluated, t.pivot.y.evaluated, t.pivot.z.evaluated] : undefined) as SmlibBackend;
+      else if (t.op === 'scale') out = out.scale([num(t.sx), num(t.sy), num(t.sz)]) as SmlibBackend;
+      else if (t.op === 'reflect') { const { normal, origin } = this.planeNormal(t.plane); out = out.reflect(normal, origin); }
+      else throw new Unsupported(`Transform '${(t as { op: string }).op}' is not supported natively.`);
+    }
+    return out;
+  }
+}
+
+export const createNativeSmlibLowerer = (): NativeSmlibLowerer => new NativeSmlibLowerer();

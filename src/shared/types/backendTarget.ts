@@ -16,7 +16,8 @@ export type BackendTarget = (typeof BACKEND_TARGETS)[number];
  * can name it ahead of the backend landing. Selecting it yields a typed
  * `recompute.kernel.unavailable` error, never a silent fallback to OCCT.
  */
-export const KERNEL_IDS = ['occt', 'smlib'] as const;
+/** `smlib-native` builds on SMLib alone (no OpenCASCADE); `smlib` is upstream's guarded mode checked against OCCT. */
+export const KERNEL_IDS = ['occt', 'smlib', 'smlib-native'] as const;
 export type KernelId = (typeof KERNEL_IDS)[number];
 export const DEFAULT_KERNEL: KernelId = 'occt';
 
@@ -24,6 +25,7 @@ export const DEFAULT_KERNEL: KernelId = 'occt';
 export const KERNEL_BACKEND_TARGET: Readonly<Record<KernelId, BackendTarget>> = {
   occt: 'export-occt',
   smlib: 'export-smlib',
+  'smlib-native': 'export-smlib',
 };
 
 export function isKernelId(value: unknown): value is KernelId {

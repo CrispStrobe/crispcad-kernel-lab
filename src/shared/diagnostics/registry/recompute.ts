@@ -28,7 +28,15 @@ export const RECOMPUTE_CODES = {
     group: 'recompute',
     description: 'The lowering pass raised an unhandled exception while compiling intent to the backend.',
   },
-  // Kernel selection (1)
+  // Kernel selection (2)
+  'recompute.kernel.unsupported-feature': {
+    hintTemplate:
+      "The native SMLib kernel does not build this feature yet. Change the model, or select kernel: 'occt' explicitly (OpenCASCADE is LGPL-2.1).",
+    nextAction: { kind: 'fix-arg', field: 'kernel' },
+    defaultSeverity: 'error',
+    group: 'recompute',
+    description: 'The native SMLib kernel has no implementation for a feature kind or option; nothing falls back silently.',
+  },
   'recompute.kernel.unavailable': {
     hintTemplate:
       "The requested kernel is not available in this build. Omit `kernel` or pass kernel: 'occt'.",
