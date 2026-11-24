@@ -28,6 +28,9 @@ type Face = InstanceType<Smlib['Face']>;
 
 class Unsupported extends Error {}
 
+type Param = (name: string) => number;
+type Builder = (sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs, p: Param) => ShapeBackend;
+
 /** A lowered 2D sketch: consumed by extrude/revolve/loft/sweep, not a solid. */
 export class SmlibSketchBackend implements ShapeBackend {
   readonly target: BackendTarget = 'export-smlib';
@@ -66,6 +69,37 @@ export const NATIVE_SMLIB_KINDS: readonly FeatureKind[] = [
 const word = (p: { expression: string } | undefined) => (p?.expression ?? '').replace(/['"]/g, '');
 const num = (v: unknown): number => (typeof v === 'number' ? v : (v as { evaluated: number }).evaluated);
 const CANONICAL_NORMALS: Record<string, Vec3> = { top: [0, 0, 1], bottom: [0, 0, -1], right: [1, 0, 0], left: [-1, 0, 0], back: [0, 1, 0], front: [0, -1, 0] };
+
+type SketchCommand = { kind: string; [k: string]: unknown };
+interface Pen { at: Vec3; start: Vec3; closed: boolean; edges: Edge[] }
+const xy = (c: Record<string, unknown>, x: string, y: string): Vec3 => [num(c[x]), num(c[y]), 0];
+/** Append one edge ending at the command's (x, y). */
+const edgeTo = (make: (sm: Smlib, from: Vec3, to: Vec3, c: SketchCommand) => Edge) => (sm: Smlib, c: SketchCommand, pen: Pen) => {
+  const next = xy(c, 'x', 'y');
+  pen.edges.push(make(sm, pen.at, next, c));
+  pen.at = next;
+};
+const SKETCH_STEPS: Record<string, (sm: Smlib, c: SketchCommand, pen: Pen) => void> = {
+  moveTo: (_sm, c, pen) => {
+    if (pen.edges.length) throw new Unsupported('Sketches with several loops are not supported natively yet.');
+    pen.at = pen.start = xy(c, 'x', 'y');
+  },
+  lineTo: edgeTo((sm, from, to) => sm.Line(from, to)),
+  threePointsArc: edgeTo((sm, from, to, c) => sm.ThreePointArc(from, xy(c, 'midX', 'midY'), to)),
+  radiusArc: edgeTo((sm, from, to, c) => sm.RadiusArc(from, to, num(c.radius))),
+  sagittaArc: edgeTo((sm, from, to, c) => sm.SagittaArc(from, to, num(c.sagitta))),
+  spline: (sm, c, pen) => {
+    if (c.startTangent || c.endTangent || c.tension) throw new Unsupported('Splines with tangents or tension are not supported natively yet.');
+    const pts = (c.points as Record<string, unknown>[]).map(pt => xy(pt, 'x', 'y'));
+    pen.edges.push(sm.Spline(pen.at, ...pts));
+    pen.at = pts.at(-1)!;
+  },
+  close: (sm, _c, pen) => {
+    pen.closed = true;
+    if (Math.hypot(pen.at[0] - pen.start[0], pen.at[1] - pen.start[1]) > 1e-9) pen.edges.push(sm.Line(pen.at, pen.start));
+    pen.at = pen.start;
+  },
+};
 
 export class NativeSmlibLowerer implements FeatureLowerer {
   readonly target: BackendTarget = 'export-smlib';
@@ -111,77 +145,84 @@ export class NativeSmlibLowerer implements FeatureLowerer {
   }
 
   private build(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): ShapeBackend {
-    const p = (name: string) => num(r.params[name]);
-    switch (r.kind) {
-      case 'box': {
-        const part = sm.Box(p('x'), p('y'), p('z'));
-        return this.solid(sm, p('centered') > 0.5 ? part : part.translate([p('x') / 2, p('y') / 2, p('z') / 2]));
-      }
-      case 'cylinder': return this.solid(sm, sm.Cylinder(p('r'), p('h')).translate([0, 0, p('h') / 2]));
-      case 'sphere': return this.solid(sm, sm.Sphere(p('r')));
-      case 'sketch': return this.sketch(sm, r);
-      case 'extrude': return this.extrude(sm, r, inputs);
-      case 'revolve': {
-        const profile = this.sketchOf(inputs).sketch;
-        // Sketch x is the radius and sketch y the height: map sketch Y onto world Z, revolve about Z.
-        const upright = profile.rotate(sm.Axis.X, 90);
-        return this.solid(sm, sm.revolve(upright, sm.Axis.Z, p('angleDeg')));
-      }
-      case 'loft': {
-        if (r.params.twistDeg && p('twistDeg') !== 0) throw new Unsupported('Twisted lofts are not supported natively.');
-        if (Array.isArray(r.metadata?.rails) && r.metadata.rails.length) throw new Unsupported('Lofts with rails are not supported natively.');
-        const keys = Object.keys(inputs.byKey).filter(k => /^sketch_\d+$/.test(k)).sort((a, b) => Number(a.slice(7)) - Number(b.slice(7)));
-        const planes = r.metadata?.planes as { plane?: string; origin?: unknown[] }[] | undefined;
-        if (planes?.some(pl => pl.plane && pl.plane !== 'XY')) throw new Unsupported('Loft sections on planes other than XY are not supported natively.');
-        const sections = keys.map((k, i) => {
-          const origin = planes?.length === keys.length ? (planes[i].origin ?? [0, 0, 0]).map(num) : planes?.length === keys.length - 1 ? (i === 0 ? [0, 0, 0] : (planes[i - 1].origin ?? [0, 0, 0]).map(num)) : [0, 0, i * p('spacing')];
-          return this.sketchOf(inputs, k).sketch.translate(origin as Vec3);
-        });
-        return this.solid(sm, sm.loft(sections, { ruled: p('ruled') > 0.5 }));
-      }
-      case 'sweep': {
-        const rail = r.metadata?.rail as unknown[][] | undefined;
-        if (!Array.isArray(rail) || rail.length < 2 || r.metadata?.spine !== 'polyline') throw new Unsupported('Only straight-segment (polyline) sweep rails are supported natively.');
-        const points = rail.map(pt => pt.map(num) as Vec3);
-        const path = points.length === 2 ? sm.Line(points[0], points[1]) : sm.Polyline(points);
-        return this.solid(sm, sm.sweep(this.sketchOf(inputs).sketch, path));
-      }
-      case 'boolean': {
-        const op = word(r.params.op);
-        let acc = this.input(inputs, 'base').part;
-        for (const key of Object.keys(inputs.byKey).filter(k => k.startsWith('cutter_')).sort()) {
-          const tool = this.input(inputs, key).part;
-          acc = op === 'union' ? acc.fuse(tool) : op === 'difference' ? acc.cut(tool) : op === 'intersection' ? acc.intersect(tool) : (() => { throw new Unsupported(`Boolean '${op}' is not supported natively.`); })();
-        }
-        return this.solid(sm, acc);
-      }
-      case 'fillet': case 'chamfer': {
-        if (r.metadata?.variable || (r.metadata?.continuity && r.metadata.continuity !== 'G1')) throw new Unsupported('Variable or G2 fillets are not supported natively.');
-        const base = this.input(inputs, 'base').part;
-        const edges = this.edges(base, r);
-        const size = r.kind === 'fillet' ? p('radius') : p('distance');
-        return this.solid(sm, r.kind === 'fillet' ? sm.fillet(edges, size, { propagate: false }) : sm.chamfer(edges, size));
-      }
-      case 'shell': {
-        const base = this.input(inputs, 'base').part;
-        const openings = Object.keys(r.inputs).filter(k => k === 'face' || /^face_\d+$/.test(k)).map(k => this.face(base, r, k));
-        return this.solid(sm, sm.shell(base, -p('thickness'), openings.length ? openings : null));
-      }
-      case 'hole': case 'holes': return this.holes(sm, r, inputs);
-      case 'pattern': return this.pattern(sm, r, inputs);
-      case 'assemblyPart': {
-        const source = this.input(inputs, 'shape');
-        const resolved = inputs.resolveRecord ? inputs.resolveRecord(r) : r;
-        const at = resolvedPartAt((resolved.metadata as { at?: Vec3Param } | undefined)?.at, inputs.resolveRecord ? undefined : inputs.paramTable);
-        return at.some(v => v !== 0) ? source.translate(at[0], at[1], at[2]) : source;
-      }
-      case 'mirror': {
-        const base = this.input(inputs, 'base');
-        const normal = this.planeNormal(r.metadata?.plane);
-        return this.solid(sm, base.part.fuse(base.reflect(normal.normal, normal.origin).part));
-      }
-    }
-    throw new Unsupported(`Feature '${r.kind}' has no native SMLib implementation yet.`);
+    const builder = this.builders[r.kind];
+    if (!builder) throw new Unsupported(`Feature '${r.kind}' has no native SMLib implementation yet.`);
+    return builder(sm, r, inputs, (name: string) => num(r.params[name]));
+  }
+
+  private readonly builders: Partial<Record<FeatureKind, Builder>> = {
+    // Like OCCT, a negative dimension spans [d, 0] instead of [0, d].
+    box: (sm, _r, _i, p) => {
+      const part = sm.Box(Math.abs(p('x')), Math.abs(p('y')), Math.abs(p('z')));
+      return this.solid(sm, p('centered') > 0.5 ? part : part.translate([p('x') / 2, p('y') / 2, p('z') / 2]));
+    },
+    cylinder: (sm, _r, _i, p) => this.solid(sm, sm.Cylinder(p('r'), p('h')).translate([0, 0, p('h') / 2])),
+    sphere: (sm, _r, _i, p) => this.solid(sm, sm.Sphere(p('r'))),
+    sketch: (sm, r) => this.sketch(sm, r),
+    extrude: (sm, r, inputs) => this.extrude(sm, r, inputs),
+    // Sketch x is the radius and sketch y the height: map sketch Y onto world Z, revolve about Z.
+    revolve: (sm, _r, inputs, p) => this.solid(sm, sm.revolve(this.sketchOf(inputs).sketch.rotate(sm.Axis.X, 90), sm.Axis.Z, p('angleDeg'))),
+    loft: (sm, r, inputs, p) => this.loft(sm, r, inputs, p),
+    sweep: (sm, r, inputs) => this.sweep(sm, r, inputs),
+    boolean: (sm, r, inputs) => this.boolean(sm, r, inputs),
+    fillet: (sm, r, inputs, p) => this.round(sm, r, inputs, p),
+    chamfer: (sm, r, inputs, p) => this.round(sm, r, inputs, p),
+    shell: (sm, r, inputs, p) => {
+      const base = this.input(inputs, 'base').part;
+      const openings = Object.keys(r.inputs).filter(k => k === 'face' || /^face_\d+$/.test(k)).map(k => this.face(base, r, k));
+      return this.solid(sm, sm.shell(base, -p('thickness'), openings.length ? openings : null));
+    },
+    hole: (sm, r, inputs) => this.holes(sm, r, inputs),
+    holes: (sm, r, inputs) => this.holes(sm, r, inputs),
+    pattern: (sm, r, inputs) => this.pattern(sm, r, inputs),
+    assemblyPart: (_sm, r, inputs) => {
+      const source = this.input(inputs, 'shape');
+      const resolved = inputs.resolveRecord ? inputs.resolveRecord(r) : r;
+      const at = resolvedPartAt((resolved.metadata as { at?: Vec3Param } | undefined)?.at, inputs.resolveRecord ? undefined : inputs.paramTable);
+      return at.some(v => v !== 0) ? source.translate(at[0], at[1], at[2]) : source;
+    },
+    mirror: (sm, r, inputs) => {
+      const base = this.input(inputs, 'base');
+      const { normal, origin } = this.planeNormal(r.metadata?.plane);
+      return this.solid(sm, base.part.fuse(base.reflect(normal, origin).part));
+    },
+  };
+
+  private loft(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs, p: Param): SmlibBackend {
+    if (r.params.twistDeg && p('twistDeg') !== 0) throw new Unsupported('Twisted lofts are not supported natively.');
+    if (Array.isArray(r.metadata?.rails) && r.metadata.rails.length) throw new Unsupported('Lofts with rails are not supported natively.');
+    const keys = Object.keys(inputs.byKey).filter(k => /^sketch_\d+$/.test(k)).sort((a, b) => Number(a.slice(7)) - Number(b.slice(7)));
+    const planes = r.metadata?.planes as { plane?: string; origin?: unknown[] }[] | undefined;
+    if (planes?.some(pl => pl.plane && pl.plane !== 'XY')) throw new Unsupported('Loft sections on planes other than XY are not supported natively.');
+    const originOf = (i: number): unknown[] => {
+      if (planes?.length === keys.length) return planes[i].origin ?? [0, 0, 0];
+      if (planes?.length === keys.length - 1) return i === 0 ? [0, 0, 0] : planes[i - 1].origin ?? [0, 0, 0];
+      return [0, 0, i * p('spacing')];
+    };
+    const sections = keys.map((k, i) => this.sketchOf(inputs, k).sketch.translate(originOf(i).map(num) as Vec3));
+    return this.solid(sm, sm.loft(sections, { ruled: p('ruled') > 0.5 }));
+  }
+
+  private sweep(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
+    const rail = r.metadata?.rail as unknown[][] | undefined;
+    if (!Array.isArray(rail) || rail.length < 2 || r.metadata?.spine !== 'polyline') throw new Unsupported('Only straight-segment (polyline) sweep rails are supported natively.');
+    const points = rail.map(pt => pt.map(num) as Vec3);
+    const path = points.length === 2 ? sm.Line(points[0], points[1]) : sm.Polyline(points);
+    return this.solid(sm, sm.sweep(this.sketchOf(inputs).sketch, path));
+  }
+
+  private boolean(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
+    const op = word(r.params.op);
+    const combine: Record<string, (a: Part, b: Part) => Part> = { union: (a, b) => a.fuse(b), difference: (a, b) => a.cut(b), intersection: (a, b) => a.intersect(b) };
+    if (!combine[op]) throw new Unsupported(`Boolean '${op}' is not supported natively.`);
+    const cutters = Object.keys(inputs.byKey).filter(k => k.startsWith('cutter_')).sort();
+    return this.solid(sm, cutters.reduce((acc, key) => combine[op](acc, this.input(inputs, key).part), this.input(inputs, 'base').part));
+  }
+
+  private round(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs, p: Param): SmlibBackend {
+    if (r.metadata?.variable || (r.metadata?.continuity && r.metadata.continuity !== 'G1')) throw new Unsupported('Variable or G2 fillets are not supported natively.');
+    const edges = this.edges(this.input(inputs, 'base').part, r);
+    return this.solid(sm, r.kind === 'fillet' ? sm.fillet(edges, p('radius'), { propagate: false }) : sm.chamfer(edges, p('distance')));
   }
 
   /** Mate-free `assembly(...).model()`: one scene part per assembly part, at identity. */
@@ -204,26 +245,16 @@ export class NativeSmlibLowerer implements FeatureLowerer {
 
   private sketch(sm: Smlib, r: FeatureRecord): SmlibSketchBackend {
     if (typeof r.metadata?.textContent === 'string') throw new Unsupported('Text sketches are not supported natively yet.');
-    const commands = r.metadata?.commands as { kind: string; [k: string]: unknown }[] | undefined;
+    const commands = r.metadata?.commands as SketchCommand[] | undefined;
     if (!Array.isArray(commands) || !commands.length) throw new Unsupported('Sketch has no path commands.');
-    const at = (c: Record<string, unknown>, x: string, y: string): Vec3 => [num(c[x]), num(c[y]), 0];
-    let pen: Vec3 = [0, 0, 0], start = pen, closed = false;
-    const edges: Edge[] = [];
+    const pen: Pen = { at: [0, 0, 0], start: [0, 0, 0], closed: false, edges: [] };
     for (const c of commands) {
-      if (c.kind === 'moveTo') { if (edges.length) throw new Unsupported('Sketches with several loops are not supported natively yet.'); pen = start = at(c, 'x', 'y'); continue; }
-      if (c.kind === 'lineTo') { const next = at(c, 'x', 'y'); edges.push(sm.Line(pen, next)); pen = next; continue; }
-      if (c.kind === 'threePointsArc') { const next = at(c, 'x', 'y'); edges.push(sm.ThreePointArc(pen, at(c, 'midX', 'midY'), next)); pen = next; continue; }
-      if (c.kind === 'radiusArc') { const next = at(c, 'x', 'y'); edges.push(sm.RadiusArc(pen, next, num(c.radius))); pen = next; continue; }
-      if (c.kind === 'sagittaArc') { const next = at(c, 'x', 'y'); edges.push(sm.SagittaArc(pen, next, num(c.sagitta))); pen = next; continue; }
-      if (c.kind === 'spline' && !c.startTangent && !c.endTangent && !c.tension) {
-        const pts = (c.points as Record<string, unknown>[]).map(pt => at(pt, 'x', 'y'));
-        edges.push(sm.Spline(pen, ...pts)); pen = pts.at(-1)!; continue;
-      }
-      if (c.kind === 'close') { closed = true; if (Math.hypot(pen[0] - start[0], pen[1] - start[1]) > 1e-9) edges.push(sm.Line(pen, start)); pen = start; continue; }
-      throw new Unsupported(`Sketch command '${c.kind}' is not supported natively yet.`);
+      const step = SKETCH_STEPS[c.kind];
+      if (!step) throw new Unsupported(`Sketch command '${c.kind}' is not supported natively yet.`);
+      step(sm, c, pen);
     }
-    if (!closed) throw new Unsupported('Open sketch paths are not supported natively yet.');
-    return new SmlibSketchBackend(sm.makeFace(new sm.Wire(edges)), closed);
+    if (!pen.closed) throw new Unsupported('Open sketch paths are not supported natively yet.');
+    return new SmlibSketchBackend(sm.makeFace(new sm.Wire(pen.edges)), true);
   }
 
   private extrude(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
@@ -231,20 +262,30 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     if (r.params.twistAngle && p('twistAngle') !== 0) throw new Unsupported('Twisted extrusions are not supported natively.');
     if (r.params.taperDeg && p('taperDeg') !== 0) throw new Unsupported('Tapered extrusions are not supported natively.');
     if (inputs.byKey.sketch) return this.solid(sm, sm.extrude(this.sketchOf(inputs).sketch, p('depth')));
-    if (word(r.params.profileKind) === 'rounded-rect') {
-      // Same as OCCT: radius clamped below half the short side; axis rotations match extrudeRoundedRectShape.
-      const radius = Math.min(Math.max(0, p('radius')), Math.min(p('width'), p('height')) / 2 * 0.9999);
-      const body = sm.extrude(radius > 0 ? sm.RoundedRectangle(p('width'), p('height'), radius) : sm.Rectangle(p('width'), p('height')), p('depth'));
-      const axis = word(r.params.axis) || 'z';
-      if (axis === 'z') return this.solid(sm, body);
-      if (axis === 'x') return this.solid(sm, body.rotate(new sm.Axis([0, 0, 0], [1, 1, 1]), 120));
-      if (axis === 'y') return this.solid(sm, body.rotate(sm.Axis.X, -90));
-      throw new Unsupported(`Extrusion axis '${axis}' is not supported.`);
-    }
-    if (Array.isArray(r.metadata?.points)) return this.solid(sm, sm.extrude(sm.Polygon(...(r.metadata.points as unknown[][]).map(pt => [num(pt[0]), num(pt[1])] as [number, number]), { align: null }), p('depth')));
-    if (r.params.w && r.params.h) return this.solid(sm, sm.extrude(sm.Rectangle(p('w'), p('h')), p('height')));
-    if (r.params.r && r.params.height) return this.solid(sm, sm.extrude(sm.Circle(p('r')), p('height')));
+    if (word(r.params.profileKind) === 'rounded-rect') return this.roundedRect(sm, r, p);
+    return this.solid(sm, sm.extrude(...this.inlineProfile(sm, r, p)));
+  }
+
+  /** Profile and depth of an extrusion given by points, w/h or r. */
+  private inlineProfile(sm: Smlib, r: FeatureRecord, p: Param): [Sketch, number] {
+    if (Array.isArray(r.metadata?.points)) return [sm.Polygon(...(r.metadata.points as unknown[][]).map(pt => [num(pt[0]), num(pt[1])] as [number, number]), { align: null }), p('depth')];
+    if (r.params.w && r.params.h) return [sm.Rectangle(p('w'), p('h')), p('height')];
+    if (r.params.r && r.params.height) return [sm.Circle(p('r')), p('height')];
     throw new Unsupported('This extrusion profile is not supported natively.');
+  }
+
+  /** Same as OCCT: radius clamped below half the short side; axis rotations match extrudeRoundedRectShape. */
+  private roundedRect(sm: Smlib, r: FeatureRecord, p: Param): SmlibBackend {
+    const radius = Math.min(Math.max(0, p('radius')), Math.min(p('width'), p('height')) / 2 * 0.9999);
+    const body = sm.extrude(radius > 0 ? sm.RoundedRectangle(p('width'), p('height'), radius) : sm.Rectangle(p('width'), p('height')), p('depth'));
+    const orient: Record<string, () => Part> = {
+      z: () => body,
+      x: () => body.rotate(new sm.Axis([0, 0, 0], [1, 1, 1]), 120),
+      y: () => body.rotate(sm.Axis.X, -90),
+    };
+    const axis = word(r.params.axis) || 'z';
+    if (!orient[axis]) throw new Unsupported(`Extrusion axis '${axis}' is not supported.`);
+    return this.solid(sm, orient[axis]());
   }
 
   /** Planar face of `base` matching a canonical selector (top/bottom/left/right/front/back). */
@@ -292,20 +333,10 @@ export class NativeSmlibLowerer implements FeatureLowerer {
   private pattern(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
     const base = this.input(inputs, 'base').part;
     const spec = r.metadata?.pattern as Record<string, unknown> | undefined;
-    const copies: Part[] = [];
-    if (spec?.kind === 'circular') {
-      const count = num(spec.count), angle = num(spec.angleDeg ?? 360), axis = (spec.axis as unknown[] ?? [0, 0, 1]).map(num) as Vec3;
-      const step = Math.abs(angle - 360) < 1e-9 ? 360 / count : angle / Math.max(1, count - 1);
-      for (let i = 0; i < count; i++) copies.push(i === 0 ? base : base.rotate(new sm.Axis([0, 0, 0], axis), i * step));
-    } else if (spec?.kind === 'linear' || spec?.kind === 'grid') {
-      const axes = spec.kind === 'linear' ? [spec] : [spec.x, spec.y].filter(Boolean);
-      let offsets: Vec3[] = [[0, 0, 0]];
-      for (const a of axes as Record<string, unknown>[]) {
-        const dir = (a.direction as unknown[]).map(num), len = Math.hypot(...dir), count = num(a.count), spacing = num(a.spacing);
-        offsets = offsets.flatMap(o => Array.from({ length: count }, (_, i) => o.map((v, k) => v + dir[k] / len * spacing * i) as Vec3));
-      }
-      for (const o of offsets) copies.push(o.every(v => v === 0) ? base : base.translate(o));
-    } else throw new Unsupported(`Pattern ${JSON.stringify(spec?.kind)} is not supported natively.`);
+    let copies: Part[];
+    if (spec?.kind === 'circular') copies = circularCopies(sm, base, spec);
+    else if (spec?.kind === 'linear' || spec?.kind === 'grid') copies = linearOffsets(spec).map(o => (o.every(v => v === 0) ? base : base.translate(o)));
+    else throw new Unsupported(`Pattern ${JSON.stringify(spec?.kind)} is not supported natively.`);
     return this.solid(sm, copies.reduce((a, b) => a.fuse(b)));
   }
 
@@ -328,6 +359,23 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     }
     return out;
   }
+}
+
+function circularCopies(sm: Smlib, base: Part, spec: Record<string, unknown>): Part[] {
+  const count = num(spec.count), angle = num(spec.angleDeg ?? 360), axis = (spec.axis as unknown[] ?? [0, 0, 1]).map(num) as Vec3;
+  const step = Math.abs(angle - 360) < 1e-9 ? 360 / count : angle / Math.max(1, count - 1);
+  return Array.from({ length: count }, (_, i) => (i === 0 ? base : base.rotate(new sm.Axis([0, 0, 0], axis), i * step)));
+}
+
+/** Offsets of a linear pattern, or the product of a grid's x and y axes. */
+function linearOffsets(spec: Record<string, unknown>): Vec3[] {
+  const axes = (spec.kind === 'linear' ? [spec] : [spec.x, spec.y].filter(Boolean)) as Record<string, unknown>[];
+  let offsets: Vec3[] = [[0, 0, 0]];
+  for (const a of axes) {
+    const dir = (a.direction as unknown[]).map(num), len = Math.hypot(...dir), count = num(a.count), spacing = num(a.spacing);
+    offsets = offsets.flatMap(o => Array.from({ length: count }, (_, i) => o.map((v, k) => v + dir[k] / len * spacing * i) as Vec3));
+  }
+  return offsets;
 }
 
 export const createNativeSmlibLowerer = (): NativeSmlibLowerer => new NativeSmlibLowerer();

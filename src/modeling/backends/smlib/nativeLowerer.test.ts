@@ -47,6 +47,11 @@ describe('native SMLib kernel (no OpenCASCADE)', () => {
     expect(mass.com[2]).toBeCloseTo(5, 9);
   }, 60000);
 
+  it('spans a negative box dimension like OCCT', async () => {
+    const model = await buildModel({ code: 'return box(-10, 20, 5);', fileName: '/tmp/native.kcad.ts', kernel: 'smlib-native' });
+    expect(model.rootShape!.boundingBox()).toEqual({ min: [-10, 0, 0], max: [0, 20, 5] });
+  }, 60000);
+
   it('reports an unsupported feature instead of falling back', async () => {
     const model = await buildModel({ code: "return box(40, 30, 10).draft(3, { face: 'front', pullDir: [0, 0, 1] });", fileName: '/tmp/native.kcad.ts', kernel: 'smlib-native' });
     const errors = model.diagnostics.filter(d => d.severity === 'error');

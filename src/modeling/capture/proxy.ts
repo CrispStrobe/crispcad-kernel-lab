@@ -133,6 +133,7 @@ import { validateChamferLegOptions } from './chamferLegOptions';
 import { assertFilletOptions } from './filletOptions';
 import { assertFinishOptions } from './finishOptions';
 import { assertPlacementOptions } from './placementOptions';
+import { assertTopologyKernel, lowerOnNativeKernel } from './nativeLower';
 
 
 const PLANE_SPEC_KEYS = new Set(['plane', 'offset']);
@@ -1475,6 +1476,11 @@ export class Shape {
     };
   }
 
+  /** Lower on the session's kernel; for geometry-level queries that need no OCCT topology. */
+  async lowerGeneric(): Promise<import('../../kernel/backends/backend').ShapeBackend> {
+    return this.session.kernel === 'smlib-native' ? lowerOnNativeKernel(this.session, this.id) : this.lower();
+  }
+
   /**
    * Lower this Shape eagerly — runs recompute against the records up to and
    * including this Shape, returns the resulting OcctBackend so script-runtime
@@ -1483,30 +1489,8 @@ export class Shape {
    * Most agents won't call this directly. It's invoked implicitly when an
    * agent calls `selectEdges(myShape, ...)` from a `.kcad.ts` script.
    */
-  /**
-   * Lower this Shape on the session's kernel and return the generic backend.
-   * For geometry-level queries (bounding box) that do not need OCCT topology.
-   */
-  async lowerGeneric(): Promise<import('../../kernel/backends/backend').ShapeBackend> {
-    if (this.session.kernel !== 'smlib-native') return this.lower();
-    const { RecomputeEngine } = await import('../compute/recomputeEngine');
-    const { createLowerer } = await import('../backends/kernelRegistry');
-    const engine = new RecomputeEngine(createLowerer('smlib-native', this.session));
-    const r = await engine.run(this.session.getRecords() as readonly import('../../shared/intent/featureRecord').FeatureRecord[], {
-      paramTable: this.session.paramTable,
-      warningPhase: 'build',
-      gatedFeatureNames: this.session.gatedFeatureNames,
-    });
-    for (const [id, sh] of r.shapes) this.session.cachedShapes.set(id, sh);
-    const shape = r.shapes.get(this.id);
-    if (!shape) throw new Error(`Shape '${this.id}' could not be built on the native SMLib kernel: ${r.diagnostics.find(d => d.severity === 'error')?.message ?? 'no shape'}`);
-    return shape;
-  }
-
   async lower(): Promise<import('../../kernel/backends/occt/occtBackend').OcctBackend> {
-    if (this.session.kernel === 'smlib-native') {
-      throw new Error(`Shape '${this.id}': this capture-time query needs OpenCASCADE topology (faces, edges, selectors), which the native SMLib kernel does not provide yet. Use geometry-level queries such as boundingBox(), or build with kernel 'occt'.`);
-    }
+    assertTopologyKernel(this.session.kernel, this.id);
     const records = this.session.getRecords();
     // Cache invalidates on record-count growth, a transform appended to THIS
     // shape (`appendTransform` mutates `record.transforms` in place, so

@@ -30,6 +30,12 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
 - The 27 analytic reference parts (`assets/reference-parts/scorecard.json`) build
   on `smlib-native` within the scorecard tolerances
   (`src/modeling/backends/smlib/nativeLowerer.test.ts`).
+- All 2402 catalog models, built on `smlib-native` with OpenCASCADE blocked from
+  loading: 2344 (97.6%) built without an error. Of the 58 that did not: 34 use
+  mates, 13 used negative box dimensions (now accepted, as OCCT does), and the rest
+  use curved sweep rails, holes on side faces, multi-loop sketches, non-XY loft
+  sections or hit an SMLib extrude error. This counts successful builds; the
+  geometry was compared with OCCT on the sample below.
 - On 74 catalog models built by both kernels, the volume difference had a median of
   2.5e-16 relative and a maximum of 3.1e-4 (a boulder cluster of spheres); the
   native build was faster (15.3 s against 21 s in total).

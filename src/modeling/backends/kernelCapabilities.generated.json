@@ -83,6 +83,30 @@
         "offsetFaces",
         "sphere"
       ]
+    },
+    "smlib-native": {
+      "available": true,
+      "target": "export-smlib",
+      "features": [
+        "assemblyModel",
+        "assemblyPart",
+        "boolean",
+        "box",
+        "chamfer",
+        "cylinder",
+        "extrude",
+        "fillet",
+        "hole",
+        "holes",
+        "loft",
+        "mirror",
+        "pattern",
+        "revolve",
+        "shell",
+        "sketch",
+        "sphere",
+        "sweep"
+      ]
     }
   }
 }

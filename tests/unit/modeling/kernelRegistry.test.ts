@@ -25,8 +25,8 @@ import {
 } from '../../../scripts/buildKernelCapabilities';
 
 describe('kernel ids and backend targets', () => {
-  it('declares occt (default) and smlib, plus the export-smlib target', () => {
-    expect(KERNEL_IDS).toEqual(['occt', 'smlib']);
+  it('declares occt (default), smlib and smlib-native, plus the export-smlib target', () => {
+    expect(KERNEL_IDS).toEqual(['occt', 'smlib', 'smlib-native']);
     expect(DEFAULT_KERNEL).toBe('occt');
     expect(BACKEND_TARGETS).toContain('export-smlib');
     expect(BACKEND_TARGETS[0]).toBe('export-occt');
@@ -52,8 +52,8 @@ describe('kernel registry', () => {
     expect(lowerer.scriptDir).toBe('/tmp/x');
   });
 
-  it('occt and opt-in smlib are registered', () => {
-    expect(availableKernels()).toEqual(['occt', 'smlib']);
+  it('occt, opt-in smlib and smlib-native are registered', () => {
+    expect(availableKernels()).toEqual(['occt', 'smlib', 'smlib-native']);
   });
 
   it('a disabled smlib factory fails with a typed unavailable error', () => {
@@ -95,7 +95,7 @@ describe('kernel registry', () => {
     } finally {
       restore();
     }
-    expect(availableKernels()).toEqual(['occt', 'smlib']);
+    expect(availableKernels()).toEqual(['occt', 'smlib', 'smlib-native']);
   });
 
   it('registers the diagnostic code', () => {

@@ -255,6 +255,12 @@ export function formatPlaywrightLaunchError<T>(error: T): T | Error {
  * static `headlessRender` path and the animation capture engine
  * (`captureAnimation.ts`) — do not fork another browser bootstrap.
  */
+/** PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH selects an installed Chromium when Playwright's pinned build is absent. */
+function chromiumExecutableOption(): { executablePath?: string } {
+  const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+  return executablePath ? { executablePath } : {};
+}
+
 export async function openDemoPlayerPage(opts: DemoPlayerPageOpts): Promise<DemoPlayerPageHandle> {
   // Lazy-import playwright so the CLI's evaluate/export/mcp/skill paths
   // don't fail at module load when playwright isn't installed (it's an
@@ -301,9 +307,7 @@ export async function openDemoPlayerPage(opts: DemoPlayerPageOpts): Promise<Demo
     }
     if (!browser) {
       try {
-        // PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH selects an installed Chromium when Playwright's pinned build is absent.
-        const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined;
-        browser = await chromium.launch({ args: ['--disable-dev-shm-usage', ...sandboxChromiumArgs()], ...(executablePath ? { executablePath } : {}) });
+        browser = await chromium.launch({ args: ['--disable-dev-shm-usage', ...sandboxChromiumArgs()], ...chromiumExecutableOption() });
       } catch (e) {
         throw formatPlaywrightLaunchError(e);
       }
