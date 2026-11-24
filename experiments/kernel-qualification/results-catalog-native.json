@@ -1,0 +1,444 @@
+{
+  "summary": {
+    "total": 2402,
+    "ok": 2356,
+    "failed": 46,
+    "wallSeconds": 3894,
+    "categories": {
+      "mates": 35,
+      "unsupported: Only straight-segment (polyline) sweep rails are supported natively.": 3,
+      "recompute.lowering.exception,recompute.input.missing: SMLib could not build extrude: extrude failed (SM_ERR)": 2,
+      "unsupported: Native holes are drilled from top or bottom faces only.": 2,
+      "recompute.lowering.exception,recompute.input.missing: SMLib could not build extrude: sketch failed (SM_ERR_NULL_POINTER)": 1,
+      "unsupported: Sketches with several loops are not supported natively yet.": 1,
+      "unsupported: Loft sections on planes other than XY are not supported natively.": 1,
+      "throw: Shape 'extrude_N' could not be built on the native SMLib kernel: SMLib could not build ext": 1
+    }
+  },
+  "failures": [
+    {
+      "file": "catalog/kits/amusement-park/miniature-park-tram-engine.kcad.ts",
+      "ok": false,
+      "ms": 23366.897957999987,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "SMLib could not build extrude: extrude failed (SM_ERR)"
+    },
+    {
+      "file": "catalog/kits/characters/bear.kcad.ts",
+      "ok": false,
+      "ms": 3696.7921659999993,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/blocky-villager.kcad.ts",
+      "ok": false,
+      "ms": 1075.5918749999837,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/chef-npc.kcad.ts",
+      "ok": false,
+      "ms": 7100.187582999992,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/chicken.kcad.ts",
+      "ok": false,
+      "ms": 2106.097542000003,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/cow.kcad.ts",
+      "ok": false,
+      "ms": 6314.015958999982,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/crab-bot.kcad.ts",
+      "ok": false,
+      "ms": 5585.2794170000125,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/deer.kcad.ts",
+      "ok": false,
+      "ms": 9678.42429200001,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/dog.kcad.ts",
+      "ok": false,
+      "ms": 3609.776459000015,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/drone-quadcopter.kcad.ts",
+      "ok": false,
+      "ms": 6489.988667000027,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/duck.kcad.ts",
+      "ok": false,
+      "ms": 926.5319170000148,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/excavator.kcad.ts",
+      "ok": false,
+      "ms": 4479.177167000016,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/fox.kcad.ts",
+      "ok": false,
+      "ms": 3319.4322909999755,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/frog.kcad.ts",
+      "ok": false,
+      "ms": 3825.150499999989,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/horse.kcad.ts",
+      "ok": false,
+      "ms": 4695.360916000034,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/house-cat.kcad.ts",
+      "ok": false,
+      "ms": 3512.173792000045,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/knight-figure.kcad.ts",
+      "ok": false,
+      "ms": 9116.595250000013,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/mannequin.kcad.ts",
+      "ok": false,
+      "ms": 6189.129042000044,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/mech-walker.kcad.ts",
+      "ok": false,
+      "ms": 3511.992666999984,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/owl.kcad.ts",
+      "ok": false,
+      "ms": 4179.888625000021,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/penguin.kcad.ts",
+      "ok": false,
+      "ms": 2516.170790999953,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/pig.kcad.ts",
+      "ok": false,
+      "ms": 7763.957750000001,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/rabbit.kcad.ts",
+      "ok": false,
+      "ms": 2569.5666249999776,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/robot-arm.kcad.ts",
+      "ok": false,
+      "ms": 1673.951791999978,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/robot-bird.kcad.ts",
+      "ok": false,
+      "ms": 1120.9032080000034,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/robot-cat.kcad.ts",
+      "ok": false,
+      "ms": 3967.895666999975,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/robot-dog.kcad.ts",
+      "ok": false,
+      "ms": 443.7369160000235,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/robot-humanoid.kcad.ts",
+      "ok": false,
+      "ms": 1747.1594580000383,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/rover-robot.kcad.ts",
+      "ok": false,
+      "ms": 1879.059958000027,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/sheep.kcad.ts",
+      "ok": false,
+      "ms": 5826.90604099998,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/skeleton-figure.kcad.ts",
+      "ok": false,
+      "ms": 5098.456666999962,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/snowman.kcad.ts",
+      "ok": false,
+      "ms": 9456.925791000016,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/spider-bot.kcad.ts",
+      "ok": false,
+      "ms": 3041.783457999991,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/turtle.kcad.ts",
+      "ok": false,
+      "ms": 5660.744292000018,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/wheeled-droid.kcad.ts",
+      "ok": false,
+      "ms": 2837.1871249999967,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/characters/worker-npc.kcad.ts",
+      "ok": false,
+      "ms": 10689.655000000028,
+      "codes": [
+        "recompute.kernel.unsupported-feature"
+      ],
+      "message": "Assemblies with mates are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/construction-equipment/pipe-roller-stand.kcad.ts",
+      "ok": false,
+      "ms": 2650.687084000034,
+      "codes": [
+        "recompute.kernel.unsupported-feature",
+        "recompute.input.missing"
+      ],
+      "message": "Native holes are drilled from top or bottom faces only."
+    },
+    {
+      "file": "catalog/kits/construction-equipment/skid-steer-loader.kcad.ts",
+      "ok": false,
+      "ms": 17726.998334000004,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "SMLib could not build extrude: sketch failed (SM_ERR_NULL_POINTER)"
+    },
+    {
+      "file": "catalog/kits/hydroponics/hydroponic-grow-rack.kcad.ts",
+      "ok": false,
+      "ms": 39226.87308400008,
+      "codes": [
+        "recompute.kernel.unsupported-feature",
+        "recompute.input.missing"
+      ],
+      "message": "Sketches with several loops are not supported natively yet."
+    },
+    {
+      "file": "catalog/kits/industrial-plant/plate-heat-exchanger.kcad.ts",
+      "ok": false,
+      "ms": 6253.546333000064,
+      "codes": [
+        "recompute.kernel.unsupported-feature",
+        "recompute.input.missing"
+      ],
+      "message": "Native holes are drilled from top or bottom faces only."
+    },
+    {
+      "file": "catalog/kits/mining/spiral-concentrator.kcad.ts",
+      "ok": false,
+      "ms": 1493.8269159998745,
+      "codes": [
+        "recompute.kernel.unsupported-feature",
+        "recompute.input.missing"
+      ],
+      "message": "Only straight-segment (polyline) sweep rails are supported natively."
+    },
+    {
+      "file": "catalog/kits/nature/rock-arch.kcad.ts",
+      "ok": false,
+      "ms": 1514.5851669998374,
+      "codes": [
+        "recompute.kernel.unsupported-feature",
+        "recompute.input.missing"
+      ],
+      "message": "Loft sections on planes other than XY are not supported natively."
+    },
+    {
+      "file": "catalog/kits/retail-store/impulse-merchandiser.kcad.ts",
+      "ok": false,
+      "ms": 3932.476374999853,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "SMLib could not build extrude: extrude failed (SM_ERR)"
+    },
+    {
+      "file": "catalog/kits/sports/batting-helmet.kcad.ts",
+      "ok": false,
+      "ms": 2792.356124999933,
+      "codes": [
+        "throw"
+      ],
+      "message": "Shape 'extrude_1' could not be built on the native SMLib kernel: SMLib could not build extrude: extrude failed (SM_ERR)"
+    },
+    {
+      "file": "catalog/kits/standard-components/beam-coupling.kcad.ts",
+      "ok": false,
+      "ms": 176.3845000001602,
+      "codes": [
+        "recompute.kernel.unsupported-feature",
+        "recompute.input.missing"
+      ],
+      "message": "Only straight-segment (polyline) sweep rails are supported natively."
+    },
+    {
+      "file": "catalog/kits/water-treatment/grit-classifier.kcad.ts",
+      "ok": false,
+      "ms": 401.6753329997882,
+      "codes": [
+        "recompute.kernel.unsupported-feature",
+        "recompute.input.missing"
+      ],
+      "message": "Only straight-segment (polyline) sweep rails are supported natively."
+    }
+  ]
+}

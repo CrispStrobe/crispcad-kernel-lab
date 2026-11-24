@@ -31,11 +31,21 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   on `smlib-native` within the scorecard tolerances
   (`src/modeling/backends/smlib/nativeLowerer.test.ts`).
 - All 2402 catalog models, built on `smlib-native` with OpenCASCADE blocked from
-  loading: 2344 (97.6%) built without an error. Of the 58 that did not: 34 use
-  mates, 13 used negative box dimensions (now accepted, as OCCT does), and the rest
-  use curved sweep rails, holes on side faces, multi-loop sketches, non-XY loft
-  sections or hit an SMLib extrude error. This counts successful builds; the
-  geometry was compared with OCCT on the sample below.
+  loading (2026-11-24, `experiments/kernel-qualification/catalogCoverage.ts`,
+  results in `results-catalog-native.json`): **2356 (98.1%)** built without an
+  error. Of the 46 that did not: 35 use mates; 3 sweep along curved rails; 2 drill
+  holes on side faces; 1 has a multi-loop sketch; 1 lofts sections on non-XY planes;
+  4 hit an SMLib extrude error (`SM_ERR` x3, `SM_ERR_NULL_POINTER` x1). No model
+  crashed the process and none reached for OpenCASCADE. This counts successful
+  builds; the geometry was compared with OCCT on the sample below.
+
+  ```sh
+  node --import tsx experiments/kernel-qualification/catalogCoverage.ts --jobs 4 \
+    --json experiments/kernel-qualification/results-catalog-native.json
+  ```
+
+  Each worker loads `blockOcct.mjs`, a Node resolve hook that throws on any import
+  of `replicad-opencascadejs`.
 - On 74 catalog models built by both kernels, the volume difference had a median of
   2.5e-16 relative and a maximum of 3.1e-4 (a boulder cluster of spheres); the
   native build was faster (15.3 s against 21 s in total).
