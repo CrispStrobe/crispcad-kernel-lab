@@ -28,18 +28,19 @@ interface Expected {
   files: Record<string, ExpectedFile>;
 }
 
+// overlay.kcad.ts pins changed only by the generated header comment naming CrispCAD.
 const CASES: Array<{ name: string; overlay: SurfaceQualityOverlay; code: string; expected: Expected }> = [
   {
     name: 'zebra on a box',
     overlay: 'zebra',
     code: 'return box(20, 20, 20);',
     expected: {
-      scriptSha: '824375e07ff432f4459f8288cb0b166e63d904f1681bd2cf074eb7a05556e4e3',
+      scriptSha: '12f4826fac4b94ad34009c33732601ea3a468bf968ef009961c2d7084d11ab1c',
       files: {
-        'overlay.kcad.ts': { size: 411, sha: '824375e07ff432f4459f8288cb0b166e63d904f1681bd2cf074eb7a05556e4e3' },
-        'zebra-2.stl': { size: 284, sha: '8b029cfcb5ed5eb771b4061f56e889878a239c2d2de5e10b4433201e4ad4dc13' },
-        'zebra-4.stl': { size: 284, sha: '3dfe4bf26332aba90b95a7c3b7ba24316c102a5dac48a9852c820654bf3cadfb' },
-        'zebra-5.stl': { size: 284, sha: 'f3bfc8a1f6a43625a8ef0a4116cd51192f85dd4810f4553076e915c93dcee82d' },
+        'overlay.kcad.ts': { size: 410, sha: '12f4826fac4b94ad34009c33732601ea3a468bf968ef009961c2d7084d11ab1c' },
+        'zebra-2.stl': { size: 284, sha: '7fc3b1f9af252e87f905032fb4bc56f1f037ddbc235efb01501162ff9efafff7' },
+        'zebra-4.stl': { size: 284, sha: 'a92115cfee61fd85abcf369b68426a7b8f7fbf1f73c3e42667cc2a572d899a1d' },
+        'zebra-5.stl': { size: 284, sha: '166dbc68c68d3edfd8e4505e27db2da21aeb3b9f30f210eac39f8d0661db2dd8' },
       },
     },
   },
@@ -48,17 +49,17 @@ const CASES: Array<{ name: string; overlay: SurfaceQualityOverlay; code: string;
     overlay: 'zebra',
     code: 'return sphere(10);',
     expected: {
-      scriptSha: 'dc226a580bd84ba9b9fb8f75d2772b8585b4cdc9945e18ddc0c8051e3ca5b6fd',
+      scriptSha: 'dfb2b15c93893516133d5e54148136ac6026348e7a1f7273a38f36bdfd235b6a',
       files: {
-        'overlay.kcad.ts': { size: 896, sha: 'dc226a580bd84ba9b9fb8f75d2772b8585b4cdc9945e18ddc0c8051e3ca5b6fd' },
-        'zebra-0.stl': { size: 11484, sha: 'b7c991473f33c2e7a3ce84ebb103a84a4373d2d64a74f2397c17a66fc431095f' },
-        'zebra-1.stl': { size: 4184, sha: 'bb6c1735b9fbe68d78728b43bf458087aa954a5fc47d05dde4e4d38548a1f0aa' },
-        'zebra-2.stl': { size: 5334, sha: '0487d048c3cd0567815d39875d938b2220139eac84460e9b0a04d4399f884cb5' },
-        'zebra-3.stl': { size: 3184, sha: 'ec33e74fd91d9088b073a7e721e76771d0903accb09008a41655aba6380b30a8' },
-        'zebra-4.stl': { size: 4834, sha: '566f4ee0546820c1fb7e4700d761f5c8d2737256d224b8302a8a555b042a8131' },
-        'zebra-5.stl': { size: 5284, sha: '8d63140ac201a58fef0b6f7ca3e20f97258ac7d5df33bf92acf7705219110019' },
-        'zebra-6.stl': { size: 3834, sha: '911ef4677d1b68418130416b9e5ca1d38f8080a07fa954ca7e86cdd98749c6ad' },
-        'zebra-7.stl': { size: 11934, sha: '1af92fd3d3dd7238e84862478fea1959e10161881daab138cc0c732ca24c337b' },
+        'overlay.kcad.ts': { size: 895, sha: 'dfb2b15c93893516133d5e54148136ac6026348e7a1f7273a38f36bdfd235b6a' },
+        'zebra-0.stl': { size: 11484, sha: '519a16763ce63724e7fd6a6f6075313cd983133888dec3261638a81fb054023e' },
+        'zebra-1.stl': { size: 4184, sha: 'b09eb14d009189cceae8d604f1de69502ddc9e25d7ea7dfb3871f49485c1b017' },
+        'zebra-2.stl': { size: 5334, sha: '765f4bf17fd4cd1f010da317aaf3314e9b944acaa8a926bff72ba7aca52a1dab' },
+        'zebra-3.stl': { size: 3184, sha: '4bd9f6463c689fdd2fd503a86e9ca5552ed95aa44af6cff41bf50f10d8e89f5e' },
+        'zebra-4.stl': { size: 4834, sha: '79c3f747bf2809ad2af0b97f3becf8807746c2756de1a8daf973ad3fe228bd88' },
+        'zebra-5.stl': { size: 5284, sha: 'fbf3d0f4b39e3b7fed0adf49f01f787a1f0f8c6e5fec6c11e3ef288c854cad01' },
+        'zebra-6.stl': { size: 3834, sha: 'fbffafb4c3a8a28643ab82eae2f0b96791c18ce1316dbaf7f6050fd438d36d2b' },
+        'zebra-7.stl': { size: 11934, sha: '2de57456b92b5cb0d506fa7aca753f0cadfea28ad54a0e7600eb8c11181546c8' },
       },
     },
   },
@@ -67,10 +68,10 @@ const CASES: Array<{ name: string; overlay: SurfaceQualityOverlay; code: string;
     overlay: 'curvature',
     code: 'return sphere(10);',
     expected: {
-      scriptSha: 'e3a706667eeede0f827fd535e17586bacae0c2340c75934432c1c5ae93d3736b',
+      scriptSha: '00530fd149d26f958154f1a4eb5c924cc60c261c6a64785b55910b1a04a0a336',
       files: {
-        'overlay.kcad.ts': { size: 215, sha: 'e3a706667eeede0f827fd535e17586bacae0c2340c75934432c1c5ae93d3736b' },
-        'curv-7.stl': { size: 49484, sha: 'ff2c29752a7c967f80ec7f4af7fd97c60f8264051b7ffc2465a9fdcabd0bf2f3' },
+        'overlay.kcad.ts': { size: 214, sha: '00530fd149d26f958154f1a4eb5c924cc60c261c6a64785b55910b1a04a0a336' },
+        'curv-7.stl': { size: 49484, sha: 'edb9409a9957bc9ab107c1c415ec11df2b1b3d118aa3d1b878fcf51068e82360' },
       },
     },
   },
@@ -79,11 +80,11 @@ const CASES: Array<{ name: string; overlay: SurfaceQualityOverlay; code: string;
     overlay: 'continuity',
     code: 'return box(20, 20, 20).fillet(3);',
     expected: {
-      scriptSha: 'c23b01676f767ef2ef4461ff881ab2544e6331e6191e81d8519822fb8a7c6440',
+      scriptSha: '62634ab9370352d1956645bd37f6a2f128c12337bf9889805ea25f1d1023a929',
       files: {
-        'overlay.kcad.ts': { size: 300, sha: 'c23b01676f767ef2ef4461ff881ab2544e6331e6191e81d8519822fb8a7c6440' },
-        'g1.stl': { size: 153684, sha: 'c4ac52dac856a0567a268022b94845d5995111626571b5a66b5412212583d90f' },
-        'ghost.stl': { size: 69084, sha: '708011b4c72ed58d3a41141e846cfb23a34e87bf848492c7beaed2cc1b7ec96d' },
+        'overlay.kcad.ts': { size: 299, sha: '62634ab9370352d1956645bd37f6a2f128c12337bf9889805ea25f1d1023a929' },
+        'g1.stl': { size: 153684, sha: 'a07b6f2f70cc49983f766fac93a0587f22fd9ce9d81fa265e698e33b0d4016f0' },
+        'ghost.stl': { size: 69084, sha: '7cfca56de49b17a89789c70c1d6ef7bc24bddd866cc868500870f609502380b5' },
       },
     },
   },

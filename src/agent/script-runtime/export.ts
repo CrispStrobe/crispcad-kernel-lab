@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 import { withNextAction } from '../../shared/diagnostics/diagnostic';
-import { HINT_TEMPLATES } from '../../shared/diagnostics/registry';
 import type { ShapeBackend } from '../../kernel/backends/backend';
 import { resolveRootId } from '../../composition/buildModel';
 import type { DrawingReviewOptions } from '../../shared/intent/drawingReview';

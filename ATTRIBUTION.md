@@ -13,3 +13,47 @@ CrispCAD names itself in the files it writes. Geometry is never changed.
 
 `src/shared/links/attribution.ts` holds the name and links. CrispCAD has no hosted
 app or share pages.
+
+# Upstream third-party attribution records
+
+The records below are kept verbatim from kernelCAD (MIT) at the fork point.
+"kernelCAD" in them names the upstream project these records were written for.
+
+### Third-party shapes in examples and cookbook recipes
+
+Some examples and recipes are ports of openly licensed models: their numbers
+were measured from the source and re-modelled in kernelCAD. The source files
+themselves are not redistributed. Each entry names the source and its license,
+and links the provenance file that records the commit, checksum, extraction and
+hand edits.
+
+| Used in | Source | Author and changes | License | Provenance |
+| --- | --- | --- | --- | --- |
+| `examples/from-reference/hatchback/hatchback.kcad.ts`, cookbook `automotive-body-envelope` | `hatchback` from [osrf/gazebo_models](https://github.com/osrf/gazebo_models) (commit `8163eb4b`) | Copyright 2012 Nathan Koenig (Open Source Robotics Foundation); modified: measured and re-modelled, mesh not included | [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/) | [`PROVENANCE.md`](examples/from-reference/hatchback/PROVENANCE.md) |
+
+### Vendored measurement oracles
+
+| Used in | Source | What is included | License | Pin |
+| --- | --- | --- | --- | --- |
+| SolidCraft CI ledger (`assets/reference-parts/solidcraft/`, `docs/solidcraft-ledger.md`) | [tangency-labs/solidcraft](https://github.com/tangency-labs/solidcraft) | `expected.json` and `recipe.json` for each oracle case. Engine code and reference meshes are not included. kernelCAD `.kcad.ts` parts under `parts/` are original. | Apache-2.0 (upstream is Apache-2.0 OR MIT; this copy uses Apache-2.0). Text: [`LICENSE-APACHE`](assets/reference-parts/solidcraft/LICENSE-APACHE) | `7a6c884418698e9c9fb0e6f97b9b847998c58c49` |
+
+### Opt-in solid-modeling dependency
+
+`@classcad/smlibwasm` is pinned to 0.6.2. The ClassCAD JavaScript bindings are
+MIT-licensed (Copyright 2026 AWV Informatik AG); the bundled USD BRep/SMLib
+core is Apache-2.0 (Copyright 2020–2026 NVIDIA CORPORATION & AFFILIATES).
+The package also contains unmodified Lato Regular under OFL-1.1, with Reserved
+Font Name “Lato” (Copyright 2010–2013 tyPoland Lukasz Dziedzic), and the
+unmodified Brotli static dictionary (`dist/_brotli_dictionary.js`, MIT,
+Copyright 2009, 2010, 2013–2016 by the Brotli Authors).
+See [NOTICE](NOTICE) and [retained license texts](licenses/smlibwasm/).
+The kernel loads only when explicitly selected; kernelCAD does not ship native
+experimental core patches.
+
+### Boolean keep-parts idea
+
+`shape.split` keeps the overlap and both leftovers as separate solids. That
+framing — retain each boolean fragment instead of discarding the complement —
+follows the idea in [Cadrs](https://github.com/Sh1Art/Cadrs) (MIT and
+Apache-2.0). kernelCAD does not include Cadrs source. The split uses the
+already-bound Open CASCADE cut and common operations.

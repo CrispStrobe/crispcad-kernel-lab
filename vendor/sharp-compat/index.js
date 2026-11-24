@@ -26,6 +26,27 @@ function detectFormat(buf) {
   return undefined;
 }
 
+/** Header-only metadata for PNG and JPEG (no pixel decode), as libvips reads it. */
+function headerMetadata(buf) {
+  const format = detectFormat(buf);
+  if (format === 'png' && buf.length >= 26 && buf.toString('ascii', 12, 16) === 'IHDR') {
+    const colorType = buf[25], channels = { 0: 1, 2: 3, 3: 3, 4: 2, 6: 4 }[colorType] ?? 4;
+    return { format, width: buf.readUInt32BE(16), height: buf.readUInt32BE(20), channels, hasAlpha: colorType === 4 || colorType === 6, space: channels <= 2 ? 'b-w' : 'srgb' };
+  }
+  if (format === 'jpeg') {
+    for (let i = 2; i + 9 < buf.length;) {
+      if (buf[i] !== 0xff) { i++; continue; }
+      const marker = buf[i + 1];
+      if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+        const channels = buf[i + 9];
+        return { format, height: buf.readUInt16BE(i + 5), width: buf.readUInt16BE(i + 7), channels, hasAlpha: false, space: channels === 1 ? 'b-w' : 'srgb' };
+      }
+      i += 2 + buf.readUInt16BE(i + 2);
+    }
+  }
+  return undefined;
+}
+
 /** Keep the PNG's own layout (grey, grey+alpha, RGB, RGBA) as libvips does; pngjs always expands to RGBA. */
 function decodePng(buf) {
   const png = PNG.sync.read(buf);
@@ -278,6 +299,11 @@ class Sharp {
   }
   async toFile(path) { const { data, info } = await this.toBuffer({ resolveWithObject: true }); writeFileSync(path, data); return info; }
   async metadata() {
+    const input = this._input;
+    if (!this._options.raw && (typeof input === 'string' || input instanceof Uint8Array)) {
+      const header = headerMetadata(typeof input === 'string' ? readFileSync(input) : Buffer.from(input.buffer, input.byteOffset, input.byteLength));
+      if (header) return header;
+    }
     const loaded = await this._load();
     return { format: loaded.format, width: loaded.width, height: loaded.height, channels: loaded.sourceChannels ?? loaded.channels, hasAlpha: loaded.hasAlpha ?? (loaded.channels === 2 || loaded.channels === 4), space: (loaded.sourceChannels ?? loaded.channels) <= 2 ? 'b-w' : 'srgb' };
   }

@@ -69,13 +69,13 @@ describe('catalog SEO page export', () => {
         expect(titles.size).toBe(index.assets.length);
     });
 
-    it('uses the same privacy-preserving marketing page-view beacon on hub, kit and asset pages', () => {
+    it('ships no analytics beacon on hub, kit and asset pages (CrispCAD has no telemetry by default)', () => {
         const urls = ['catalog/index.html', kitPath(index.kits[0]) + 'index.html', assetPath(index.assets[0]) + 'index.html'];
         for (const url of urls) {
             const html = readFileSync(join(out, url), 'utf8');
             expect(html, url).not.toContain('cloudflareinsights');
-            expect(html, url).toContain('e5f5f4c6464f456d8f5376411e77f545');
-            expect(html.match(/data-cf-beacon=/g)).toHaveLength(1);
+            expect(html, url).not.toContain('e5f5f4c6464f456d8f5376411e77f545');
+            expect(html, url).not.toMatch(/data-cf-beacon=/);
         }
     });
 
@@ -83,7 +83,8 @@ describe('catalog SEO page export', () => {
         for (const a of index.assets.slice(0, 20)) {
             const html = readFileSync(join(out, assetPath(a), 'index.html'), 'utf8');
             expect(html).toContain('aria-label="Continue with CrispCAD"');
-            expect(html).toContain(`Start with ${escapeHtml(a.title)} in CrispCAD Studio`);
+            expect(html).toContain(`Start with ${escapeHtml(a.title)} and evaluate its source with the CrispCAD CLI`);
+            expect(html).not.toContain('CrispCAD Studio');
             expect(html).toContain('href="/code-cad/"');
             expect(html).toContain('href="/mcp/"');
             expect(html).toContain('MCP tools for AI assistants');

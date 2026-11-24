@@ -128,7 +128,7 @@ describe('pdf-drawing: title block', () => {
 
 describe('pdf-drawing: attribution', () => {
   it('prints a linked "Made with CrispCAD" line and stamps the producer metadata', async () => {
-    expect(textsOf(bracket.page)).toContain('Made with CrispCAD \u00b7 kernelcad.com');
+    expect(textsOf(bracket.page)).toContain('Made with CrispCAD \u00b7 github.com');
     const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
     const doc = await pdfjs.getDocument({ data: new Uint8Array(bracket.bytes), isEvalSupported: false, verbosity: 0 }).promise;
     try {
@@ -138,10 +138,10 @@ describe('pdf-drawing: attribution', () => {
       const annots = await (await doc.getPage(1)).getAnnotations();
       const link = annots.find(a => a.subtype === 'Link');
       expect(link?.url).toBe(attributionUrl('drawing'));
-      expect(link?.url).toContain('https://kernelcad.com/?ref=drawing');
+      expect(link?.url).toContain('https://github.com/CrispStrobe/kernelCAD-web?ref=drawing');
       // The link sits on the line: inside the title block's DATE cell, bottom-right of the sheet.
       const [x0, y0, x1, y1] = link!.rect as number[];
-      const made = textAt(bracket.page, 'Made with CrispCAD \u00b7 kernelcad.com');
+      const made = textAt(bracket.page, 'Made with CrispCAD \u00b7 github.com');
       const mmPerPt = 25.4 / 72;
       expect(x0 * mmPerPt).toBeLessThanOrEqual(made.x + 0.01);
       expect(x1 * mmPerPt).toBeGreaterThanOrEqual(made.x + made.widthMm - 0.01);
@@ -164,7 +164,7 @@ describe('svg-drawing: attribution with the full title block', () => {
     const svg = new TextDecoder().decode(r.bytes);
     expect(svg).toContain(`data-kc-generator="${attributionGenerator()}"`);
     expect(svg).toContain(`<a href="${attributionUrl('drawing').replace(/&/g, '&amp;')}">`);
-    expect(svg).toContain('>Made with CrispCAD \u00b7 kernelcad.com</text></a>');
+    expect(svg).toContain('>Made with CrispCAD \u00b7 github.com</text></a>');
   }, 60_000);
 });
 

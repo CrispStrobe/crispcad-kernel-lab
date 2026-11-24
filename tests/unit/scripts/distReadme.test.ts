@@ -36,9 +36,9 @@ describe('authorReadme', () => {
     expect(md).toMatch(/~\/\.copilot\/skills/);
   });
 
-  it('shows both local-default and hosted-fallback MCP setup', () => {
+  it('shows the local MCP setup and no hosted endpoint', () => {
     const md = authorReadme({ entries, version: '0.11.0' });
-    expect(md).toMatch(/kernelcad mcp/);
+    expect(md).toMatch(/crispcad mcp/);
     expect(md).not.toMatch(/mcp\.kernelcad\.com/);
   });
 

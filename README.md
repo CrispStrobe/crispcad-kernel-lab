@@ -10,6 +10,26 @@ by the kernelCAD project**; it is renamed as kernelCAD's
 [trademark policy](TRADEMARKS.md) requires. The `.kcad.ts` source format keeps its
 name for compatibility with kernelCAD models.
 
+## What it does
+
+- Models are editable `.kcad.ts` source with named params, so an agent or a person
+  changes a dimension and rebuilds instead of re-drawing.
+- Modelling covers solids, sketches, assemblies with mates, NURBS surfaces, SDF
+  bodies and sheet metal with flat patterns.
+- Review is deterministic: `review_cad` (MCP) and `crispcad validate` / `dfm` /
+  `interference` report structured diagnostics before anyone looks at a render.
+
+## Authoring discipline
+
+The `.kcad.ts` file is the design's source of truth. PNG, MP4, STEP, STL and score
+files are generated evidence or deliverables; regenerate them from source, never
+edit them by hand. Validate with deterministic commands first, then inspect visual
+artifacts and say what is actually visible. `crispcad render inspect <file> <outDir>`
+writes an inspection bundle with a manifest and canonical RGB views; add
+`--channels rgb,mask,depth,normals` for object masks, depth and view-space normals.
+Use `lib.fromSTEP(...)` for purchased components (bearings, motors, fasteners,
+PCBs) instead of placeholder boxes, or label the placeholder.
+
 ## Direction
 
 - **Permissive licences only.** CrispCAD is replacing every LGPL component in its

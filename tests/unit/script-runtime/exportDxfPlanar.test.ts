@@ -161,7 +161,7 @@ describe('DXF export of flat parts', () => {
     // Unit and attribution header survive.
     const text = new TextDecoder().decode(r.bytes);
     expect(text).toMatch(/\$INSUNITS\n70\n4\n/);
-    expect(text).toMatch(/^999\nkernelCAD /);
+    expect(text).toMatch(/^999\nCrispCAD /);
   });
 
   it('scales a flat part to inches with $INSUNITS = 1', async () => {
