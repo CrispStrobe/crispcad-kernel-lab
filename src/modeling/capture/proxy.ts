@@ -1391,7 +1391,7 @@ export class Shape {
     center: [number, number, number];
   }> {
     assertPlacementOptions('boundingBox', ['exact'], 'await part.boundingBox({ exact: true })', opts, this.id);
-    const backend = await this.lowerGeneric();
+    const backend = this.session.kernel === 'smlib-native' ? await lowerOnNativeKernel(this.session, this.id) : await this.lower();
     const { min, max } = backend.boundingBox(opts);
     const size: [number, number, number] = [
       max[0] - min[0],
@@ -1474,11 +1474,6 @@ export class Shape {
       records: this.session.getRecords(),
       paramTable: this.session.paramTable,
     };
-  }
-
-  /** Lower on the session's kernel; for geometry-level queries that need no OCCT topology. */
-  async lowerGeneric(): Promise<import('../../kernel/backends/backend').ShapeBackend> {
-    return this.session.kernel === 'smlib-native' ? lowerOnNativeKernel(this.session, this.id) : this.lower();
   }
 
   /**

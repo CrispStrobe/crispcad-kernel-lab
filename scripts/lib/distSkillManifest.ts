@@ -51,7 +51,7 @@ export function authorPluginJson({ entries, version }: PluginManifestInput): str
       requires: { kernelcad: `^${minorOf(version)}` },
       mcp: {
         default: 'local',
-        local: { command: 'kernelcad', args: ['mcp'] },
+        local: { command: 'crispcad', args: ['mcp'] },
       },
     },
     skills,

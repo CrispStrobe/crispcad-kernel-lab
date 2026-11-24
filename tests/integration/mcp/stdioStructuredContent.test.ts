@@ -14,7 +14,7 @@ describe('stdio structured content SDK roundtrip', () => {
     try {
       await server.connect(serverTransport);
       await client.connect(clientTransport);
-      expect(client.getServerVersion()).toEqual({ name: 'kernelcad', version: pkg.version });
+      expect(client.getServerVersion()).toEqual({ name: 'crispcad', version: pkg.version });
       const { tools } = await client.listTools();
       expect(tools.find(tool => tool.name === 'lookup_api')?.outputSchema).toBeDefined();
       const result = await client.callTool({ name: 'lookup_api', arguments: {} });

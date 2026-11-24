@@ -7,7 +7,9 @@ import { parse } from 'yaml';
 // Merges to `develop` used to land unverified: ci.yml fired only on
 // pull_request, so a PR tested against a stale base (e.g. an OCCT bump that
 // left catalog/index.json stale) went green and broke every later PR.
-const ci = parse(readFileSync('.github/workflows/ci.yml', 'utf8'));
+// CrispCAD archives upstream workflows inactive; this guards the archived ci.yml
+// so it stays correct if it is ever re-enabled.
+const ci = parse(readFileSync('ci/upstream-workflows/ci.yml', 'utf8'));
 const jobs = ci.jobs as Record<string, { name?: string; if?: string; needs?: string[] | string; steps?: { run?: string }[]; strategy?: { matrix?: { shard?: number[] } } }>;
 
 describe('ci.yml develop push gate', () => {

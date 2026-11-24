@@ -39,11 +39,13 @@ describe('agent-controlled mesh tolerance', () => {
         const result = await runAndExport({ code, fileName: `${name}.kcad.ts`, format: 'stl' });
         hashes.push(createHash('sha256').update(result.bytes).digest('hex'));
       }
+      // Re-pinned for the CrispCAD generator string in the 80-byte header;
+      // the triangle data after the header is byte-identical to kernelCAD's.
       expect(hashes).toEqual([
-        'f29ac00494098b29a05e3c97b6681474976d5dedd3d0c1e5d7949bd96616dc05',
+        'c442cf3cc859a27b3c7026e8f27e5707ed15d4add502a489c38443d3f6c56a49',
         // Re-pinned when export meshes started flipping cap slivers on flat
         // faces (meshCleanup.ts); the cylinder's end caps changed, the box did not.
-        'aa7ca3d0c20b52d3fa2c0e0ff1866ac3a1b9cae15fd7dd521c74205c11f5a8cf',
+        '28e5e66f9c012399acc6941608b565269b35bed87634b0e0c3fa1284a3c093a7',
       ]);
     } finally {
       globalThis.Date = originalDate;

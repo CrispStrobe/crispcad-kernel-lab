@@ -2,7 +2,7 @@
 // Single-bored fire hose barrel plus independent selector and pistol grip.
 // A visually acceptable but solid, disconnected barrel must fail.
 import { beforeAll, describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { NodeIO } from '@gltf-transform/core';
 import { initOcct } from '../../../src/kernel/backends/occt/occtBackend';
@@ -82,7 +82,9 @@ describe('fire-hose nozzle illustrative continuous fluid passage',()=>{
  it('committed thumbnail is rendered from current CAD source with exact canonical caption',async()=>{
   const {asset,glb}=await buildCatalogAssetWithGlb(root,sourcePath);
   const render=await renderTrianglesPng(await glbTriangles(glb),{label:`${asset.title} · ${asset.stats.triangles} tris`});
-  const preview=readFileSync(resolve(root,'catalog/kits/fire-rescue/previews/fire-hose-nozzle.png'));
+  const previewPath=resolve(root,'catalog/kits/fire-rescue/previews/fire-hose-nozzle.png');
+  if(process.env.KCAD_UPDATE_PREVIEW==='1')writeFileSync(previewPath,render);
+  const preview=readFileSync(previewPath);
   expect(Buffer.compare(render,preview)).toBe(0);
  },30000);
  for(const [size,scale] of [[1,1],[0.7,0.7],[1.3,1.3]] as const){

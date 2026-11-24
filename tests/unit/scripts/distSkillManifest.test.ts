@@ -51,16 +51,15 @@ describe('authorPluginJson', () => {
     expect(mcp.entry).toBeUndefined();
   });
 
-  it('encodes the kernelcad MCP block with local default + hosted fallback', () => {
+  it('encodes the kernelcad MCP block with the local crispcad server only', () => {
     const out = JSON.parse(
       authorPluginJson({ entries: [entry('kernelcad', 'kernelcad/SKILL.md')], version: '0.11.0' }),
     );
     expect(out.kernelcad.mcp.default).toBe('local');
-    expect(out.kernelcad.mcp.local.command).toBe('kernelcad');
+    expect(out.kernelcad.mcp.local.command).toBe('crispcad');
     expect(out.kernelcad.mcp.local.args).toEqual(['mcp']);
     // CrispCAD: no hosted MCP endpoint is advertised.
     expect(out.kernelcad.mcp.remote).toBeUndefined();
-    expect(out.kernelcad.mcp.remote.authEnv).toBeUndefined();
   });
 
   it('emits skills[] in deterministic sort order regardless of input order', () => {
