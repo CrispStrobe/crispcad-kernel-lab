@@ -11,6 +11,18 @@ forked at commit 7e06253cbc97b80911b70f8269998ea3eb001fe5:
 CrispCAD is not affiliated with or endorsed by the kernelCAD project. The
 kernelCAD name and logo are not licensed under MIT; see TRADEMARKS.md.
 
+Image codecs (vendor/sharp-compat, CrispCAD's MIT replacement for sharp/libvips):
+
+  pngjs 7.0.0, MIT, Copyright (c) 2015 Luke Page & Original Contributors,
+  Copyright (c) 2012 Kuba Niegowski.
+  jpeg-js 0.4.4, BSD-3-Clause, Copyright (c) 2014 Eugene Ware. Its decoder is
+  Copyright 2011 notmasteryet (Apache-2.0, from pdf.js); its encoder is
+  Copyright (c) 2008 Adobe Systems Incorporated (BSD-3-Clause), ported to
+  JavaScript by Andreas Ritter.
+
+  SVG, WebP and GIF images are decoded by the Chromium build that Playwright
+  installs (BSD-3-Clause and Apache-2.0 components), not shipped by CrispCAD.
+
 The notices below are retained from kernelCAD.
 
 smlibwasm

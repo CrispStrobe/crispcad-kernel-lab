@@ -99,7 +99,7 @@ describe('exportDxf', () => {
     );
     const text = new TextDecoder().decode(bytes);
     expect(text).toMatch(/tolerance: 0\.05 mm \(OCCT tessellation\)/);
-    expect(text).toMatch(/^999\r?\nkernelCAD \S+ \(https:\/\/kernelcad\.com\) \d{4}-\d{2}-\d{2}\r?\n/);
+    expect(text).toMatch(/^999\r?\nkernelCAD \S+ \(https:\/\/github\.com\/CrispStrobe\/kernelCAD-web\) \d{4}-\d{2}-\d{2}\r?\n/);
   });
 
   it('emits LWPOLYLINE only — never SPLINE entities', () => {

@@ -1,0 +1,18 @@
+{
+  "name": "sharp",
+  "version": "0.33.5-crispcad.1",
+  "description": "CrispCAD's MIT replacement for the subset of the sharp API this project uses. PNG/JPEG in pure JavaScript (pngjs, jpeg-js); other formats (SVG, WebP, GIF) are decoded by headless Chromium via Playwright. No libvips.",
+  "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "jpeg-js": "0.4.4",
+    "pngjs": "7.0.0"
+  },
+  "peerDependencies": {
+    "playwright": "*"
+  },
+  "peerDependenciesMeta": {
+    "playwright": { "optional": true }
+  }
+}

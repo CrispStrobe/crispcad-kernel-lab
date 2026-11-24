@@ -317,7 +317,7 @@ describe('exportGlbAsync', () => {
     // glTF-Transform's reader drops asset.generator; read the JSON chunk raw.
     const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     const json = JSON.parse(new TextDecoder().decode(bytes.subarray(20, 20 + view.getUint32(12, true))));
-    expect(json.asset.generator).toMatch(/^CrispCAD \S+ \(https:\/\/kernelcad\.com\)$/);
+    expect(json.asset.generator).toMatch(/^CrispCAD \S+ \(https:\/\/github\.com\/CrispStrobe\/kernelCAD-web\)$/);
   });
 
   it('records axisConvention="z-up" when axis: "z-up" is passed', async () => {

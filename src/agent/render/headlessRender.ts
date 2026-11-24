@@ -301,7 +301,9 @@ export async function openDemoPlayerPage(opts: DemoPlayerPageOpts): Promise<Demo
     }
     if (!browser) {
       try {
-        browser = await chromium.launch({ args: ['--disable-dev-shm-usage', ...sandboxChromiumArgs()] });
+        // PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH selects an installed Chromium when Playwright's pinned build is absent.
+        const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined;
+        browser = await chromium.launch({ args: ['--disable-dev-shm-usage', ...sandboxChromiumArgs()], ...(executablePath ? { executablePath } : {}) });
       } catch (e) {
         throw formatPlaywrightLaunchError(e);
       }

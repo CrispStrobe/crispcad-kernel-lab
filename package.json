@@ -145,7 +145,7 @@
     "react-markdown": "^10.1.0",
     "replicad": "^0.23.1",
     "replicad-opencascadejs": "github:w1ne/replicad-opencascadejs#583431c032e015fa3b0eb509bf0009a5b6820a9a",
-    "sharp": "^0.33.5",
+    "sharp": "file:vendor/sharp-compat",
     "shiki": "^1.29.2",
     "sucrase": "^3.35.1",
     "three": "^0.184.0",
@@ -156,7 +156,8 @@
     "zod": "^4.3.6"
   },
   "overrides": {
-    "replicad-opencascadejs": "github:w1ne/replicad-opencascadejs#583431c032e015fa3b0eb509bf0009a5b6820a9a"
+    "replicad-opencascadejs": "github:w1ne/replicad-opencascadejs#583431c032e015fa3b0eb509bf0009a5b6820a9a",
+    "sharp": "$sharp"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260504.1",

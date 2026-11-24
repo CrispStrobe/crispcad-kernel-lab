@@ -139,8 +139,8 @@ describe('export3mfAsync — slicer-ready output', () => {
     const meta = Object.fromEntries(
       [...p.doc.getElementsByTagNameNS(CORE_NS, 'metadata')].map((m) => [m.getAttribute('name'), m.textContent]),
     );
-    expect(meta.Application).toMatch(/^CrispCAD \S+ \(https:\/\/kernelcad\.com\)$/);
-    expect(meta.Description).toBe('Made with CrispCAD (https://kernelcad.com)');
+    expect(meta.Application).toMatch(/^CrispCAD \S+ \(https:\/\/github\.com\/CrispStrobe\/kernelCAD-web\)$/);
+    expect(meta.Description).toBe('Made with CrispCAD (https://github.com/CrispStrobe/kernelCAD-web)');
   });
 
   it('round-trips each part colour through its object pindex (hex and role token)', async () => {
