@@ -3,7 +3,7 @@ name: kernelcad-params
 description: Editable symbolic parameters — param(), params(), ParamRef arithmetic, MCP set_param. Use when the model needs values the agent or studio can change live.
 ---
 
-# kernelCAD — editable parameters
+# CrispCAD — editable parameters
 
 Use `param()` for values the user may want to tweak after the first build; use literals for incidental dimensions. A param returns a `ParamRef`. Plain JS math works on it inside a script: `w + 4`, `w / 2`, `Math.sin(angle * Math.PI / 180)`, loops and point lists all get the current value, and an edit to that param re-runs the script, rebuilding only the features whose inputs changed. The arithmetic methods `.add`, `.subtract`, `.multiply`, `.divide`, `.negate`, `.min`, `.max`, `.abs`, `.clamp` are still available and keep the dimension symbolic (it re-evaluates in place without re-running the script, the fastest slider path) — e.g. `param('r', 5).divide(2)`, `param('w', 80).subtract(param('margin', 5).multiply(2))`, `param('wall', 2).max(1.2).clamp(1.2, 8)`. Use whichever reads better; prefer plain math when it is clearer (trig, loops, point lists).
 
@@ -282,7 +282,7 @@ arm.mate('yaw', 'base.pivot', 'shoulder.root', 'revolute', {});
 
 ## Diagnostic codes
 
-The following diagnostic codes surface in the `diagnostics[]` array returned by `kernelcad evaluate`:
+The following diagnostic codes surface in the `diagnostics[]` array returned by `crispcad evaluate`:
 
 | Code | Trigger |
 |------|---------|
@@ -300,7 +300,7 @@ After authoring with editable parameters, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 — no `param.*` diagnostics |
+| G-eval | `crispcad evaluate` exits 0 — no `param.*` diagnostics |
 | G-default-in-range | Every `param()` default value satisfies its declared `min` / `max` |
 | G-unique-names | No two `param()` calls share a `name` in the same script — duplicates fail at capture time |
 | G-paramref-survives-arithmetic | `ParamRef.add/.subtract/.multiply/.divide/.negate/.min/.max/.abs/.clamp` return new ParamRefs, not numbers; chains like `radius.multiply(2).add(1).clamp(0, 50)` stay symbolic |

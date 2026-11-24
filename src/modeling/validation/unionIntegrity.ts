@@ -33,7 +33,7 @@
 // distance/naming work runs only when a defect was found.
 //
 // Emitted from the shared evaluate seam (`evaluateAndBuildScript`), so
-// `evaluate_script`, `kernelcad evaluate` and the review payload all carry
+// `evaluate_script`, `crispcad evaluate` and the review payload all carry
 // it. Studio's per-keystroke recompute does not run it (same policy as the
 // interference sweep).
 

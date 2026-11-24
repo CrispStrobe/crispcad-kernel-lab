@@ -166,7 +166,7 @@
             ]
           },
           "command": {
-            "name": "kernelcad render inspect",
+            "name": "crispcad render inspect",
             "channels": [
               "rgb"
             ],
@@ -347,7 +347,7 @@
             ]
           },
           "command": {
-            "name": "kernelcad render inspect",
+            "name": "crispcad render inspect",
             "channels": [
               "rgb"
             ],
@@ -528,7 +528,7 @@
             ]
           },
           "command": {
-            "name": "kernelcad render inspect",
+            "name": "crispcad render inspect",
             "channels": [
               "rgb"
             ],
@@ -709,7 +709,7 @@
             ]
           },
           "command": {
-            "name": "kernelcad render inspect",
+            "name": "crispcad render inspect",
             "channels": [
               "rgb"
             ],

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/mcp/tools/listFaces.ts
 //
-// MCP tool: list faces of a kernelCAD shape with optional FaceQuery filter.
+// MCP tool: list faces of a CrispCAD shape with optional FaceQuery filter.
 //
 // F-surface F2: each face summary now carries a stable `ref` string of the form
 // `@kc[<owner>/face/<refName>]` plus a `lineage` record describing how the ref

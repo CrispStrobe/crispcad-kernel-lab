@@ -20,8 +20,8 @@ sitemap entry.
   advertised today. It offers the public download URLs and the Studio deep
   link without naming a nonexistent tool.
 
-The downloads are produced only by running the public kernelCAD `.kcad.ts`
-sources through the kernelCAD exporter. The build checks the GLB structure,
+The downloads are produced only by running the public CrispCAD `.kcad.ts`
+sources through the CrispCAD exporter. The build checks the GLB structure,
 nonzero triangle count, and each asset's `triangleBudget`. It does not read or
 decimate third-party meshes.
 

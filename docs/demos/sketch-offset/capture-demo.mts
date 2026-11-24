@@ -137,7 +137,7 @@ const implementation = Object.fromEntries(await Promise.all(
   IMPLEMENTATION_FILES.map(async (file) => [file, sha256(await readFile(file))] as const),
 ));
 const evidence = {
-  scope: 'Local kernelCAD Node API: Sketch.offset of a rounded outline, extrude and boolean to a tray and a lid, OCCT volume, validity, overlap and distance measurement.',
+  scope: 'Local CrispCAD Node API: Sketch.offset of a rounded outline, extrude and boolean to a tray and a lid, OCCT volume, validity, overlap and distance measurement.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),

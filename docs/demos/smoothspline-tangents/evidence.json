@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: a drawer-pull backplate built from one smoothSpline quarter profile and its three mirror images, and one quarter with a stated end tangent. OCCT volume, bounding box and validity checks against closed-form values.",
+  "scope": "Local CrispCAD Node API: a drawer-pull backplate built from one smoothSpline quarter profile and its three mirror images, and one quarter with a stated end tangent. OCCT volume, bounding box and validity checks against closed-form values.",
   "invocation": "node --import tsx docs/demos/smoothspline-tangents/capture-demo.mts",
   "source": "docs/demos/smoothspline-tangents/pull-backplate.kcad.ts",
   "sourceSha256": "fa530cb8c3ad4ccf2193e05e3632dcb9ed0be10c73b044fb8444c462419ea7a4",

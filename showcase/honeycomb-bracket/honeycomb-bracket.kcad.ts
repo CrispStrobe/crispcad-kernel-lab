@@ -17,8 +17,8 @@
 // Beyond the prompt — what the agent can prove about it:
 //   dfmSpec() declares an FDM print gate (0.4 mm nozzle, 45 deg overhang,
 //   1.6 mm min wall) and a build direction, so every evaluate measures the
-//   lattice webs and overhangs; `kernelcad dfm` reports the result and
-//   `kernelcad export step` writes the B-rep for a machinist.
+//   lattice webs and overhangs; `crispcad dfm` reports the result and
+//   `crispcad export step` writes the B-rep for a machinist.
 
 const t = param('thickness', 5, { min: 3, max: 10, description: 'Plate thickness of both legs (mm)' });
 const filletR = param('innerFillet', 6, { min: 1, max: 12, description: 'Inside corner fillet radius (mm)' });

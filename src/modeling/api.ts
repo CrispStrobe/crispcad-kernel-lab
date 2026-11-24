@@ -123,7 +123,7 @@ export interface PartsLib {
   meshFromSTL(path: string): Promise<Shape>;
   /**
    * Import a composite GLB as a display-only body with material groups
-   * intact. Node transforms are flattened, glTF Y-up is rotated to kernelCAD
+   * intact. Node transforms are flattened, glTF Y-up is rotated to CrispCAD
    * Z-up, and each primitive keeps its own PBR material (a PCB assembly keeps
    * solder mask, copper, gold pads and component bodies). Units come from
    * `asset.extras.kernelcad.units` or the raw extent; override with `opts`.
@@ -748,7 +748,7 @@ export interface KernelCadApi {
   /**
    * Declare printability (design-for-manufacture) gates for the model.
    * Declaration-only: this registers a virtual record (no OCCT geometry).
-   * Enforcement runs on every `kernelcad evaluate` / `evaluate_script` once
+   * Enforcement runs on every `crispcad evaluate` / `evaluate_script` once
    * a dfmSpec record is present — declared gates (minimum wall thickness,
    * inter-part clearance, internal-channel topology) fail the evaluation
    * when violated.

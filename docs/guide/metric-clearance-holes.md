@@ -1,6 +1,6 @@
 ---
 title: "Metric clearance hole sizes (ISO 273): chart and how to choose close, normal or loose fit"
-summary: The ISO 273 clearance hole chart for M2 to M20 in close, normal and loose fit, with tap drills, how to pick a fit class, and how kernelCAD reads the fit back from your holes.
+summary: The ISO 273 clearance hole chart for M2 to M20 in close, normal and loose fit, with tap drills, how to pick a fit class, and how CrispCAD reads the fit back from your holes.
 date: 2026-11-01
 kind: guide
 status: published
@@ -22,7 +22,7 @@ quote. This guide gives you the numbers and a fast way to choose.
 2. [What close, normal and loose fit mean](#2-what-close-normal-and-loose-fit-mean)
 3. [How to choose a fit class](#3-how-to-choose-a-fit-class)
 4. [Common clearance hole mistakes](#4-common-clearance-hole-mistakes)
-5. [Clearance holes in kernelCAD: a worked example](#5-clearance-holes-in-kernelcad-a-worked-example)
+5. [Clearance holes in CrispCAD: a worked example](#5-clearance-holes-in-kernelcad-a-worked-example)
 6. [FAQ](#6-faq)
 7. [Key takeaways](#7-key-takeaways)
 
@@ -52,9 +52,9 @@ plus tolerance: H12 for close, H13 for normal and H14 for loose. For an M3
 hole that works out to 3.2 to 3.32 mm close, 3.4 to 3.58 mm normal and 3.6
 to 3.9 mm loose.
 
-**How kernelCAD helps.** This exact table is built into kernelCAD for M2 to
+**How CrispCAD helps.** This exact table is built into CrispCAD for M2 to
 M20, all three classes. You never type a clearance diameter from memory, and
-when you hand kernelCAD a part with holes, it tells you which thread and
+when you hand CrispCAD a part with holes, it tells you which thread and
 which fit class each hole already is.
 
 ## 2. What close, normal and loose fit mean
@@ -96,7 +96,7 @@ is the only practical locator and the parts are machined together.
 **Think about the head.** A loose hole under a small socket head leaves less
 bearing area. Add a washer, or stay at normal.
 
-**How kernelCAD helps.** Fit class is something kernelCAD reports, not
+**How CrispCAD helps.** Fit class is something CrispCAD reports, not
 something you have to keep in your head. Every hole that lib.insert fastens
 comes back tagged `close`, `normal` or `loose`, so a design review is a
 glance at the output instead of a caliper session with the drawing.
@@ -118,14 +118,14 @@ glance at the output instead of a caliper session with the drawing.
    countersink; socket heads that must sit flush need a counterbore. A plain
    clearance hole leaves the head proud.
 
-**How kernelCAD helps.** kernelCAD catches the first two by refusing to
+**How CrispCAD helps.** CrispCAD catches the first two by refusing to
 size a fastener for a bore that is not a real clearance size, and it cuts
 the seat the fastener family needs. That means fewer surprises at assembly
 and fewer re-spins after the first parts arrive.
 
-## 5. Clearance holes in kernelCAD: a worked example
+## 5. Clearance holes in CrispCAD: a worked example
 
-kernelCAD models are `.kcad.ts` source files. You can write them yourself
+CrispCAD models are `.kcad.ts` source files. You can write them yourself
 or ask ChatGPT or Claude to write and run them over MCP. The example
 [`examples/gallery/clearance-hole-plate.kcad.ts`](../../examples/gallery/clearance-hole-plate.kcad.ts)
 is a 80 × 50 × 6 mm plate with three kinds of hole:
@@ -196,7 +196,7 @@ parts and 0 diagnostics.
 
 ![M4 socket-head screws in the four normal-fit corner holes of a plate](metric-clearance-holes/m4-clearance-plate.png "The corner Ø4.5 holes were read as M4 normal fit and got socket-head screws with washers. The Ø4.3 close-fit pair and the Ø5.0 tap-drill hole are left open here.")
 
-**How kernelCAD helps.** The holes drive the hardware. Change a hole from
+**How CrispCAD helps.** The holes drive the hardware. Change a hole from
 4.5 to 4.3 and the next run reports close fit; change it to 5.0 and you get
 told before anyone orders parts. For flat-head screws the same call cuts a
 90° countersink to the head diameter, and `seat: 'counterbore'` cuts a seat
@@ -231,8 +231,8 @@ For metric fasteners the clearance sizes agree. ISO 273 covers M1 to M150.
   hole when both parts have clearance holes; halve it when one part is
   tapped.
 - Never use a tap drill or the nominal diameter as a clearance hole.
-- In kernelCAD, `lib.insert` sizes the fastener from the hole, reports its
+- In CrispCAD, `lib.insert` sizes the fastener from the hole, reports its
   fit class, and refuses bores that are not clearance holes.
 
-**Try kernelCAD free — connect it to ChatGPT or Claude in a minute:
-https://app.kernelcad.com/connect** (or run `npx -y kernelcad mcp`).
+**Try CrispCAD free — connect it to ChatGPT or Claude in a minute:
+https://app.kernelcad.com/connect** (or run `npx -y crispcad mcp`).

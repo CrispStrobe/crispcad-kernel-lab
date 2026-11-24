@@ -27,7 +27,7 @@ when_to_use: >-
   bands. The result is a watertight mesh solid: export STL / 3MF / OBJ (not
   STEP), check feature.lattice.report for the measured wall and solid
   fraction, and declare dfmSpec({ process: 'fdm', minWall }) so thin walls
-  fail. Render a cut-away with `kernelcad render --section y=20`.
+  fail. Render a cut-away with `crispcad render --section y=20`.
 ---
 
 ```typescript

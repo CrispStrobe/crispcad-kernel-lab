@@ -59,7 +59,7 @@ def base_frame(title: str, mono: ImageFont.FreeTypeFont, bold: ImageFont.FreeTyp
     image = Image.new("RGB", (WIDTH, HEIGHT), BACKGROUND)
     draw = ImageDraw.Draw(image)
     draw.rectangle((0, 0, 13, HEIGHT), fill=CYAN)
-    draw.text((60, 45), "kernelCAD  /  REFERENCE PARTS", font=mono, fill=CYAN)
+    draw.text((60, 45), "CrispCAD  /  REFERENCE PARTS", font=mono, fill=CYAN)
     draw.text((60, 88), title, font=bold, fill=FOREGROUND)
     draw.line((60, 150, WIDTH - 60, 150), fill=BORDER, width=2)
     draw.text((60, HEIGHT - 52), "LOCAL OCCT VALIDATION  |  NOT DEPLOYED  |  NO HARDWARE ACCEPTANCE", font=mono, fill=MUTED)

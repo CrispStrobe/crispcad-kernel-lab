@@ -10,7 +10,7 @@ moment about the mate; the declared legacy limit is 5 N·m.
 ## Replay and artifacts
 
 - [MP4 demo](gate3-solved-frame.mp4) — 1280×720, 24 fps, 8 seconds.
-- [Fixture](gate3-solved-frame.kcad.ts) — native kernelCAD assembly source.
+- [Fixture](gate3-solved-frame.kcad.ts) — native CrispCAD assembly source.
 - [Capture source](capture-demo.ts) — executes the fixture, calls
   `checkLoadCapacity(..., { mode: 'stub' })`, and creates the MP4.
 - [Settings](demo-settings.json) — invocation, dimensions, timing and claims.

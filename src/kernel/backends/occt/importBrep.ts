@@ -9,7 +9,7 @@
 // round-trip is therefore lossless in a way STEP is not — no AP203/AP214
 // schema mapping, no unit conversion, no re-derivation of surfaces. That
 // makes it the right format for caching kernel state and for moving shapes
-// between kernelCAD processes.
+// between CrispCAD processes.
 //
 // The binding used here is `oc.BRepToolsWrapper`, a replicad-opencascadejs
 // convenience class that constructs the `BRep_Builder` internally (the

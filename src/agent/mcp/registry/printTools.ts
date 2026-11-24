@@ -34,7 +34,7 @@ export const printToolEntries: ToolRegistryEntry[] = [
           printer: {
             type: 'string',
             enum: [...PRINTER_PROFILE_IDS],
-            description: "Printer profile id; checked against protocol before upload. List them with 'kernelcad print printers'.",
+            description: "Printer profile id; checked against protocol before upload. List them with 'crispcad print printers'.",
           },
           filename: { type: 'string', description: "Uploaded file name (default: 'kernelcad.gcode'; bambu-lan appends '.3mf')." },
           start_print: { type: 'boolean', description: 'Start the print immediately after upload (default: true).' },

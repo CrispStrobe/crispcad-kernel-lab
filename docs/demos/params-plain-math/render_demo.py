@@ -21,7 +21,7 @@ def slide(title, render, lines, code=False):
     y = 110
     for line in lines:
         d.text((40, y), line, font=ImageFont.truetype(M if code else F, 17 if code else 22), fill="#0b5394" if code else "#26323d"); y += 32
-    d.text((40, H - 38), "kernelCAD core, local run (bench.ts); timings are this machine, not production", font=ImageFont.truetype(F, 15), fill="#7a8794")
+    d.text((40, H - 38), "CrispCAD core, local run (bench.ts); timings are this machine, not production", font=ImageFont.truetype(F, 15), fill="#7a8794")
     return img
 b, e45, e60, full = by["build"], by["tabAngle=45"], by["tabAngle=60"], by["full rebuild at tabAngle=60"]
 slides = [

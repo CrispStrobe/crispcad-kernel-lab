@@ -5,7 +5,7 @@
     "kernelcadWeb": "d7f97879",
     "kernelcadServerLocal": "7799454 (#178 vendor bump to d7f97879)",
     "prodServerBuild": "0.1.0+1182e325ce87@2026-09-24T23:55:42.329Z (#177 \u2014 prod not yet on #178; evaluate+open_in_studio still green)",
-    "embedViewerBanner": "kernelCAD v0.17.0 (d7f9787)"
+    "embedViewerBanner": "CrispCAD v0.17.0 (d7f9787)"
   },
   "housingEvaluate": {
     "ok": true,
@@ -116,7 +116,7 @@
       "blankViewer": false,
       "multiBodyPainted": true,
       "animationOverlay": "shoulder-sweep visible with Play + scrubber 0\u20133.6s",
-      "viewerBanner": "kernelCAD v0.17.0 (d7f9787) | Shaded + Edges",
+      "viewerBanner": "CrispCAD v0.17.0 (d7f9787) | Shaded + Edges",
       "stills": [
         "/workspace/chatgpt-debug/MLl-f0Uq-preview.png",
         "/workspace/chatgpt-debug/MLl-f0Uq-embed-iso.png",

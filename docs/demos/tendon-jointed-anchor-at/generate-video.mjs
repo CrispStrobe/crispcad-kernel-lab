@@ -38,7 +38,7 @@ function panel(title, subtitle, body, badge = 'LOCAL KERNELCAD MESH CHECK · NO 
     ${body}
     <rect x="72" y="647" width="755" height="32" rx="16" fill="#e0e9f7"/>
     <text x="91" y="668" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing=".45" fill="#31547f">${escapeXml(badge)}</text>
-    <text x="1206" y="668" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">kernelCAD · issue #917</text>
+    <text x="1206" y="668" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">CrispCAD · issue #917</text>
   </svg>`;
 }
 

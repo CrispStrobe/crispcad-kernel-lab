@@ -1,6 +1,6 @@
 ---
 name: image-replicator
-description: The render→score→iterate loop for reference-photo reconstruction. How to invoke kernelcad render, run scoreAgainstReference, interpret per-gate numbers, and decide which gate to chase next.
+description: The render→score→iterate loop for reference-photo reconstruction. How to invoke crispcad render, run scoreAgainstReference, interpret per-gate numbers, and decide which gate to chase next.
 ---
 
 # image-replicator
@@ -24,7 +24,7 @@ which gate is weakest, what model change closes it, whether to continue or stop.
 Always render all four canonical views at the correct resolution:
 
 ```bash
-kernelcad render build.kcad.ts \
+crispcad render build.kcad.ts \
   --width 1920 --height 1080 \
   --views front,right,top,iso \
   -o /tmp/render.png
@@ -35,7 +35,7 @@ Read the PNG back. Filenames are not evidence — you must observe the image.
 ### Step 2 — Score
 
 ```bash
-kernelcad score build.kcad.ts \
+crispcad score build.kcad.ts \
   --reference ./reference.jpg \
   --view front \
   --json
@@ -150,7 +150,7 @@ Therefore:
 ## Done
 
 The iteration loop is done when all required gates are above threshold AND
-`kernelcad evaluate` exits clean AND `kernelcad interference` reports zero pairs.
+`crispcad evaluate` exits clean AND `crispcad interference` reports zero pairs.
 
 Proceed to `render-inspect/SKILL.md` if any iteration produces diagnostic
 hints that need interpretation.

@@ -5,7 +5,7 @@
 // Input validation for capture_animation's turntable mode
 // ({ turntable: true }) — kept out of captureAnimation.ts so the timeline
 // path stays readable. Every refusal is a typed cli.invalid-args with a
-// hint; the tool turns it into its envelope. `kernelcad animate --turntable`
+// hint; the tool turns it into its envelope. `crispcad animate --turntable`
 // resolves its flags through the same functions, so the MCP tool and the
 // CLI share one rule set and one engine call.
 

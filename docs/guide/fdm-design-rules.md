@@ -45,7 +45,7 @@ An overhang is a face that points down and leans out past the layer below it. Mo
 
 Fix it with a 45° chamfer, a gusset, or by rotating the part so the face points sideways. Supports work too, but cost material and time and leave a rough surface.
 
-**How kernelCAD helps.** `dfm_review` finds every downward face steeper than your limit (45° by default, configurable). Each region comes back with its area, angle and reach, plus the fix in plain words, down to the exact rotation that removes the overhang ("Rotate -90° about X"), instead of a red patch in a slicer. Face references are optional: kernelCAD emits one only when the face has a unique, resolvable lineage name, and omits it otherwise.
+**How CrispCAD helps.** `dfm_review` finds every downward face steeper than your limit (45° by default, configurable). Each region comes back with its area, angle and reach, plus the fix in plain words, down to the exact rotation that removes the overhang ("Rotate -90° about X"), instead of a red patch in a slicer. Face references are optional: CrispCAD emits one only when the face has a unique, resolvable lineage name, and omits it otherwise.
 
 ## 2. Bridges
 
@@ -53,13 +53,13 @@ A bridge is a flat span held up at both ends, such as the top of a window or a s
 
 Shorten it with a mid-span rib, a pointed or arched top, or by turning the part so the opening runs vertically.
 
-**How kernelCAD helps.** `fdm.bridging` measures every flat ceiling and fails any span over `max_bridge_mm` (10 mm by default), with its location, so you know where the rib goes before anything reaches the printer.
+**How CrispCAD helps.** `fdm.bridging` measures every flat ceiling and fails any span over `max_bridge_mm` (10 mm by default), with its location, so you know where the rib goes before anything reaches the printer.
 
 ## 3. Wall thickness
 
 The slicer builds a wall from whole perimeters, each about one nozzle width wide. Design walls as **whole multiples of the nozzle diameter**, and make them **at least twice the nozzle**. For a 0.4 mm nozzle that means 0.8 mm, 1.2 mm or 1.6 mm ([Pollen AM](https://pollen.am/design_guidelines_dimensioning/)). A 0.6 mm wall can vanish from the toolpath entirely. For walls that carry load, 1.5 mm is a common recommendation ([Xometry](https://xometry.pro/en/?p=154421)).
 
-**How kernelCAD helps.** `fdm.min-wall` samples thickness over the whole part against 2 × `nozzle_mm` and returns every thin spot with an XYZ location. The model is a `.kcad.ts` source file, so the fix is usually one number, such as `ribT = 1.2`, and every rib follows.
+**How CrispCAD helps.** `fdm.min-wall` samples thickness over the whole part against 2 × `nozzle_mm` and returns every thin spot with an XYZ location. The model is a `.kcad.ts` source file, so the fix is usually one number, such as `ribT = 1.2`, and every rib follows.
 
 ## 4. Holes and pins
 
@@ -71,19 +71,19 @@ The slicer builds a wall from whole perimeters, each about one nozzle width wide
 
 **Pins.** A vertical pin thinner than **5 mm** prints with perimeters only and no infill, which makes it weak. Add a small fillet at the base, or press a metal pin into a drilled hole instead ([Hubs](https://www.hubs.com/knowledge-base/how-design-parts-fdm-3d-printing/)).
 
-**How kernelCAD helps.** `fdm.min-hole` flags any hole under 5 × nozzle (2 mm at 0.4 mm) with its diameter and location, and `fdm.min-pin` warns about slender pins. Horizontal hole roofs are reported as bridged spans with their length. Hole sizes live as constants in the source, so shrinkage compensation is a single edit.
+**How CrispCAD helps.** `fdm.min-hole` flags any hole under 5 × nozzle (2 mm at 0.4 mm) with its diameter and location, and `fdm.min-pin` warns about slender pins. Horizontal hole roofs are reported as bridged spans with their length. Hole sizes live as constants in the source, so shrinkage compensation is a single edit.
 
 ## 5. First layer and elephant's foot
 
 The first layer is pressed onto the bed, so it spreads slightly wider than the layers above. This lip is called elephant's foot. The usual design fix is a **45° chamfer or a small radius on every edge that touches the build plate** ([Hubs](https://www.hubs.com/knowledge-base/how-design-parts-fdm-3d-printing/)).
 
-**How kernelCAD helps.** `fdm.bed-contact` reports contact area, footprint ratio and tip risk for the chosen orientation. A bed-edge chamfer is one feature in the source and survives every later change.
+**How CrispCAD helps.** `fdm.bed-contact` reports contact area, footprint ratio and tip risk for the chosen orientation. A bed-edge chamfer is one feature in the source and survives every later change.
 
 ## 6. Print orientation
 
 Orientation decides which faces become overhangs, which openings become bridges and which holes run horizontal. It also sets layer direction, and FDM parts are weakest between layers. Start with the largest flat face on the bed, check what is left hanging, and keep layers running along the main load.
 
-**How kernelCAD helps.** `dfm_review` scores all six axis-aligned build directions. Each comes with unsupported area, bed contact, height, bed fit for your printer profile (for example `bambu-a1`, `prusa-mk4s`) and the code to apply, such as `.rotateX(-90)`. You choose from numbers instead of dragging the part around a slicer.
+**How CrispCAD helps.** `dfm_review` scores all six axis-aligned build directions. Each comes with unsupported area, bed contact, height, bed fit for your printer profile (for example `bambu-a1`, `prusa-mk4s`) and the code to apply, such as `.rotateX(-90)`. You choose from numbers instead of dragging the part around a slicer.
 
 ## 7. Worked example: a bracket from fail to pass
 
@@ -156,4 +156,4 @@ Perimeters pull inward, most on small holes. Enlarge the hole after a test print
 **What is the best orientation for a 3D print?**
 The one with the least unsupported area and a large flat face on the bed, with layers running along the main load. Score all six directions and pick from the numbers.
 
-**Try kernelCAD free. Connect it to ChatGPT or Claude in a minute: https://app.kernelcad.com/connect**
+**Try CrispCAD free. Connect it to ChatGPT or Claude in a minute: https://app.kernelcad.com/connect**

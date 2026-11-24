@@ -190,7 +190,7 @@ function modelExportOptions({ format, options, no_verify }: ExportModelInput): E
 }
 
 /**
- * MCP `export_model` tool — runs a kernelCAD script and writes the geometry
+ * MCP `export_model` tool — runs a CrispCAD script and writes the geometry
  * to `output_path` in the requested `format`. The single, unified write-side
  * export entry point. (The legacy `export_stl` shim was removed in C2.)
  *

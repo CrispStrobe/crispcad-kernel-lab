@@ -1,7 +1,7 @@
 # Fastener precedence and tool reach (P2)
 
 The `demo.mp4` is an annotated still sequence built from local
-`kernelcad render --preset publish` captures of
+`crispcad render --preset publish` captures of
 `examples/assemblies/assembly-sequence-gearbox.kcad.ts` and the planner's
 actual JSON result. It is not a screen recording, turntable, deployed-platform
 capture or hardware test.

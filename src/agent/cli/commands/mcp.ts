@@ -7,13 +7,13 @@ import { isSandboxError } from '../../../shared/sandbox/errors';
 
 export function mcpCommand(): Command {
   return new Command('mcp')
-    .description('Run the kernelCAD MCP server (stdio transport).')
-    .option('--cloud', 'proxy MCP tools through the hosted kernelCAD cloud kernel')
-    .option('--api-base-url <url>', 'kernelCAD API base URL', process.env.KERNELCAD_API_BASE_URL)
-    .option('--token <token>', 'kernelCAD MCP token', process.env.KERNELCAD_API_TOKEN)
+    .description('Run the CrispCAD MCP server (stdio transport).')
+    .option('--cloud', 'proxy MCP tools through the hosted CrispCAD cloud kernel')
+    .option('--api-base-url <url>', 'CrispCAD API base URL', process.env.KERNELCAD_API_BASE_URL)
+    .option('--token <token>', 'CrispCAD MCP token', process.env.KERNELCAD_API_TOKEN)
     .addHelpText(
       'after',
-      '\nSandbox: `kernelcad mcp --sandbox [--workspace <dir>]` (or KERNELCAD_SANDBOX=1) keeps every tool\'s file\n' +
+      '\nSandbox: `crispcad mcp --sandbox [--workspace <dir>]` (or KERNELCAD_SANDBOX=1) keeps every tool\'s file\n' +
         'access inside the workspace and refuses all outbound network; the constraints are sent to the\n' +
         'client in the initialize `instructions`. --cloud is refused in sandbox mode. See docs/sandbox.md.',
     )

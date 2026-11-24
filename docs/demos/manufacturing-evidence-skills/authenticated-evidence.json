@@ -1,7 +1,7 @@
 {
   "schema": "kernelcad.manufacturing-evidence-demo.v1",
   "recordedAt": "2026-11-12",
-  "surface": "authenticated connected kernelCAD MCP tool",
+  "surface": "authenticated connected CrispCAD MCP tool",
   "engine": {
     "kernel": "occt",
     "version": "0.17.4",

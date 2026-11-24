@@ -46,7 +46,7 @@ function panel(title, subtitle, body, badge = 'EXPORT MATH PREVIEW · NOT A THRE
     ${body}
     <rect x="72" y="641" width="500" height="34" rx="17" fill="#e0e9f7"/>
     <text x="92" y="664" font-family="Arial,sans-serif" font-size="14" font-weight="700" letter-spacing=".7" fill="#31547f">${escapeXml(badge)}</text>
-    <text x="1205" y="661" text-anchor="end" font-family="Arial,sans-serif" font-size="16" fill="#66758b">kernelCAD · GLB rig pivots</text>
+    <text x="1205" y="661" text-anchor="end" font-family="Arial,sans-serif" font-size="16" fill="#66758b">CrispCAD · GLB rig pivots</text>
   </svg>`;
 }
 

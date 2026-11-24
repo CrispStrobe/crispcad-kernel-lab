@@ -27,7 +27,7 @@ bounding box).
 What is not vendored
 --------------------
 SolidCraft engine code, FreeCAD oracle tooling, and reference.stl meshes.
-kernelCAD parts under parts/ are original kernelCAD source, not SolidCraft
+CrispCAD parts under parts/ are original kernelCAD source, not SolidCraft
 code. They are checked against the vendored expected values.
 
 How to bump the pin

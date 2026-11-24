@@ -24,7 +24,7 @@ export async function loadFontViaHost(
     throw new KernelError(
       'cli.host-fs-unavailable',
       'Text features load font files from disk, which the browser runtime cannot do. ' +
-        'Run this script through the kernelCAD CLI or MCP server to render text.',
+        'Run this script through the CrispCAD CLI or MCP server to render text.',
     );
   }
   // Only taken when the host filesystem capability is present; nodeLoader uses

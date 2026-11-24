@@ -57,4 +57,4 @@ there are five chamfer cones in the top 0.5 mm and five in the bottom
 0.3 mm, and the exit-rim labels survive the entry chamfer.
 
 The three solid views (`plate-top.png`, `plate-bottom.png`,
-`rim-closeup.png`) are `kernelcad render` output from the built CLI.
+`rim-closeup.png`) are `crispcad render` output from the built CLI.

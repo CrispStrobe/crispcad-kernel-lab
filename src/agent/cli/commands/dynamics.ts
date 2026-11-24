@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/dynamics.ts
 //
-// `kernelcad dynamics run <scenario.json>`
+// `crispcad dynamics run <scenario.json>`
 //
 // Generic tank, nozzle and rigid-body checks. The scenario describes a
 // mass, tanks and thrusters. It does not name a vehicle.

@@ -163,7 +163,7 @@ function cloadLines(job: FeaJobSpec, load: FeaJobSpec['loads'][number]): string[
  */
 export function writeInp(job: FeaJobSpec): string {
   const lines: string[] = [];
-  lines.push('** kernelCAD linear static study — units: mm / N / MPa');
+  lines.push('** CrispCAD linear static study — units: mm / N / MPa');
 
   lines.push('*NODE, NSET=NALL');
   const ids = [...job.mesh.nodes.keys()].sort((a, b) => a - b);

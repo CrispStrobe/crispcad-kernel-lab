@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Compose the P2 demo from local kernelcad renders and the planner evidence.
+// Compose the P2 demo from local crispcad renders and the planner evidence.
 // Not a screen recording. Run from the repository root:
 //   node docs/demos/assembly-sequence-planner/make-video.mjs
 // Set FFMPEG to an ffmpeg binary if it is not on PATH.
@@ -76,7 +76,7 @@ slides.push([3.5, await slide('00-title', {
     'Declared helical bolts, press fits and swept tool envelopes; no fake proof.',
     'Local triangle-mesh evidence. Not a deployed capture or hardware test.',
   ],
-  footer: 'kernelCAD · examples/assemblies/assembly-sequence-gearbox.kcad.ts',
+  footer: 'CrispCAD · examples/assemblies/assembly-sequence-gearbox.kcad.ts',
 })]);
 slides.push([4.5, await slide('01-assembled', {
   title: 'Gearbox with four bolts, a press fit and a tool-clearance rib',
@@ -84,7 +84,7 @@ slides.push([4.5, await slide('01-assembled', {
     'Cover, four posts, two shafts, four gears, base, four bolts, one rib.',
     'Rib sits beside bolt A: the screw leaves, the driver envelope does not.',
   ],
-  footer: 'Assembled render · local kernelcad render --preset publish',
+  footer: 'Assembled render · local crispcad render --preset publish',
   image: join(HERE, 'gearbox-assembled.png'),
   imageBox: { left: 120, top: 280, width: 1680, height: 620 },
 })]);
@@ -214,7 +214,7 @@ const videoEvidence = {
     "verify({ check: 'assembly-path', file: 'examples/assemblies/assembly-sequence-gearbox.kcad.ts', sequence: true })",
     'node docs/demos/assembly-sequence-planner/make-video.mjs',
   ],
-  provenance: 'Annotated still sequence composed from local kernelcad renders and the planner evidence JSON. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test.',
+  provenance: 'Annotated still sequence composed from local crispcad renders and the planner evidence JSON. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test.',
 };
 writeFileSync(join(HERE, 'video-evidence.json'), JSON.stringify(videoEvidence, null, 2) + '\n');
 console.log(`wrote ${OUT} (${videoEvidence.videoSha256})`);

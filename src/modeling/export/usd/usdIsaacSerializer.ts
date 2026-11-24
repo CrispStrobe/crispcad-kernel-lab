@@ -88,7 +88,7 @@ export interface UsdIsaacSerializeOptions {
   /** Relative directory prefix for the per-link mesh layers; default `./meshes/`. */
   meshPrefix?: string;
   /**
-   * Joint drives keyed by joint (mate) name. kernelCAD's mate vocabulary
+   * Joint drives keyed by joint (mate) name. CrispCAD's mate vocabulary
    * declares kinematics (type, axis, limits) but no actuator gains, so a drive
    * is emitted ONLY when declared here — a stage never carries invented
    * zero-gain drives, which would actively hold a joint at its target.

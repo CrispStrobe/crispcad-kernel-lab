@@ -1,5 +1,5 @@
 ---
-title: kernelCAD now shows the sizes on your model
+title: CrispCAD now shows the sizes on your model
 summary: Read part sizes straight off the 3D view, measure anything you click, and download a dimensioned drawing as a PDF.
 date: 2026-10-06
 kind: guide
@@ -11,9 +11,9 @@ You can now read the size of a part straight off the 3D view, measure anything y
 
 ## Dimensions on the model
 
-There is a new button next to Measure, top-left of the viewer. Press it and kernelCAD draws the overall size, the holes ("2× Ø5"), the spacing between holes, radii ("12× R3") and chamfers. It works in Studio, on shared project pages and in the ChatGPT viewer.
+There is a new button next to Measure, top-left of the viewer. Press it and CrispCAD draws the overall size, the holes ("2× Ø5"), the spacing between holes, radii ("12× R3") and chamfers. It works in Studio, on shared project pages and in the ChatGPT viewer.
 
-![Mounting bracket in the kernelCAD viewer with dimensions on: overall size 60, 40 and 46, hole spacing X 40, hole spacing Y 18, thickness 6 and bolt hole Ø5](../../site/blog/dimensions-measure-drawings/bracket-dimensions.png "The mounting bracket with its declared dimensions (blue) and overall size (grey).")
+![Mounting bracket in the CrispCAD viewer with dimensions on: overall size 60, 40 and 46, hole spacing X 40, hole spacing Y 18, thickness 6 and bolt hole Ø5](../../site/blog/dimensions-measure-drawings/bracket-dimensions.png "The mounting bracket with its declared dimensions (blue) and overall size (grey).")
 
 It is off by default, so the view stays clean. If the model declares its own dimensions, it starts on.
 

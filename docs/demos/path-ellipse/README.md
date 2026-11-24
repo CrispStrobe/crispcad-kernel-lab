@@ -44,7 +44,7 @@ The closed forms do not come from the kernel: half a spheroid is
 
 In the video, the 2D outlines are drawn from the sketch commands in
 `evidence.json`. The three solid views (`head-outside.png`,
-`head-section.png`, `gasket.png`) are `kernelcad render` output from the built
+`head-section.png`, `gasket.png`) are `crispcad render` output from the built
 CLI; `video-evidence.json` holds the three invocations. The section view has
 no filled cut face.
 

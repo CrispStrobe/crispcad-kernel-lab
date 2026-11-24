@@ -55,7 +55,7 @@ describe('single-shape STEP validity', () => {
 });
 
 // A boolean that removes every face used to export as a header-only STEP with
-// no diagnostic, so `kernelcad export` printed success for an empty file.
+// no diagnostic, so `crispcad export` printed success for an empty file.
 describe('single-shape export of an empty result', () => {
   for (const format of ['step', 'stl'] as const) {
     it(`refuses an empty ${format} instead of writing a header-only file`, async () => {

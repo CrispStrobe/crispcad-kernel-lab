@@ -60,7 +60,7 @@ export const ANIMATION_CODES = {
   },
   'animation.bake.geometry-param': {
     hintTemplate:
-      'A track param drives part GEOMETRY (a dimension, extrude depth, hole radius, …) rather than a mate pose, so Studio baked playback — which only re-applies rigid per-part world transforms — would show the wrong shape. Studio playback supports POSE-ONLY (mate-driven) timelines; render geometry-animating timelines with the capture_animation MCP tool or `kernelcad animate` (offline MP4 re-meshes every frame).',
+      'A track param drives part GEOMETRY (a dimension, extrude depth, hole radius, …) rather than a mate pose, so Studio baked playback — which only re-applies rigid per-part world transforms — would show the wrong shape. Studio playback supports POSE-ONLY (mate-driven) timelines; render geometry-animating timelines with the capture_animation MCP tool or `crispcad animate` (offline MP4 re-meshes every frame).',
     nextAction: { kind: 'call-tool', tool: 'capture_animation', args: {} },
     defaultSeverity: 'error',
     group: 'animation',

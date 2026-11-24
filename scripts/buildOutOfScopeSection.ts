@@ -32,7 +32,7 @@ export function renderOutOfScopeSection(
   // or an unrelated selector error, never a "not supported" diagnostic.
   lines.push(
     'These are not available today; do not generate code that uses them. ' +
-      'Anything not listed here is fair game — call `lookup_api` / `lookup_cookbook` before concluding kernelCAD lacks a capability.',
+      'Anything not listed here is fair game — call `lookup_api` / `lookup_cookbook` before concluding CrispCAD lacks a capability.',
   );
   lines.push('');
   if (claims.length === 0) {

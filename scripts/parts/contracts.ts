@@ -38,7 +38,7 @@ export interface PartSourceEntry {
   /** Path globs for STEP files within the source. */
   include: string[];
   exclude?: string[];
-  /** Upstream-dir → kernelCAD category hint; unmapped parts use keyword heuristics. */
+  /** Upstream-dir → CrispCAD category hint; unmapped parts use keyword heuristics. */
   categoryMap?: Record<string, PartCategory>;
   /** How to resolve per-part licenses; null/undefined ⇒ use the source-level license. */
   perPartLicense?: PerPartLicenseMode | null;

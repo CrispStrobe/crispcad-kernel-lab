@@ -3,7 +3,7 @@
 // src/agent/mcp/tools/resolveTopoRef.ts
 //
 // MCP tool: resolve a single `@kc[owner/kind/name]` topology ref against a
-// kernelCAD script's lowered geometry. The discovery primitive for agents
+// CrispCAD script's lowered geometry. The discovery primitive for agents
 // that already hold a ref (e.g. from a previous list_faces / list_edges
 // call) and want to confirm it still resolves on the current shape, or who
 // want to inspect what an upstream tool emitted.

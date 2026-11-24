@@ -52,7 +52,7 @@ export const scanReferenceToolEntries: ToolRegistryEntry[] = [
         type: 'object',
         properties: {
           file: { type: 'string', description: 'Path to a .kcad.ts model script.' },
-          code: { type: 'string', description: 'Inline kernelCAD model script.' },
+          code: { type: 'string', description: 'Inline CrispCAD model script.' },
           scan_file: { type: 'string', description: 'Path to an ASCII PLY, little-endian binary PLY, or XYZ point cloud.' },
           scan_data: { type: 'string', description: 'Base64-encoded PLY or XYZ bytes. Do not combine with scan_file or scan_bbox.' },
           scan_bbox: {

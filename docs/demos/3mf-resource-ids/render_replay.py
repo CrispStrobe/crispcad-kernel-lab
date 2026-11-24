@@ -21,7 +21,7 @@ frames = []
 for subtitle, panel, duration in panels:
     im = Image.new('RGB', (1280,720), '#0b1120')
     draw = ImageDraw.Draw(im)
-    draw.text((48,36), 'kernelCAD / 3MF resource IDs', font=title, fill='#f0f5ff')
+    draw.text((48,36), 'CrispCAD / 3MF resource IDs', font=title, fill='#f0f5ff')
     draw.text((48,90), subtitle, font=small, fill='#8ab4f8')
     draw.rounded_rectangle((36,140,1244,592), radius=14, fill='#121d31', outline='#29415f', width=2)
     for i, line in enumerate(panel):

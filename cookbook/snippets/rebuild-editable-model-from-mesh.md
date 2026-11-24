@@ -7,14 +7,14 @@ keywords:
   - scan to parametric model
   - mesh to feature tree
   - mesh_to_features
-  - kernelcad reconstruct
+  - crispcad reconstruct
   - reverse engineer a mesh
   - volume iou fidelity verdict
   - turned flange with bolt circle
 when_to_use: >-
   You were handed an STL, OBJ or 3MF of a mostly prismatic mechanical component
   and need named params and real features, not the faceted solid lib.fromSTL
-  gives you. Call mesh_to_features({ file, out }) (CLI: kernelcad reconstruct
+  gives you. Call mesh_to_features({ file, out }) (CLI: crispcad reconstruct
   scan.stl -o rebuilt.kcad.ts). It measures the mesh, emits a script like the one below —
   a revolve or extruded profile, drilled and counterbored bores placed on face
   queries relative to the entry face centroid — then evaluates that script and

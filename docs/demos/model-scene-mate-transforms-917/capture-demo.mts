@@ -182,7 +182,7 @@ function sceneSvg(stage: number, parts: PartEvidence[]): string {
 
     <rect x="64" y="630" width="1152" height="34" rx="17" fill="#e0e9f7"/>
     <text x="84" y="652" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing=".4" fill="#31547f">LOCAL CAD CAPTURE + LOWERER VALIDATION · TOPOLOGY CONNECTORS RESOLVE DURING RECOMPUTE</text>
-    <text x="1210" y="696" text-anchor="end" font-family="Arial,sans-serif" font-size="14" fill="#66758b">kernelCAD · issue #917</text>
+    <text x="1210" y="696" text-anchor="end" font-family="Arial,sans-serif" font-size="14" fill="#66758b">CrispCAD · issue #917</text>
   </svg>`;
 }
 

@@ -1,4 +1,4 @@
-$ kernelcad dfm docs/demos/moulding-check/straight-walls.kcad.ts   # (npx tsx src/agent/cli/index.ts dfm ...)
+$ crispcad dfm docs/demos/moulding-check/straight-walls.kcad.ts   # (npx tsx src/agent/cli/index.ts dfm ...)
 kernelcad: mesh-heavy command 'dfm' with a 2096 MB heap limit — re-executing with --max-old-space-size=8192
 ERROR [dfm.moulding.draft-insufficient] <unknown>: dfm.moulding: part 'shape' face @kc[shell_1/face/back] has 0.00° draft (< minDraftDeg 1°, pull [0, 0, 1]) at (26.7, 50.0, 8.3); 2000.0 mm² of face.
   Hint: A face that slides against the mould on ejection has less draft than minDraftDeg, so it drags, scuffs and raises ejection force. Apply shape.draft(angle, { face, pullDir }) to the face (1° smooth finish; add ~1° per 0.025 mm texture depth).
@@ -35,7 +35,7 @@ WARN [dfm.moulding.sharp-corner] <unknown>: dfm.moulding: part 'shape' has a sha
 DFM: 1 parts, 0 clearance pairs, 0 wall clusters, 0 voids, moulding[shape] draft min 0.00° (8 faces < 1°), undercut 0.0 mm², wall 2.000–2.50 mm, 8 sharp corner(s) — FAIL
 [exit 1]
 
-$ kernelcad dfm docs/demos/moulding-check/wrong-draft.kcad.ts   # (npx tsx src/agent/cli/index.ts dfm ...)
+$ crispcad dfm docs/demos/moulding-check/wrong-draft.kcad.ts   # (npx tsx src/agent/cli/index.ts dfm ...)
 kernelcad: mesh-heavy command 'dfm' with a 2096 MB heap limit — re-executing with --max-old-space-size=8192
 ERROR [dfm.moulding.undercut] <unknown>: dfm.moulding: part 'shape' face @kc[fillet_1/face/f8] has 1610.47 mm² of undercut at (52.1, 2.3, 10.4) — material blocks its release along ±[0, 0, 1].
   Hint: Material blocks this face from releasing along the pull direction, so the part locks in the mould. Remove the overhang, core it out from the pull direction, change pullDirection, or budget a side action / lifter.
@@ -76,7 +76,7 @@ ERROR [dfm.moulding.draft-insufficient] <unknown>: dfm.moulding: part 'shape' fa
 DFM: 1 parts, 0 clearance pairs, 0 wall clusters, 0 voids, moulding[shape] draft min 0.00° (8 faces < 1°), undercut 5534.6 mm², wall 2.000–3.06 mm, 0 sharp corner(s) — FAIL
 [exit 1]
 
-$ kernelcad dfm docs/demos/moulding-check/enclosure.kcad.ts   # (npx tsx src/agent/cli/index.ts dfm ...)
+$ crispcad dfm docs/demos/moulding-check/enclosure.kcad.ts   # (npx tsx src/agent/cli/index.ts dfm ...)
 kernelcad: mesh-heavy command 'dfm' with a 2096 MB heap limit — re-executing with --max-old-space-size=8192
 DFM: 1 parts, 0 clearance pairs, 0 wall clusters, 0 voids, moulding[shape] draft min 1.50° (0 faces < 1°), undercut 0.0 mm², wall 2.000–3.03 mm, 0 sharp corner(s) — PASS
 [exit 0]

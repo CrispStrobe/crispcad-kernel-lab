@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/h563zi-board.kcad.ts
 //
-// ST NUCLEO-H563ZI (Nucleo-144, MB1404) development board — kernelCAD model
+// ST NUCLEO-H563ZI (Nucleo-144, MB1404) development board — CrispCAD model
 // composed from REAL component STEP geometry (KiCad packages3D) on an original
 // modeled PCB, following the esp32-devkit-board.kcad.ts / nucleo64-board.kcad.ts
 // template idioms exactly.
@@ -38,7 +38,7 @@ const PCB_L = 147.0; // X  (length)
 const PCB_W = 70.0;  // Y  (width)
 const PCB_T = 1.6;   // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render keys off these; imported STEP
+// Explicit part colors — the CrispCAD render keys off these; imported STEP
 // would otherwise fall back to gray.
 // NOTE: .color() takes a '#RRGGBB' STRING; a numeric 0xRRGGBB is NOT honored.
 const PCB_GREEN    = '#1f7a4d'; // ST Nucleo solder-mask green

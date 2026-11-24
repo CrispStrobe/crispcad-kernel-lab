@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Colour-space conversion at the STEP boundary. A kernelCAD hex colour and a
+// Colour-space conversion at the STEP boundary. A CrispCAD hex colour and a
 // STEP `COLOUR_RGB` are both sRGB (display) values. OCCT's `Quantity_Color`
 // holds linear RGB and applies the sRGB transfer curve itself when it writes
 // or reads STEP, so hex channels must be linearized before they enter OCCT

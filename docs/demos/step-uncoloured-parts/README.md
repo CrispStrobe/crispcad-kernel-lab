@@ -21,8 +21,8 @@ an assembly of 4 products and 9 placed instances that sets no colours.
   `tests/integration/lowering/sceneStepExport.test.ts`
 
 The capture exports the example through the path behind
-`kernelcad export step`, reads the file back with the OCCT XCAF STEP reader,
-and writes the project with the writer behind `kernelcad import-step`. It
+`crispcad export step`, reads the file back with the OCCT XCAF STEP reader,
+and writes the project with the writer behind `crispcad import-step`. It
 fails unless the file text has no `COLOUR_RGB` or `PRE_DEFINED_COLOUR` entity,
 the file holds 4 products and 9 instances, no instance reads back with a
 colour, and the generated script has no `.color(` call.
@@ -31,7 +31,7 @@ The "before" values are not measured by the capture. They are recorded from
 `docs/demos/step-instance-roundtrip/evidence.json` on develop `5f6868265`, a
 capture of the same example. In the video the "before" assembly is drawn in
 the colour that file stated, and the "now" assembly is drawn in `#bfc4c8`, the
-colour kernelCAD uses for a part without one.
+colour CrispCAD uses for a part without one.
 
 ## Behavior
 
@@ -50,5 +50,5 @@ uncoloured part in one file.
 This is local API export, OCCT read-back and import. No other CAD system
 opened the file, and the demo shows no deployed behavior or hardware
 acceptance. Another CAD system applies its own default appearance to a part
-without a colour. A project imported from STEP with an earlier kernelCAD
+without a colour. A project imported from STEP with an earlier CrispCAD
 version keeps the red `.color(...)` calls in its script.

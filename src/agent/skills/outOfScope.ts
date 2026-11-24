@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Canonical registry of kernelCAD's out-of-scope capability claims.
+// Canonical registry of CrispCAD's out-of-scope capability claims.
 //
 // WHY THIS FILE EXISTS
 // --------------------
@@ -61,7 +61,7 @@ export interface OutOfScopeClaim {
 }
 
 /**
- * Every claim the authoring skill makes about what kernelCAD cannot do.
+ * Every claim the authoring skill makes about what CrispCAD cannot do.
  *
  * Verified against the shipped surface on 2026-07-16.
  */

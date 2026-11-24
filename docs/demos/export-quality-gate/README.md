@@ -15,9 +15,9 @@ renderer.
 ## Invocation
 
 ```sh
-kernelcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-1.step
-kernelcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-2.step --quality-gate block
-kernelcad export step docs/demos/export-quality-gate/plate-fixed.kcad.ts  -o /tmp/out/plate-3.step
+crispcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-1.step
+crispcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-2.step --quality-gate block
+crispcad export step docs/demos/export-quality-gate/plate-fixed.kcad.ts  -o /tmp/out/plate-3.step
 # MCP: export({ target: 'model', file, format: 'step', output_path, qualityGate: 'warn' | 'block' | 'off',
 #               tiny_face_area_mm2?, short_edge_length_mm? })
 ```
@@ -41,7 +41,7 @@ for the same three runs. The worst finding in scene 1 is
   5 µm step cannot be seen at model scale, so an inset zooms about 650x on
   the worst short edge. There the strip's top sits one thin band above the
   plate top.
-- Right: the real `kernelcad export` CLI output for that run.
+- Right: the real `crispcad export` CLI output for that run.
 - Badge: exported with warnings, blocked with nothing written, or exported
   with quality ok.
 

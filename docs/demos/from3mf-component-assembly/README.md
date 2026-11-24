@@ -17,7 +17,7 @@ the script.
 - Video settings and output hashes: [`video-evidence.json`](./video-evidence.json)
 - Preview: [`poster.png`](./poster.png)
 
-The capture runs the script through kernelCAD's Node API and OCCT recompute. It
+The capture runs the script through CrispCAD's Node API and OCCT recompute. It
 checks the 2,000 mm³ assembly, the expected transformed bounds, two independent
 solids, B-rep validity, and a boolean that removes 40π mm³ while retaining both
 solids. The fixture contains one nested component resource with two references

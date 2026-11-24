@@ -65,7 +65,7 @@ def base_frame(title: str, mono: ImageFont.FreeTypeFont, bold: ImageFont.FreeTyp
     image = Image.new("RGB", (WIDTH, HEIGHT), BG)
     draw = ImageDraw.Draw(image)
     draw.rectangle((0, 0, 12, HEIGHT), fill=CYAN)
-    draw.text((56, 34), "kernelCAD  /  EDGE PICK REGRESSION", font=mono, fill=CYAN)
+    draw.text((56, 34), "CrispCAD  /  EDGE PICK REGRESSION", font=mono, fill=CYAN)
     draw.text((56, 75), title, font=bold, fill=FG)
     draw.line((56, 132, WIDTH - 56, 132), fill=EDGE, width=2)
     draw.text(

@@ -21,7 +21,7 @@ const types = { '.js': 'text/javascript', '.glb': 'model/gltf-binary', '.html': 
 const page = `<!doctype html><html><body style="margin:0;background:#f4f7fb;font-family:Arial,sans-serif">
 <div style="position:absolute;left:0;top:0;width:1280px;height:92px;padding:22px 40px;box-sizing:border-box">
 <div style="font-size:30px;font-weight:700;color:#17243a">GLB export shading normals: sharp edges stay sharp</div>
-<div style="font-size:18px;color:#53657f">Same kernelCAD part, default glTF export, rendered by three.js GLTFLoader from the file's NORMAL attribute</div></div>
+<div style="font-size:18px;color:#53657f">Same CrispCAD part, default glTF export, rendered by three.js GLTFLoader from the file's NORMAL attribute</div></div>
 <div id="l" style="position:absolute;left:40px;top:150px;font-size:22px;font-weight:700;color:#9a2a2a">Before (develop): normals averaged across 90° edges</div>
 <div id="r" style="position:absolute;left:660px;top:150px;font-size:22px;font-weight:700;color:#1f6b35">After: split at creases &gt; 30°, smooth on curved faces</div>
 <canvas id="c" width="1280" height="720"></canvas>

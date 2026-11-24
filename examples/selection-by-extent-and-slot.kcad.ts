@@ -1,5 +1,5 @@
 // Housing built with selectors, a point pattern, a slot, a mirrored ear and a face picked by extent.
-// Verify: kernelcad evaluate examples/selection-by-extent-and-slot.kcad.ts  (OK, bbox 61 x 40 x 32 mm)
+// Verify: crispcad evaluate examples/selection-by-extent-and-slot.kcad.ts  (OK, bbox 61 x 40 x 32 mm)
 const W = 60, D = 40, H = 24, wall = 2.5;
 
 // edges("|Z").fillet(5): the vertical edges, by direction

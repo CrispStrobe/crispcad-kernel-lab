@@ -20,7 +20,7 @@
 //   - the result touches itself at a point: it extrudes to a non-manifold
 //     solid,
 //   - OCCT returns an open chain or throws.
-// A multi-region result cannot be represented: a kernelCAD sketch is one outer
+// A multi-region result cannot be represented: a CrispCAD sketch is one outer
 // loop plus holes, so a second region would be read as a hole and dropped.
 
 import { getOC, cast, measureArea, type AnyShape } from 'replicad';

@@ -1,7 +1,7 @@
 # Machining-fixture library (`lib.fixture`)
 
 The 18-second `demo.mp4` is an annotated still sequence composed from local
-`kernelcad render --preset publish` captures of the committed example. It is
+`crispcad render --preset publish` captures of the committed example. It is
 not a screen recording, turntable, deployed-platform capture, physical setup
 or machining test.
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Length unit of a STEP file, as a scale into kernelCAD millimetres.
+// Length unit of a STEP file, as a scale into CrispCAD millimetres.
 // Pure text: no geometry kernel. OCCT's STEP reader applies this same
 // factor when its cascade unit is millimetres, so the importer records
 // the factor and does not scale the shape a second time.

@@ -194,7 +194,7 @@ export interface EvaluateWithEnvelopeResult {
 }
 
 /**
- * Implements `kernelcad evaluate --envelope [--samples-per-mate N]
+ * Implements `crispcad evaluate --envelope [--samples-per-mate N]
  * [--combinatorial]`. After the script runs, captured assemblies are pulled
  * off the session and `reviewPoseEnvelope` runs on each. Any envelope
  * `severity: 'error'` diagnostic produces exit code 2.
@@ -413,7 +413,7 @@ async function writeTraceOut(
   }
 }
 
-/** The object `kernelcad evaluate --json` prints. Exported so other readers of
+/** The object `crispcad evaluate --json` prints. Exported so other readers of
  *  that output (the blog build checks quoted numbers against it) read exactly
  *  what the CLI prints. */
 export function evaluateJsonOutput(r: EvaluateWithEnvelopeResult): Record<string, unknown> {

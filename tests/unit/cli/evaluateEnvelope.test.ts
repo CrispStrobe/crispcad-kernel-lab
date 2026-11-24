@@ -1,6 +1,6 @@
 // tests/unit/cli/evaluateEnvelope.test.ts
 //
-// Task 7 of pose-envelope review-loop closure: `kernelcad evaluate`
+// Task 7 of pose-envelope review-loop closure: `crispcad evaluate`
 // `--envelope` / `--samples-per-mate <n>` / `--combinatorial` flags.
 //
 // Predecessor (Task 6): `Assembly.solvedModel(poses, {posesGate:'envelope'})`
@@ -16,10 +16,10 @@ import { writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-describe('kernelcad evaluate --envelope', () => {
+describe('crispcad evaluate --envelope', () => {
   beforeAll(async () => { await initOcct(); }, 60000);
 
-  it('kernelcad evaluate --envelope exits 2 when pose-envelope has an error diagnostic', async () => {
+  it('crispcad evaluate --envelope exits 2 when pose-envelope has an error diagnostic', async () => {
     const tmp = mkdtempSync(join(tmpdir(), 'kcad-test-'));
     const file = join(tmp, 'out-of-limits.kcad.ts');
     writeFileSync(file, `
@@ -41,7 +41,7 @@ describe('kernelcad evaluate --envelope', () => {
     expect(errCodes).toContain('assembly.pose.out-of-limits');
   }, 60000);
 
-  it('kernelcad evaluate (no flag) exits 0 on the same script', async () => {
+  it('crispcad evaluate (no flag) exits 0 on the same script', async () => {
     const tmp = mkdtempSync(join(tmpdir(), 'kcad-test-'));
     const file = join(tmp, 'out-of-limits.kcad.ts');
     writeFileSync(file, `
@@ -61,7 +61,7 @@ describe('kernelcad evaluate --envelope', () => {
     expect(result.exitCode).toBe(0);
   }, 60000);
 
-  it('kernelcad evaluate --samples-per-mate 4 without --envelope exits 1 with diagnostic', async () => {
+  it('crispcad evaluate --samples-per-mate 4 without --envelope exits 1 with diagnostic', async () => {
     const tmp = mkdtempSync(join(tmpdir(), 'kcad-test-'));
     const file = join(tmp, 'demo.kcad.ts');
     writeFileSync(file, `
@@ -74,7 +74,7 @@ describe('kernelcad evaluate --envelope', () => {
     expect(result.misuseMessage).toMatch(/--samples-per-mate has no effect without --envelope/);
   }, 60000);
 
-  it('kernelcad evaluate --envelope --samples-per-mate 4 propagates sampling to the gate', async () => {
+  it('crispcad evaluate --envelope --samples-per-mate 4 propagates sampling to the gate', async () => {
     const tmp = mkdtempSync(join(tmpdir(), 'kcad-test-'));
     const file = join(tmp, 'single-part.kcad.ts');
     // Per task: "if too brittle [to construct a clean multi-part envelope
@@ -108,7 +108,7 @@ describe('kernelcad evaluate --envelope', () => {
     expect(result.envelopeDiagnostics ?? []).toEqual([]);
   }, 60000);
 
-  it('kernelcad evaluate --combinatorial without --envelope exits 1 with diagnostic', async () => {
+  it('crispcad evaluate --combinatorial without --envelope exits 1 with diagnostic', async () => {
     const tmp = mkdtempSync(join(tmpdir(), 'kcad-test-'));
     const file = join(tmp, 'demo.kcad.ts');
     writeFileSync(file, `

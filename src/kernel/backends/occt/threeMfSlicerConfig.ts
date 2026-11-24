@@ -168,7 +168,7 @@ function prusaModelConfig(
   return lines.join('\n');
 }
 
-/** Orca config key -> PrusaSlicer config key, for the settings kernelCAD writes. */
+/** Orca config key -> PrusaSlicer config key, for the settings CrispCAD writes. */
 const PRUSA_KEYS: Readonly<Record<string, string>> = {
   sparse_infill_density: 'fill_density',
   sparse_infill_pattern: 'fill_pattern',

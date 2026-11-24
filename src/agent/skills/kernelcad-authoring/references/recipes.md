@@ -1,4 +1,4 @@
-# kernelCAD authoring reference — Recipes
+# CrispCAD authoring reference — Recipes
 
 Joinery, hardware and belt recipes, and worked sample scripts.
 
@@ -128,6 +128,6 @@ return molded;
 Export as STEP after verifying:
 
 ```bash
-kernelcad evaluate surfaces-to-solid.kcad.ts   # exits 0, no open-shell diagnostic
-kernelcad export step surfaces-to-solid.kcad.ts -o out.step
+crispcad evaluate surfaces-to-solid.kcad.ts   # exits 0, no open-shell diagnostic
+crispcad export step surfaces-to-solid.kcad.ts -o out.step
 ```

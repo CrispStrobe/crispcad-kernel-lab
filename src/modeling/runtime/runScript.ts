@@ -54,7 +54,7 @@ export interface RunScriptFacadeOptions {
 /**
  * Execute a `.kcad.ts` user script end-to-end:
  *   1. transpile TypeScript → ES2022 JavaScript,
- *   2. run inside an isolated `vm` context with the kernelCAD API injected
+ *   2. run inside an isolated `vm` context with the CrispCAD API injected
  *      as the only mutable globals, and
  *   3. return the captured `FeatureRecord`s, the session's `ParamTable`,
  *      and whatever the script `return`ed (typically the root `Shape`).

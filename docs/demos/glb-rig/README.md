@@ -1,6 +1,6 @@
 # GLB rig pivots demo bundle
 
-This bundle demonstrates the native kernelCAD GLB export of the original hinge
+This bundle demonstrates the native CrispCAD GLB export of the original hinge
 assembly in `examples/assemblies/glb-rig-hinge.kcad.ts`.
 
 ## Reproduce

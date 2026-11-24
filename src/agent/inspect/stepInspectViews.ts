@@ -113,10 +113,10 @@ interface LoadedImport {
 }
 
 const VIEW_TEXT: Record<InspectViewName, string> = {
-  front: 'Front view. Camera on -Y, looking toward +Y. kernelCAD is Z-up.',
-  right: 'Right view. Camera on +X, looking toward -X. kernelCAD is Z-up.',
+  front: 'Front view. Camera on -Y, looking toward +Y. CrispCAD is Z-up.',
+  right: 'Right view. Camera on +X, looking toward -X. CrispCAD is Z-up.',
   top: 'Top view. Camera on +Z, looking down. Screen up is +Y.',
-  iso: 'Isometric view from the +X, -Y, +Z octant. kernelCAD is Z-up.',
+  iso: 'Isometric view from the +X, -Y, +Z octant. CrispCAD is Z-up.',
 };
 
 const memory = new Map<string, InspectStepViewsResult>();

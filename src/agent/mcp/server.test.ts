@@ -4,7 +4,7 @@
  * Bridge wiring for MCP `resources/*` — Slice C of the meaningful-onboarding
  * iteration (2026-05-24).
  *
- * The `kernelcad mcp --cloud` bridge proxies tools/* to the hosted
+ * The `crispcad mcp --cloud` bridge proxies tools/* to the hosted
  * `/api/v1/mcp/...` gateway. Slice C extends the same pattern to resources/*:
  * the local stdio MCP client (Claude Desktop) lists and reads resources
  * through the bridge, the bridge calls the hosted gateway, the response is
@@ -29,7 +29,7 @@ vi.mock('./cloudClient', () => ({
       uri: 'kernelcad://skills/authoring',
       name: 'kernelcad-authoring',
       mimeType: 'text/markdown',
-      description: 'Authoring guide for kernelCAD .kcad.ts',
+      description: 'Authoring guide for CrispCAD .kcad.ts',
     },
   ]),
   readCloudResource: vi.fn().mockResolvedValue([

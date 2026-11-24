@@ -3,7 +3,7 @@
 //
 // BROWSER facade over the isomorphic script engine (`runScriptCore.ts`).
 //
-// This is the entry point that makes kernelCAD's MODERN script API — `path()`,
+// This is the entry point that makes CrispCAD's MODERN script API — `path()`,
 // `assembly()`, `q`/`select*`, `nurbsCurve`, patterns, `param()` returning a
 // real ParamRef — evaluate client-side with no network round-trip. Before this,
 // the in-browser worker injected 11 hand-picked v0.1 globals and everything
@@ -84,7 +84,7 @@ export interface RunScriptInBrowserInput {
 }
 
 /**
- * Evaluate a kernelCAD script in a browser (or any runtime without node
+ * Evaluate a CrispCAD script in a browser (or any runtime without node
  * builtins) and return the captured FeatureRecords, ParamTable and return
  * value — the same `RunScriptResult` the node `runScript` produces.
  *

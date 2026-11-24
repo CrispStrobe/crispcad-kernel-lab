@@ -19,7 +19,7 @@ const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt
 const base = body => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <rect width="100%" height="100%" fill="#0b1220"/>
   <rect x="48" y="40" width="1184" height="640" rx="18" fill="#111c2f" stroke="#2c4260"/>
-  <text x="88" y="102" fill="#73d5ff" font-family="Arial,sans-serif" font-size="22" font-weight="700">kernelCAD · local feature demo · 2026-10-29</text>
+  <text x="88" y="102" fill="#73d5ff" font-family="Arial,sans-serif" font-size="22" font-weight="700">CrispCAD · local feature demo · 2026-10-29</text>
   ${body}
 </svg>`;
 const text = (x, y, value, size = 24, color = '#e8f0fb', family = 'Arial,sans-serif', weight = 400) =>

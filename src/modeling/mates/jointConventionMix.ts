@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/modeling/mates/jointConventionMix.ts
 //
-// kernelCAD has TWO conventions for what a joint's `origin` means, and both
+// CrispCAD has TWO conventions for what a joint's `origin` means, and both
 // are correct within their own path:
 //
 //   .revolute() / .prismatic() / .ball()  — URDF semantics. `origin` is the

@@ -14,7 +14,7 @@ Measure is the ruler button, and Dimensions is the button with the ruler-and-tic
 
 It is off by default. It turns on by itself when the model declares its own dimensions (see below). Add `?dims=1` to the URL to force it on.
 
-Without any declared dimensions, kernelCAD adds a set of automatic ones:
+Without any declared dimensions, CrispCAD adds a set of automatic ones:
 
 - overall size
 - holes, grouped: `2× Ø5`
@@ -64,7 +64,7 @@ An anchor is one of:
 
 On a linear dimension, a circular edge anchor means the hole centre, so you get centre-to-centre distances.
 
-The label is a name. kernelCAD appends the value, so `'hole spacing X'` shows as `hole spacing X 40` and `'bolt hole'` shows as `bolt hole Ø5`.
+The label is a name. CrispCAD appends the value, so `'hole spacing X'` shows as `hole spacing X 40` and `'bolt hole'` shows as `bolt hole Ø5`.
 
 An angular dimension measures the angle between two edges: `from` and `to` are edge queries, not points. It is shown as a straight callout with the angle in degrees.
 
@@ -105,7 +105,7 @@ Agents use the same call in source. `evaluate_script` returns the declared dimen
 
 An assembly with two or more parts gets a third button, Exploded view (the stacked-boxes icon), next to Dimensions. Click it and the parts move apart in a short animation; a slider under the button sets the distance from 0 to 100 %. Click it again to put the parts back.
 
-Parts move along their mates. A part fastened or jointed to another moves away from it along the mate's connector axis, and it takes the parts attached to it along. Parts mated to the same parent in the same direction spread as a stack, nearest first. The biggest part stays where it is. When the loaded mesh carries no mate information (for example a stored mesh on a shared page), kernelCAD links parts whose boxes touch and moves each one off its neighbour along the axis where they come apart most easily. Parts that touch nothing move out from the assembly centre.
+Parts move along their mates. A part fastened or jointed to another moves away from it along the mate's connector axis, and it takes the parts attached to it along. Parts mated to the same parent in the same direction spread as a stack, nearest first. The biggest part stays where it is. When the loaded mesh carries no mate information (for example a stored mesh on a shared page), CrispCAD links parts whose boxes touch and moves each one off its neighbour along the axis where they come apart most easily. Parts that touch nothing move out from the assembly centre.
 
 The exploded view only changes the picture. It does not change the script, the parameters or the saved model, and it turns itself off when the model moves for another reason: an animation plays, a joint is dragged, or a parameter or the code changes.
 

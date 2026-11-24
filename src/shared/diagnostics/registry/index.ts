@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Single source of truth for the kernelCAD agent-facing diagnostic
+// Single source of truth for the CrispCAD agent-facing diagnostic
 // vocabulary. Every entry corresponds to a distinct recovery action an
 // agent would take. See spec 2026-05-05-diagnostic-vocabulary-milestone-c.
 //
@@ -102,7 +102,7 @@ export type DiagnosticCode = keyof typeof DIAGNOSTIC_REGISTRY;
 // `drawing` each 2. Reproducing the order by spread order alone would need
 // positional shard files (e.g. two `tool` files with no domain meaning),
 // which defeats "registry per domain" — so the original order is frozen
-// here as a literal instead. It is the kernelCAD agent-facing contract:
+// here as a literal instead. It is the CrispCAD agent-facing contract:
 // DIAGNOSTIC_CODES, HINT_TEMPLATES, NEXT_ACTIONS all derive their order
 // from it. Never edit or reorder this array by hand; it is the published
 // order of the 309 codes that existed before the split. A code added to a

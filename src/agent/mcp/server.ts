@@ -61,11 +61,11 @@ export function createMcpServer(options: McpServerOptions = {}): Server {
 
   const sandboxed = isSandboxEnabled();
   if (sandboxed && options.cloud) {
-    throw sandboxCommandRefused('kernelcad mcp --cloud', 'cloud mode proxies every tool call to the hosted kernelCAD API');
+    throw sandboxCommandRefused('crispcad mcp --cloud', 'cloud mode proxies every tool call to the hosted CrispCAD API');
   }
   const instructions = sandboxAgentInstructions();
   const server = new Server(
-    { name: 'kernelcad', version: pkg.version, ...(sandboxed ? { title: 'kernelCAD (sandbox mode)' } : {}) },
+    { name: 'crispcad', version: pkg.version, ...(sandboxed ? { title: 'CrispCAD (sandbox mode)' } : {}) },
     { capabilities, ...(instructions !== '' ? { instructions } : {}) },
   );
 

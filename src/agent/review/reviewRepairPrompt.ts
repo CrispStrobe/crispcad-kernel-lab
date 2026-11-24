@@ -94,5 +94,5 @@ export function buildSuggestedRepairPrompt(
   const facts = selectBoundedRepairFacts(factCandidates);
   const repairDirective = buildRepairDirective(fitness);
   const designBlock = buildDesignContextBlock(input);
-  return `Repair the kernelCAD script using these deterministic review facts:${repairDirective}${designBlock}\n${facts.join('\n')}`;
+  return `Repair the CrispCAD script using these deterministic review facts:${repairDirective}${designBlock}\n${facts.join('\n')}`;
 }

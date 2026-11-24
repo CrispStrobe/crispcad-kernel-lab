@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: STEP export of an assembly that sets no colours, text check for colour entities, read-back through the OCCT XCAF STEP reader, and import as a KernelCAD project.",
+  "scope": "Local CrispCAD Node API: STEP export of an assembly that sets no colours, text check for colour entities, read-back through the OCCT XCAF STEP reader, and import as a KernelCAD project.",
   "invocation": "node --import tsx docs/demos/step-uncoloured-parts/capture-demo.mts",
   "source": "examples/bom/panel-with-fasteners.kcad.ts",
   "sourceSha256": "ca93d6b276e6fac27a10ebd45442642e32e5537c955e9cfaf5639205d7f797bd",
@@ -82,7 +82,7 @@
     ]
   },
   "importedProject": {
-    "writer": "writeStepBundle (kernelcad import-step)",
+    "writer": "writeStepBundle (crispcad import-step)",
     "scriptSha256": "36fab9db713cfc1de00f10b5b3bd06d79dce3d03b69757506605dd213aed32e4",
     "scriptLines": 31,
     "colourCalls": 0,
@@ -116,7 +116,7 @@
   "limits": [
     "Other CAD systems were not used to open the file.",
     "The values under \"before\" are recorded from a capture on the named commit; this script does not measure them again.",
-    "A project imported from STEP with an earlier kernelCAD version keeps the explicit red colour that version wrote into its script."
+    "A project imported from STEP with an earlier CrispCAD version keeps the explicit red colour that version wrote into its script."
   ],
   "simulationRun": false,
   "deployed": false,

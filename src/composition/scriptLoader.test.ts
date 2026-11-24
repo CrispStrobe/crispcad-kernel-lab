@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { loadScriptFeatures } from './scriptLoader';
 
-// `kernelcad render` and `render_preview` load the script through
+// `crispcad render` and `render_preview` load the script through
 // `loadScriptFeatures`. The modeling primitive has no `kinematic` namespace,
 // so a script that calls `kinematic.*` threw `ReferenceError: kinematic is not
 // defined` on the render path while `evaluate_script` accepted it.

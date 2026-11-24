@@ -1,7 +1,7 @@
 # Approximate static stability (P3)
 
 The `demo.mp4` is an annotated still sequence built from local
-`kernelcad render --preset publish` captures of
+`crispcad render --preset publish` captures of
 `examples/assemblies/assembly-stability-bracket.kcad.ts` and the real P3
 verifier result. It is not a screen recording, turntable, deployed-platform
 capture, physics simulation or hardware test.

@@ -380,7 +380,7 @@ asm.mate('esp-fit', 'cover.espSeat', 'esp32.seat', 'fastened');
 // sealed DOFs NEVER move at once — exactly the choreography the architecture
 // exists to make collision-free, which the pose verification proves.
 // Play it in Studio's Animation tab, or capture a cutaway MP4:
-//   kernelcad animate examples/spice-dispenser-carousel.kcad.ts cycle.mp4 \
+//   crispcad animate examples/spice-dispenser-carousel.kcad.ts cycle.mp4 \
 //     --hide wall,cap,skirt,cover,base,servo-drum,servo-meter,battery,esp32
 // (Param-driven content last — relower perf rule.)
 animationView({

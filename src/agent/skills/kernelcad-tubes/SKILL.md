@@ -3,7 +3,7 @@ name: kernelcad-tubes
 description: Model bent tubes and fluid lines between ports with tube(name, opts), tubeSpec(rules) and part.port(name), checked for bend radius, straight lengths and clearance, with a bend table per tube. A tube can branch off another tube at a 90 degree tee. Use when routing a rigid tube or line (hydraulic, fuel, coolant, oil, pneumatic) between two fittings, when one line feeds two places, or when asked for a bend radius check or a bend table.
 ---
 
-# kernelCAD: bent tubes
+# CrispCAD: bent tubes
 
 Route a rigid tube between two ports as straight legs joined by constant-radius bends. You give the corner points; the kernel builds one hollow solid, checks it against the bending and clearance rules, and reports a bend table, cut length and nearest neighbour for every tube.
 
@@ -241,14 +241,14 @@ A pair of tubes is reported once, on the tube declared first, so the corner to m
 
 ## The loop
 
-1. Write the parts and their ports, with no tubes yet, and evaluate: `evaluate_script`, or `kernelcad evaluate <file> --json`.
+1. Write the parts and their ports, with no tubes yet, and evaluate: `evaluate_script`, or `crispcad evaluate <file> --json`.
 2. Read `ports`: every port's `origin` and `axis`. Write each tube's first and last corner from them (see "The port report").
 3. Evaluate again. For each `tube.*` diagnostic, change the argument the table names by at least the stated amount.
 4. Repeat until there are no errors, then read `tubes.lines[].minClearance` to see how much room each line has left (the field is absent for a tube with nothing near it), and check in `ports` that every port you meant to connect has the tube in `usedBy`.
 
 ## The port report
 
-`evaluate_script` and `kernelcad evaluate <file> --json` (with or without `--envelope`) return a `ports` array whenever the script declares an assembly and builds a model (a script that throws while it runs has no `ports`). It does not need a tube: it is there for a script that only places parts, and when a gate fails. It lists the ports of the assembly the script returns, in the order the parts and connectors were declared. A dry run (`dryRun: true`) builds nothing and has no `ports`.
+`evaluate_script` and `crispcad evaluate <file> --json` (with or without `--envelope`) return a `ports` array whenever the script declares an assembly and builds a model (a script that throws while it runs has no `ports`). It does not need a tube: it is there for a script that only places parts, and when a gate fails. It lists the ports of the assembly the script returns, in the order the parts and connectors were declared. A dry run (`dryRun: true`) builds nothing and has no `ports`.
 
 ```json
 "ports": [
@@ -294,7 +294,7 @@ A port that nothing connects to is not an error. Two tubes in one `usedBy` are t
 
 ## The line report
 
-`evaluate_script` and `kernelcad evaluate <file> --json` return a `tubes` object whenever the script builds a tube. It is there when a gate fails too, so you can read the measured values next to the diagnostics.
+`evaluate_script` and `crispcad evaluate <file> --json` return a `tubes` object whenever the script builds a tube. It is there when a gate fails too, so you can read the measured values next to the diagnostics.
 
 `tubes.lines[]`, one entry per tube:
 
@@ -318,7 +318,7 @@ A port that nothing connects to is not an error. Two tubes in one `usedBy` are t
 ## Bend-table export
 
 ```bash
-kernelcad export bend-table line.kcad.ts -o out/bend-tables
+crispcad export bend-table line.kcad.ts -o out/bend-tables
 ```
 
 `-o` is a directory. The export writes one CSV per tube, named after the tube: a header with the name, OD, wall, bend radius and cut length, then the XYZ points, then the bend rows and the last straight. A trunk's file ends with a `branch,at_mm` section, one row per branch with its station. A branch's header has the trunk's name and the station after the cut length, as two rows. A branch joined at its start has the `from` rows; one joined at its end has the `to` rows:
@@ -340,7 +340,7 @@ STEP, STL (including per-part STL), DXF, 3MF and G-code run the same tube gate b
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 with no `tube.*` error and no `feature.invalid-args` |
+| G-eval | `crispcad evaluate` exits 0 with no `tube.*` error and no `feature.invalid-args` |
 | G-spec-declared | no `tube.spec.defaulted` warning: the script calls `tubeSpec` |
 | G-lines-present | `tubes.lines` has one entry per tube you meant to route, each with the system you expect |
 | G-ports-connected | every port you meant to connect has its tube in `ports[].usedBy`, and no port has `unresolved` |

@@ -21,7 +21,7 @@
 //                     gear-pair transmission, so the mechanism check turns the
 //                     pair together and tests the teeth for interference.
 //
-// kernelCAD has a spurGear() primitive but no bevel-gear primitive, so the
+// CrispCAD has a spurGear() primitive but no bevel-gear primitive, so the
 // teeth are generated here from the involute equations.
 
 const z1Choice = param('pinionTeeth', '16', { choices: ['12', '14', '16', '18', '20'] });

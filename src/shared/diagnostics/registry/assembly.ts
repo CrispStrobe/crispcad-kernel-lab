@@ -51,7 +51,7 @@ export const ASSEMBLY_CODES = {
   },
   'assembly.interference.overlap': {
     hintTemplate:
-      "Translate one part along its mating direction, or add a coupling part (washer / spacer / bracket) to clear the overlap. Use --ignore '<a>,<b>' on `kernelcad interference` if the contact is intentional.",
+      "Translate one part along its mating direction, or add a coupling part (washer / spacer / bracket) to clear the overlap. Use --ignore '<a>,<b>' on `crispcad interference` if the contact is intentional.",
     nextAction: {
       kind: 'rewrite-feature',
       guidance: 'translate one part or insert a spacer/bracket to remove the BREP overlap',

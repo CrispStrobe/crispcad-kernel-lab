@@ -4,7 +4,7 @@ import type { SceneSummary } from '../../script-runtime/sceneSummary';
 // src/agent/mcp/tools/projectCurve.ts
 //
 // W3 MCP tool: AST-edit a `<shape>.projectCurve({...})` chained call into a
-// kernelCAD script. Pair with `.extrude(...)` / `.cut(...)` edits for an
+// CrispCAD script. Pair with `.extrude(...)` / `.cut(...)` edits for an
 // engraved or raised logo on a curved face.
 
 import { addProjectCurve, type AddProjectCurveInput } from '../edits/projectCurve';

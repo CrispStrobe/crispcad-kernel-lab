@@ -132,7 +132,7 @@ function catalogPartNumber(catalogPart: CatalogPartMetadata): string {
 }
 
 function catalogInfo(catalogPart: CatalogPartMetadata): BomCatalogInfo {
-  const vendor = catalogPart.upstream?.repo ?? (catalogPart.standard !== undefined ? 'kernelCAD catalog' : null);
+  const vendor = catalogPart.upstream?.repo ?? (catalogPart.standard !== undefined ? 'CrispCAD catalog' : null);
   const partNumber = catalogPartNumber(catalogPart);
   const source = catalogPart.stepUrl ?? catalogPart.glbUrl ?? catalogPart.upstream?.path ?? null;
   return { id: catalogPart.id, vendor, partNumber, source, license: catalogPart.license };

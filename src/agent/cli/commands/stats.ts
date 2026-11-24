@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/stats.ts
 //
-// `kernelcad stats` — maintainer view of anonymous usage telemetry.
+// `crispcad stats` — maintainer view of anonymous usage telemetry.
 // Requires KERNELCAD_ADMIN_TOKEN (and optionally KERNELCAD_API_BASE).
 import { Command } from 'commander';
 
@@ -41,7 +41,7 @@ export function statsCommand(): Command {
         process.exitCode = 1;
         return;
       }
-      console.log(`kernelCAD usage — last ${days} days`);
+      console.log(`CrispCAD usage — last ${days} days`);
       printTable('Reach (distinct installs by mode)', data.reach);
       printTable('Tool distribution', data.toolDistribution);
       printTable('Tool outcomes', data.toolOutcomes);

@@ -143,7 +143,7 @@ function buildCompactPrompt(
   ].filter((line): line is string => line !== undefined);
   const designBlock = context.length === 0 ? '' : `\n${context.join('\n')}\n`;
   const body = buildPromptBody(reasons, findings);
-  return `Repair the kernelCAD script using these deterministic review facts ` +
+  return `Repair the CrispCAD script using these deterministic review facts ` +
     `(message + hint for each id are in diagnostics[] (d<n>) / mechanismFailures[] (m<n>)):` +
     `${directive}${designBlock}\n${body.join('\n')}`;
 }

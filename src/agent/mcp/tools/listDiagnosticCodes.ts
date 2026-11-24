@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/mcp/tools/listDiagnosticCodes.ts
 //
-// Protocol-discoverable view of the kernelCAD diagnostic vocabulary.
+// Protocol-discoverable view of the CrispCAD diagnostic vocabulary.
 // Exists so an agent can pre-populate retry strategies without rummaging
 // through SKILL.md.
 

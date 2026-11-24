@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // tests/integration/drawing/drawingToCad.test.ts
 //
-// Round trip: kernelCAD's svg-drawing exporter draws a known part, the sheet
+// Round trip: CrispCAD's svg-drawing exporter draws a known part, the sheet
 // is converted to PDF (committed under tests/fixtures/drawing-pdf/, see
 // tests/helpers/drawingPdf/), drawing_to_cad reads the PDF back, and the
 // emitted script is evaluated here — independently of the pipeline's own

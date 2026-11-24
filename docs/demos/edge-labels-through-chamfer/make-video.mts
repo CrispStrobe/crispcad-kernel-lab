@@ -5,9 +5,9 @@
 //
 // The three renders are inputs. They come from the built CLI
 // (`npm run build:cli`), 640 × 480 per tile:
-//   kernelcad render mount-plate.kcad.ts -o plate.png --pose 30,40   -> plate-top.png
-//   kernelcad render mount-plate.kcad.ts -o plate.png --pose 30,-40  -> plate-bottom.png
-//   kernelcad render rim-closeup.kcad.ts -o c.png --pose 30,-35      -> rim-closeup.png
+//   crispcad render mount-plate.kcad.ts -o plate.png --pose 30,40   -> plate-top.png
+//   crispcad render mount-plate.kcad.ts -o plate.png --pose 30,-40  -> plate-bottom.png
+//   crispcad render rim-closeup.kcad.ts -o c.png --pose 30,-35      -> rim-closeup.png
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';

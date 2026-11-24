@@ -3,7 +3,7 @@
 //
 // `x.arcTo is not a function` and `polarArray is not defined` say nothing
 // about what to call instead. This turns them into a diagnostic that names it:
-// the kernelCAD way to say the same thing (the shared idiom table) or the
+// the CrispCAD way to say the same thing (the shared idiom table) or the
 // closest real method name.
 import { KernelError, isKernelError } from '../../shared/intent/kernelError';
 import { compactName, idiomForMissingName } from '../../shared/intent/apiIdioms';

@@ -23,7 +23,7 @@ const runCfdToolEntry: ToolRegistryEntry = {
       type: 'object',
       properties: {
         file: { type: 'string', description: 'Path to a .kcad.ts script (with a cfdStudy, or pass the study on the call).' },
-        code: { type: 'string', description: 'Inline kernelCAD script source (mutually exclusive with file).' },
+        code: { type: 'string', description: 'Inline CrispCAD script source (mutually exclusive with file).' },
         study: { type: ['string', 'object'], description: 'Name of a declared cfdStudy (default: the last), or an inline study object.' },
         flow: { type: 'string', enum: ['internal', 'external'], description: 'Inline study: internal (duct / pipe / manifold) or external (flow around the part).' },
         fluid: { type: ['string', 'object'], description: "'water' (internal default), 'air' (external default), or { rho, nu } in SI." },

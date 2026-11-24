@@ -14,7 +14,7 @@ const meshToFeaturesToolEntry: ToolRegistryEntry = {
     name: 'mesh_to_features',
     description:
       'Use this when you are handed an STL, OBJ or 3MF of a mostly prismatic mechanical part (plate, ' +
-      'bracket, spacer, flange, housing block) and need an EDITABLE kernelCAD model of it rather than ' +
+      'bracket, spacer, flange, housing block) and need an EDITABLE CrispCAD model of it rather than ' +
       'a faceted lib.fromSTL import — or a STEP file whose solid you need as an editable feature tree ' +
       'rather than a dumb lib.fromSTEP body (one solid; pass solid for a multi-solid file; the exact ' +
       'B-rep is tessellated finely and `source` reports the deflection the fidelity is measured to). ' +

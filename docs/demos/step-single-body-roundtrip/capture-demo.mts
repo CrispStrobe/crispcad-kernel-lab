@@ -56,7 +56,7 @@ const firstText = new TextDecoder().decode(first.bytes);
 const firstSnapshot = await importStepAssembly(first.bytes, 'motor-plate.step');
 const firstBody = describeBody(firstSnapshot);
 
-// 2. Import it as a KernelCAD project (the writer behind `kernelcad import-step`).
+// 2. Import it as a KernelCAD project (the writer behind `crispcad import-step`).
 const workDir = await mkdtemp(join(tmpdir(), 'kcad-step-single-body-demo-'));
 let importedScript: string;
 let renamedParts: unknown[];
@@ -97,7 +97,7 @@ const implementation = Object.fromEntries(await Promise.all(
 ));
 await writeFile(join(HERE, 'motor-plate.step'), first.bytes);
 const evidence = {
-  scope: 'Local kernelCAD Node API: STEP export of a bare shape, import as a KernelCAD project, second STEP export. Both files are read back through the OCCT XCAF STEP reader.',
+  scope: 'Local CrispCAD Node API: STEP export of a bare shape, import as a KernelCAD project, second STEP export. Both files are read back through the OCCT XCAF STEP reader.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),
@@ -112,7 +112,7 @@ const evidence = {
   },
   firstExport: firstBody,
   importedProject: {
-    writer: 'writeStepBundle (kernelcad import-step)',
+    writer: 'writeStepBundle (crispcad import-step)',
     scriptSha256: sha256(importedScript),
     scriptLines: importedScript.split('\n').length,
     script: importedScript.split('\n'),

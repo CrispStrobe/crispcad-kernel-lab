@@ -5,7 +5,7 @@ description: Use when rebuilding a simple front-on consumer electronic, passive 
 
 # photo-to-device
 
-Build portable kernelCAD from photo evidence: one image establishes scale, not
+Build portable CrispCAD from photo evidence: one image establishes scale, not
 hidden construction.
 
 ## Use this route
@@ -63,18 +63,18 @@ object hypothesis.
 Before handoff, run:
 
 ```bash
-kernelcad evaluate build.kcad.ts
-kernelcad interference build.kcad.ts
+crispcad evaluate build.kcad.ts
+crispcad interference build.kcad.ts
 ```
 
-`kernelcad evaluate` must have zero errors and `kernelcad interference` zero
+`crispcad evaluate` must have zero errors and `crispcad interference` zero
 unintended overlaps. With the reference hidden, render front, top, and iso:
 every visible feature maps to a real part or intentional one-piece feature.
 
 ## External mesh and proto.cat boundary
 
 Meshy or Tripo output is not CAD. Retain it only as a visual_mesh_reference for
-composition/proportions, never as parts or a way around kernelCAD gates.
+composition/proportions, never as parts or a way around CrispCAD gates.
 
 For a proto.cat handoff, send asset identity, provenance, known dimension,
 observed/inferred brief, and portable gated source—not a local temporary path,

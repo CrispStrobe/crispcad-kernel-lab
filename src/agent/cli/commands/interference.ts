@@ -2,14 +2,14 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/cli/commands/interference.ts
 //
-// `kernelcad interference <file.kcad.ts>` — pairwise BREP clash detection
+// `crispcad interference <file.kcad.ts>` — pairwise BREP clash detection
 // over an assembly Scene. Industry-standard interference detection (see
 // Fusion 360 Inspect → Interference, Onshape Interference, SolidWorks
 // Tools → Evaluate → Interference Detection).
 //
 // Exit code: 0 if no interference, 1 on clash. Pipe-friendly:
 //
-//   kernelcad interference robot-arm.kcad.ts && echo "ok"
+//   crispcad interference robot-arm.kcad.ts && echo "ok"
 
 import { Command } from 'commander';
 import { readFile } from 'node:fs/promises';

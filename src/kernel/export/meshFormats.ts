@@ -45,7 +45,7 @@ export function exportMeshObj(parts: readonly NamedMesh[], options?: ObjMeshExpo
   if (parts.length === 0) throw new Error('OBJ export requires at least one mesh.');
   const slots = materialTable(parts);
   const lines = [
-    '# kernelCAD OBJ mesh export',
+    '# CrispCAD OBJ mesh export',
     ...(options?.toleranceMm === undefined ? [] : [`# requested mesh tolerance ${String(options.toleranceMm)} mm`]),
     `mtllib ${OBJ_MTL_FILENAME}`,
   ];
@@ -93,7 +93,7 @@ function writeObjObject(lines: string[], part: NamedMesh, material: string, base
 
 function writeMtl(slots: readonly MeshMaterialSlot[]): string[] {
   const seen = new Set<string>();
-  const lines = ['# kernelCAD MTL material library'];
+  const lines = ['# CrispCAD MTL material library'];
   for (const slot of slots) {
     if (seen.has(slot.objToken)) continue;
     seen.add(slot.objToken);

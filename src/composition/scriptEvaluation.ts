@@ -172,7 +172,7 @@ export function tubesOutput(report: TubeCheckReport | undefined): Pick<TubeCheck
  *
  * Idempotent: a caller-supplied `KERNELCAD_VALIDATE_DEFAULT` (including
  * `warn` / `off`) is preserved so users can still opt out with
- * `KERNELCAD_VALIDATE_DEFAULT=warn npx kernelcad evaluate ...`.
+ * `KERNELCAD_VALIDATE_DEFAULT=warn npx crispcad evaluate ...`.
  *
  * Per spec 2026-05-11-assembly-mates-validator-design.md §"Validity gate"
  * (T10 of the v0.6 assembly mates plan).

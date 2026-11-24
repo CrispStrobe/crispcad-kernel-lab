@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API export, then re-import of the written bytes through the OCCT XCAF STEP reader.",
+  "scope": "Local CrispCAD Node API export, then re-import of the written bytes through the OCCT XCAF STEP reader.",
   "invocation": "node --import tsx docs/demos/step-product-tree-export/capture-demo.mts",
   "source": "examples/bom/panel-with-fasteners.kcad.ts",
   "sourceSha256": "ca93d6b276e6fac27a10ebd45442642e32e5537c955e9cfaf5639205d7f797bd",

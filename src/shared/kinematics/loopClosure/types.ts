@@ -6,7 +6,7 @@
 // mate solver, the joint-graph forward kinematics, the OCCT lowerer) build a
 // `LoopModel` from their own graph and hand it to `solveLoops`.
 //
-// Units on the public surface match the rest of kernelCAD: revolute-like
+// Units on the public surface match the rest of CrispCAD: revolute-like
 // coordinates in degrees, prismatic in millimetres, ball as an extrinsic XYZ
 // Euler triple in degrees.
 

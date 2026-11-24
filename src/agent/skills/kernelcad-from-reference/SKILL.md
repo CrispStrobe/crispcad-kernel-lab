@@ -1,12 +1,12 @@
 ---
 name: kernelcad-from-reference
-description: Reproduce a real-world artifact from one or more reference photographs using kernelCAD primitives. Orchestrator skill — names sub-skills and their order. Load this first; it points at the right sub-skill for each stage.
+description: Reproduce a real-world artifact from one or more reference photographs using CrispCAD primitives. Orchestrator skill — names sub-skills and their order. Load this first; it points at the right sub-skill for each stage.
 ---
 
-# kernelCAD — from reference (orchestrator)
+# CrispCAD — from reference (orchestrator)
 
 Reproduce a real-world artifact from one or more reference photographs using
-kernelCAD primitives. This is an orchestrator skill that names sub-skills and
+CrispCAD primitives. This is an orchestrator skill that names sub-skills and
 their order. Read this first; then load each sub-skill in sequence as you
 work through the stages.
 
@@ -137,7 +137,7 @@ single extrusion or revolve rebuilds as the best prism and says so in an
 4. `blockout-model/SKILL.md` — coarse parametric blockout in canonical views.
 5. `kernelcad-trace-from-image/SKILL.md` — convert pixel-space curves on a reference photo into normalized waypoints. Load only when an organic-curve outline (upper contour, ergonomic handle, sneaker midsole) would take more than ~60 seconds to eyeball off the photo.
 6. `image-replicator/SKILL.md` — the render→score→iterate loop (caveat: see Rule 9).
-7. `render-inspect/SKILL.md` — interpret diagnostic hints from `kernelcad evaluate`.
+7. `render-inspect/SKILL.md` — interpret diagnostic hints from `crispcad evaluate`.
 
 ## Hard rules across all sub-skills
 
@@ -166,8 +166,8 @@ single extrusion or revolve rebuilds as the best prism and says so in an
 | Gate | Pass criterion |
 |------|----------------|
 | G-real-object-brief | Source opens with `// Real Object Brief` containing artifact name, scale, visible facts, hidden-side inference, validation focus |
-| G-evaluate | `kernelcad evaluate <script>` exits 0; zero error diagnostics |
-| G-no-overlap | `kernelcad interference <script>` reports zero pairs |
+| G-evaluate | `crispcad evaluate <script>` exits 0; zero error diagnostics |
+| G-no-overlap | `crispcad interference <script>` reports zero pairs |
 | G-reference-parity | Every visually distinct feature in the reference has a corresponding part at the right relative position and scale |
 | G-no-floaters | No part hovers in empty space in any render |
 | G-no-protrusions | Sub-components meant to be contained are fully contained on every visible axis |

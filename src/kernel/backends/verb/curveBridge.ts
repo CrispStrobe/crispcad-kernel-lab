@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/kernel/backends/verb/curveBridge.ts
 //
-// Internal-only bridge between kernelCAD's OCCT-backed Curve3D proxy and the
+// Internal-only bridge between CrispCAD's OCCT-backed Curve3D proxy and the
 // vendored JS NURBS analytics module at vendor/verb-nurbs/build/verb.es.js
 // (resolved by the path alias `verb-nurbs`). NEVER imported outside
 // src/kernel/backends/ or src/modeling/capture/ — the public Kcad surface
@@ -50,7 +50,7 @@ function expandKnots(distinctKnots: number[], multiplicities: number[]): number[
 }
 
 /**
- * Convert a kernelCAD `Curve3DMetadataCarrier` into a JS-side analytics
+ * Convert a CrispCAD `Curve3DMetadataCarrier` into a JS-side analytics
  * curve. Cached on the proxy instance via a `Symbol`; invalidated when the
  * proxy's `__paramVersion` counter bumps.
  */
@@ -152,7 +152,7 @@ export function fromVerb(verbCurve: NurbsCurve): replicad.Edge {
 }
 
 /**
- * Convert a kernelCAD `SurfaceRecordCarrier` into a JS-side analytics surface.
+ * Convert a CrispCAD `SurfaceRecordCarrier` into a JS-side analytics surface.
  *
  * V3 scope is the bare minimum needed for the `Curve3D.analytics.intersect`
  * curve-surface overload: only `kind: 'nurbsSurface'` SurfaceRecords are

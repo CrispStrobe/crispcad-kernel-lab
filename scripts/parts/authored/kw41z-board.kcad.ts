@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/kw41z-board.kcad.ts
 //
-// NXP FRDM-KW41Z Freedom development board — kernelCAD model composed from REAL
+// NXP FRDM-KW41Z Freedom development board — CrispCAD model composed from REAL
 // component STEP geometry (KiCad packages3D) on an original modeled PCB.
 //
 // Follows the ESP32 DevKitC template (scripts/parts/authored/esp32-devkit-board.kcad.ts):
@@ -37,7 +37,7 @@ const PCB_L = 81.0; // X  (length)
 const PCB_W = 53.0; // Y  (width)
 const PCB_T = 1.6;  // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render and LabWired both key off these,
+// Explicit part colors — the CrispCAD render and LabWired both key off these,
 // so every composed component is tinted. .color() takes a '#RRGGBB' STRING; a
 // numeric 0xRRGGBB is NOT honored (import falls back to gray).
 const PCB_GREEN   = '#0e5a3a'; // NXP dark-green solder mask

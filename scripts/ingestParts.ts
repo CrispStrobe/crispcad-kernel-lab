@@ -3,7 +3,7 @@
 // scripts/ingestParts.ts
 //
 // Ingest a directory of off-the-shelf STEP files into a self-hosted parts
-// catalog that kernelCAD's remote tier can consume directly — same `/v1/parts`
+// catalog that CrispCAD's remote tier can consume directly — same `/v1/parts`
 // schema the bundled remote adapter already speaks, so the output is a drop-in
 // source: point KERNELCAD_PARTS_BASE_URL at the deployed catalog and stop.
 //

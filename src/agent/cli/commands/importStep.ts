@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// `kernelcad import-step` translates STEP product assemblies into a portable
+// `crispcad import-step` translates STEP product assemblies into a portable
 // KernelCAD source + exact native BREP asset bundle.
 
 import { readFile } from 'node:fs/promises';

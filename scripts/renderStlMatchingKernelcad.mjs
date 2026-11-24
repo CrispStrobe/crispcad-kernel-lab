@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // scripts/renderStlMatchingKernelcad.mjs
 //
-// Render an STL (or multiple) using the SAME camera math as kernelCAD's
+// Render an STL (or multiple) using the SAME camera math as CrispCAD's
 // DemoPlayerPage.tsx setRenderPose. Goal: produce a reference image at the
 // identical framing convention agent builds are rendered with, so scoring
 // builds against this reference uses an apples-to-apples comparison.

@@ -46,7 +46,7 @@ const line = tube('coolant-1', {
 //   xyz         corner points in the tube's own frame (first leg along +X)
 //   lra         one row per bend: straight before it, plane rotation, angle
 //   massKg, volumeInternalMl, pressureDropKPa
-// `kernelcad export bend-table <file> -o <dir>` writes the same table to
+// `crispcad export bend-table <file> -o <dir>` writes the same table to
 // <dir>/coolant-1.csv.
 return line;
 ```

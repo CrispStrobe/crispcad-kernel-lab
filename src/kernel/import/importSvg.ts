@@ -18,7 +18,7 @@
 //
 // THE Y AXIS
 // ----------
-// SVG's Y axis points DOWN; kernelCAD's points UP. Every imported point is
+// SVG's Y axis points DOWN; CrispCAD's points UP. Every imported point is
 // therefore reflected. The reflection is folded into the ROOT TRANSFORM
 // matrix rather than applied as a late fixup, which is what makes it correct
 // for arcs too: a reflection has a negative determinant, and the one place
@@ -1010,7 +1010,7 @@ function resolveFlipAbout(root: Tag, viewBox: ViewBox | null): number | null {
   return null;
 }
 
-/** Emit one geometry element into the sink; throws for elements kernelCAD
+/** Emit one geometry element into the sink; throws for elements CrispCAD
  *  cannot resolve. Group (`<g>`) handling stays in the caller. */
 function emitGeometryElement(
   lower: string,
@@ -1039,7 +1039,7 @@ function emitGeometryElement(
     case 'foreignobject':
       throw new SvgParseError(
         'unsupported-element',
-        `<${tag.name}> at offset ${tag.offset}: this element carries geometry kernelCAD cannot ` +
+        `<${tag.name}> at offset ${tag.offset}: this element carries geometry CrispCAD cannot ` +
           'resolve here (glyph outlines or raster content), and skipping it would leave ' +
           'the profile silently incomplete. Convert it to paths in the source tool ' +
           '(Inkscape: Path > Object to Path; Illustrator: Create Outlines / Expand).',
@@ -1047,7 +1047,7 @@ function emitGeometryElement(
     default:
       throw new SvgParseError(
         'unsupported-element',
-        `<${tag.name}> at offset ${tag.offset}: unrecognised SVG element. kernelCAD reads ` +
+        `<${tag.name}> at offset ${tag.offset}: unrecognised SVG element. CrispCAD reads ` +
           'path, rect, circle, ellipse, polygon, polyline, line, g and use.',
       );
   }

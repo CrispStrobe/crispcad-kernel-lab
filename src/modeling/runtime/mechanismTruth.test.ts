@@ -649,7 +649,7 @@ describe.skipIf(!process.env.KCAD_SLOW)('mechanism truth — pose-sweep grounded
   // ───────────────────────────────────────────────────────────────────
   // KC-04 — the reachability walk must see BOTH assembly conventions.
   //
-  // kernelCAD has two, both correct and both load-bearing:
+  // CrispCAD has two, both correct and both load-bearing:
   //   - `.mate()` + connectors           → `arm.__mates()`
   //   - `.revolute()/.prismatic()/...`   → `arm.__joints()` (URDF semantics)
   // The walk used to read the mate edge list ONLY, so every joint-primitive

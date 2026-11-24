@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/renderLook.ts
 //
-// `kernelcad render` look flags: `--preset`, `--background`, `--no-shadow`,
+// `crispcad render` look flags: `--preset`, `--background`, `--no-shadow`,
 // `--width`, `--height`. The option rules are render_preview's
 // (resolvePublishLook in src/shared/render/publishPreset.ts); this module
 // only turns them into what headlessRender captures and words the refusals

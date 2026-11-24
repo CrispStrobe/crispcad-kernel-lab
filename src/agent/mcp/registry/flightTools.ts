@@ -19,7 +19,7 @@ const runFlightToolEntry: ToolRegistryEntry = {
       type: 'object',
       properties: {
         file: { type: 'string', description: 'Path to a .kcad.ts script (with a flightStudy, or pass the study on the call).' },
-        code: { type: 'string', description: 'Inline kernelCAD script source (mutually exclusive with file).' },
+        code: { type: 'string', description: 'Inline CrispCAD script source (mutually exclusive with file).' },
         study: { type: ['string', 'object'], description: 'Name of a declared flightStudy (default: the last), or an inline study object.' },
         motor: { type: 'object', description: "{ thrustCurve: [[t s, N], ...] | engFile: '.eng text', totalMassKg, propellantKg, part?, cgFromNoseMm? }." },
         aero: { type: 'object', description: "{ cd: 'auto' | number, refDiameterMm?, axis?: '+Z', nose?: { shape?: 'ogive' | 'cone', part?, lengthMm? }, fins?: { count, part?, rootChordMm?, tipChordMm?, spanMm?, sweepMm?, leadingEdgeFromNoseMm? }, lengthMm? }." },

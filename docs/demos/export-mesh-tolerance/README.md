@@ -1,6 +1,6 @@
 # Mesh tolerance export demo
 
-This small local replay runs the public `export({ target: 'model' })` tool on a native kernelCAD
+This small local replay runs the public `export({ target: 'model' })` tool on a native CrispCAD
 plate, writes an STL with a requested 0.01 mm tolerance, reads the exported
 triangle count and header back, and records the tool's sampled deviation report.
 The video's plate image is drawn from the Float32 triangle coordinates in that

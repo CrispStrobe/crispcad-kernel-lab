@@ -1,6 +1,6 @@
 // tests/unit/cli/evaluateValidateGate.test.ts
 //
-// T10 of v0.6 assembly-mates plan: `kernelcad evaluate` flips the
+// T10 of v0.6 assembly-mates plan: `crispcad evaluate` flips the
 // `Assembly.solvedModel` validate gate to `'error'` so harness runs trip
 // on invalid assemblies rather than silently emitting warnings.
 //
@@ -12,7 +12,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { applyEvaluateDefaults } from '../../../src/agent/cli/commands/evaluate';
 
-describe('kernelcad evaluate — validate gate', () => {
+describe('crispcad evaluate — validate gate', () => {
   let prev: string | undefined;
 
   beforeEach(() => {

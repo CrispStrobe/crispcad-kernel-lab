@@ -3,7 +3,7 @@
 // src/dynamics/index.ts
 //
 // Generic propulsion and rigid-body checks. Import this from a script, or
-// run a JSON scenario with `kernelcad dynamics run <file>`.
+// run a JSON scenario with `crispcad dynamics run <file>`.
 
 export {
   AMBIENT_PA,

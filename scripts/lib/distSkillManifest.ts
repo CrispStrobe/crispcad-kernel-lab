@@ -46,15 +46,12 @@ export function authorPluginJson({ entries, version }: PluginManifestInput): str
     name: 'kernelcad',
     version,
     description:
-      'kernelCAD authoring skills — agent-first CAD. Editable source, ships STEP.',
+      'CrispCAD authoring skills — agent-first CAD. Editable source, ships STEP.',
     kernelcad: {
       requires: { kernelcad: `^${minorOf(version)}` },
       mcp: {
         default: 'local',
         local: { command: 'kernelcad', args: ['mcp'] },
-        remote: {
-          url: 'https://mcp.kernelcad.com/mcp',
-        },
       },
     },
     skills,

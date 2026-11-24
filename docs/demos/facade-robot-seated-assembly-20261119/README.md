@@ -13,7 +13,7 @@ The example is now 61 parts on 60 mates. No two parts share volume.
 | --- | --- | --- |
 | `evaluate_script` | `ok: false`, `broken`, 107 errors | `ok: true`, `real`, 0 diagnostics |
 | Mates | 0 | 6 revolute, 5 prismatic, 49 fastened |
-| `kernelcad validate` with the interference sweep | not measured | `real`, 0 failures |
+| `crispcad validate` with the interference sweep | not measured | `real`, 0 failures |
 | Interfering pairs at 7 joint-limit poses | not measured | 0 |
 
 ## Design changes
@@ -37,7 +37,7 @@ now a 300 mm stroke.
 ## Demonstration
 
 [demo.mp4](demo.mp4) shows 8 key poses, 2 s each. Each still is a
-`kernelcad render --preset publish` of the example with the param defaults
+`crispcad render --preset publish` of the example with the param defaults
 set to the values in [poses.json](verification/poses.json). The contact sheet
 is [video-contact-sheet.png](verification/video-contact-sheet.png).
 

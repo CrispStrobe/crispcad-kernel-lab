@@ -5,7 +5,7 @@
 // Stats-only MCP view of a solved assembly's parts — name, exact bbox,
 // volume, surface area, and export-mesh triangle count. Backed by the
 // shared script-runtime `listPartStats` so the numbers match the
-// `kernelcad parts` CLI command and the per-part STL exporter exactly.
+// `crispcad parts` CLI command and the per-part STL exporter exactly.
 
 import { dirname, resolve } from 'node:path';
 import { initOcct } from '../../../kernel/backends/occt/occtBackend';

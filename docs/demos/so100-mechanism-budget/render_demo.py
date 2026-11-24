@@ -38,7 +38,7 @@ def text(draw: ImageDraw.ImageDraw, xy: tuple[int, int], value: str, size: int, 
 def base(title: str, subtitle: str, index: int) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     image = Image.new("RGB", (WIDTH, HEIGHT), BACKGROUND)
     draw = ImageDraw.Draw(image)
-    text(draw, (64, 40), "kernelCAD   /   ISSUE #1267", 20, BLUE)
+    text(draw, (64, 40), "CrispCAD   /   ISSUE #1267", 20, BLUE)
     text(draw, (64, 92), title, 42)
     text(draw, (64, 154), subtitle, 22, MUTED)
     draw.rounded_rectangle((64, 640, WIDTH - 64, 644), radius=2, fill=(45, 59, 82))

@@ -37,7 +37,7 @@ export interface FeaToolchain {
 export const FEA_INSTALL_HINT =
   'Install the solver toolchain: `sudo apt-get install -y calculix-ccx` (or `dnf install calculix`), ' +
   'and a Python with gmsh: `python3 -m venv .fea-venv && .fea-venv/bin/pip install gmsh==4.15.2`. ' +
-  'Point kernelCAD at them with KERNELCAD_CCX=/path/to/ccx and KERNELCAD_FEA_PYTHON=/path/to/python. ' +
+  'Point CrispCAD at them with KERNELCAD_CCX=/path/to/ccx and KERNELCAD_FEA_PYTHON=/path/to/python. ' +
   'No container needed; a Docker fallback is documented in the kernelcad-fea skill.';
 
 function run(cmd: string, args: string[], timeoutMs: number): Promise<{ code: number; out: string }> {

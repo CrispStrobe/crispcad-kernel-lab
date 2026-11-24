@@ -8,7 +8,7 @@ describe('skill-built supported arm — deliberately-colliding fixture', () => {
   // disconnect and interpenetration defects (27 failures). Tracked
   // alongside the designLoop fixture rebuild in the issue below.
   //
-  // Issue:  https://github.com/w1ne/kernelCAD-web/issues/353
+  // Issue:  https://github.com/CrispStrobe/kernelCAD-web/issues/353
   it.skip('passes the physics-grounded loop — see issues/353', () => {
     // no body — the citation in the title is what the sweep test reads
   });

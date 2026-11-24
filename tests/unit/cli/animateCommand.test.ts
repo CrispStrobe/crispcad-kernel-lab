@@ -1,8 +1,8 @@
 // tests/unit/cli/animateCommand.test.ts
 //
-// `kernelcad animate` CLI surface: arg parsing, the exit-code scheme
+// `crispcad animate` CLI surface: arg parsing, the exit-code scheme
 // (0 captured+verified-or-skipped / 1 captured-but-collisions / 2 could not
-// capture — the `kernelcad dfm` sibling scheme), the --json envelope (engine
+// capture — the `crispcad dfm` sibling scheme), the --json envelope (engine
 // result as-is), --quiet, verification flags (--no-verify / --verify-every),
 // and deps threading into the capture engine — with the engine layer mocked
 // (no real browser, no real ffmpeg), mirroring renderCommand.test.ts's

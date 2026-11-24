@@ -37,7 +37,7 @@ const PCB_L = 82.5; // X  (length)
 const PCB_W = 70.0; // Y  (width)
 const PCB_T = 1.6;  // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render keys off these; imported STEP
+// Explicit part colors — the CrispCAD render keys off these; imported STEP
 // would otherwise fall back to gray.
 // NOTE: .color() takes a '#RRGGBB' STRING; a numeric 0xRRGGBB is NOT honored.
 const PCB_GREEN   = '#1f7a4d'; // ST Nucleo solder-mask green

@@ -15,7 +15,7 @@
 // deps).
 //
 // DECISION (agent-animation workstream): capture does NOT run the
-// full-range mechanism-truth probe (`kernelcad render` does). On real
+// full-range mechanism-truth probe (`crispcad render` does). On real
 // assemblies that probe sweeps every mate's full limit range BEFORE frame 1
 // — measured at 48 minutes on the gearfinity planetary stage — and its
 // verdict covers poses the animation may never visit. Capture's
@@ -107,7 +107,7 @@ export interface CaptureAnimationOpts {
    *  (the keyframe sample set / verifySampleTimesMs still runs). */
   verifyEveryNthFrame?: number;
   /** Object-visibility filter applied to the rendered scene — SAME shape
-   *  `headlessRender` / `kernelcad render --focus/--hide` use ({ mode:
+   *  `headlessRender` / `crispcad render --focus/--hide` use ({ mode:
    *  'focus' | 'hide', patterns }). 'focus' shows only matching parts;
    *  'hide' hides them. Re-applied AFTER each frame's mesh reload, because
    *  loadFeatureMeshes rebuilds every feature group with visible:true (the
@@ -276,7 +276,7 @@ function scheduleFrames(metadata: AnimationViewMetadata, fps: number): ReturnTyp
  * build-level diagnostics ONLY — any error-severity diagnostic on the built
  * model refuses the capture before a browser or encoder starts. Capture
  * deliberately does NOT run the full-range mechanism-truth probe that
- * `kernelcad render` runs: that probe sweeps every mate's full limit range
+ * `crispcad render` runs: that probe sweeps every mate's full limit range
  * (48 minutes before frame 1 on the gearfinity planetary stage) and judges
  * poses the animation never visits. Interference at the poses the animation
  * ACTUALLY visits is verified by the animation-pose interference check
@@ -399,7 +399,7 @@ export async function captureAnimation(
     //    ephemeral 127.0.0.1 port, falling back to a live dev-server probe
     //    (DEFAULT_RENDER_BASE_URL / VITE_PORT) and finally to a typed error
     //    naming the fix. `opts.baseUrl` takes the 'explicit' lane and skips
-    //    provisioning. Mirrors `kernelcad render` (#625) — one source of
+    //    provisioning. Mirrors `crispcad render` (#625) — one source of
     //    truth for how a render surface is obtained.
     renderSurface = await resolveRenderBaseUrl(opts.baseUrl);
     if (renderSurface.source !== 'explicit') {

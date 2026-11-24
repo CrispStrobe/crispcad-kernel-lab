@@ -55,7 +55,7 @@ export async function runPreflight(deps: PreflightDeps): Promise<PreflightReport
 
   const kcadBin = deps.env.KERNELCAD_BIN ?? './dist/cli/index.js';
   const kcadPath = kcadBin.endsWith('.js') ? resolve(kcadBin) : kcadBin;
-  push('kernelcad cli', deps.exists(kcadPath), kcadPath);
+  push('crispcad cli', deps.exists(kcadPath), kcadPath);
 
   const museRoot = deps.env.MUSE_ROOT ?? join(deps.env.HOME ?? '', 'projects/muse');
   push('muse checkout', deps.exists(resolve(museRoot, 'src/judge_system')), museRoot);

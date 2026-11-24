@@ -5,9 +5,9 @@
 //
 // The three renders are inputs. They come from the built CLI
 // (`npm run build:cli`), 640 × 480 per tile:
-//   kernelcad render instrument-lid.kcad.ts -o lid.png --pose 30,40  -> lid-front.png
-//   kernelcad render instrument-lid.kcad.ts -o lid.png --pose 200,35 -> lid-back.png
-//   kernelcad render instrument-lid.kcad.ts -o lid.png --pose 0,90   -> lid-top.png
+//   crispcad render instrument-lid.kcad.ts -o lid.png --pose 30,40  -> lid-front.png
+//   crispcad render instrument-lid.kcad.ts -o lid.png --pose 200,35 -> lid-back.png
+//   crispcad render instrument-lid.kcad.ts -o lid.png --pose 0,90   -> lid-top.png
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';

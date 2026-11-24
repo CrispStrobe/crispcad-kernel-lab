@@ -24,7 +24,7 @@ export const exportHealthToolEntries: ToolRegistryEntry[] = [
         type: 'object',
         properties: {
           file: { type: 'string', description: 'Path of a .kcad.ts script. Mutually exclusive with code.' },
-          code: { type: 'string', description: 'Inline kernelCAD script. Mutually exclusive with file.' },
+          code: { type: 'string', description: 'Inline CrispCAD script. Mutually exclusive with file.' },
           assembly: { type: 'string', description: 'Assembly name when the script defines more than one. Defaults to the first captured assembly.' },
         },
       },

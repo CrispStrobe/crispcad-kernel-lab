@@ -8,7 +8,7 @@ comparison ran for that mate.
 ## Replay and artifacts
 
 - [MP4 demo](demo.mp4) — 1280×720, 24 fps, 8 seconds.
-- [Fixture](topology-load.kcad.ts) — native kernelCAD assembly source.
+- [Fixture](topology-load.kcad.ts) — native CrispCAD assembly source.
 - [Capture source](capture-demo.ts) — runs the fixture, calls
   `checkLoadCapacity(..., { mode: 'stub' })`, verifies the warning, and builds
   the MP4 from the actual result.

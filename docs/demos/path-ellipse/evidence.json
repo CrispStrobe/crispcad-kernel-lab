@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: a 2:1 semi-elliptical vessel head revolved from two ellipseArc segments, and a turned elliptical gasket from two closed ellipses. OCCT volume, bounding box and validity checks against closed-form values.",
+  "scope": "Local CrispCAD Node API: a 2:1 semi-elliptical vessel head revolved from two ellipseArc segments, and a turned elliptical gasket from two closed ellipses. OCCT volume, bounding box and validity checks against closed-form values.",
   "invocation": "node --import tsx docs/demos/path-ellipse/capture-demo.mts",
   "headSource": "docs/demos/path-ellipse/elliptical-head.kcad.ts",
   "headSourceSha256": "72377f1b0f15d64d0515270e4c1ffbdf9dff3c25bbb5bd98ad77f2962f2ff7fb",

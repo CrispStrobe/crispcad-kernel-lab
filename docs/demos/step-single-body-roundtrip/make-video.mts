@@ -117,7 +117,7 @@ function codeLines(lines: string[], x: number, y: number): string {
 function sceneOne(evidence: Evidence, source: string[]): string {
   const sourceLines = source.filter((line) => /^let plate|^return plate/.test(line));
   const content = `<rect x="72" y="140" width="1136" height="70" rx="14" fill="#142235" stroke="#29445c"/>
-    <text x="98" y="183" fill="#f8fafc" font-family="monospace" font-size="20">kernelcad export step motor-plate.kcad.ts -o motor-plate.step</text>
+    <text x="98" y="183" fill="#f8fafc" font-family="monospace" font-size="20">crispcad export step motor-plate.kcad.ts -o motor-plate.step</text>
     <rect x="72" y="222" width="1136" height="150" rx="20" fill="#111c2d" stroke="#334155"/>
     <text x="98" y="256" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="17">SOURCE · the script returns one bare shape, no assembly (excerpt)</text>
     ${codeLines([...sourceLines.slice(0, 1), '// ... four frame holes, four motor holes, one 22 mm pilot', ...sourceLines.slice(1)], 98, 290)}
@@ -156,11 +156,11 @@ function sceneTwo(evidence: Evidence, mesh: Mesh): string {
     <line x1="700" y1="194" x2="1184" y2="194" stroke="#334155"/>
     ${rows}
     <line x1="700" y1="400" x2="1184" y2="400" stroke="#334155"/>
-    <text x="700" y="432" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="15">PROJECT FROM kernelcad import-step motor-plate.step</text>
+    <text x="700" y="432" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="15">PROJECT FROM crispcad import-step motor-plate.step</text>
     ${evidence.importedProject.script.slice(2, 7).map(shortLine).map((line, index) => `<text x="700" y="${460 + index * 21}" fill="#e2e8f0" font-family="monospace" font-size="12" xml:space="preserve">${xml(line)}</text>`).join('')}
     <text x="700" y="590" fill="#37d6b0" font-family="Arial,sans-serif" font-size="17">The name, colour, volume and size are equal in both files.</text>
     <text x="700" y="616" fill="#37d6b0" font-family="Arial,sans-serif" font-size="17">Each file holds one product with one solid.</text>`;
-  return shell('The part keeps its name and colour through import and a second export', 'kernelcad import-step motor-plate.step, then kernelcad export step on the imported project.', content);
+  return shell('The part keeps its name and colour through import and a second export', 'crispcad import-step motor-plate.step, then crispcad export step on the imported project.', content);
 }
 
 const evidence = JSON.parse(await readFile(join(HERE, 'evidence.json'), 'utf8')) as Evidence;

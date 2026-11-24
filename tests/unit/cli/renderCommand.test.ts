@@ -179,7 +179,7 @@ describe('render command', () => {
       views: ['front', 'right', 'top', 'iso'],
       bounds: { min: [0, 0, 0], max: [1, 1, 1] },
       command: {
-        name: 'kernelcad render inspect',
+        name: 'crispcad render inspect',
         channels: ['rgb'],
       },
       caveats: ['Channels are view-dependent and reflect the same camera, visibility filter, tail-feature filtering, and reference-image visibility used for RGB.'],

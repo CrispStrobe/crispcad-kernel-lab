@@ -175,7 +175,7 @@ export type ShadowedAttribute = 'material' | 'color';
  *  also has its own material/color. The kernel's boolean operation produces a
  *  single post-fuse mesh whose faces inherit the head record's attribution —
  *  the leaf's is therefore invisible on the static silhouette (post-fuse render
- *  in `kernelcad render` and after the build animation settles in
+ *  in `crispcad render` and after the build animation settles in
  *  `npm run capture-demo`). The leaf attribution IS visible during the staged
  *  build animation while predecessor groups are still fading.
  *

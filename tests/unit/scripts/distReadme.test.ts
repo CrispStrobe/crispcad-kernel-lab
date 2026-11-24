@@ -39,7 +39,7 @@ describe('authorReadme', () => {
   it('shows both local-default and hosted-fallback MCP setup', () => {
     const md = authorReadme({ entries, version: '0.11.0' });
     expect(md).toMatch(/kernelcad mcp/);
-    expect(md).toMatch(/claude mcp add --transport http kernelcad https:\/\/mcp\.kernelcad\.com\/mcp/);
+    expect(md).not.toMatch(/mcp\.kernelcad\.com/);
   });
 
   it('lists each discovered skill with its description', () => {

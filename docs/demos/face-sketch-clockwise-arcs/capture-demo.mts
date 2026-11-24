@@ -99,7 +99,7 @@ const bbox = gasket.boundingBox();
 const size = [0, 1, 2].map((i) => bbox.max[i] - bbox.min[i]);
 assert.ok(Math.abs(size[0] - WIDTH) < 1e-6 && Math.abs(size[1] - DEPTH) < 1e-6 && Math.abs(size[2] - GASKET_THICKNESS) < 1e-6, 'gasket size');
 
-// 4. The flat profile behind `kernelcad export dxf` has the same outline.
+// 4. The flat profile behind `crispcad export dxf` has the same outline.
 const flat = extractFlatProfile(gasket);
 assert.ok(flat.ok, 'flat profile');
 const flatAreas = flat.profile.loops.map((loop) => Math.abs(segmentsSignedArea(loop)));
@@ -113,7 +113,7 @@ const implementation = Object.fromEntries(await Promise.all(
   IMPLEMENTATION_FILES.map(async (file) => [file, sha256(await readFile(file))] as const),
 ));
 const evidence = {
-  scope: 'Local kernelCAD Node API: faceSketch of the top face of a rounded cover plate, extrude to a gasket, OCCT volume and validity check, and the flat DXF profile of the gasket.',
+  scope: 'Local CrispCAD Node API: faceSketch of the top face of a rounded cover plate, extrude to a gasket, OCCT volume and validity check, and the flat DXF profile of the gasket.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),

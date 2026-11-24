@@ -49,7 +49,7 @@ function chrome(title: string, subtitle: string, body: string): string {
     '<text x="56" y="68" font-family="Arial,sans-serif" font-size="32" font-weight="700" fill="#17243a">' + esc(title) + '</text>' +
     '<text x="58" y="100" font-family="Arial,sans-serif" font-size="18" fill="#53657f">' + esc(subtitle) + '</text>' +
     body +
-    '<text x="' + (W - 56) + '" y="' + (H - 24) + '" text-anchor="end" font-family="Arial,sans-serif" font-size="14" fill="#66758b">kernelCAD · local catalog and export · software-rendered GLB · deployment not verified</text>' +
+    '<text x="' + (W - 56) + '" y="' + (H - 24) + '" text-anchor="end" font-family="Arial,sans-serif" font-size="14" fill="#66758b">CrispCAD · local catalog and export · software-rendered GLB · deployment not verified</text>' +
     '</svg>';
 }
 

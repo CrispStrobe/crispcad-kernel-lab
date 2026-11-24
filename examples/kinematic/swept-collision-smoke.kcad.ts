@@ -13,7 +13,7 @@
 // The arm is declared with the mate vocabulary (`arm.connector(...)` +
 // `arm.mate(..., 'revolute', ...)`); `kinematic.checkSweptCollision` accepts
 // mate names as the swept joint. The results are logged rather than asserted
-// so the script renders cleanly under `kernelcad render inspect`.
+// so the script renders cleanly under `crispcad render inspect`.
 
 const arm = assembly('swept-collision-smoke');
 
@@ -100,7 +100,7 @@ console.log(
     `dirtyPoses>=${dirty.collidingPoses.length}`,
 );
 
-// Return a valid Scene so `kernelcad evaluate` finishes cleanly. Use a
+// Return a valid Scene so `crispcad evaluate` finishes cleanly. Use a
 // shoulder pose well clear of the base wall so the harness's interference
 // gate (KERNELCAD_VALIDATE_DEFAULT=error) doesn't trip on the default pose.
 return arm.solvedModel({ shoulder: 0, elbow: 0 });

@@ -119,7 +119,7 @@ function sceneOne(evidence: Evidence, mesh: Mesh): string {
     ${panel(652, 'NOW · measured in this run', now, evidence.write.asHex, mesh, `The file states ${evidence.write.asHex}, equal to the script.`, '#37d6b0')}
     <rect x="72" y="574" width="1136" height="80" rx="14" fill="#142235" stroke="#29445c"/>
     <rect x="98" y="590" width="20" height="20" rx="4" fill="${evidence.scriptColour}" stroke="#f8fafc" stroke-width="0.8"/>
-    <text x="130" y="606" fill="#f8fafc" font-family="monospace" font-size="18">box(100, 80, 4).color('${evidence.scriptColour}')   kernelcad export step motor-plate.kcad.ts</text>
+    <text x="130" y="606" fill="#f8fafc" font-family="monospace" font-size="18">box(100, 80, 4).color('${evidence.scriptColour}')   crispcad export step motor-plate.kcad.ts</text>
     <text x="98" y="638" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="16">Each part is drawn in the colour that its STEP colour entity states. The geometry is the same in both files.</text>`;
   return shell('STEP export writes the colour that the script sets', `Source: ${evidence.source}`, content);
 }
@@ -131,7 +131,7 @@ function sceneTwo(evidence: Evidence): string {
     <text x="694" y="${y + 34}" fill="#f8fafc" font-family="monospace" font-size="22">${hex}</text>
     <text x="830" y="${y + 34}" fill="${fill}" font-family="Arial,sans-serif" font-size="18">${xml(note)}</text>`;
   const content = `<rect x="72" y="140" width="1136" height="70" rx="14" fill="#142235" stroke="#29445c"/>
-    <text x="98" y="183" fill="#f8fafc" font-family="monospace" font-size="20">kernelcad import-step part.step      # the file holds ${xml(evidence.read.foreignEntity)}</text>
+    <text x="98" y="183" fill="#f8fafc" font-family="monospace" font-size="20">crispcad import-step part.step      # the file holds ${xml(evidence.read.foreignEntity)}</text>
     <rect x="72" y="224" width="1136" height="290" rx="18" fill="#111c2d" stroke="#334155"/>
     ${row(250, 'Colour that the file states', evidence.scriptColour, '#9fb0c4', '0.2, 0.4, 0.8 as 8-bit channels')}
     ${row(334, `Read before · develop ${evidence.before.commit}, recorded`, evidence.before.foreignReadAsHex, '#fbbf24', 'darker than the file')}
@@ -139,7 +139,7 @@ function sceneTwo(evidence: Evidence): string {
     <rect x="72" y="528" width="1136" height="126" rx="14" fill="#142235" stroke="#29445c"/>
     <text x="98" y="566" fill="#37d6b0" font-family="Arial,sans-serif" font-size="19">Export then import returns ${evidence.read.roundTripColour} for the script colour ${evidence.scriptColour}.</text>
     <text x="98" y="600" fill="#f8fafc" font-family="Arial,sans-serif" font-size="17">A hex colour and a STEP COLOUR_RGB are display (sRGB) values. OCCT holds linear RGB between them.</text>
-    <text x="98" y="630" fill="#f8fafc" font-family="Arial,sans-serif" font-size="17">kernelCAD now converts at the OCCT boundary on write and on read.</text>`;
+    <text x="98" y="630" fill="#f8fafc" font-family="Arial,sans-serif" font-size="17">CrispCAD now converts at the OCCT boundary on write and on read.</text>`;
   return shell('STEP import reads the colour that the file states', 'The colour entity of the exported file is replaced with stated channels, then the file is imported.', content);
 }
 

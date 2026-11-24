@@ -30,7 +30,7 @@ function linesForStep(record: BuildRecord, step: BuildRecordStep, index: number)
     const status = step.status === 'passed' ? 'PASS' : 'FAIL';
     const reasons = step.review.blockingReasons ?? [];
     return [
-        { text: `$ kernelcad loop --goal "${record.goal}"`, fullyTypedAtMs: 450 },
+        { text: `$ crispcad loop --goal "${record.goal}"`, fullyTypedAtMs: 450 },
         { text: `iteration ${index + 1}/${record.steps.length}: ${step.title}`, fullyTypedAtMs: 1050 },
         { text: `script: ${step.script}`, fullyTypedAtMs: 1600 },
         { text: `review_cad: ${status} - ${step.review.summary}`, fullyTypedAtMs: 2300 },

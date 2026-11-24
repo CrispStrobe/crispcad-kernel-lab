@@ -8,7 +8,7 @@ describe('skill-built supported robot arm example', () => {
   // issues/346. Smallest passing fix is the Luxo offset trick or a
   // kernel-side topology-aware reference point.
   //
-  // Issue:  https://github.com/w1ne/kernelCAD-web/issues/352
+  // Issue:  https://github.com/CrispStrobe/kernelCAD-web/issues/352
   it.skip('passes the physics-grounded loop — see issues/352', () => {
     // no body — the citation in the title is what the sweep test reads
   });

@@ -46,7 +46,7 @@ const inspectToolEntry: ToolRegistryEntry = {
           description: 'Which facts to read.',
         },
         file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-        code: { type: 'string', description: 'Inline kernelCAD script source.' },
+        code: { type: 'string', description: 'Inline CrispCAD script source.' },
         assembly: { type: 'string', description: "of:'assembly'|'robot'|'bom' — assembly name; defaults to the first captured assembly." },
         feature_id: { type: 'string', description: "of:'shape'|'mass'|'topology'|'edges'|'faces'|'face-edges'|'face-labels' — FeatureId; defaults to the last returned shape." },
         density: { type: 'number', description: "of:'mass' — material density in kg/m^3 (steel 7850, aluminium 2700, ABS 1050). Defaults to 1000 (water); the response echoes the value used and flags when it was defaulted." },
@@ -125,7 +125,7 @@ const verifyToolEntry: ToolRegistryEntry = {
             "Operands are { kind: body | faces | edges | part, ref: <feature id/name or part name>, query? }. With `check` omitted the ledger is the whole verification; check 'requirements' is the explicit form.",
         },
         file: { type: 'string', description: 'Path to a .kcad.ts script (assembly/dfm/swept-collision/joint-range/reachable/mounting-holes/load-capacity/static-hold/geometry-quality/edge-radius/requirements).' },
-        code: { type: 'string', description: 'Inline kernelCAD script source (same checks as `file`).' },
+        code: { type: 'string', description: 'Inline CrispCAD script source (same checks as `file`).' },
         feature_id: { type: 'string', description: "check:'geometry-quality' — body feature to measure; defaults to script return. check:'edge-radius' — lowered feature; default the returned model." },
         tiny_face_area_mm2: { type: 'number', minimum: 0, default: 0.01, description: "check:'geometry-quality' — flag faces strictly below this absolute area; zero disables." },
         tiny_face_relative: { type: 'number', minimum: 0, maximum: 1, default: 0, description: "check:'geometry-quality' — fraction of total BREP surface area, ORed with absolute threshold." },
@@ -251,7 +251,7 @@ const repairScriptToolEntry: ToolRegistryEntry = {
       type: 'object',
       properties: {
         file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-        code: { type: 'string', description: 'Inline kernelCAD script source.' },
+        code: { type: 'string', description: 'Inline CrispCAD script source.' },
         diagnostic: {
           type: 'string',
           description: "Diagnostic id from why_did_this_fail's `targetDiagnosticId` / `candidates[].diagnosticId`, or 'first-error' (default) for the first error-severity diagnostic.",
@@ -294,7 +294,7 @@ const queryToolEntry: ToolRegistryEntry = {
       properties: {
         mode: { type: 'string', enum: ['evaluate', 'resolve', 'lineage'], description: "Resolution mode (default 'evaluate')." },
         file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-        code: { type: 'string', description: 'Inline kernelCAD script source.' },
+        code: { type: 'string', description: 'Inline CrispCAD script source.' },
         query: { type: ['string', 'object'], description: "mode:'evaluate' — Query: a bare face label ('top'), an @kc[<feature-id>/face/<label>] ref, an @kcq[face(...)] expression, or { ast }." },
         ref: { type: 'string', description: "mode:'resolve'|'lineage' — one face: '@kc[box_1/face/top]', '@kcq[...]', or '<feature-id>.<label>' (lineage)." },
         expect: { type: 'string', enum: ['any', 'unique'], description: "mode:'evaluate' — 'unique' asserts exactly-one." },

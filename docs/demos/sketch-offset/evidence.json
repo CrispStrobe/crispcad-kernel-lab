@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: Sketch.offset of a rounded outline, extrude and boolean to a tray and a lid, OCCT volume, validity, overlap and distance measurement.",
+  "scope": "Local CrispCAD Node API: Sketch.offset of a rounded outline, extrude and boolean to a tray and a lid, OCCT volume, validity, overlap and distance measurement.",
   "invocation": "node --import tsx docs/demos/sketch-offset/capture-demo.mts",
   "source": "docs/demos/sketch-offset/tray-and-lid.kcad.ts",
   "sourceSha256": "6abb11305cdfcf87e1f884d3f0387d62a32508230b81beea0ea0e20ae3ee37ba",

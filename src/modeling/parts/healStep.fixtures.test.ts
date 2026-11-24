@@ -10,7 +10,7 @@
 // gate is optional too: set KCAD_CADGENBENCH_GATE to sanity_check_submission.py
 // and KCAD_CADGENBENCH_PYTHON to the interpreter that can import cadgenbench.
 // When both are set this test runs the exact benchmark gate on the exported
-// bytes, not a kernelCAD-only approximation.
+// bytes, not a CrispCAD-only approximation.
 
 import { describe, expect, it } from 'vitest';
 import { spawnSync } from 'node:child_process';

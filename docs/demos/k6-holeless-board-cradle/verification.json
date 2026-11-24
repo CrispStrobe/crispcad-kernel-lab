@@ -32,7 +32,7 @@
       33,
       15.1
     ],
-    "renderSource": "kernelCAD static-player"
+    "renderSource": "CrispCAD static-player"
   },
   "limits": [
     "Local geometry evaluation is not deployed behavior.",

@@ -7,7 +7,7 @@ status: published
 model: examples/parts/bolted-flange.kcad.ts
 ---
 
-kernelCAD ships one table of ISO metric fasteners. Socket head, button head, countersunk and hex head screws and bolts, set screws, threaded rod, hex nuts, lock nuts and washers. Sizes run M2 to M20 where the standard has them, and every stocked length is per thread.
+CrispCAD ships one table of ISO metric fasteners. Socket head, button head, countersunk and hex head screws and bolts, set screws, threaded rod, hex nuts, lock nuts and washers. Sizes run M2 to M20 where the standard has them, and every stocked length is per thread.
 
 Each part is drawn the way its standard draws it: the hex socket with its drill-point bottom, the 30° chamfer on a hex head, the washer face, the button dome, the 90° countersunk cone, a nut chamfered and countersunk on both faces, and an ISO 68-1 thread at the coarse pitch with a chamfered start. The browser builds them in memory, without a filesystem.
 
@@ -130,4 +130,4 @@ the two SG90 parts, NEMA 17/23 motors, 2.54 mm and 1.27 mm pin headers, and
 JST-XH housings. Those need catalog geometry or non-threaded variant domains,
 and are listed in `STANDARD_PART_RANGE_REMAINING` rather than claimed.
 
-The model above is live: drag it to rotate, and the eight stacks are the parts the examples place. The same calls work in Studio, in the browser and through kernelCAD's MCP tools. See the [docs](/docs/) for the API.
+The model above is live: drag it to rotate, and the eight stacks are the parts the examples place. The same calls work in Studio, in the browser and through CrispCAD's MCP tools. See the [docs](/docs/) for the API.

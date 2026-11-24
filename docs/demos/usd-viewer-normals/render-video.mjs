@@ -27,7 +27,7 @@ const panels = [
 const page = `<!doctype html><html><body style="margin:0;background:#f4f7fb;font-family:Arial,sans-serif">
 <div style="position:absolute;left:0;top:0;width:1280px;padding:20px 30px;box-sizing:border-box">
 <div style="font-size:28px;font-weight:700;color:#17243a">USD export in a three.js viewer: the part loads, sharp edges stay sharp</div>
-<div style="font-size:17px;color:#53657f">Same kernelCAD bracket exported with format: 'usd', loaded by three.js USDLoader</div></div>
+<div style="font-size:17px;color:#53657f">Same CrispCAD bracket exported with format: 'usd', loaded by three.js USDLoader</div></div>
 ${panels.map(([, x, c, t], i) => `<div style="position:absolute;left:${x}px;top:118px;width:400px;font-size:20px;font-weight:700;color:${c}">${t}</div>
 <div id="s${i}" style="position:absolute;left:${x}px;top:146px;width:400px;font-size:15px;color:#33445c"></div>`).join('')}
 <canvas id="c" width="1280" height="720"></canvas>

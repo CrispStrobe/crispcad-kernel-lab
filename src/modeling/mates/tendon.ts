@@ -10,7 +10,7 @@
 // elements on their owning bodies, and the spatial tendon's stiffness +
 // rest length apply the spring force.
 //
-// kernelCAD's spanning-tree FK still treats every part as singly-rooted;
+// CrispCAD's spanning-tree FK still treats every part as singly-rooted;
 // the tendon is a FORCE constraint, not a kinematic one. The capture
 // surface is intentionally minimal — two endpoints, rest length,
 // stiffness, optional damping. No pulleys (3+ sites), no actuators, no

@@ -1,6 +1,6 @@
 {
   "bundleVersion": 1,
-  "scriptPath": "/home/andrii/Projects/kernelCAD/examples/parts/bolt-stack.kcad.ts",
+  "scriptPath": "/home/andrii/Projects/CrispCAD/examples/parts/bolt-stack.kcad.ts",
   "generatedAt": "2026-10-17T16:48:20.364Z",
   "requestedChannels": [
     "rgb"
@@ -31,7 +31,7 @@
     ]
   },
   "command": {
-    "name": "kernelcad render inspect",
+    "name": "crispcad render inspect",
     "channels": [
       "rgb"
     ],

@@ -16,7 +16,7 @@ npx vitest run tests/integration/fast/exampleParseSmoke.test.ts -t 'supported-ar
 The targeted smoke run passed 5 tests, including evaluation of this example.
 This is the visual handoff for [PR #1380](https://github.com/w1ne/kernelCAD-web/pull/1380).
 
-The source is rendered through kernelCAD's `render_preview` and
+The source is rendered through CrispCAD's `render_preview` and
 `capture_animation` tools. `capture-settings.json` retains the tool parameters,
 source hash, server build, and output hashes. `capture-raw.mp4` is the raw
 turntable result; `render-demo.sh` overlays the two caption files to build the

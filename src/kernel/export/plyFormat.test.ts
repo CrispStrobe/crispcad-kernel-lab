@@ -30,7 +30,7 @@ describe('PLY writer', () => {
     expect(headerOf(bytes)).toBe([
       'ply',
       'format binary_little_endian 1.0',
-      'comment kernelCAD PLY mesh export; units mm; Z up',
+      'comment CrispCAD PLY mesh export; units mm; Z up',
       'comment part 0 Plate',
       'element vertex 3',
       'property float x', 'property float y', 'property float z',

@@ -21,7 +21,7 @@ when_to_use: >-
   the thickest section over maxWallMm (sink / warp), and concave corners
   sharper than minRadiusMm. Anything the check could not measure is reported
   as dfm.moulding.unmeasured, never as a pass. Full per-face report via
-  verify({ check: 'dfm' }) or kernelcad dfm.
+  verify({ check: 'dfm' }) or crispcad dfm.
 ---
 
 ```typescript

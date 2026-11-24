@@ -28,8 +28,8 @@ describe('photo-to-device skill operating contract', () => {
     expect(child).toMatch(/observed facts/i);
     expect(child).toMatch(/inferred facts/i);
     expect(child).toMatch(/real (?:assemblies|parts)|static named assembly/i);
-    expect(child).toContain('kernelcad evaluate');
-    expect(child).toContain('kernelcad interference');
+    expect(child).toContain('crispcad evaluate');
+    expect(child).toContain('crispcad interference');
   });
 
   it('keeps photo-only device work out of trace, mesh, and robot shortcuts', () => {

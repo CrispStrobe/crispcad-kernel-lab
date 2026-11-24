@@ -12,7 +12,7 @@ and does not already know a STEP file path.
 The catalog ships **bundled** with the npm package — `npm install` resolves
 every bundled id offline. When a query has no bundled match, discovery and
 fetch fall through to a built-in public parts catalog by default (see "Remote
-tier" below), so kernelCAD can find off-the-shelf parts it does not bundle.
+tier" below), so CrispCAD can find off-the-shelf parts it does not bundle.
 Set `KERNELCAD_PARTS_BASE_URL=off` to stay offline on the bundled seed only.
 
 ## Four-tool discovery flow
@@ -51,7 +51,7 @@ results are returned with a specific `errorCode`. This resolves a model asset
 but does not place it or perform a fit check.
 
 `fetch_part { url }` pulls geometry on demand from an **allowlisted** host
-(GitHub/GitLab raw + release-asset hosts and the kernelCAD parts host) — it is
+(GitHub/GitLab raw + release-asset hosts and the CrispCAD parts host) — it is
 cached locally, never re-hosted (`redistribution: 'fetch-only'`):
 
 - A `.step`/`.stp` URL → inspected, connectors synthesized, returned as a record.
@@ -365,7 +365,7 @@ Bundled parts ship under kernelCAD's MIT license — see `record.license`.
 ## Remote tier — built-in public catalog (default)
 
 When a query has no bundled match, discovery and fetch fall through to a
-built-in public parts catalog automatically — this is how kernelCAD finds
+built-in public parts catalog automatically — this is how CrispCAD finds
 off-the-shelf parts (motors, bearings, connectors, brackets) it does not bundle.
 No configuration is required.
 
@@ -375,7 +375,7 @@ const matches = await lib.findPart('flanged linear bearing');
 const bearing = await lib.fetchPart('linear-bearing-lmk10luu');
 ```
 
-What kernelCAD adds on top of the raw catalog, so a *found* part is as usable as
+What CrispCAD adds on top of the raw catalog, so a *found* part is as usable as
 a bundled one:
 
 - **Byte integrity.** The STEP is downloaded to `~/.cache/kernelcad/parts/` and

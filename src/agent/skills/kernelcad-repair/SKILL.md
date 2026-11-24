@@ -3,7 +3,7 @@ name: kernelcad-repair
 description: Turn a failed evaluation into a bounded, applied fix — why_did_this_fail for the repair region and candidates, then repair_script to apply and verify. Load when evaluate_script reports an error, a gate fails, or a feature shows up degraded in featureHealth.
 ---
 
-# kernelCAD — trace-guided repair
+# CrispCAD — trace-guided repair
 
 `evaluate_script` tells you a feature broke. `why_did_this_fail` now also tells
 you **which lines you may edit** and **what edits are on the table**, and
@@ -52,7 +52,7 @@ the repaired fillet pattern.
 | `inputs` / `dependents` | upstream and downstream feature ids |
 | `paramRefs` | named `param()` values the feature reads |
 
-`kernelcad evaluate <file> --trace-out trace.json` writes the same structure to
+`crispcad evaluate <file> --trace-out trace.json` writes the same structure to
 disk — use it when a CI run failed and you are reading the artifact after the
 fact.
 

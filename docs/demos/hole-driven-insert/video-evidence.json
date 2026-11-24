@@ -39,5 +39,5 @@
     "npx tsx src/agent/cli/index.ts render examples/parts/hole-driven-insert.kcad.ts --preset publish --width 2048 --height 1536 --pose 0,0 -o docs/demos/hole-driven-insert/insert-front.png",
     "convert insert.hero.png -crop 760x700+540+260 +repage insert-detail.png"
   ],
-  "provenance": "Annotated still sequence composed from local kernelcad render --preset publish outputs of the committed example source. Not a screen recording, turntable, deployed platform capture, physical hardware or strength test."
+  "provenance": "Annotated still sequence composed from local crispcad render --preset publish outputs of the committed example source. Not a screen recording, turntable, deployed platform capture, physical hardware or strength test."
 }

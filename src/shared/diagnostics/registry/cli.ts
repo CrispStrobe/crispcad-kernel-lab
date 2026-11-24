@@ -6,7 +6,7 @@ import type { DiagnosticCodeSpec } from './types';
 export const CLI_CODES = {
   // CLI / IO (5) + sandbox (3)
   'cli.invalid-args': {
-    hintTemplate: 'CLI was called with missing or malformed arguments. Run `kernelcad --help`.',
+    hintTemplate: 'CLI was called with missing or malformed arguments. Run `crispcad --help`.',
     nextAction: { kind: 'check-cli-args' },
     defaultSeverity: 'error',
     group: 'cli',
@@ -22,7 +22,7 @@ export const CLI_CODES = {
   },
   'cli.host-fs-unavailable': {
     hintTemplate:
-      'This feature reads files from disk and is unavailable in the browser runtime. Run the script through the kernelCAD CLI or MCP server, or drop the call.',
+      'This feature reads files from disk and is unavailable in the browser runtime. Run the script through the CrispCAD CLI or MCP server, or drop the call.',
     nextAction: { kind: 'inspect-message' },
     defaultSeverity: 'error',
     group: 'cli',
@@ -31,19 +31,19 @@ export const CLI_CODES = {
   },
   'cli.file-read': {
     hintTemplate:
-      'kernelCAD could not read the script file. Either the path does not exist locally, or this server is hosted/remote and cannot see your filesystem — pass the script inline via `code` instead of `file`.',
+      'CrispCAD could not read the script file. Either the path does not exist locally, or this server is hosted/remote and cannot see your filesystem — pass the script inline via `code` instead of `file`.',
     nextAction: { kind: 'check-file-path' },
     defaultSeverity: 'error',
     group: 'cli',
-    description: 'kernelCAD could not read the script file at the given path (missing locally, or the server is remote and has no access to the caller\'s filesystem).',
+    description: 'CrispCAD could not read the script file at the given path (missing locally, or the server is remote and has no access to the caller\'s filesystem).',
   },
   'cli.file-write': {
     hintTemplate:
-      'kernelCAD could not write the output file. Check the output path is writable and that -o points at a directory when exporting multiple parts.',
+      'CrispCAD could not write the output file. Check the output path is writable and that -o points at a directory when exporting multiple parts.',
     nextAction: { kind: 'check-file-path' },
     defaultSeverity: 'error',
     group: 'cli',
-    description: 'kernelCAD could not write an export output file at the given path.',
+    description: 'CrispCAD could not write an export output file at the given path.',
   },
   'cli.export-exception': {
     hintTemplate: 'An exception occurred during export. Read the diagnostic message for details.',
@@ -54,7 +54,7 @@ export const CLI_CODES = {
   },
   'cli.sandbox-path-denied': {
     hintTemplate:
-      'Sandbox mode is on and this path resolves outside the workspace root. Use a path inside the workspace (see `kernelcad sandbox status`), or restart with a different --workspace / KERNELCAD_WORKSPACE.',
+      'Sandbox mode is on and this path resolves outside the workspace root. Use a path inside the workspace (see `crispcad sandbox status`), or restart with a different --workspace / KERNELCAD_WORKSPACE.',
     nextAction: { kind: 'check-file-path' },
     defaultSeverity: 'error',
     group: 'cli',

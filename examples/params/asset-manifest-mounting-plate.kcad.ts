@@ -5,7 +5,7 @@
 meta({
   name: 'Parametric mounting plate',
   description: 'A two-hole mounting plate with named size presets.',
-  authors: ['kernelCAD example'],
+  authors: ['CrispCAD example'],
   tags: ['plate', 'mounting', 'parametric'],
 });
 

@@ -11,7 +11,7 @@ an 80 × 50 × 25 mm enclosure base with a 2 mm wall, pulled along +Z:
 | 1.5° draft flaring to the opening, r1 inside fillets | `enclosure.kcad.ts` | PASS (exit 0) | draft min 1.50°, no undercut, walls 2.000–3.03 mm, no sharp corners, no diagnostics |
 
 ```sh
-kernelcad dfm docs/demos/moulding-check/enclosure.kcad.ts
+crispcad dfm docs/demos/moulding-check/enclosure.kcad.ts
 # MCP: verify({ check: 'dfm', file })
 ```
 

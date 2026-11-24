@@ -43,7 +43,7 @@ import { inlineFeaStudy, inlineSpec, isCompleteInlineSpec, RUN_FEA_EXAMPLE } fro
 export interface RunFeaInput {
   /** Path to a `.kcad.ts` script declaring at least one `feaStudy`. */
   file?: string;
-  /** Inline kernelCAD script source. Mutually exclusive with `file`. */
+  /** Inline CrispCAD script source. Mutually exclusive with `file`. */
   code?: string;
   /** Study name to run; defaults to the LAST declared study. An object is
    *  read as an inline study ({ material, fixed, loads, ... }). */

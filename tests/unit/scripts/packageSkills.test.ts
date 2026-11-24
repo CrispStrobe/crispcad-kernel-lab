@@ -37,7 +37,7 @@ describe('npm package skills', () => {
     const source = join(out, 'source');
     const dest = join(out, 'dest');
     mkdirSync(join(source, 'nested'), { recursive: true });
-    const skill = '---\nname: sample\ndescription: sample skill\nmetadata:\n  version: "0.1.0"\n  author: kernelCAD\n---\n\n# Unchanged body\n';
+    const skill = '---\nname: sample\ndescription: sample skill\nmetadata:\n  version: "0.1.0"\n  author: CrispCAD\n---\n\n# Unchanged body\n';
     writeFileSync(join(source, 'SKILL.md'), skill);
     writeFileSync(join(source, 'nested/SKILL.md'), skill);
     writeFileSync(join(source, 'nested/recipe.md'), '# Recipe\n');
@@ -47,7 +47,7 @@ describe('npm package skills', () => {
       copyPackageSkills(source, dest, '0.18.0-beta.1');
       for (const path of ['SKILL.md', 'nested/SKILL.md']) {
         const result = readFileSync(join(dest, path), 'utf8');
-        expect(parse(result.split('---')[1]).metadata).toEqual({ version: '0.18.0-beta.1', author: 'kernelCAD' });
+        expect(parse(result.split('---')[1]).metadata).toEqual({ version: '0.18.0-beta.1', author: 'CrispCAD' });
         expect(result.endsWith('\n\n# Unchanged body\n')).toBe(true);
       }
       expect(readFileSync(join(source, 'SKILL.md'), 'utf8')).toBe(skill);

@@ -1,7 +1,7 @@
 # Hole-driven insert (`lib.insert`)
 
 The 23-second `demo.mp4` is an annotated still sequence composed from local
-`kernelcad render --preset publish` captures of the committed example. It is
+`crispcad render --preset publish` captures of the committed example. It is
 not a screen recording, turntable, deployed-platform capture or hardware test.
 
 Source: `examples/parts/hole-driven-insert.kcad.ts` — a plate with four Ø5.5

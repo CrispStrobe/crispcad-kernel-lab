@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Export one static, indexable HTML page per catalog asset for kernelcad.com.
+// Export one static, indexable HTML page per catalog asset (CrispCAD catalog site).
 //   npx tsx scripts/buildCatalogPages.ts [outDir]   (default: site-build/)
 //
 // Writes pages and previews from catalog/index.json only. The complete static
@@ -19,8 +19,9 @@
 import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-export const ORIGIN = 'https://kernelcad.com/';
-export const STUDIO = 'https://app.kernelcad.com/studio';
+// CrispCAD: the catalog site has no hosted origin by default; set CRISPCAD_CATALOG_ORIGIN when publishing.
+export const ORIGIN = process.env.CRISPCAD_CATALOG_ORIGIN ?? 'https://crispstrobe.github.io/kernelCAD-web/';
+export const REPOSITORY = 'https://github.com/CrispStrobe/kernelCAD-web';
 export const MODEL_VIEWER_CDN = 'https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js';
 const DESCRIPTION_MAX = 160;
 
@@ -166,7 +167,7 @@ export function metaDescription(text: string, max = DESCRIPTION_MAX): string {
 }
 
 export function pageTitle(asset: CatalogAsset): string {
-    return `${asset.title} - free low-poly ${asset.category} model (CC0) | kernelCAD`;
+    return `${asset.title} - free low-poly ${asset.category} model (CC0) | CrispCAD`;
 }
 
 function licenseOf(asset: CatalogAsset): { name: string; url: string | null } {
@@ -185,22 +186,13 @@ const HEAD_COMMON = `  <meta charset="UTF-8" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,500;1,500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
-  <!-- Same anonymous Cloudflare Web Analytics site token as kernelcad.com marketing pages.
-       Catalog detail and kit pages previously had no page-view measurement. -->
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"e5f5f4c6464f456d8f5376411e77f545"}'></script>`;
+  <!-- CrispCAD: no analytics. -->`;
 
 const NAV = `    <nav class="nav">
-      <a class="nav-mark" href="/">
-        <svg class="k" viewBox="0 0 84 84" fill="none" aria-label="kernelCAD">
-          <path d="M 14,12 L 26,12 L 26,34 Q 26,36 27.5,34.5 L 46,12 L 60,12 L 36,40 Q 35,42 36,44 L 60,72 L 46,72 L 27.5,49.5 Q 26,48 26,50 L 26,72 L 14,72 Z" fill="currentColor"/>
-        </svg>
-        <span>kernel<span class="cad">CAD</span></span>
-      </a>
+      <a class="nav-mark" href="/"><span>CrispCAD</span></a>
       <div class="nav-links">
         <a href="/catalog/">catalog</a>
-        <a href="/blog/">blog</a>
-        <a class="app-link" href="https://app.kernelcad.com">app ↗</a>
-        <a href="https://github.com/w1ne/kernelCAD-web">github</a>
+        <a href="${REPOSITORY}">github</a>
       </div>
     </nav>`;
 
@@ -285,7 +277,7 @@ function socialTags(title: string, description: string, url: string, image: stri
     const d = escapeHtml(description);
     return [
         `  <meta property="og:type" content="website" />`,
-        `  <meta property="og:site_name" content="kernelCAD" />`,
+        `  <meta property="og:site_name" content="CrispCAD" />`,
         `  <meta property="og:title" content="${t}" />`,
         `  <meta property="og:description" content="${d}" />`,
         `  <meta property="og:url" content="${escapeHtml(url)}" />`,
@@ -474,12 +466,12 @@ function productNextStep(asset: CatalogAsset): string {
     const action = controls > 0
         ? `change its ${controls} published parameter${controls === 1 ? '' : 's'}`
         : 'inspect the model';
-    return `      <section class="next-step" aria-label="Continue with kernelCAD">
-        <h2>Build your own model with kernelCAD</h2>
-        <p>Start with ${model} in kernelCAD Studio to ${action}. For a new design, kernelCAD also supports code-based CAD and MCP tools for AI assistants.</p>
+    return `      <section class="next-step" aria-label="Continue with CrispCAD">
+        <h2>Build your own model with CrispCAD</h2>
+        <p>Start with ${model} and evaluate its source with the CrispCAD CLI to ${action}. For a new design, CrispCAD also supports code-based CAD and MCP tools for AI assistants.</p>
         <div class="next-step-links">
           <a href="/code-cad/">Design with code</a>
-          <a href="/mcp/">Use kernelCAD with an AI assistant</a>
+          <a href="/mcp/">Use CrispCAD with an AI assistant</a>
         </div>
       </section>`;
 }
@@ -490,9 +482,8 @@ export function renderAssetPage(asset: CatalogAsset, kit: CatalogKit | undefined
     const description = metaDescription(asset.description);
     const image = `${url}preview.png`;
     const alt = previewAlt(asset);
-    const studio = `${STUDIO}?catalog=${encodeURIComponent(asset.kit)}/${encodeURIComponent(asset.id)}`;
-    const studioAbsolute = `${STUDIO}?catalog=${encodeURIComponent(asset.kit)}/${encodeURIComponent(asset.id)}`;
-    const prompt = `Use this free kernelCAD catalog asset: ${url}\n\nThe hosted kernelCAD MCP at https://mcp.kernelcad.com/mcp currently does not expose catalog lookup or fetch tools. Do not guess tool names. Use the page's free GLB or STEP download if you can fetch public URLs, or open the source in kernelCAD Studio: ${studioAbsolute}. Tell me which file or workflow you used.`;
+    const source = `${REPOSITORY}/blob/develop/catalog/kits/${encodeURIComponent(asset.kit)}/${encodeURIComponent(asset.id)}.kcad.ts`;
+    const prompt = `Use this free catalog asset: ${url}\n\nUse the page's GLB or STEP download, or evaluate its source with the local CrispCAD MCP server (crispcad mcp): ${source}. Tell me which file or workflow you used.`;
     const head = `  <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}" />
   <link rel="canonical" href="${url}" />
@@ -512,13 +503,13 @@ ${jsonForScript(breadcrumbJsonLd(asset, kit))}
             <img id="model-fallback" class="model-fallback" src="preview.png" alt="${escapeHtml(alt)}" width="512" height="512" />
             <model-viewer id="asset-viewer" src="${escapeHtml(`${asset.id}.glb`)}" poster="preview.png" alt="Interactive 3D preview of ${escapeHtml(asset.title)}" camera-controls auto-rotate touch-action="pan-y" shadow-intensity="0.45" loading="eager"></model-viewer>
           </div>
-          <p class="fine-print">This static page uses pre-rendered variants of the original kernelCAD source. Switch a preset to change the model; open it in Studio for arbitrary knob values.</p>
+          <p class="fine-print">This static page uses pre-rendered variants of the original kernelCAD source. Switch a preset to change the model; evaluate the source with the CrispCAD CLI for arbitrary knob values.</p>
           <div class="variant-list" role="group" aria-label="Choose a pre-rendered parameter preset">
 ${modelVariants(asset)}
           </div>
           <p id="variant-summary" class="variant-summary">Default parameter values</p>
           <h2>Download this model</h2>
-          <p class="fine-print">GLB follows the selected preset. STEP contains the default parameter values; use Studio to edit knobs before exporting a custom STEP file.</p>
+          <p class="fine-print">GLB follows the selected preset. STEP contains the default parameter values; evaluate the source with other knob values to export a custom STEP file.</p>
           <div class="downloads">
             <a id="download-glb" href="${escapeHtml(`${asset.id}.glb`)}" download="${escapeHtml(`${asset.id}.glb`)}">Download GLB · Default</a>
             <a href="${escapeHtml(`${asset.id}.step`)}" download="${escapeHtml(`${asset.id}.step`)}">Download STEP · Default</a>
@@ -526,18 +517,17 @@ ${modelVariants(asset)}
         </section>
         <div>
           <p>${escapeHtml(asset.description)}</p>
-          <a class="cta" href="${studio}">Open in Studio</a>
+          <a class="cta" href="${source}">View source</a>
 ${factsList(asset, kit)}
         </div>
       </div>
       <h2>Knobs</h2>
-      <p>${asset.params.length} parameter${asset.params.length === 1 ? '' : 's'} you can change in Studio before export.</p>
+      <p>${asset.params.length} parameter${asset.params.length === 1 ? '' : 's'} you can change before export.</p>
 ${knobTable(asset)}
 ${presetsSection(asset)}
 ${productNextStep(asset)}
       <h2>Use with an agent</h2>
-      <p>The kernelCAD MCP endpoint is live, but its current tool list does not include catalog lookup or fetch tools. This prompt avoids calling a catalog tool that is not available yet.</p>
-      <p><a href="https://mcp.kernelcad.com/mcp">kernelCAD MCP endpoint</a></p>
+      <p>Run the local CrispCAD MCP server (<code>crispcad mcp</code>) and give your agent this prompt.</p>
       <pre id="mcp-prompt" class="mcp-prompt">${escapeHtml(prompt)}</pre>
       <button type="button" class="copy-prompt" data-copy-prompt>Copy agent prompt</button>
 ${siblingList(asset, siblings)}
@@ -548,8 +538,8 @@ ${siblingList(asset, siblings)}
 /** A small, topic-specific entry point for searchers looking for a class of parts. */
 export function renderKitPage(kit: CatalogKit, assets: readonly CatalogAsset[]): string {
     const url = kitUrl(kit);
-    const title = `${kit.title} 3D models — editable CC0 kit | kernelCAD`;
-    const description = metaDescription(`${kit.description} Browse ${assets.length} free 3D models, open a model in kernelCAD Studio, or build parametric CAD using MCP.`);
+    const title = `${kit.title} 3D models — editable CC0 kit | CrispCAD`;
+    const description = metaDescription(`${kit.description} Browse ${assets.length} free 3D models, evaluate a model with the CrispCAD CLI, or build parametric CAD using MCP.`);
     const image = assets[0] ? `${assetUrl(assets[0])}preview.png` : `${ORIGIN}og-image.png`;
     const graph = {
         '@context': 'https://schema.org',
@@ -590,7 +580,7 @@ ${jsonForScript(graph)}
     const body = `      <p class="crumbs"><a href="/catalog/">Catalog</a> / ${escapeHtml(kit.title)}</p>
       <h1>${escapeHtml(kit.title)} 3D models</h1>
       <p>${escapeHtml(kit.description)}</p>
-      <p>Explore ${assets.length} free CC0 models. Open any part in kernelCAD Studio to inspect and edit it. Build new designs with <a href="/code-cad/">code-first CAD</a> or <a href="/mcp/">CAD MCP tools</a>.</p>
+      <p>Explore ${assets.length} free CC0 models. Open any part's source to inspect and edit it. Build new designs with <a href="/code-cad/">code-first CAD</a> or <a href="/mcp/">CAD MCP tools</a>.</p>
       <ul class="grid">
 ${cards.join('\n')}
       </ul>
@@ -598,7 +588,7 @@ ${cards.join('\n')}
     return document(head, body);
 }
 
-export const HUB_TITLE = 'Free low-poly 3D model catalog (CC0) | kernelCAD';
+export const HUB_TITLE = 'Free low-poly 3D model catalog (CC0) | CrispCAD';
 
 /** Describe the published collection, without asserting reviews, sales or indexing. */
 export function catalogHubJsonLd(index: CatalogIndex): Record<string, unknown> {
@@ -661,7 +651,7 @@ export function renderHub(index: CatalogIndex): string {
     const head = `  <title>${escapeHtml(HUB_TITLE)}</title>
   <meta name="description" content="${escapeHtml(description)}" />
   <link rel="canonical" href="${url}" />
-${socialTags(HUB_TITLE, description, url, firstImage, 'kernelCAD low-poly asset catalog')}
+${socialTags(HUB_TITLE, description, url, firstImage, 'CrispCAD low-poly asset catalog')}
   <script type="application/ld+json">
 ${jsonForScript(catalogHubJsonLd(index))}
   </script>`;
@@ -680,9 +670,9 @@ ${cards.join('\n')}
     });
     const body = `      <h1>Low-poly 3D model catalog</h1>
       <p>${escapeHtml(description)}</p>
-      <section aria-label="Use models with kernelCAD">
-        <h2>Use these models in kernelCAD</h2>
-        <p>Select a model to open it in Studio and edit its parameters. You can also <a href="/code-cad/">design a model with code</a> or use <a href="/mcp/">kernelCAD MCP tools with an AI assistant</a>.</p>
+      <section aria-label="Use models with CrispCAD">
+        <h2>Use these models in CrispCAD</h2>
+        <p>Select a model to view it and its editable parameters. You can also <a href="/code-cad/">design a model with code</a> or use <a href="/mcp/">CrispCAD MCP tools with an AI assistant</a>.</p>
       </section>
 ${FINDER}
       <section id="catalog-search-results" data-total="${total}" aria-label="Matching catalog models" hidden>

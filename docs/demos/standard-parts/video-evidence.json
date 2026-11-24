@@ -41,5 +41,5 @@
     "npx tsx src/agent/cli/index.ts render examples/parts/bolt-stack.kcad.ts --preset publish --width 2048 --height 1536 --pose 0,0 -o docs/demos/standard-parts/stack-front.png",
     "convert stack-front.pose-0-0.png -crop 1400x1100+330+210 +repage stack-detail.png"
   ],
-  "provenance": "Annotated still sequence composed from local kernelcad render --preset publish outputs of the committed example sources. Not a screen recording, turntable, deployed platform capture, physical hardware or strength test."
+  "provenance": "Annotated still sequence composed from local crispcad render --preset publish outputs of the committed example sources. Not a screen recording, turntable, deployed platform capture, physical hardware or strength test."
 }

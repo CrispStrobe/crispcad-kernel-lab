@@ -6,7 +6,7 @@
 // existing curve3dEval.ts:118 pattern for BRepGProp::LinearProperties.
 //
 // Units:
-//   - shape geometry is mm (kernelCAD-native)
+//   - shape geometry is mm (CrispCAD-native)
 //   - density is kg/m^3 (SI; URDF + SDF convention)
 //   - returned mass is kg
 //   - returned CoM is in shape-local mm

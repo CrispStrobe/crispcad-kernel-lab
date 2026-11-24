@@ -17,8 +17,8 @@ instance placement.
 - Video settings and output hashes: [`video-evidence.json`](./video-evidence.json)
 - Preview: [`poster.png`](./poster.png)
 
-The capture exports through kernelCAD's Node API (the path behind
-`kernelcad export step`), re-imports the written bytes with the OCCT XCAF STEP
+The capture exports through CrispCAD's Node API (the path behind
+`crispcad export step`), re-imports the written bytes with the OCCT XCAF STEP
 reader, and fails unless:
 
 - every BOM row maps to one STEP product with the same instance names and the

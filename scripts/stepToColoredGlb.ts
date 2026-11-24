@@ -6,7 +6,7 @@
 // 3D viewer (web 3D tabs) can load a pre-tessellated mesh through
 // three.js and NEVER download the 7.6 MB OCCT wasm decoder.
 //
-// Why not the kernelCAD kernel's own `fromSTEP -> export glb`? It discards the
+// Why not the CrispCAD kernel's own `fromSTEP -> export glb`? It discards the
 // AP214 per-face colors — the output is a single grey material. These Adafruit
 // sensor STEPs carry 18-24 real colors; dropping them would render every sensor
 // as a grey blob (worse than the procedural stand-in it replaces).

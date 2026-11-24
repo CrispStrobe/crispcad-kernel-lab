@@ -17,7 +17,7 @@ const sweepToleranceToolEntry: ToolRegistryEntry = {
       type: 'object',
       properties: {
         file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-        code: { type: 'string', description: 'Inline kernelCAD script source.' },
+        code: { type: 'string', description: 'Inline CrispCAD script source.' },
         assembly: { type: 'string', description: 'Assembly name; defaults to the first captured assembly.' },
         params: {
           type: 'object',

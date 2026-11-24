@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/mcp/tools/lookupCookbook.ts
 //
-// MCP tool: BM25 search over the curated kernelCAD cookbook. Returns
+// MCP tool: BM25 search over the curated CrispCAD cookbook. Returns
 // the top-k snippets matching a natural-language query, ranked by score
 // over title + tags + keywords + when_to_use (body excluded). Empty hits
 // is a valid success — tells the agent "no canonical pattern available

@@ -3,7 +3,7 @@
 // src/render-player/components/demoPlayer/sectionParam.ts
 //
 // Parser for the demo-player section-plane URL params. The headless render
-// path (`kernelcad render --section <axis>=<pos>`) forwards the validated
+// path (`crispcad render --section <axis>=<pos>`) forwards the validated
 // flag as `?section=<axis>:<pos>` (+ `?sectionflip=1`); DemoPlayerPage turns
 // the parsed state into a global renderer clipping plane via
 // sectionPlaneFromState (../viewer/sectionPlane).

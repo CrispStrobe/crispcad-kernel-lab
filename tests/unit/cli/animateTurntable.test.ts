@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // tests/unit/cli/animateTurntable.test.ts
 //
-// `kernelcad animate --turntable`: the CLI face of capture_animation
+// `crispcad animate --turntable`: the CLI face of capture_animation
 // ({ turntable: true }). Flags resolve through the MCP tool's validator
 // (resolveTurntableSettings) into the same engine (captureTurntable); the
 // turntable-only flags are refused without --turntable. Engines mocked.

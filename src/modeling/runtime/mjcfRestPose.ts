@@ -57,7 +57,7 @@ function authoredEuler(mate: MateRecord, table: ParamTable): [number, number, nu
 }
 
 /**
- * CAD rest in kernelCAD units (degrees or millimetres, or an XYZ Euler
+ * CAD rest in CrispCAD units (degrees or millimetres, or an XYZ Euler
  * triple for a ball). Driven mates follow their coupling. A scalar mate
  * with no pose is absent and exports as 0.
  */

@@ -13,7 +13,7 @@ describe('distGrepGate', () => {
         join(root, 'skills/x/SKILL.md'),
         '---\nname: x\ndescription: y\n---\n# clean\n',
       );
-      writeFileSync(join(root, 'README.md'), '# kernelCAD\n\nA NURBS BREP kernel.\n');
+      writeFileSync(join(root, 'README.md'), '# CrispCAD\n\nA NURBS BREP kernel.\n');
       const r = runGrepGate(root);
       expect(r.ok).toBe(true);
       expect(r.hits).toEqual([]);
@@ -53,7 +53,7 @@ describe('distGrepGate', () => {
       const root = mkdtempSync(join(tmpdir(), 'kc-grep-x-'));
       try {
         mkdirSync(join(root), { recursive: true });
-        writeFileSync(join(root, 'README.md'), `# kernelCAD\n\nLike ${word}.\n`);
+        writeFileSync(join(root, 'README.md'), `# CrispCAD\n\nLike ${word}.\n`);
         const r = runGrepGate(root);
         expect(r.ok).toBe(false);
       } finally {
@@ -66,7 +66,7 @@ describe('distGrepGate', () => {
     for (const prose of ['Like SendCutSend.', 'Inspired by sendcutsend', "vendor: 'sendcutsend'", 'https://sendcutsend.com/materials/']) {
       const root = mkdtempSync(join(tmpdir(), 'kc-grep-vendor-bad-'));
       try {
-        writeFileSync(join(root, 'README.md'), `# kernelCAD\n\n${prose}\n`);
+        writeFileSync(join(root, 'README.md'), `# CrispCAD\n\n${prose}\n`);
         const r = runGrepGate(root);
         expect(r.ok).toBe(false);
         expect(r.hits.some((h) => h.match === 'sendcutsend')).toBe(true);

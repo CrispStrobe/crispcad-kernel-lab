@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Default IBL in the demo player (the headless `kernelcad render` path). A
+// Default IBL in the demo player (the headless `crispcad render` path). A
 // metal (metalness ~1: steel, aluminium, brass…) reflects only its
 // environment, so with no environment it renders near-black except for
 // specular glints. When the script declares no environment, install

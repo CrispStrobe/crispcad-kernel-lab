@@ -2,12 +2,12 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
 // Drawing round-trip scorecard. Every reference part with an analytic volume
-// (assets/reference-parts/scorecard.json) is drawn by kernelCAD's own
+// (assets/reference-parts/scorecard.json) is drawn by CrispCAD's own
 // pdf-drawing exporter (auto-annotated, A3, third angle), read back by
 // drawing_to_cad, and the emitted script is rebuilt and measured. A part
 // passes when the rebuilt volume (the "mass check") and bbox extents match
 // the analytic values. This scores the reader on clean vector sheets drawn
-// by kernelCAD; it says nothing about scanned or third-party drawings.
+// by CrispCAD; it says nothing about scanned or third-party drawings.
 //
 // Run: npx tsx scripts/drawingRoundTripScorecard.ts [--out docs/drawing-roundtrip-scorecard.md]
 
@@ -109,12 +109,12 @@ export function renderReport(results: readonly RoundTripResult[], raster: string
     `**Result:** ${pass}/${results.length} parts rebuilt to the right volume and size from their drawing alone ` +
       `(${count('WRONG')} wrong, ${count('REFUSED')} refused, ${count('ERROR')} errors).`,
     '',
-    'Each reference part in `assets/reference-parts/scorecard.json` is drawn by kernelCAD\'s `pdf-drawing` exporter ' +
+    'Each reference part in `assets/reference-parts/scorecard.json` is drawn by CrispCAD\'s `pdf-drawing` exporter ' +
       '(automatic dimensions, A3, third-angle). `drawing_to_cad` reads only that PDF and emits a script. ' +
       'The script is rebuilt and measured against the analytic values. ' +
       `A part passes when its volume is within ±${VOLUME_TOLERANCE * 100}% (a mass check) and every bbox extent is within ${EXTENT_TOLERANCE_MM} mm.`,
     '',
-    '**Scope:** these are clean vector sheets drawn by kernelCAD itself, so the score is an upper bound on what the reader ' +
+    '**Scope:** these are clean vector sheets drawn by CrispCAD itself, so the score is an upper bound on what the reader ' +
       'does with third-party drawings. Scanned or raster drawings are out of scope for this reader (see the last section).',
     '',
     'Regenerate with `npm run drawing-roundtrip:scorecard`.',

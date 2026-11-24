@@ -33,7 +33,7 @@
   "posterSha256": "807b6c928a551c48980cd98a7282c994a8e9b5260d37d8a3e88c8d5d4778309b",
   "videoSha256": "e9e02170429a4e18844fa2c3414c1e8e568be2c9a9992745dc6be3ab811541b7",
   "inspection": "Both scenes extracted from the final MP4 and visually reviewed after generation.",
-  "scope": "Local kernelCAD Node API: STEP export, import as a KernelCAD project, second STEP export. Both files are read back through the OCCT XCAF STEP reader.",
+  "scope": "Local CrispCAD Node API: STEP export, import as a KernelCAD project, second STEP export. Both files are read back through the OCCT XCAF STEP reader.",
   "simulationRun": false,
   "deployed": false,
   "hardwareAccepted": false

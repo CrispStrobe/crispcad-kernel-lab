@@ -7,7 +7,7 @@
 //   OpenFOAM dictionaries  ->  blockMesh / snappyHexMesh / checkMesh /
 //   simpleFoam  ->  log + postProcessing parsers  ->  summary.
 //
-// Units: the CASE is SI (m, m/s, Pa, kg/s, N); kernelCAD geometry is mm and
+// Units: the CASE is SI (m, m/s, Pa, kg/s, N); CrispCAD geometry is mm and
 // is scaled by 1e-3 when the STL is written. The summary reports SI values,
 // with the mm-flavoured fields named so (`...Mm`).
 

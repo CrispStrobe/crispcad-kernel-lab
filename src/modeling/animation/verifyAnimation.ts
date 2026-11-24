@@ -3,7 +3,7 @@
 // src/modeling/animation/verifyAnimation.ts
 //
 // Animation-pose interference verification — the right-sized motion gate
-// for `kernelcad animate`. The capture engine deliberately does NOT run the
+// for `crispcad animate`. The capture engine deliberately does NOT run the
 // full-range mechanism-truth probe (48 minutes before frame 1 on the
 // gearfinity planetary stage; it judges poses the animation never visits).
 // This module instead checks interference at the poses the animation

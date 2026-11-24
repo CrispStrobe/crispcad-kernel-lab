@@ -2,14 +2,14 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/kernel/export/plyFormat.ts
 //
-// Stanford PLY writer for tessellated kernelCAD bodies and assemblies.
+// Stanford PLY writer for tessellated CrispCAD bodies and assemblies.
 //
 // Layout follows the reader conventions shared by MeshLab, Blender's PLY
 // importer, trimesh and Open3D:
 //
 //   ply
 //   format binary_little_endian 1.0        (or `format ascii 1.0`)
-//   comment kernelCAD PLY mesh export; units mm; Z up
+//   comment CrispCAD PLY mesh export; units mm; Z up
 //   comment part <index> <name>             (one per part, in file order)
 //   element vertex N
 //   property float x / y / z
@@ -100,7 +100,7 @@ function plyHeader(
   const lines = [
     'ply',
     `format ${encoding === 'ascii' ? 'ascii' : 'binary_little_endian'} 1.0`,
-    'comment kernelCAD PLY mesh export; units mm; Z up',
+    'comment CrispCAD PLY mesh export; units mm; Z up',
     ...parts.map((p, i) => `comment part ${i} ${headerSafe(p.name)}`),
     `element vertex ${merged.positions.length / 3}`,
     'property float x', 'property float y', 'property float z',

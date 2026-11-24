@@ -5,9 +5,9 @@
 //
 // The three renders are inputs. They come from the built CLI
 // (`npm run build:cli`), 640 × 480 per tile:
-//   kernelcad render elliptical-head.kcad.ts -o head.png --pose 25,20            -> head-outside.png
-//   kernelcad render elliptical-head.kcad.ts -o head.png --section y=0 --section-flip --pose 0,-18 -> head-section.png
-//   kernelcad render handhole-gasket.kcad.ts -o gasket.png --pose 20,55          -> gasket.png
+//   crispcad render elliptical-head.kcad.ts -o head.png --pose 25,20            -> head-outside.png
+//   crispcad render elliptical-head.kcad.ts -o head.png --section y=0 --section-flip --pose 0,-18 -> head-section.png
+//   crispcad render handhole-gasket.kcad.ts -o gasket.png --pose 20,55          -> gasket.png
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -184,9 +184,9 @@ try {
     media: probe,
     renders: Object.fromEntries(RENDERS.map((name, i) => [name, sha256(renders[i])])),
     renderInvocations: [
-      'kernelcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --pose 25,20 --width 640 --height 480',
-      'kernelcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --section y=0 --section-flip --pose 0,-18 --width 640 --height 480',
-      'kernelcad render docs/demos/path-ellipse/handhole-gasket.kcad.ts -o gasket.png --pose 20,55 --width 640 --height 480',
+      'crispcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --pose 25,20 --width 640 --height 480',
+      'crispcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --section y=0 --section-flip --pose 0,-18 --width 640 --height 480',
+      'crispcad render docs/demos/path-ellipse/handhole-gasket.kcad.ts -o gasket.png --pose 20,55 --width 640 --height 480',
     ],
     poster: 'poster.png',
     posterSha256: sha256(await readFile(join(HERE, 'poster.png'))),

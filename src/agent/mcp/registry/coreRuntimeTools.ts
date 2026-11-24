@@ -13,7 +13,7 @@ const evaluateScriptToolEntry: ToolRegistryEntry = {
       'Full local builds return viewerUrl only when KERNELCAD_VIEWER_DIST explicitly supplies a separate viewer bundle; the link is reused on later full builds. Otherwise viewerError explains the missing viewer and geometry remains available. ' +
       'Hosted builds return viewerMode: hosted and viewerHint pointing to open_in_studio; they do not start a loopback viewer. ' +
       'Full evaluations return step evidence: build validity, volume and before/after local PNG paths in one shared iso frame. Snapshots require PW_CDP_URL for an existing browser; unavailable captures report an explicit error. ' +
-      'Run a kernelCAD .kcad.ts script and report pass/fail + feature count + diagnostics + sceneSummary (BREP validity, volume in mm³, face count, bounding size in mm). ' +
+      'Run a CrispCAD .kcad.ts script and report pass/fail + feature count + diagnostics + sceneSummary (BREP validity, volume in mm³, face count, bounding size in mm). ' +
       'When ok is false, refuse is the first error (refuse.code, refuse.message, refuse.try) so the next edit can target it. ' +
       'When the scene is assembly-built (assembly().part(...) → .model()/.solvedModel()), ' +
       'also returns a parts summary { count, names } AND runs the mechanism-truth gate by ' +
@@ -46,7 +46,7 @@ const evaluateScriptToolEntry: ToolRegistryEntry = {
       type: 'object',
       properties: {
         file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-        code: { type: 'string', description: 'Inline kernelCAD script source.' },
+        code: { type: 'string', description: 'Inline CrispCAD script source.' },
         dry_run: {
           type: 'boolean',
           description:
@@ -97,7 +97,7 @@ const diffScriptsToolEntry: ToolRegistryEntry = {
     name: 'diff_scripts',
     description:
       'Use this when you need to see exactly what changed between two script versions. ' +
-      'Structured geometric delta between two versions of a kernelCAD script — a baseline ' +
+      'Structured geometric delta between two versions of a CrispCAD script — a baseline ' +
       '({ base_file } or { base_code }) and a revision ({ file } or { code }). Returns ' +
       'agent-readable JSON: per-part added/removed/renamed/changed (volume mm³ + exact bbox ' +
       "deltas, numbers matching inspect({ of: 'part-stats' })), total interference-volume delta with " +
@@ -126,7 +126,7 @@ const setParamToolEntry: ToolRegistryEntry = {
   definition: {
     name: 'set_param',
     description:
-      'Use this when you need to edit a param() default value in a kernelCAD script. Returns the modified code as text plus diagnostics from re-evaluating the result. Caller persists the new code via standard file-write tools (this tool has no side effects). ' +
+      'Use this when you need to edit a param() default value in a CrispCAD script. Returns the modified code as text plus diagnostics from re-evaluating the result. Caller persists the new code via standard file-write tools (this tool has no side effects). ' +
       'With preview: true it builds the edit in a scratch session instead and returns the diff_geometry summary plus the requirements-ledger and S1 binding diffs (which requirements flip, which margins shrink, which selectors moved or re-bound), without touching the active session, source, revision or caches. ' +
       'A preview whose revised build fails returns ok:false and no diff. Inspect after.requirementsOk to see whether the edit preserves declared intent; preview.ok only says the preview could be computed. ' +
       'FEATURE MODE: pass { feature, changes } instead of param_name/new_value to change a feature\'s own literal arguments in place, by feature id (inspect({ of: \'features\' }) lists ids and parameter names), e.g. { feature: \'cylinder_1\', changes: { r: 3.3 } }. ' +

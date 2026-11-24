@@ -3,7 +3,7 @@ name: kernelcad-fields
 description: Signed-distance fields — sdf.sphere/.box/.cylinder/.torus, sdf.smoothBlend, sdf.materialize — and TPMS lattice infill (body.lattice — gyroid, Schwarz-P, diamond, Neovius; graded, conformal). Use for smooth-blended primitives, organic shapes and lightweight lattice cores.
 ---
 
-# kernelCAD — signed-distance fields
+# CrispCAD — signed-distance fields
 
 Compose signed-distance fields (`sdf.sphere/.box/.cylinder/.torus`), blend them smoothly with `sdf.smoothBlend`, then call `sdf.materialize(field, { resolution })` to obtain a standard `Shape` that flows through booleans / fillets / exports.
 
@@ -88,7 +88,7 @@ After authoring an SDF-rooted Shape, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 — no `feature.sdf.*` diagnostics |
+| G-eval | `crispcad evaluate` exits 0 — no `feature.sdf.*` diagnostics |
 | G-sdf-finite | `evaluate_sdf` at the AABB centre and three corner samples returns a finite `distance` (no NaN / Infinity) |
 | G-smooth-blend-k-positive | Every `sdf.smoothBlend(_, _, k)` has `k > 0` — `k === 0` emits `feature.sdf.field-undefined` |
 | G-materialize-resolution-in-range | `resolution` is an integer in `[10, 200]`. Default 30; bump to 40-60 for fine blends; reserve 100+ for hero captures |

@@ -3,7 +3,7 @@
 //
 // A fastened mate whose two parts do not touch is a broken assembly on every
 // surface, including the cheap ones. The DRAW-01 negative control (an ear nut
-// fastened 2.5 mm above its lid) passed the default `kernelcad validate` while
+// fastened 2.5 mm above its lid) passed the default `crispcad validate` while
 // `restPoseMateGaps` caught it when called directly.
 
 import { describe, expect, it } from 'vitest';

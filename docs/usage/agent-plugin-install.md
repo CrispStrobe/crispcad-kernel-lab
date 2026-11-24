@@ -5,13 +5,13 @@ links [llms.txt](https://kernelcad.com/llms.txt), which gives supported host set
 and a read-only connection check.
 
 For local npm use, pick one published `kernelcad` version and use it for both
-the MCP server and `kernelcad skill install`. The package bundles
+the MCP server and `crispcad skill install`. The package bundles
 `dist/cli/skills/kernelcad/SKILL.md` and the specialty tree; each packaged
 `SKILL.md` has `metadata.version` stamped from `package.json.version` during
 `build:cli` / `prepack`. Source skills are not manually versioned. Hosted
 plugins follow the hosted service rather than a local npm version.
 
-kernelCAD ships as a plugin for Claude Code, Codex, Cursor, Gemini CLI and Grok
+CrispCAD ships as a plugin for Claude Code, Codex, Cursor, Gemini CLI and Grok
 Build. Every manifest points at the hosted MCP server
 `https://mcp.kernelcad.com/mcp` (streamable HTTP). The server works anonymously
 and also offers OAuth (dynamic client registration at
@@ -39,7 +39,7 @@ evidence, deterministic renders, and the visually inspected MP4 walkthrough.
 
 ## Already in ChatGPT and Claude: no install
 
-kernelCAD runs as a connected app in **ChatGPT** (Apps SDK, with the Studio
+CrispCAD runs as a connected app in **ChatGPT** (Apps SDK, with the Studio
 viewer and paint review inside the chat) and in **Claude / claude.ai** (custom
 connector). Add it from the chat settings and sign in:
 
@@ -47,7 +47,7 @@ connector). Add it from the chat settings and sign in:
 - Claude: [connect guide](https://app.kernelcad.com/connect?client=claude) or [claude.ai → Settings → Connectors](https://claude.ai/settings/connectors), URL `https://mcp.kernelcad.com/mcp`
 
 **One account everywhere.** The coding-agent plugins below use the same hosted
-server (`https://mcp.kernelcad.com/mcp`) and the same kernelCAD sign-in. A model
+server (`https://mcp.kernelcad.com/mcp`) and the same CrispCAD sign-in. A model
 saved from Claude Code, Codex, Cursor, Gemini or Grok opens at the same Studio
 share link (`/p/<slug>`) you see in ChatGPT or Claude. Sign in with the same
 account in each client.
@@ -59,7 +59,7 @@ then authenticate; Codex: `codex mcp login kernelcad`; Gemini: `/mcp auth kernel
 ## Claude Code
 
 ```bash
-claude plugin install kernelcad --marketplace w1ne/kernelCAD-web
+claude plugin install crispcad --marketplace w1ne/kernelCAD-web
 ```
 
 Needs Claude Code 2.1.275 or later. On older versions:
@@ -86,7 +86,7 @@ OpenAI's plugin portal.
 ## Cursor
 
 MCP server only, one click:
-[Add kernelCAD to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=kernelcad&config=eyJ1cmwiOiJodHRwczovL21jcC5rZXJuZWxjYWQuY29tL21jcCJ9).
+[Add CrispCAD to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=kernelcad&config=eyJ1cmwiOiJodHRwczovL21jcC5rZXJuZWxjYWQuY29tL21jcCJ9).
 The link carries `{"url":"https://mcp.kernelcad.com/mcp"}` in base64.
 
 MCP server and skills, as a local plugin (Cursor reads `.cursor-plugin/plugin.json`):
@@ -109,7 +109,7 @@ Update: `gemini extensions update kernelcad`. Remove: `gemini extensions uninsta
 ## Grok Build
 
 ```bash
-grok plugin marketplace add w1ne/kernelCAD-web && grok plugin install kernelcad --trust
+grok plugin marketplace add w1ne/kernelCAD-web && grok plugin install crispcad --trust
 ```
 
 Grok Build reads `.claude-plugin/marketplace.json`. `--trust` is required to
@@ -133,9 +133,9 @@ questions). Pair it with one of the MCP lines below.
 
 | Client | Command or link |
 |---|---|
-| Claude Code | `claude mcp add --transport http kernelcad https://mcp.kernelcad.com/mcp` |
-| Codex | `codex mcp add kernelcad --url https://mcp.kernelcad.com/mcp` |
-| Gemini CLI | `gemini mcp add -s user --transport http kernelcad https://mcp.kernelcad.com/mcp` |
+| Claude Code | `claude mcp add --transport http crispcad https://mcp.kernelcad.com/mcp` |
+| Codex | `codex mcp add crispcad --url https://mcp.kernelcad.com/mcp` |
+| Gemini CLI | `gemini mcp add -s user --transport http crispcad https://mcp.kernelcad.com/mcp` |
 | VS Code / GitHub Copilot | `code --add-mcp '{"name":"kernelcad","type":"http","url":"https://mcp.kernelcad.com/mcp"}'` or [Install in VS Code](https://insiders.vscode.dev/redirect/mcp/install?name=kernelcad&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.kernelcad.com%2Fmcp%22%7D) |
 | Cursor | [Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=kernelcad&config=eyJ1cmwiOiJodHRwczovL21jcC5rZXJuZWxjYWQuY29tL21jcCJ9) |
 
@@ -143,7 +143,7 @@ questions). Pair it with one of the MCP lines below.
 
 Claude Desktop and claude.ai: Settings → Connectors → Add custom connector, URL
 `https://mcp.kernelcad.com/mcp`. Local stdio alternative:
-`kernelcad install --claude-desktop`.
+`crispcad install --claude-desktop`.
 
 Windsurf (`~/.codeium/windsurf/mcp_config.json`):
 
@@ -176,7 +176,7 @@ mcpServers:
 ```
 
 Local stdio server for any client (bundled WASM kernel, no OCCT install):
-`kernelcad mcp`.
+`crispcad mcp`.
 
 ### Registries
 
@@ -185,7 +185,7 @@ Local stdio server for any client (bundled WASM kernel, no OCCT install):
 
 ## Coverage compared with text-to-cad
 
-| Channel | text-to-cad | kernelCAD |
+| Channel | text-to-cad | CrispCAD |
 |---|---|---|
 | ChatGPT app with in-chat Studio viewer and paint review | no | yes, live |
 | Claude / claude.ai connector | no | yes, live |
@@ -200,7 +200,7 @@ Local stdio server for any client (bundled WASM kernel, no OCCT install):
 | Grok Build | yes | yes |
 | Gemini CLI extension | yes | yes |
 | skills.sh (`npx skills add`) | yes | yes |
-| Claude Desktop | manual JSON (uvx) | custom connector URL, or `kernelcad install --claude-desktop` |
+| Claude Desktop | manual JSON (uvx) | custom connector URL, or `crispcad install --claude-desktop` |
 | Package manager runtime | PyPI `cadgen` via uvx | npm `kernelcad` via npx |
 | Hosted remote MCP (no local install) | no | yes |
 | VS Code / Copilot one-click and `code --add-mcp` | no | yes |

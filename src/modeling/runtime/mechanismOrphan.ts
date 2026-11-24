@@ -89,7 +89,7 @@ function buildPartAdjacency(
 ): Map<string, Set<string>> {
   // Build adjacency: part-name → set of neighbor part-names.
   //
-  // KC-04: kernelCAD has TWO assembly conventions and BOTH connect parts —
+  // KC-04: CrispCAD has TWO assembly conventions and BOTH connect parts —
   // `.mate()` + connectors (`arm.__mates()`) and the joint primitives
   // `.revolute()/.prismatic()/.ball()` (`arm.__joints()`). This
   // walk used to read the mate edge list only, so a perfectly sound

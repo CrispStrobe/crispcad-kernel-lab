@@ -78,7 +78,7 @@ function failingReviewOutput(): ReviewCadOutput {
       preserveInterfaces: ['base-yaw mate'],
       designGoal: 'Test hinge widening repair flow.',
     },
-    suggestedRepairPrompt: 'Repair the kernelCAD script using these deterministic review facts:\nRepair mode: parameter-tune\nDirective: Widen the hinge mate limits to cover the requested pose.\n\n- assembly.pose.out-of-limits [current]: mate exceeds limits. Hint: Widen the limits.',
+    suggestedRepairPrompt: 'Repair the CrispCAD script using these deterministic review facts:\nRepair mode: parameter-tune\nDirective: Widen the hinge mate limits to cover the requested pose.\n\n- assembly.pose.out-of-limits [current]: mate exceeds limits. Hint: Widen the limits.',
   };
 }
 

@@ -23,7 +23,7 @@ in memory.
 
 ## Provenance and scope
 
-- Geometry and materials come from the linked kernelCAD source example.
+- Geometry and materials come from the linked CrispCAD source example.
 - The MP4 renders the emitted GLB's actual triangle mesh with the repository's
   fixed-view software renderer and shows the measured bounds. It is **not** an
   interactive browser viewer, a standard viewer render, or a simulation.

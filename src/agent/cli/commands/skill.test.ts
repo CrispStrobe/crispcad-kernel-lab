@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { installCommand, renderOnefile } from './skill';
 
-describe('kernelcad skill install', () => {
+describe('crispcad skill install', () => {
   it('writes every SKILL.md from the skill tree into <target>/kernelcad-<name>/SKILL.md', async () => {
     const target = mkdtempSync(join(tmpdir(), 'kc-skill-install-'));
     await installCommand(target);
@@ -38,7 +38,7 @@ describe('kernelcad skill install', () => {
   });
 });
 
-describe('kernelcad skill onefile', () => {
+describe('crispcad skill onefile', () => {
   it('concatenates every SKILL.md with frontmatter blocks intact', async () => {
     const text = await renderOnefile();
     // Each skill contributes its own frontmatter block; expect at least 6 instances of '---\nname: '

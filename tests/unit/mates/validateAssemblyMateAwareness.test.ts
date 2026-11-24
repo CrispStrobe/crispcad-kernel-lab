@@ -1,7 +1,7 @@
 // tests/unit/mates/validateAssemblyMateAwareness.test.ts
 //
 // Regression test for the v0.6 mate-graph awareness of the synchronous
-// `validateAssembly` function (the path `kernelcad validate` CLI uses).
+// `validateAssembly` function (the path `crispcad validate` CLI uses).
 //
 // Surfaced 4× across Exp-B/C/D agent runs (ball-joint, gear-pair,
 // robotic-arm, screw-in-block): the v0.5 floating-part walk doesn't see

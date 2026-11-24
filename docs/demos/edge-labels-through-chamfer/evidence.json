@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: a NEMA 17 motor mount plate. A first chamfer breaks the entry rims; a second, later chamfer picks the exit rims by created edge label, which the first chamfer now keeps. OCCT volume and validity against a closed form; chamfer cone positions; labels after the first chamfer.",
+  "scope": "Local CrispCAD Node API: a NEMA 17 motor mount plate. A first chamfer breaks the entry rims; a second, later chamfer picks the exit rims by created edge label, which the first chamfer now keeps. OCCT volume and validity against a closed form; chamfer cone positions; labels after the first chamfer.",
   "invocation": "node --import tsx docs/demos/edge-labels-through-chamfer/capture-demo.mts",
   "source": "docs/demos/edge-labels-through-chamfer/mount-plate.kcad.ts",
   "sourceSha256": "6cf09db3d61d1e85dedcdab97ad3f3e428347fda597130f21b01f1d6f7e4a055",

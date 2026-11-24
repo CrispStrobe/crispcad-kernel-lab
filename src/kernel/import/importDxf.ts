@@ -177,7 +177,7 @@ function resolveScale(
     if (!unit) {
       throw new DxfParseError(
         'bad-units',
-        `line ${v.line}: $INSUNITS=${v.value.trim()} is not a length unit kernelCAD maps ` +
+        `line ${v.line}: $INSUNITS=${v.value.trim()} is not a length unit CrispCAD maps ` +
           `(supported: ${Object.entries(INSUNITS).map(([k, u]) => `${k}=${u}`).join(', ')}). ` +
           'Pass opts.units to state the intended unit explicitly.',
       );
@@ -186,7 +186,7 @@ function resolveScale(
   }
 
   // A DXF with no usable $INSUNITS carries bare numbers. Millimetres is the
-  // kernelCAD world unit and by far the most common intent in a 2D profile
+  // CrispCAD world unit and by far the most common intent in a 2D profile
   // exchange, so that is the assumption — reported, never silent, and
   // overridable with opts.units.
   return { scale: 1, source: 'assumed mm ($INSUNITS absent or 0/Unitless)' };
@@ -623,7 +623,7 @@ function throwUnsupportedEntity(b: EntityBlock): never {
     default:
       throw new DxfParseError(
         'unsupported-entity',
-    `${b.type} at line ${b.line}: unsupported DXF entity. kernelCAD reads LINE, ARC, CIRCLE, planar ELLIPSE, ` +
+    `${b.type} at line ${b.line}: unsupported DXF entity. CrispCAD reads LINE, ARC, CIRCLE, planar ELLIPSE, ` +
           'LWPOLYLINE, POLYLINE, INSERT, closed polyline HATCH boundaries, and clamped continuous planar SPLINE for 2D profiles; anything else is refused rather than dropped, ' +
           'because a dropped entity leaves a hole in the profile with no indication.',
       );

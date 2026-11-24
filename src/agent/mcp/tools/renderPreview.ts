@@ -8,7 +8,7 @@
 // LOOK → fix entirely in-band.
 //
 // REUSE, NOT A NEW RENDERER: the pixels come from the exact same pipeline as
-// `kernelcad render` / `kernelcad render inspect` — Node-side OCCT meshing +
+// `crispcad render` / `crispcad render inspect` — Node-side OCCT meshing +
 // the DemoPlayerPage bridge driven by headless chromium (headlessRender.ts).
 // What #440 adds is provisioning: resolveRenderBaseUrl() serves the prebuilt
 // static player (dist/headless-player) from an ephemeral 127.0.0.1 port, so
@@ -71,7 +71,7 @@ import {
 export const RENDER_PREVIEW_TIMEOUT_MS = 5 * 60 * 1000;
 
 export interface RenderPreviewInput {
-  /** Inline kernelCAD script source. Mutually exclusive with file. NOTE:
+  /** Inline CrispCAD script source. Mutually exclusive with file. NOTE:
    *  relative imports (e.g. lib.fromSTEP('./servo.step')) resolve against a
    *  temp directory in code mode — pass { file } for scripts with relative
    *  asset imports. */
@@ -111,7 +111,7 @@ export interface RenderPreviewInput {
   /** Playwright screenshot deadline in ms. Default leaves Playwright's 30 s
    *  in place; raise it for heavy lofts on slow machines. */
   screenshot_timeout_ms?: number;
-  /** Suppress the kernelCAD version watermark. */
+  /** Suppress the CrispCAD version watermark. */
   no_watermark?: boolean;
   /** Skip the mechanism-truth probe (it can dominate latency on large
    *  assemblies — full BREP interference sweeps). The preview then reports
@@ -124,7 +124,7 @@ export interface RenderPreviewInput {
   /** Cut the model with a single axis-aligned section plane so the captures
    *  show interior structure (wall thickness, pockets, whether a bore runs
    *  through) instead of only the outer shell. `position` is in mm along the
-   *  axis in kernelCAD's Z-up frame; `flip` keeps the positive-axis side
+   *  axis in CrispCAD's Z-up frame; `flip` keeps the positive-axis side
    *  (default keeps the negative-axis side). */
   section?: { axis: 'x' | 'y' | 'z'; position: number; flip?: boolean };
   /** Explode a multi-part assembly for the preview. `mode` defaults to
@@ -156,7 +156,7 @@ export interface RenderPreviewImage {
   name: string;
   /** Absolute PNG path on the MCP server's filesystem. */
   path: string;
-  /** What the camera shows — axis orientation in kernelCAD's Z-up frame. */
+  /** What the camera shows — axis orientation in CrispCAD's Z-up frame. */
   description: string;
 }
 
@@ -186,7 +186,7 @@ export interface RenderPreviewOutput {
 }
 
 /** Per-view camera orientation, phrased for an agent that needs to map
- *  pixels back to model coordinates (kernelCAD is Z-up). Derived from
+ *  pixels back to model coordinates (CrispCAD is Z-up). Derived from
  *  DemoPlayerPage's setRenderView camera math — keep in sync. */
 export const VIEW_DESCRIPTIONS: Record<RenderView, string> = {
   front:
@@ -227,7 +227,7 @@ function heroDescription(preset: RenderPreset): string {
   const p = presetDefaults(preset);
   return (
     `Publish hero — 3/4 front-right product shot (az=${p.heroAzDeg}°, el=${p.heroElDeg}°), ` +
-    'silhouette centred and auto-framed with margin; kernelCAD is Z-up.'
+    'silhouette centred and auto-framed with margin; CrispCAD is Z-up.'
   );
 }
 
@@ -686,7 +686,7 @@ async function resolveRenderBase(
       refusal: refusal(
         'cli.export-exception',
         `render_preview: ${e instanceof Error ? e.message : String(e)}`,
-        'Run `npm run build:player` (in-repo) or reinstall the kernelcad package so dist/headless-player exists; alternatively start `npm run dev` or pass base_url.',
+        'Run `npm run build:player` (in-repo) or reinstall the crispcad package so dist/headless-player exists; alternatively start `npm run dev` or pass base_url.',
       ),
     };
   }

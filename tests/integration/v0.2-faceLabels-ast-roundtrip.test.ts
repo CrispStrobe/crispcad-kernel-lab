@@ -1,7 +1,7 @@
 // tests/integration/v0.2-faceLabels-ast-roundtrip.test.ts
 // Task 8: AST round-trip tests for faceLabels.
 //
-// The kernelCAD add_feature tool is a raw text insertion tool — the agent
+// The CrispCAD add_feature tool is a raw text insertion tool — the agent
 // writes a TypeScript code snippet that is spliced into the script source.
 // The round-trip under test is:
 //

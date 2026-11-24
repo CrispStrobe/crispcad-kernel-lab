@@ -85,4 +85,4 @@ The [handoff bundle](../../artifacts/catalog-demos/mining-longwall-shearer-pick-
 - The current public detail and preview routes returned HTTP 200. The live target preview matched the branch baseline before the change; the branch is not deployed.
 - The local before/after source and preview, five-preview ledger, live-route baseline, test and lint evidence, generated-index audit, and visually inspected 15.9-second MP4 are retained in the [converter-cabinet handoff bundle](../../artifacts/catalog-demos/wind-converter-cabinet-material-review-20261113/README.md).
 
-The public record describes the native kernelCAD material assignment only. It does not assert a vendor-specific design, electrical rating, deployment, simulation, or hardware acceptance.
+The public record describes the native CrispCAD material assignment only. It does not assert a vendor-specific design, electrical rating, deployment, simulation, or hardware acceptance.

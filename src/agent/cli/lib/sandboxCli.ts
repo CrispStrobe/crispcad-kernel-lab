@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Sandbox guard for CLI ARGUMENTS, plus the `kernelcad sandbox` command.
+// Sandbox guard for CLI ARGUMENTS, plus the `crispcad sandbox` command.
 //
 // One commander `preAction` hook (installed on the root program) checks the
 // path/URL arguments and options of whichever subcommand is about to run,
@@ -188,8 +188,8 @@ Sandbox mode (regulated / air-gapped deployments):
   --workspace <dir>    workspace root for --sandbox (default: cwd; implies --sandbox)
   env: KERNELCAD_SANDBOX=1, KERNELCAD_WORKSPACE=<dir>, KERNELCAD_SANDBOX_ALLOW_LOOPBACK=1,
        KERNELCAD_SANDBOX_READ_PATHS=<dir>[:<dir>…] (extra read-only roots)
-  Both flags work before or after any subcommand (kernelcad --sandbox export …, kernelcad mcp --sandbox).
-  Check with: kernelcad sandbox status   ·   docs/sandbox.md`;
+  Both flags work before or after any subcommand (crispcad --sandbox export …, crispcad mcp --sandbox).
+  Check with: crispcad sandbox status   ·   docs/sandbox.md`;
 
 export function sandboxCommand(): Command {
   const cmd = new Command('sandbox').description('Report sandbox mode (workspace-confined files, no outbound network) and test paths against it');

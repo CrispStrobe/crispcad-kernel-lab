@@ -70,7 +70,7 @@ const GATED_MATE_TYPES: ReadonlySet<MateType> = new Set<MateType>([
 const FORCE_UNIT = 'N';
 /** Unit string for torque checks (Newton·metres). */
 const TORQUE_UNIT = 'N·m';
-/** mm → m for torque computation. `r` is read in mm (kernelCAD's canonical
+/** mm → m for torque computation. `r` is read in mm (CrispCAD's canonical
  *  length unit), force is N, so `r × F` yields N·mm; divide by `MM_PER_M`
  *  to land in N·m to compare against `maxLoad.torque`. */
 const MM_PER_M = 1000;

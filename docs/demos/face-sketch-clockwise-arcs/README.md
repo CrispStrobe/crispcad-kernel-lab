@@ -24,7 +24,7 @@ script reads the top face with `faceSketch('top')` and extrudes the profile
 The capture runs the script, then fails unless: the sketch has one outline
 and four hole loops; each corner arc has |bulge| = tan(π/8); the gasket is a
 valid B-rep of 60 × 40 × 1.5 mm with the closed-form volume (tolerance
-0.001 mm³); the flat profile behind `kernelcad export dxf` has five loops and
+0.001 mm³); the flat profile behind `crispcad export dxf` has five loops and
 the closed-form outline area; and the DXF export returns no error.
 
 The "before" values are not measured by the capture. They are recorded from a

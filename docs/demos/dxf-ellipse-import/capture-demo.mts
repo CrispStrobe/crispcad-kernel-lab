@@ -95,7 +95,7 @@ function frameSvg(index: number, measuredVolume: number): string {
     <rect x="930" y="580" width="260" height="27" rx="13" fill="#e7eefb"/>
     <text x="947" y="599" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#315c9e">4 NURBS · ${measured} mm³</text>
     <text x="64" y="670" font-family="Arial,sans-serif" font-size="15" fill="#586982">Local geometry validation · deployment, simulation and hardware acceptance are not shown</text>
-    <text x="1216" y="670" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#718096">kernelCAD · DXF import</text>
+    <text x="1216" y="670" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#718096">CrispCAD · DXF import</text>
   </svg>`;
 }
 
@@ -138,7 +138,7 @@ for (const face of feature.faces) {
     const at = (corner: number): [number, number, number] => {
       const vertex = face.indices[i + corner]!;
       const offset = vertex * 3;
-      // The software renderer uses Y-up while kernelCAD's modeling frame is Z-up.
+      // The software renderer uses Y-up while CrispCAD's modeling frame is Z-up.
       return [face.vertices[offset]!, face.vertices[offset + 2]!, face.vertices[offset + 1]!];
     };
     triangles.push({ v: [at(0), at(1), at(2)], color: [0.24, 0.45, 0.75] });

@@ -1,7 +1,7 @@
 // Original kernelCAD low-poly pine tree: a parametric game asset exported with
 // `export` glb `style: 'lowpoly'`. Faceted polygon profiles (not smooth
 // circles) give the flat-shaded look; colour knobs become palette zones.
-// Real-world scale: kernelCAD models in millimetres, the low-poly GLB is metres.
+// Real-world scale: CrispCAD models in millimetres, the low-poly GLB is metres.
 
 meta({
   name: 'pine-tree',

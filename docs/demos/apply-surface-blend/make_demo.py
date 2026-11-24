@@ -5,7 +5,7 @@ root = Path(__file__).parent
 result = json.loads((root / 'result.json').read_text())
 code = result['new_code'] or '(no source returned)'
 lines = [
-  'kernelCAD MCP · apply_surface_blend',
+  'CrispCAD MCP · apply_surface_blend',
   'Local source-checkout invocation · G2 edge fillet',
   '',
   'INPUT',

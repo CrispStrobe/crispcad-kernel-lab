@@ -75,7 +75,7 @@ export async function solveMatesTool(input: SolveMatesInput): Promise<SolveMates
   if (!active) {
     return {
       ok: false,
-      error: 'No active kernelCAD session. Run evaluate_script successfully before calling solve_mates.',
+      error: 'No active CrispCAD session. Run evaluate_script successfully before calling solve_mates.',
       errorCode: 'feature.invalid-args',
       errorHint: 'invalid-args.session.no-active-session',
     };

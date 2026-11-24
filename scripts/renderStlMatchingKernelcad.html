@@ -17,7 +17,7 @@ const azDeg = Number(params.get('az') ?? '30');
 const elDeg = Number(params.get('el') ?? '15');
 const size = Number(params.get('size') ?? '1024');
 const fovDeg = Number(params.get('fov') ?? '50');
-// Rotate STL geometry to align with kernelCAD's coord convention (Y=depth, Z=up).
+// Rotate STL geometry to align with CrispCAD's coord convention (Y=depth, Z=up).
 // Most STLs use Z=up natively; some use Y=up. Override via ?rotate=xdeg,ydeg,zdeg
 const rotateStr = params.get('rotate') ?? '-90,0,0';
 const [rotX, rotY, rotZ] = rotateStr.split(',').map(Number);
@@ -47,10 +47,10 @@ async function loadAll() {
     const mesh = new THREE.Mesh(geom, mat);
     group.add(mesh);
   }
-  // Apply orientation rotation (degrees → radians) — maps STL's coord system to kernelCAD's.
+  // Apply orientation rotation (degrees → radians) — maps STL's coord system to CrispCAD's.
   group.rotation.set((rotX * Math.PI) / 180, (rotY * Math.PI) / 180, (rotZ * Math.PI) / 180);
   group.updateMatrixWorld(true);
-  // Center group at origin (so framing math matches kernelCAD's "center at origin" assumption)
+  // Center group at origin (so framing math matches CrispCAD's "center at origin" assumption)
   const bbox = new THREE.Box3().setFromObject(group);
   const center = bbox.getCenter(new THREE.Vector3());
   group.position.sub(center);

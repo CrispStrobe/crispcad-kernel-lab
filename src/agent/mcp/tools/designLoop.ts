@@ -719,7 +719,7 @@ function buildQualityRepairPrompt(reviewFacts: readonly DesignLoopAttemptResult[
 
 function buildRecord(input: DesignLoopInput, attempts: readonly DesignLoopAttemptResult[]): BuildRecord {
   return {
-    title: input.recordTitle ?? 'kernelCAD design loop',
+    title: input.recordTitle ?? 'CrispCAD design loop',
     goal: input.goal,
     steps: attempts
       .filter((attempt): attempt is DesignLoopAttemptResult & { script: string } => attempt.script !== undefined)

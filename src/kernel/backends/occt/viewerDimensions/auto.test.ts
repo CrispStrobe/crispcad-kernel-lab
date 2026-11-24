@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Real-OCCT gate for the automatic viewer dimensions. kernelCAD's
+// Real-OCCT gate for the automatic viewer dimensions. CrispCAD's
 // cylinder(height, radius): cylinder(20, 2.5) is a Ø5 bore 20 long.
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import * as replicad from 'replicad';

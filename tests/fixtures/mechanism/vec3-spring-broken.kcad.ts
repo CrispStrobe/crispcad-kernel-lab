@@ -2,7 +2,7 @@
 //
 // Mirrors the P0 unit test #3 (`spring fastened by VEC3 origin onto a
 // MOVING parent — PR #341 pattern`) but in script form so both CLI
-// `kernelcad validate` AND Studio's runtime can load it through the
+// `crispcad validate` AND Studio's runtime can load it through the
 // normal `.kcad.ts` entry point.
 //
 // Why this fixture matters:

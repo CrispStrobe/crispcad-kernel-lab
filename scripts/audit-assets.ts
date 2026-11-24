@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Volume audit of the kernelCAD asset catalog: for every row of catalog/index.json
+// Volume audit of the CrispCAD asset catalog: for every row of catalog/index.json
 // record LOAD (source resolves + evaluates), KNOBS (param table matches the index),
 // MESH (low-poly GLB renders real geometry), and the failure mode when one fails.
 //   npx tsx audit-assets.ts [--out out.json] [--only kit/id] [--limit N]

@@ -176,7 +176,7 @@ async function buildPartLinkBlocks(
     linkBlocks.push([
       `  <link name="${escapeXml(partName)}">`,
       inertial.xml,
-      // Mesh geometry is kernelCAD-native mm; URDF consumes metres. The
+      // Mesh geometry is CrispCAD-native mm; URDF consumes metres. The
       // scale attribute keeps visuals/collisions consistent with the
       // already-SI inertials and joint origins.
       `    <visual>`,

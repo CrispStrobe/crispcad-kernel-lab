@@ -45,7 +45,7 @@ return arm.model();
 //   capture_animation({ file: 'lamp.kcad.ts', turntable: true, output_path: 'lamp.gif', width: 640, height: 640, fps: 20 })
 
 // Or from the CLI (same preset, same renderer):
-//   kernelcad render lamp.kcad.ts --preset publish -o lamp.png
-//   kernelcad render lamp.kcad.ts --preset publish --background transparent -o lamp-alpha.png
-//   kernelcad animate lamp.kcad.ts lamp.gif --turntable --width 640 --height 640 --fps 20
+//   crispcad render lamp.kcad.ts --preset publish -o lamp.png
+//   crispcad render lamp.kcad.ts --preset publish --background transparent -o lamp-alpha.png
+//   crispcad animate lamp.kcad.ts lamp.gif --turntable --width 640 --height 640 --fps 20
 ```

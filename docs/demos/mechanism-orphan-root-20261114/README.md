@@ -1,6 +1,6 @@
 # Mechanism truth: orphan-part root with a standalone first part
 
-`demo.mp4` is a 12-second text replay of recorded strict `kernelcad render`
+`demo.mp4` is a 12-second text replay of recorded strict `crispcad render`
 output for `examples/exploded/clamshell-table-first.kcad.ts`. The model declares
 an unlinked `table` before a `base`/`lid` hinge pair.
 

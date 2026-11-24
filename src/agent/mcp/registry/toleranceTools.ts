@@ -76,7 +76,7 @@ export const toleranceStackToolEntries: ToolRegistryEntry[] = [
             },
           },
           file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-          code: { type: 'string', description: 'Inline kernelCAD script source.' },
+          code: { type: 'string', description: 'Inline CrispCAD script source.' },
           requirement: {
             type: 'object',
             description: 'Optional fit window. pass follows the worst-case band.',

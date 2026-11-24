@@ -1,9 +1,9 @@
 ---
 name: kernelcad-features
-description: Edge and face features — fillet, chamfer, shell, face refs through operations, holes, cutouts. Use when adding rounded edges, recesses, bolt patterns, or carved profiles to a kernelCAD model.
+description: Edge and face features — fillet, chamfer, shell, face refs through operations, holes, cutouts. Use when adding rounded edges, recesses, bolt patterns, or carved profiles to a CrispCAD model.
 ---
 
-# kernelCAD — edge and face features
+# CrispCAD — edge and face features
 
 For a general edge-break or radius specification, use `verify({ check: 'edge-radius', file, min_radius_mm?, max_radius_mm?, require_edge_break?: 'external'|'internal'|'all', edges?, faces? })`. It inspects final BREP, reports per-face fillet radii and sharp edges, and treats planar chamfer strips heuristically without claiming a radius. See `docs/guide/edge-radius-check.md`.
 
@@ -527,7 +527,7 @@ See `cookbook/snippets/Q-S3-lenient-composition.kcad.ts`.
 
 ## Selectors that drift after an edit
 
-Every selector, whatever its syntax (a label such as `'mountFront.wall'`, an `@kc[...]` ref, a `q.*` query or a `{ byNormal, minArea, ... }` face query), records what it bound to: entity kind, surface type, the feature that produced it, direction, radius, area or length, and centroid. `evaluate_script` and `kernelcad evaluate <file> --json` return them as `selections`.
+Every selector, whatever its syntax (a label such as `'mountFront.wall'`, an `@kc[...]` ref, a `q.*` query or a `{ byNormal, minArea, ... }` face query), records what it bound to: entity kind, surface type, the feature that produced it, direction, radius, area or length, and centroid. `evaluate_script` and `crispcad evaluate <file> --json` return them as `selections`.
 
 A parameter edit can leave a selector valid but pointing at another face: the model still builds, the fillet or hole is just in the wrong place. Re-evaluating compares each selector with the previous evaluation:
 
@@ -535,7 +535,7 @@ A parameter edit can leave a selector valid but pointing at another face: the mo
 - `selector.binding-moved` (info): the same face, moved or resized (direction over 1 degree, radius, area or length over 1 %, centroid beyond the larger of 0.01 mm and 0.1 % of the part diagonal). Expected after a parameter edit.
 - Nothing is reported when the entity is within those tolerances. Zero or several matches still raise `query.empty` / `query.over-determined`.
 
-The previous evaluation is picked up automatically by `set_param` (after an `evaluate_script` of the same code), by `evaluate_script` on the same `file`, and by a model's `set_param`/code-edit rebuild. For anything else pass it explicitly: `kernelcad evaluate <file> --baseline <json>` takes the `--json` output of the earlier run; the `evaluate_script` tool takes `baseline` (the earlier `selections`).
+The previous evaluation is picked up automatically by `set_param` (after an `evaluate_script` of the same code), by `evaluate_script` on the same `file`, and by a model's `set_param`/code-edit rebuild. For anything else pass it explicitly: `crispcad evaluate <file> --baseline <json>` takes the `--json` output of the earlier run; the `evaluate_script` tool takes `baseline` (the earlier `selections`).
 
 To see the re-bind *before* committing the edit, call
 `set_param({ code, param_name, new_value, preview: true })`. It builds the
@@ -560,11 +560,11 @@ After applying edge/face features, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 — no `feature.invalid-args` or `feature.face-ref.*` diagnostics |
+| G-eval | `crispcad evaluate` exits 0 — no `feature.invalid-args` or `feature.face-ref.*` diagnostics |
 | G-face-ref-survives-transform | Apply features BEFORE final transforms when face-ref names matter. After translate/rotate, canonical face refs (top, bottom, etc.) still resolve, but inline queries may not |
 | G-no-rim-island | Fillets / chamfers on subtractive boundaries (hole rims, pocket edges) reach a CONTINUOUS edge loop — no broken arcs or unfilleted segments in renders |
 | G-shell-thickness-positive | Shell offset `t` is positive (outward) AND less than the smallest local feature radius — otherwise shells inverts or self-intersects |
-| G-no-overlap | `kernelcad interference` reports zero overlaps; subtractive features (`hole`, `cutout`) clear their target volume completely |
+| G-no-overlap | `crispcad interference` reports zero overlaps; subtractive features (`hole`, `cutout`) clear their target volume completely |
 
 ## Requirements ledger — declare what the design must satisfy
 

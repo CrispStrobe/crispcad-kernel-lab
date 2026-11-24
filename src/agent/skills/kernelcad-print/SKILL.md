@@ -3,7 +3,7 @@ name: kernelcad-print
 description: Close the physical print loop — check FDM printability and pick the print orientation first (dfmSpec process 'fdm'), slice a model to real G-code with a slicer CLI (export target:'model' format:'gcode'), then upload it to a network printer and start the print (send_to_printer). Load when the task is "print this" / "send this to my printer" / "will this print without supports", not just "export the mesh".
 ---
 
-# kernelCAD — print loop
+# CrispCAD — print loop
 
 ## When to load this skill
 
@@ -23,7 +23,7 @@ dfmSpec({ process: 'fdm', buildDirection: '+x', nozzleMm: 0.4,
           maxOverhangDeg: 45, maxBridgeMm: 10, printer: 'generic-fdm' })
 ```
 
-`evaluate_script` / `kernelcad evaluate` then fail on unsupported overhangs
+`evaluate_script` / `crispcad evaluate` then fail on unsupported overhangs
 (`dfm.fdm.overhang-unsupported`), over-long bridges
 (`dfm.fdm.bridge-too-long`), walls under 2 × nozzle
 (`dfm.fdm.wall-below-nozzle`), and a part too big for the bed
@@ -32,7 +32,7 @@ warn. The overhang hint names the best axis-aligned rotation and what it
 buys, e.g. `Rotate -90° about Y (.rotateY(-90), or dfmSpec buildDirection:
 '+x'): unsupported area drops from 938.2 to 0.0 mm²`. The full per-part
 report with all six orientations ranked is `verify({ check: 'dfm' })` (the
-`fdm[]` block) or `kernelcad dfm <file> --json`.
+`fdm[]` block) or `crispcad dfm <file> --json`.
 
 Act on it by declaring that `buildDirection`. The gcode export below reads
 it and rotates the part into that orientation before the bed gate and the
@@ -62,7 +62,7 @@ export({
 })
 ```
 
-CLI equivalent: `kernelcad export gcode <file> -o <out.gcode>`.
+CLI equivalent: `crispcad export gcode <file> -o <out.gcode>`.
 
 This shells out to a real slicer CLI using OrcaSlicer flags (OrcaSlicer is
 the supported CLI; PrusaSlicer header parsing is supported separately) — never a placeholder. Detection order: `KERNELCAD_SLICER`
@@ -95,7 +95,7 @@ contacted by an export.
 ## Sending it to a printer: `send_to_printer`
 
 In sandbox mode (`--sandbox` / `KERNELCAD_SANDBOX=1`), `send_to_printer` and
-`kernelcad print send` are refused with `cli.sandbox-command-refused` because
+`crispcad print send` are refused with `cli.sandbox-command-refused` because
 they need the network. Slicing to G-code and exporting a slicer-ready 3MF into
 the workspace still work.
 
@@ -130,7 +130,7 @@ Failures come back as `tool.send-to-printer.unreachable` (can't connect/
 auth) or `tool.send-to-printer.upload-failed` (connected, but the upload
 or print-start command was rejected).
 
-CLI equivalent: `kernelcad print send <gcode-file> --protocol <p> --host <h> ...`
+CLI equivalent: `crispcad print send <gcode-file> --protocol <p> --host <h> ...`
 
 ## Opening it in a slicer yourself: slicer-ready 3MF
 
@@ -149,14 +149,14 @@ writes the per-object filament slot (slot N = Nth distinct colour); pick
 the filament colours in the slicer. See the `slicer-ready-3mf` cookbook
 snippet.
 
-## Opening a STEP/3MF directly in a local slicer: `kernelcad slicer open`
+## Opening a STEP/3MF directly in a local slicer: `crispcad slicer open`
 
 For human review or manual print setup, the CLI can ask the detected local
 slicer to open an already-exported STEP or 3MF file:
 
 ```bash
-kernelcad slicer open model.step
-kernelcad slicer open model.3mf
+crispcad slicer open model.step
+crispcad slicer open model.3mf
 ```
 
 Detection order: `KERNELCAD_SLICER` env var, then `orca-slicer`,
@@ -165,7 +165,7 @@ The command returns exit code `1` with a typed `no-slicer` or `spawn-failed`
 result when no slicer is available or it cannot be started; the exported file
 is left untouched.
 
-In sandbox mode (`--sandbox` / `KERNELCAD_SANDBOX=1`), `kernelcad slicer open`
+In sandbox mode (`--sandbox` / `KERNELCAD_SANDBOX=1`), `crispcad slicer open`
 is refused outright with `cli.sandbox-command-refused` because it launches a
 local GUI binary outside the in-process guard.
 
@@ -188,7 +188,7 @@ fits on (`Fits on: Bambu Lab H2D ('bambu-h2d'), ...`):
 One registry drives the 3MF `arrange` bed, the bed-fit warnings, the gcode
 bed gate and slicer bed, `dfmSpec({ printer })` and `send_to_printer`.
 The bed is the usable single-tool build volume from the maker's spec page
-(URL and check date in `kernelcad print printers --json`). All ship a
+(URL and check date in `crispcad print printers --json`). All ship a
 0.4 mm nozzle. An unknown id fails with the list of valid ids.
 
 | id | build volume (mm) | slicer |
@@ -217,7 +217,7 @@ The bed is the usable single-tool build volume from the maker's spec page
 | `voron-2.4-350` | 350×350×310 | orca |
 | `ultimaker-s5` | 330×240×300 | generic |
 
-CLI: `kernelcad print printers` (add `--json` for the full records).
+CLI: `crispcad print printers` (add `--json` for the full records).
 
 ## Full loop example
 

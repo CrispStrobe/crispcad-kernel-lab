@@ -143,7 +143,7 @@ function expandUse(ctx: WalkContext, tag: Tag, m: Matrix): void {
   } else if (NON_RENDERING.has(lower)) {
     throw new SvgParseError(
       'unsupported-element',
-      `${targetWhere}: a <use> of a non-rendering <${target.name}> draws nothing kernelCAD can import.`,
+      `${targetWhere}: a <use> of a non-rendering <${target.name}> draws nothing CrispCAD can import.`,
     );
   } else {
     ctx.emit(lower, target, tm);

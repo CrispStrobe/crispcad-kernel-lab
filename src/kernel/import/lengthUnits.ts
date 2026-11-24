@@ -4,7 +4,7 @@
 //
 // The length units a 2D vector file can declare, and their millimetre scale.
 //
-// kernelCAD's world is millimetres, so every importer's job is to land on one
+// CrispCAD's world is millimetres, so every importer's job is to land on one
 // number: how many millimetres is one source coordinate worth. This table is
 // that number and nothing else — unit DISCOVERY (DXF `$INSUNITS`, SVG
 // `width` + `viewBox`) is format-specific and stays in the two parsers.

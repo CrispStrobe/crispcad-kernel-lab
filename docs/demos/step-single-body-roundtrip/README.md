@@ -17,8 +17,8 @@ the colour reads back as `#3366cc` from each file.
 - Video settings and output hashes: [`video-evidence.json`](./video-evidence.json)
 - Preview: [`poster.png`](./poster.png)
 
-The capture uses kernelCAD's Node API: the export path behind
-`kernelcad export step` and the project writer behind `kernelcad import-step`.
+The capture uses CrispCAD's Node API: the export path behind
+`crispcad export step` and the project writer behind `crispcad import-step`.
 It reads both STEP files back with the OCCT XCAF STEP reader and fails unless,
 for each file:
 
@@ -31,7 +31,7 @@ for each file:
 
 ## Behavior
 
-`kernelcad export step` on a script that returns a bare shape now writes one
+`crispcad export step` on a script that returns a bare shape now writes one
 named STEP product. The name is the script file name without its directory and
 `.kcad.ts` extension. The colour is the shape colour found on the returned
 feature or on its primary upstream features, the same rule as the single-shape

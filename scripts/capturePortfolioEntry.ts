@@ -95,7 +95,7 @@ async function main(): Promise<void> {
   renameSync(join(outDir, 'meta.json'), join(outDir, 'capture-meta.json'));
 
   // 2. STEP + STL via the kernelcad CLI.
-  // Signature: `kernelcad export <format> <file> -o <out>` (positional).
+  // Signature: `crispcad export <format> <file> -o <out>` (positional).
   const stepPath = join(outDir, 'build.step');
   const stlPath = join(outDir, 'build.stl');
   execFileSync('node', ['dist/cli/index.js', 'export', 'step', a.script, '-o', stepPath], { stdio: 'inherit' });
@@ -170,7 +170,7 @@ async function main(): Promise<void> {
     '',
     '| File | Description |',
     '|------|-------------|',
-    '| `build.kcad.ts` | kernelCAD source script |',
+    '| `build.kcad.ts` | CrispCAD source script |',
     '| `build.mp4` | Build + rotate demo video |',
     '| `build.step` | STEP export (multi-body, preserves part names) |',
     '| `build.stl` | STL export (merged mesh) |',

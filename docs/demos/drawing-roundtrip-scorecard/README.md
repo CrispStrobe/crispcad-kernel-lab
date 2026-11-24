@@ -1,7 +1,7 @@
 # Drawing round-trip scorecard demo
 
 `npm run drawing-roundtrip:scorecard` draws each of the 27 reference parts
-(`assets/reference-parts/scorecard.json`) with kernelCAD's `pdf-drawing`
+(`assets/reference-parts/scorecard.json`) with CrispCAD's `pdf-drawing`
 exporter. That sheet is auto-dimensioned, A3, third angle, with datum and
 tolerance frames. The script then reads the PDF back with `drawing_to_cad`,
 rebuilds the emitted script, and compares it with the analytic volume and bbox.
@@ -32,7 +32,7 @@ bash docs/demos/drawing-roundtrip-scorecard/capture.sh
 
 ## Scope
 
-These are clean vector sheets that kernelCAD drew itself, so the score is an
+These are clean vector sheets that CrispCAD drew itself, so the score is an
 upper bound for third-party drawings. It is not a test on public practice
 drawings, which are mostly raster images; `drawing_to_cad` refuses raster
 pages. The remaining failures are things the reader does not model: fillets,

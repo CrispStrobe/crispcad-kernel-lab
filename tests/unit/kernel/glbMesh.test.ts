@@ -3,7 +3,7 @@
 // tests/unit/kernel/glbMesh.test.ts
 //
 // lib.meshFromGLB: a composite in-memory GLB decodes into material groups,
-// rotates glTF Y-up to kernelCAD Z-up, and yields a display body.
+// rotates glTF Y-up to CrispCAD Z-up, and yields a display body.
 import { afterAll, describe, expect, it } from 'vitest';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';

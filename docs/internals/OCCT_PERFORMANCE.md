@@ -1,9 +1,9 @@
 > **Ported from `kernelCAD-private` research; revised for v0.1+ implementation.**
 > See the kernelcad-NORTHSTAR architecture spec (in kernelCAD-private) for current architecture.
 
-# OCCT WebAssembly Performance Guide for kernelCAD
+# OCCT WebAssembly Performance Guide for CrispCAD
 
-**Project**: kernelCAD — Parametric CAD (OCCT + replicad + TypeScript)
+**Project**: CrispCAD — Parametric CAD (OCCT + replicad + TypeScript)
 **Document Type**: Research / Architecture Reference
 **Date**: 2026-03-20
 **Status**: Reference — Architecture Phase
@@ -298,7 +298,7 @@ shapeFix.delete();
 
 ### 3.5 The Complete Recovery Pattern
 
-The kernelCAD feature compute function should use this error recovery cascade:
+The CrispCAD feature compute function should use this error recovery cascade:
 
 ```typescript
 type BooleanOp = 'fuse' | 'cut' | 'common';
@@ -621,7 +621,7 @@ class GeometryEngine {
 }
 ```
 
-**Note**: `worker.terminate()` is the nuclear option — it kills the entire WASM instance. The new worker must re-initialize opencascade.js (~500ms–2s). For kernelCAD, this is acceptable since the timeout scenario (>10s computation) is already an error state.
+**Note**: `worker.terminate()` is the nuclear option — it kills the entire WASM instance. The new worker must re-initialize opencascade.js (~500ms–2s). For CrispCAD, this is acceptable since the timeout scenario (>10s computation) is already an error state.
 
 ### WASM Thread Limitation
 
@@ -676,7 +676,7 @@ OCCT uses reference-counting via `Handle<T>` (equivalent to `shared_ptr`). In op
 - If the result `shape` was not separately referenced, deleting the builder frees the shape
 - Use `shape.IsNull()` to check if a handle is still valid
 
-**Recommended shape ownership pattern for kernelCAD**:
+**Recommended shape ownership pattern for CrispCAD**:
 
 ```typescript
 class ShapeOwner {
@@ -703,7 +703,7 @@ class ShapeOwner {
 
 ### Shape Lifetime in the Feature Graph
 
-In the kernelCAD worker, OCCT shapes persist across multiple compute calls. The worker's `ShapeCache` is the authority on which shapes are alive:
+In the CrispCAD worker, OCCT shapes persist across multiple compute calls. The worker's `ShapeCache` is the authority on which shapes are alive:
 
 ```typescript
 // In worker: shapes live here
@@ -881,7 +881,7 @@ Total: ~600ms instead of ~700ms (small gain here; larger on complex models)
 
 ### 7.1 replicad (https://replicad.xyz)
 
-replicad is the **recommended starting point** for kernelCAD. It provides a high-level, ergonomic TypeScript API over opencascade.js.
+replicad is the **recommended starting point** for CrispCAD. It provides a high-level, ergonomic TypeScript API over opencascade.js.
 
 **Pros**:
 - Clean builder API (`draw().hLine(10).vLine(10).close().extrude(20)`)
@@ -896,7 +896,7 @@ replicad is the **recommended starting point** for kernelCAD. It provides a high
 - Face selection from `meshShell()` requires per-face tessellation workaround
 - No constraint solver
 
-**kernelCAD strategy**: Use replicad for ~80% of operations. For stable naming and advanced features (`BRepFeat_MakePrism::PerformUntilFace()`, `BRepOffsetAPI_DraftAngle`), access `shape.wrapped` to get the raw `TopoDS_Shape` and call opencascade.js directly.
+**CrispCAD strategy**: Use replicad for ~80% of operations. For stable naming and advanced features (`BRepFeat_MakePrism::PerformUntilFace()`, `BRepOffsetAPI_DraftAngle`), access `shape.wrapped` to get the raw `TopoDS_Shape` and call opencascade.js directly.
 
 ### 7.2 CascadeStudio (https://github.com/zalo/CascadeStudio)
 
@@ -969,7 +969,7 @@ Three.js-based CSG libraries (e.g., `three-bvh-csg`) perform Boolean operations 
 
 ## 8. Recommended OCCT Build Configuration
 
-For kernelCAD's needs, the following OCCT module set is recommended. This covers all parametric modeling operations while excluding the OCCT visualization stack (replaced by Three.js) and unnecessary file formats.
+For CrispCAD's needs, the following OCCT module set is recommended. This covers all parametric modeling operations while excluding the OCCT visualization stack (replaced by Three.js) and unnecessary file formats.
 
 ### Modules to Include
 
@@ -1214,7 +1214,7 @@ The following sources informed this document. Since web search was unavailable a
   Primary source for build configuration, WASM initialization API, and TypeScript binding status.
 
 - **replicad documentation**: https://replicad.xyz/docs/intro
-  API reference for the high-level TypeScript wrapper used in kernelCAD.
+  API reference for the high-level TypeScript wrapper used in CrispCAD.
 
 - **replicad source (GitHub)**: https://github.com/sgenoud/replicad
   Reference for `meshShell()` implementation, face tessellation approach, and Worker compatibility.
@@ -1249,7 +1249,7 @@ The following sources informed this document. Since web search was unavailable a
 - **FreeCAD source — OCCT integration**: https://github.com/FreeCAD/FreeCAD
   Reference for OCCT boolean robustness patterns, `ShapeFix_Shape` usage, and tolerance management in a real-world parametric CAD system.
 
-- **kernelCAD internal research**:
+- **CrispCAD internal research**:
   - `REPLICAD_DEEP_DIVE.md` — Performance table, face tessellation approach, API mapping
   - `OCCT_VS_ASM_GAPS.md` — Boolean robustness comparison, `BRepCheck_Analyzer` usage
   - `PARAMETRIC_HISTORY_IMPLEMENTATION.md` — Incremental recompute and caching strategy

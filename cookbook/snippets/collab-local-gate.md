@@ -13,7 +13,7 @@ example: examples/collab/bracket-and-motor-plate.kcad.ts
 
 ```typescript
 // Run from the repository; sources come from git, not the working tree.
-//   kernelcad collab check \
+//   crispcad collab check \
 //     --file examples/collab/bracket-and-motor-plate.kcad.ts \
 //     --base origin/develop --head origin/develop \
 //     --yours my-branch --out merged.kcad.ts --json

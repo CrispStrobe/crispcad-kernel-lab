@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedBy": "kernelcad import-step",
+  "generatedBy": "crispcad import-step",
   "input": {
     "fileName": "unicode-name.step",
     "sha256": "144f12a953b679503b19cb84addcc67a51a326125aac7cc181c8fd254430a538",

@@ -50,4 +50,4 @@ diagnostic, its volume equals the closed form within 1 part in 1 000 000,
 and there are five chamfer cones, all between z 5.5 and 6.
 
 The three solid views (`plate-top.png`, `plate-bottom.png`,
-`rim-closeup.png`) are `kernelcad render` output from the built CLI.
+`rim-closeup.png`) are `crispcad render` output from the built CLI.

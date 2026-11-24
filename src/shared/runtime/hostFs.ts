@@ -66,7 +66,7 @@ export function requireHostFs(feature: string): HostFs {
     throw new KernelError(
       'cli.host-fs-unavailable',
       `${feature} needs filesystem access, which the browser runtime does not have. ` +
-        `Run this script through the kernelCAD CLI or MCP server instead, or remove the ${feature} call.`,
+        `Run this script through the CrispCAD CLI or MCP server instead, or remove the ${feature} call.`,
     );
   }
   return installed;

@@ -1,4 +1,4 @@
-# kernelCAD v0.17 hero — single-spool turbojet (display model)
+# CrispCAD v0.17 hero — single-spool turbojet (display model)
 
 `examples/gallery/turbojet-engine.kcad.ts` is an exhibit-grade cutaway of a
 J85-class single-spool turbojet: inlet guide vanes, an 8-stage axial

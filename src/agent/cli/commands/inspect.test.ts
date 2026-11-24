@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/inspect.test.ts
 //
-// W4 inspection — Task 4: `kernelcad inspect step` CLI. Tests target the
+// W4 inspection — Task 4: `crispcad inspect step` CLI. Tests target the
 // exported action function (repo convention — commander wiring is thin).
 // Fixture: same two-disjoint-solid STEP recipe as inspectStep.test.ts.
 

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/intent/kernelError.ts
 //
-// `KernelError` is the kernelCAD-thrown exception type. Carrying a structured
+// `KernelError` is the CrispCAD-thrown exception type. Carrying a structured
 // `code` field lets the script-runtime exception path emit a `CompilerDiagnostic`
 // with the same code that the catalogue registers a hint for, instead of
 // the generic `cli.script-exception` fallback.

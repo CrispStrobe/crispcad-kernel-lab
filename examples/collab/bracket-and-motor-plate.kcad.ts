@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-/* eslint-disable @typescript-eslint/no-require-imports -- require() is the kernelCAD requirements API. */
+/* eslint-disable @typescript-eslint/no-require-imports -- require() is the CrispCAD requirements API. */
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
 // Two-part model used by the collaboration gate example and the `collab check`

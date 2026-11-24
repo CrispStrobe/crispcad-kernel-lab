@@ -224,9 +224,9 @@ export async function runPhysicsCriteria(
  * qvel=0 / qacc=0 and report any joint whose required holding torque
  * is non-finite (NaN / Infinity / very large).
  *
- * Mapping kernelCAD's `solved.transforms` poses to MuJoCo's qpos vector
+ * Mapping CrispCAD's `solved.transforms` poses to MuJoCo's qpos vector
  * is direct for revolute / prismatic mates (one qpos slot per mate),
- * but the kernelCAD `NumericPoses` map is keyed by mate name, not by
+ * but the CrispCAD `NumericPoses` map is keyed by mate name, not by
  * the qpos index. We use `jointOrder` from the MJCF emitter to walk
  * mate-by-mate and look up each mate's pose value.
  */
@@ -578,10 +578,10 @@ async function runDropOnRelease(
 }
 
 /**
- * Translate a kernelCAD `NumericPoses` map (keyed by mate name) into
+ * Translate a CrispCAD `NumericPoses` map (keyed by mate name) into
  * a flat qpos array matching the MuJoCo model's joint order.
  *
- * For revolute / cylindrical / pin_slot the kernelCAD pose value is in
+ * For revolute / cylindrical / pin_slot the CrispCAD pose value is in
  * degrees; MJCF converts to radians. For prismatic it's in mm; MJCF
  * converts to metres. Anything we don't recognize (ball mates) defaults
  * to 0 — drop-test will exercise it, criterion 5's "is it finite" check
@@ -624,7 +624,7 @@ function jointOrderToQpos(
       }
       // Planar scalar decomposition and any future untyped joint retain
       // the legacy fallback; supported scalar mates above use their
-      // declared kernelCAD units at every magnitude, including near zero.
+      // declared CrispCAD units at every magnitude, including near zero.
       out.push(Math.abs(v) > 2 * Math.PI ? (v * Math.PI) / 180 : v);
     } else if (Array.isArray(v)) {
       // Ball joint pose triple → 4 quaternion slots in MuJoCo's qpos.

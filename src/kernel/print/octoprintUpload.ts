@@ -5,7 +5,7 @@
 // Real OctoPrint REST upload: POST multipart/form-data to
 // /api/files/local with the X-Api-Key header. `select`/`print` in the
 // form body ask OctoPrint to start the print immediately after upload —
-// OctoPrint's own documented contract, not a kernelCAD invention.
+// OctoPrint's own documented contract, not a CrispCAD invention.
 // https://docs.octoprint.org/en/master/api/files.html#upload-file-or-create-folder
 
 import type { UploadOutcome, UploadRequest } from './types';

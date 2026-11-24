@@ -1058,7 +1058,7 @@ function attributeShadowingWarning(
       `leaf '${leaf.featureId}' (${leaf.featureKind}) has its own ${attribute} but is unioned into ` +
       `'${shadower.featureId}' (${shadower.featureKind}) which also has its own ${attribute}. ` +
       `The leaf ${attribute} is visible during the build animation only; the static render ` +
-      `(kernelcad render, post-rotate capture-demo) shows the head ${attribute} on the fused silhouette. ` +
+      `(crispcad render, post-rotate capture-demo) shows the head ${attribute} on the fused silhouette. ` +
       `A ${attribute} on the union result covers every face. To keep the leaf ${attribute} on the faces ` +
       `that came from the leaf, drop the ${attribute} on '${shadower.featureId}': union() keeps each ` +
       `member's own ${attribute} on its faces, so one rigid body needs no extra assembly part per colour.`,

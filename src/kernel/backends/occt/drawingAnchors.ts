@@ -15,7 +15,7 @@ import type { WorldFramePart } from './sceneToWorldFrame';
 
 /**
  * Where an annotation attaches. Either an explicit model-space point, or a
- * query naming geometry the way every other kernelCAD selector does.
+ * query naming geometry the way every other CrispCAD selector does.
  * An edge resolves to its curve midpoint, a face to its centre.
  */
 export type DrawingAnchor =

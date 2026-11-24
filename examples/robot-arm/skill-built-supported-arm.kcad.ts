@@ -1,6 +1,6 @@
 // Tool-built compact robot arm trial.
 //
-// Purpose: exercise the kernelCAD authoring skill + deterministic review loop
+// Purpose: exercise the CrispCAD authoring skill + deterministic review loop
 // on a fresh arm, using explicit support contracts so "moving but floating"
 // joints are rejected.
 

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Repackage the kernelCAD-exported 10 mm cube as a two-instance, nested
+// Repackage the CrispCAD-exported 10 mm cube as a two-instance, nested
 // 3MF Core component assembly. Keeps the source OPC package and mesh intact.
 
 import { readFile, writeFile } from 'node:fs/promises';
@@ -30,7 +30,7 @@ const nestedAssembly = [
 ].join('\n');
 
 if (!xml.includes('</resources>') || !xml.includes('<item objectid="1" />')) {
-  throw new Error('Source 3MF does not match the expected kernelCAD cube fixture.');
+  throw new Error('Source 3MF does not match the expected CrispCAD cube fixture.');
 }
 xml = xml
   .replace('</resources>', `${nestedAssembly}\n  </resources>`)

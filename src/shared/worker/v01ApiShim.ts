@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 /**
- * Browser-side compatibility shim for the kernelCAD v0.1 script API.
+ * Browser-side compatibility shim for the CrispCAD v0.1 script API.
  *
  * The v0.1 kernel (`src/modules/api.ts`, `src/script-runtime/*`) executes
  * `.kcad.ts` scripts in a Node `vm` context that doesn't exist in browsers.

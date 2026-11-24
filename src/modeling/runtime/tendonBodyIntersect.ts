@@ -5,7 +5,7 @@
 // P11 Slice 2 — criterion 8 helper (`mechanism.tendon-body-intersect`).
 // A balance tendon's routed path must stay clear of every part except near
 // its two endpoint attachments. This is the static authoring
-// backstop that runs in `kernelcad validate` BEFORE MuJoCo spins up — it
+// backstop that runs in `crispcad validate` BEFORE MuJoCo spins up — it
 // red-flags "the spring cuts through the arm" at author time.
 //
 // Straight route entries are connected by line segments. Wrap geoms expand

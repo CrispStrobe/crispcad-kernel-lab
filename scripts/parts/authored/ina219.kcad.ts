@@ -6,7 +6,7 @@
 // Form factor: 25.4 × 20.3 × ~5 mm with 6-pin 2.54 mm header.
 // Distinctive: blue FR4, SOIC-8 INA219, 0.1 Ω sense shunt bar, VIN+/− pads.
 
-// cylinder(height, radius) — kernelCAD convention.
+// cylinder(height, radius) — CrispCAD convention.
 
 const PCB_L = 25.4;
 const PCB_W = 20.3;

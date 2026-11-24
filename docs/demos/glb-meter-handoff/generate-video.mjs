@@ -52,7 +52,7 @@ function frame(section) {
     <text x="695" y="579" font-family="Arial,sans-serif" font-size="15" fill="#52657e">Mesh rendered from the GLB; no interactive viewer or simulation.</text>
     <text x="72" y="634" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#17243a">${caption}</text>
     <rect x="72" y="658" width="370" height="30" rx="15" fill="#e0e9f7"/><text x="90" y="679" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing=".6" fill="#31547f">LOCAL EXPORT · METADATA + BOUNDS VERIFIED</text>
-    <text x="1205" y="679" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">kernelCAD · GLB scale</text>
+    <text x="1205" y="679" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">CrispCAD · GLB scale</text>
   </svg>`;
 }
 

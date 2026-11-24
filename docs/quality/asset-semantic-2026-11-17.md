@@ -21,7 +21,7 @@ preview PNG hashes matched the branch renders before editing.
 one of seven otherwise matching I/O card housings. The model now uses steel for
 the rack and all card housings, with separate green channel, green RUN, and red
 ERROR indicator-lens controls and preset values. The preview remains a generic
-kernelCAD scene asset and makes no controller-state or vendor-product claim.
+CrispCAD scene asset and makes no controller-state or vendor-product claim.
 
 No change was made to the other four sampled assets. Their rendered previews
 read as the named equipment and showed no material mismatch established by this
@@ -63,7 +63,7 @@ the 3,616-triangle count are unchanged.
 The [five-preview ledger, before/after renders, GLB regression, generated-index
 check, and inspected MP4](../../artifacts/catalog-demos/mining-jaw-crusher-eccentric-shaft-material-review-20261117/README.md)
 record this follow-up. The public material-role description stays native to the
-kernelCAD asset; no vendor product identity is claimed. The branch is not
+CrispCAD asset; no vendor product identity is claimed. The branch is not
 deployed, and the local preview/regression do not imply simulation or hardware
 acceptance. The full catalog integration suite passed 137 files and 207 tests,
 including the complete source/export/index-freshness check.
@@ -81,7 +81,7 @@ beams. Geometry, dimensions, presets, and triangle budget are unchanged.
 
 The [five-preview ledger, before/after previews, baseline-failing and passing
 exported-GLB regression, regenerated index evidence, and inspected MP4](../../artifacts/catalog-demos/shipyard-hull-block-fabrication-jig-base-rail-material-review-20261117/README.md)
-record this material-only correction. The preview is a local kernelCAD software
+record this material-only correction. The preview is a local CrispCAD software
 render; the branch is not deployed, and no simulation or hardware acceptance is
 claimed. A different finish split on the paired rails of `ship-lift-cradle` is
 recorded in the ledger for separate review. The shipyard structural quality
@@ -104,7 +104,7 @@ mesh are unchanged.
 The [five-preview ledger, before/after renders, baseline-failing and passing
 exported-GLB regression, generated-index evidence, and inspected MP4](../../artifacts/catalog-demos/shipyard-ship-lift-cradle-rail-material-review-20261117/README.md)
 record this local material correction. The public asset remains a generic
-kernelCAD model; it does not claim a vendor design or universal shipyard paint
+CrispCAD model; it does not claim a vendor design or universal shipyard paint
 standard. Its current public detail page returned HTTP 200 before the change;
 this branch is not deployed, so post-deployment behavior is not claimed.
 

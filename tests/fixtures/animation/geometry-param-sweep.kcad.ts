@@ -8,7 +8,7 @@
 // Studio baked playback only re-applies rigid per-part world transforms — it
 // never re-meshes — so it cannot represent this changing shape. The bake
 // endpoint must REFUSE it with `animation.bake.geometry-param` (use offline
-// `kernelcad animate` instead). Offline MP4 capture re-meshes every frame and
+// `crispcad animate` instead). Offline MP4 capture re-meshes every frame and
 // renders it correctly.
 
 // ── Params ───────────────────────────────────────────────────────────────────

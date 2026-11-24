@@ -767,7 +767,7 @@ function resolveTendonWrapGeoms(state: AssemblyState, name: string, opts: Tendon
  * the two referenced connectors.
  *
  * Unlike `mate(...)`, a tendon is NOT a kinematic constraint — it
- * doesn't add or remove DOFs. kernelCAD's spanning-tree FK ignores
+ * doesn't add or remove DOFs. CrispCAD's spanning-tree FK ignores
  * tendons entirely; they only fire under `validate --include-physics`,
  * which feeds the assembly to MuJoCo via `mjcfExport`.
  *

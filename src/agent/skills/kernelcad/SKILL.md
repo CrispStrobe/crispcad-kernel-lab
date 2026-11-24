@@ -1,9 +1,9 @@
 ---
 name: kernelcad
-description: kernelCAD entry decision tree — what skill to load when, universal conventions that apply everywhere. Load this FIRST; it points at the right specialty skill for your task.
+description: CrispCAD entry decision tree — what skill to load when, universal conventions that apply everywhere. Load this FIRST; it points at the right specialty skill for your task.
 ---
 
-# kernelCAD
+# CrispCAD
 
 A two-tier skill system. **Load `kernelcad-authoring` to write or modify any `.kcad.ts` model.** Add specialty skills as the task demands.
 
@@ -34,7 +34,7 @@ A two-tier skill system. **Load `kernelcad-authoring` to write or modify any `.k
 - An evaluation reported an error, a gate failed, or a feature came back degraded in `featureHealth` → load `kernelcad-repair` for the bounded repair loop (`why_did_this_fail` → `repair_script`).
 - Will this part hold this load? Structural evidence — peak von Mises stress, deflection, safety factor against yield, named hot-spot regions, stress heatmaps — and a gate that fails the build when the margin is not met (`shape.feaStudy({...})`, `run_fea`, `fea_summary`) → also load `kernelcad-fea`.
 - How high does this model rocket fly, is it stable, how fast does it land? Mass and CG from the parts, Barrowman CP and static margin in calibers from the nose and fin geometry, RK4 trajectory with ISA atmosphere, launch rail and parachute; apogee, max speed, rail-exit speed, descent rate, a time series and an animationView track, plus an evaluate gate on the margin (`arm.flightStudy({...})`, `run_flight`) → stay in `kernelcad-authoring` (API reference: Rocket flight study).
-- How much pressure does this duct, pipe or manifold cost, how does the flow split between outlets, or how much drag does this part see in a stream? Steady incompressible CFD evidence from OpenFOAM — pressure drop, per-outlet flow, Cd / Cl, Reynolds number and convergence verdict, mid-plane velocity PNG (`shape.cfdStudy({...})`, `run_cfd`, `cfd_summary`, `kernelcad cfd run`) → also load `kernelcad-cfd`.
+- How much pressure does this duct, pipe or manifold cost, how does the flow split between outlets, or how much drag does this part see in a stream? Steady incompressible CFD evidence from OpenFOAM — pressure drop, per-outlet flow, Cd / Cl, Reynolds number and convergence verdict, mid-plane velocity PNG (`shape.cfdStudy({...})`, `run_cfd`, `cfd_summary`, `crispcad cfd run`) → also load `kernelcad-cfd`.
 
 ## Key globals available today
 
@@ -49,17 +49,17 @@ A two-tier skill system. **Load `kernelcad-authoring` to write or modify any `.k
 
 - **Units**: millimetres, degrees, Z-up right-handed.
 - **Return rule**: every `.kcad.ts` script `return`s a single `Shape` (or `Scene` from `assembly().model()`); without a `return` the last created shape is used and evaluate warns `script.no-return`.
-- **Diagnostic-anchored hints**: when a kernelCAD tool throws, the error carries a `hint` field tied to a diagnostic code (`feature.*`, `assembly.*`, etc.). Read the hint — it carries the fix.
+- **Diagnostic-anchored hints**: when a CrispCAD tool throws, the error carries a `hint` field tied to a diagnostic code (`feature.*`, `assembly.*`, etc.). Read the hint — it carries the fix.
 - **Clarify load-bearing intent before generating**: when a generation request is ambiguous on parameters the design hangs on — overall dimensions, units, symmetry, part count, fit/clearance targets — ask 1–3 targeted clarifying questions BEFORE authoring geometry. Guessing a load-bearing number produces a confidently wrong model. If you proceed without answers, state each assumption explicitly and encode it as a named `param()` so it stays visible and editable.
 - **Words to CAD / Words to geometry**: preserve the prompt-to-geometry mapping. Important nouns and constraints from the user's words should become named source sections, parameters, parts, connectors, materials, tests, or visible artifacts; do not reduce the job to untraceable hand-tuned shapes.
 - **Source-first CAD**: the `.kcad.ts` file is the design source of truth. Generated screenshots, videos, STEP, STL, and score JSON are evidence/artifacts, not editable source. Change source, then regenerate explicit targets.
 - **Derived artifacts are not source-of-truth**: exported files (`.step`, `.stl`, `.dxf`, `.3mf`, `.glb`, `.obj`, `.usd`, `.svg` drawing sheets, `.urdf`, `.srdf`, `.sdf`) are evidence and deliverables, not editable targets. To change geometry, edit the `.kcad.ts` script and re-export. Do not hand-edit derived files.
 - **`@kc[...]` topology refs are the canonical handoff format**: faces, edges, vertices, and connectors are addressable as stable string refs of the form `@kc[<owner>/<kind>/<refName>]` (with optional `#modifier` for a sub-aspect of an entity, e.g. `#normal`, `#axis`, `#center`). Emit them from `inspect({ of: 'faces' })` / `inspect({ of: 'edges' })` / `inspect({ of: 'assembly' })` outputs; paste them into `hole`, `fillet`, `add_mate`, `add_connector`, or `query({ mode: 'resolve' })`. The structured forms still work as escape hatches. Full grammar and resolution semantics live in `kernelcad-mcp/SKILL.md`.
 - **Queries are first-class**: `q.face(...)`, `q.edge(...)`, `q.connector(...)`, etc. are lazy topology-selection values that compose via set algebra (`q.union` / `q.intersection` / `q.subtraction`) and chain via `.and(...)`, `.or(...)`, `.minus(...)`, `.nth(i)`, `.asLenient()`. Strings (`@kc[...]`) are sugar over the same internal Query value — emit either form and the kernel sees one type. Use strings for simple refs (`'@kc[base/face/top]'`); use Queries when geometric narrowing (`q.closestTo`) or composition (`q.union(a, b)`) matters. Full grammar + semantics in `kernelcad-mcp/SKILL.md`.
-- **No broad regeneration**: generate only the named output needed for the task (`kernelcad render`, `kernelcad export`, demo capture, portfolio capture). Do not run directory-wide artifact refreshes unless the user asked for a release/demo rebuild.
+- **No broad regeneration**: generate only the named output needed for the task (`crispcad render`, `crispcad export`, demo capture, portfolio capture). Do not run directory-wide artifact refreshes unless the user asked for a release/demo rebuild.
 - **Catalog parts over fake geometry**: for real hardware such as servos, motors, bearings, fasteners, connectors, sensors, and boards, prefer `lib.fromSTEP(...)` with a recorded source/provenance over hand-modeled placeholder boxes/cylinders. Use placeholders only for blockouts or when the real part is unavailable.
-- **Validation before screenshots**: use deterministic checks first (`kernelcad evaluate`, exports, `inspect({ of: 'assembly' })`, `review_cad`, interference checks, scorer gates). Visual review is required evidence for rendered artifacts, but it does not replace geometry checks.
-- **Deterministic visual evidence**: when visual evidence matters, run `kernelcad render inspect <file> <outDir>` to produce an inspection bundle with a manifest and canonical RGB views. Add `--channels rgb,mask,depth,normals` when machine-readable object masks, depth, or view-space normals are needed. Use `--focus <names>` or `--hide <names>` to isolate feature ids or assembly part names when clutter would obscure the check. Keep richer channels in the same manifest packet; do not replace the canonical RGB views. `--shading flat` shows face normals for tessellation checks; `--screenshot-timeout <ms>` raises the headless screenshot deadline.
+- **Validation before screenshots**: use deterministic checks first (`crispcad evaluate`, exports, `inspect({ of: 'assembly' })`, `review_cad`, interference checks, scorer gates). Visual review is required evidence for rendered artifacts, but it does not replace geometry checks.
+- **Deterministic visual evidence**: when visual evidence matters, run `crispcad render inspect <file> <outDir>` to produce an inspection bundle with a manifest and canonical RGB views. Add `--channels rgb,mask,depth,normals` when machine-readable object masks, depth, or view-space normals are needed. Use `--focus <names>` or `--hide <names>` to isolate feature ids or assembly part names when clutter would obscure the check. Keep richer channels in the same manifest packet; do not replace the canonical RGB views. `--shading flat` shows face normals for tessellation checks; `--screenshot-timeout <ms>` raises the headless screenshot deadline.
 
 ## Mandatory visual-critique step (applies to ALL agents, every skill)
 

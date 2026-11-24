@@ -18,6 +18,6 @@
 <text x="112" y="426" class="body">without meta              n=2100  min=95  median=491  mean=640.79  p90=1157  max=2998</text>
 <text x="112" y="492" class="body">program only              n=2100  min=95  median=468.5  mean=606.62  p90=1078  max=2959</text>
 <text x="112" y="558" class="body">Large sources excluded: 0; largest included: 8313 bytes.</text>
-    <text x="112" y="817" class="muted">kernelCAD native catalogue source measurement · 2026-11-05</text>
+    <text x="112" y="817" class="muted">CrispCAD native catalogue source measurement · 2026-11-05</text>
     <text x="1468" y="817" class="muted">03 / 4</text>
   </svg>

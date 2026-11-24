@@ -16,7 +16,7 @@
 //     child-side connector origin — not the parent-side one.
 //   - <axis><xyz> is expressed in the joint frame, which shares the child
 //     link orientation: the child-side connector axis.
-//   - Mesh geometry is kernelCAD-native mm; SDFormat consumes metres. Every
+//   - Mesh geometry is CrispCAD-native mm; SDFormat consumes metres. Every
 //     <mesh> carries <scale>0.001 0.001 0.001</scale> so visuals, collisions
 //     and the (already-SI) inertials agree.
 //   - The default mesh <uri> is the relative `meshes/<part>.stl`, resolved
@@ -63,7 +63,7 @@ const DEFAULT_MESH_PREFIX = 'meshes/';
 const SDF_VERSION = '1.10';
 const MM_TO_M = 1e-3;
 const DEG_TO_RAD = Math.PI / 180;
-/** kernelCAD shape geometry is mm; SDFormat consumes metres. */
+/** CrispCAD shape geometry is mm; SDFormat consumes metres. */
 const MESH_SCALE_BLOCK = '<scale>0.001 0.001 0.001</scale>';
 
 export async function sdfSerialize(arm: Assembly, opts: SdfSerializeOptions): Promise<SdfSerializeResult> {

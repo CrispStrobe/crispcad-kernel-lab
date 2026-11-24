@@ -11,7 +11,7 @@
 ```
 A milling setup, written as code.
 
-lib.fixture brings the T-slot clamping kit into kernelCAD: T-slot nuts (slot 10, 12, 14 mm), clamping studs (63 to 160 mm), flange nuts, strap clamps and step blocks, keyed to M8, M10 and M12.
+lib.fixture brings the T-slot clamping kit into CrispCAD: T-slot nuts (slot 10, 12, 14 mm), clamping studs (63 to 160 mm), flange nuts, strap clamps and step blocks, keyed to M8, M10 and M12.
 
 Every part carries its stock dimensions and placement connectors: the T-nut's mating face, the stud's two ends, the clamp's slot axis, the block's treads.
 
@@ -22,7 +22,7 @@ Two honest limits. The dimensions are nominal envelope values from the stock tab
 It runs in Studio, and from Claude or ChatGPT through MCP, from the same script.
 
 Repo link in the first comment.
-#CAD #OpenSource #Machining #kernelCAD
+#CAD #OpenSource #Machining #CrispCAD
 ```
 
 *(944 chars · first comment: `github.com/w1ne/kernelCAD-web`)*

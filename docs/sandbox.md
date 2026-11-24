@@ -1,14 +1,14 @@
 # Sandbox mode
 
 Sandbox mode is for regulated and air-gapped deployments. It keeps the local
-kernelCAD CLI and the local MCP server inside one workspace directory and
+CrispCAD CLI and the local MCP server inside one workspace directory and
 refuses outbound network at runtime.
 
 ```sh
-kernelcad --sandbox export step plate.kcad.ts -o out/plate.step   # one command
-kernelcad mcp --sandbox --workspace /srv/cad                       # MCP server
-KERNELCAD_SANDBOX=1 KERNELCAD_WORKSPACE=/srv/cad kernelcad mcp     # same, by env
-kernelcad --sandbox sandbox status                                 # what is enforced
+crispcad --sandbox export step plate.kcad.ts -o out/plate.step   # one command
+crispcad mcp --sandbox --workspace /srv/cad                       # MCP server
+KERNELCAD_SANDBOX=1 KERNELCAD_WORKSPACE=/srv/cad crispcad mcp     # same, by env
+crispcad --sandbox sandbox status                                 # what is enforced
 ```
 
 `--sandbox` and `--workspace <dir>` work before or after any subcommand.
@@ -35,7 +35,7 @@ Every path is checked on its real location:
    final link. A link inside the workspace that points outside it is refused,
    even before its target exists.
 4. Read and write access is allowed under the workspace root. Read-only
-   access is allowed under the runtime roots: the kernelCAD package and its
+   access is allowed under the runtime roots: the CrispCAD package and its
    `node_modules`, the Playwright browser cache, the Node binary directory,
    `PATH` directories (so helper binaries such as `ffmpeg` can be found), and
    `KERNELCAD_SANDBOX_READ_PATHS`. `/dev/null`, `/dev/urandom` and the standard
@@ -73,7 +73,7 @@ there. You can delete that directory at any time.
 
 ### Network
 
-All outbound traffic from the kernelCAD process is refused, and the refusal
+All outbound traffic from the CrispCAD process is refused, and the refusal
 happens before any packet leaves:
 
 - `net.Socket.prototype.connect` is wrapped. This is the floor for http,
@@ -115,22 +115,22 @@ Bundled HDRI presets work. A URL `environment` is refused.
 
 | Refused outright | Why |
 | --- | --- |
-| `kernelcad mcp --cloud` | Proxies every call to the hosted API. |
-| `kernelcad stats` | Admin telemetry API. |
-| `kernelcad print send`, MCP `send_to_printer` | Uploads to a network printer. |
-| `kernelcad slicer open` | Launches a local GUI binary outside the in-process guard. |
-| `kernelcad install` | Writes MCP client configs in your home directory and runs other agent CLIs. |
-| `kernelcad telemetry enable` / `reset` | Telemetry is forced off. |
+| `crispcad mcp --cloud` | Proxies every call to the hosted API. |
+| `crispcad stats` | Admin telemetry API. |
+| `crispcad print send`, MCP `send_to_printer` | Uploads to a network printer. |
+| `crispcad slicer open` | Launches a local GUI binary outside the in-process guard. |
+| `crispcad install` | Writes MCP client configs in your home directory and runs other agent CLIs. |
+| `crispcad telemetry enable` / `reset` | Telemetry is forced off. |
 
 Network **modes** of other tools are refused per argument. Their offline
 modes keep working:
 
 | Refused mode | Offline equivalent |
 | --- | --- |
-| `import_step` `url` / `upload` | `content_base64`, or a file in the workspace with `kernelcad import-step` |
+| `import_step` `url` / `upload` | `content_base64`, or a file in the workspace with `crispcad import-step` |
 | `fetch_part` / `find_part` `partsBaseUrl`, `fetch_part` `model.url` | The bundled catalog, or `lib.fromSTEP('vendor/part.step')` from the workspace |
 | `trace_from_image` with an `http(s)` image | A workspace path or a `data:` URL |
-| `render_preview` / `kernelcad render --base-url`, URL `environment` | The bundled player and HDRI presets |
+| `render_preview` / `crispcad render --base-url`, URL `environment` | The bundled player and HDRI presets |
 | `get_selection` / `set_selection` / `ray_pick` `studio_url` | Allowed only with `KERNELCAD_SANDBOX_ALLOW_LOOPBACK=1` |
 
 ## How refusals look
@@ -146,8 +146,8 @@ refusal as a diagnostic object:
 | `cli.sandbox-command-refused` | The command, tool or server mode is online-only. |
 
 ```text
-$ kernelcad --sandbox export step plate.kcad.ts -o ../plate.step
-ERROR [cli.sandbox-path-denied] kernelcad export: --out — got "../plate.step"; requires a path
+$ crispcad --sandbox export step plate.kcad.ts -o ../plate.step
+ERROR [cli.sandbox-path-denied] crispcad export: --out — got "../plate.step"; requires a path
 inside the sandbox workspace /srv/cad (it resolves to /srv/plate.step). Example: ...
 ```
 
@@ -156,15 +156,15 @@ The CLI exits with code 2. MCP tools return `isError: true` with
 
 ## How an agent learns the constraints
 
-- `initialize` returns `serverInfo.title = "kernelCAD (sandbox mode)"` and
+- `initialize` returns `serverInfo.title = "CrispCAD (sandbox mode)"` and
   `instructions` that name the workspace, the network policy and the offline
   alternatives.
 - In `tools/list`, each affected tool's description ends with a
   `SANDBOX MODE:` line that names its path arguments and refused URL
   arguments.
-- `kernelcad sandbox status [--json]` reports the workspace, scratch
+- `crispcad sandbox status [--json]` reports the workspace, scratch
   directories, read-only roots, network, loopback and telemetry policy.
-  `kernelcad sandbox check <path> [--write]` tests a single path.
+  `crispcad sandbox check <path> [--write]` tests a single path.
 
 ## Limits
 

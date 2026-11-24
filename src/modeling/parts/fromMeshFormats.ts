@@ -222,7 +222,7 @@ export type MeshFromGLBOptions = DecodeGlbMeshOptions;
  * body. Each glTF primitive becomes a RuntimeSubMesh with its own PBR
  * material, UVs and vertex colours (PCB assemblies keep solder mask, copper,
  * gold pads and component bodies). Transforms are flattened, glTF Y-up is
- * rotated to kernelCAD Z-up, and units come from the asset extras or extent.
+ * rotated to CrispCAD Z-up, and units come from the asset extras or extent.
  * No BRep: booleans, volume, face queries and solid exports are unavailable.
  */
 export async function meshFromGLB(

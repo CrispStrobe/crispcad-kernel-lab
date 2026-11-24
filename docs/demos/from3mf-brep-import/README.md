@@ -15,7 +15,7 @@ the script.
 - Video settings and output hashes: [`video-evidence.json`](./video-evidence.json)
 - Preview: [`poster.png`](./poster.png)
 
-The capture runs the source through kernelCAD's Node script API and OCCT
+The capture runs the source through CrispCAD's Node script API and OCCT
 recompute. It checks the imported solid and boolean result with
 `BRepCheck_Analyzer`, verifies the source's 1,000 mm³ volume and 10 mm bounds,
 and checks that the through-hole removes 40π mm³. The video is a replay of that

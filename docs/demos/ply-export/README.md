@@ -7,7 +7,7 @@ One export writes all three into a single file, each part in world space and
 in its own colour:
 
 ```sh
-kernelcad export ply docs/demos/ply-export/mount.kcad.ts -o docs/demos/ply-export/mount.ply
+crispcad export ply docs/demos/ply-export/mount.kcad.ts -o docs/demos/ply-export/mount.ply
 # MCP: export({ target: 'model', file, format: 'ply', output_path })
 ```
 
@@ -43,7 +43,7 @@ face colours with the same three values.
 
 - `mount.kcad.ts`: the model (source of truth).
 - `demo.ts`: runs the CLI export function (`exportScript`, the code behind
-  `kernelcad export`). It then reads `mount.ply` back with the repository's
+  `crispcad export`). It then reads `mount.ply` back with the repository's
   test PLY reader (`tests/helpers/plyParse.ts`), writes `result.json`, renders
   the stills and frames with a small Gouraud z-buffer rasterizer, and encodes
   them with `ffmpeg -c:v libx264 -pix_fmt yuv420p`.

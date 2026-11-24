@@ -1,17 +1,17 @@
-# kernelCAD competitor watch
+# CrispCAD competitor watch
 
 Track competitors by the engineering job they compete for. Distinguish vendor claims,
-roadmap items, independently exercised behavior, and proposals for kernelCAD.
+roadmap items, independently exercised behavior, and proposals for CrispCAD.
 
-This is a repository watchlist; no scheduled kernelCAD refresh was configured in this change.
+This is a repository watchlist; no scheduled CrispCAD refresh was configured in this change.
 Review the entries below monthly, with the next check due 2026-12-23.
 
 ## Watchlist
 
 | Company / product | Competitive overlap | Last checked | Source |
 |---|---|---|---|
-| **Weave 2D Inc / CADalyst** (one entry) | Production drawing automation; narrower than kernelCAD's design-to-export workflow. Primary relevance: kernelCAD. LabWired relevance: workflow ideas only. | 2026-10-11 | [Official site](https://weave2d.com/) |
-| **Blueprint Labs / Blueprint.io** | Browser CAD plus AI-assisted generation; overlaps kernelCAD's model-generation entry path, not its verified/manufacturable CAD+electronics loop. Primary relevance: kernelCAD. LabWired relevance: none demonstrated. | 2026-11-23 | [Official site](https://www.blueprint.io/) |
+| **Weave 2D Inc / CADalyst** (one entry) | Production drawing automation; narrower than CrispCAD's design-to-export workflow. Primary relevance: CrispCAD. LabWired relevance: workflow ideas only. | 2026-10-11 | [Official site](https://weave2d.com/) |
+| **Blueprint Labs / Blueprint.io** | Browser CAD plus AI-assisted generation; overlaps CrispCAD's model-generation entry path, not its verified/manufacturable CAD+electronics loop. Primary relevance: CrispCAD. LabWired relevance: none demonstrated. | 2026-11-23 | [Official site](https://www.blueprint.io/) |
 
 ## Blueprint.io by Blueprint Labs
 
@@ -31,10 +31,10 @@ validity, any manufacturable constraint, or an electronics/firmware workflow.
 ### Assessment
 
 Blueprint.io competes at the entry to model generation: a prompt or sketch
-becomes a 3D model in a browser with a community gallery. kernelCAD's
+becomes a 3D model in a browser with a community gallery. CrispCAD's
 differentiator is the verified, manufacturable CAD+electronics loop: scripted
 geometry that compiles, deterministic review, and artifacts a shop can inspect.
-That advantage is verified for kernelCAD; the LLM plan claim for Blueprint.io is
+That advantage is verified for CrispCAD; the LLM plan claim for Blueprint.io is
 unverified. Do not repeat the vendor's counters as independent adoption evidence.
 
 No LabWired overlap is demonstrated: a CAD model is not firmware simulation.
@@ -68,7 +68,7 @@ Neither establishes measured drafting speed or a recorded product run.
 ### Assessment
 
 CADalyst competes for the work after a mechanical model exists: producing documentation
-that a shop can use. kernelCAD covers a broader source-to-model-to-review-to-export loop,
+that a shop can use. CrispCAD covers a broader source-to-model-to-review-to-export loop,
 as described in the [repository README](../../README.md). The narrower drawing task could
 become a buyer's immediate reason to choose a tool, so it deserves monitoring even without
 overlap in model generation.
@@ -110,7 +110,7 @@ links. If a plain HTML fetch omits the copy, read the referenced marketing compo
 | Outputs become inspectable | Check a real drawing for editable annotations, revision association, dimensions, notes, and output formats. |
 | Manufacturing scope grows | Watch for tolerancing, GD&T, BOMs, assemblies, DFM, process-specific rules, or quoting. Separate proposals from demonstrated behavior. |
 | Product access changes | Record pricing, trial/self-serve access, licensing, and deployment/data-handling terms when published. |
-| Agent integration appears | Watch for CLI, API, MCP, or batch processing; assess whether it enables a kernelCAD handoff. |
+| Agent integration appears | Watch for CLI, API, MCP, or batch processing; assess whether it enables a CrispCAD handoff. |
 | Independent evidence appears | Link actual recordings, sample drawings, and customer accounts. Do not substitute animated homepage counters for benchmarks. |
 | Electronics or firmware scope appears | Reassess LabWired relevance only when there is an explicit circuit, firmware, or simulation workflow. |
 
@@ -120,13 +120,13 @@ claim without comparable, reproducible evidence.
 
 ## Change log
 
-- **2026-11-23:** Added Blueprint Labs / Blueprint.io as a kernelCAD competitor entry
+- **2026-11-23:** Added Blueprint Labs / Blueprint.io as a CrispCAD competitor entry
   focused on browser model generation. Recorded vendor-published counters (376,710
   projects, 296,733 accounts, 17,495 published community projects), the August 2026
   ForgeCAD integration, and Basic $0 / Pro $20/mo / Ultra $100/mo tiers. The LLM
-  plan/verification claim is unverified; kernelCAD's verified manufacturable CAD+electronics
+  plan/verification claim is unverified; CrispCAD's verified manufacturable CAD+electronics
   advantage is stated as our position, not as a measured head-to-head result.
-- **2026-10-11:** Added CADalyst and its maker Weave 2D as one kernelCAD competitor entry,
+- **2026-10-11:** Added CADalyst and its maker Weave 2D as one CrispCAD competitor entry,
   focused on manufacturing documentation. Recorded transferable LabWired ideas separately.
   Checked the public homepage and its referenced component source; no product installation
   or customer drawing was exercised.

@@ -2,10 +2,10 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/print.ts
 //
-// `kernelcad print send <gcode-file> --protocol <p> --host <h> ...` — CLI
+// `crispcad print send <gcode-file> --protocol <p> --host <h> ...` — CLI
 // front-end for the `send_to_printer` MCP tool's core logic. Real upload
 // only: OctoPrint / Moonraker HTTP, or Bambu Lab LAN-mode FTPS+MQTT.
-// `kernelcad print printers` lists the bundled printer profiles (the ids
+// `crispcad print printers` lists the bundled printer profiles (the ids
 // accepted by `--printer` here and by export 3mf/gcode `options.printer`).
 
 import { Command } from 'commander';
@@ -126,7 +126,7 @@ export function printCommand(): Command {
     .option('--access-code <code>', 'Bambu LAN-mode access code')
     .option('--serial <serial>', 'Bambu printer serial number')
     .option('--model-3mf <path>', "bambu-lan: model .3mf (export 3mf) to package the G-code into as a .gcode.3mf")
-    .option('--printer <id>', "printer profile id (see 'kernelcad print printers'); checked against --protocol")
+    .option('--printer <id>', "printer profile id (see 'crispcad print printers'); checked against --protocol")
     .option('--filename <name>', "uploaded file name (default: 'kernelcad.gcode')")
     .option('--no-start-print', 'upload without starting the print')
     .option('--dry-run', 'validate connectivity/auth only; never uploads or starts a print')

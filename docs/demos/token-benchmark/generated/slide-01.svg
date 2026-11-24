@@ -17,6 +17,6 @@
     <text x="112" y="360" class="body">One file is one catalogue asset; assemblies may contain multiple solids.</text>
 <text x="112" y="426" class="body">Tokenizer: o200k_base via js-tiktoken@1.0.21.</text>
 <text x="112" y="492" class="body">The full-source count includes each asset’s meta({...}) block.</text>
-    <text x="112" y="817" class="muted">kernelCAD native catalogue source measurement · 2026-11-05</text>
+    <text x="112" y="817" class="muted">CrispCAD native catalogue source measurement · 2026-11-05</text>
     <text x="1468" y="817" class="muted">01 / 4</text>
   </svg>

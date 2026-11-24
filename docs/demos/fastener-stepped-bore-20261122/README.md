@@ -35,7 +35,7 @@ native hole/counterbore feature. Audit `{ part: 'screw', against: ['plate'] }`,
 change `fixtureCase`, and repeat the same call.
 
 `browser-capture-preflight.json` records the observed connection and WebGL
-limitations. Canonical images come from the existing `kernelcad render inspect`
+limitations. Canonical images come from the existing `crispcad render inspect`
 workflow and its native meshing, player, camera and tile capture.
 
 The bundle retains exact source variants, canonical inspection manifests and

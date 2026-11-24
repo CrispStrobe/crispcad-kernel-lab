@@ -19,7 +19,7 @@ function skillRoot(): string {
   if (existsSync(bundled) && statSync(bundled).isDirectory()) return bundled;
   const dev = join(here, '..', '..', 'skills');
   if (existsSync(dev) && statSync(dev).isDirectory()) return dev;
-  throw new Error(`kernelcad skill tree not found near ${here}`);
+  throw new Error(`crispcad skill tree not found near ${here}`);
 }
 
 export async function installCommand(target: string): Promise<void> {
@@ -38,7 +38,7 @@ export async function installCommand(target: string): Promise<void> {
   // Soft-deprecation notice (Task D6 — pointing users at the new cross-agent flow).
   if (process.env.KERNELCAD_SUPPRESS_DEPRECATION !== '1') {
     console.error(
-      '[kernelcad skill install] consider `npx skills add w1ne/kernelcad-skills` for cross-agent install.',
+      '[crispcad skill install] consider `npx skills add w1ne/kernelcad-skills` for cross-agent install.',
     );
   }
 }
@@ -55,18 +55,18 @@ const DEFAULT_ONEFILE_PATH = './kernelcad-skills.md';
 
 export function skillCommand(): Command {
   const cmd = new Command('skill').description(
-    "Install kernelCAD's skill tree into an agent skills directory or emit it as a single context file.",
+    "Install CrispCAD's skill tree into an agent skills directory or emit it as a single context file.",
   );
 
   cmd
     .command('install')
-    .description(`Install all kernelCAD skills into a directory (default: ${DEFAULT_INSTALL_DIR}).`)
+    .description(`Install all CrispCAD skills into a directory (default: ${DEFAULT_INSTALL_DIR}).`)
     .argument('[dir]', 'install directory', DEFAULT_INSTALL_DIR)
     .action((dir: string) => installCommand(dir));
 
   cmd
     .command('onefile')
-    .description(`Emit every kernelCAD skill concatenated to a single file (default: ${DEFAULT_ONEFILE_PATH}).`)
+    .description(`Emit every CrispCAD skill concatenated to a single file (default: ${DEFAULT_ONEFILE_PATH}).`)
     .argument('[path]', 'output file', DEFAULT_ONEFILE_PATH)
     .action(async (path: string) => writeFileSync(path, await renderOnefile(), 'utf8'));
 

@@ -14,7 +14,7 @@ npx tsx src/agent/cli/index.ts validate examples/kinematic/luxo-lamp.kcad.ts --i
 npx vitest run tests/integration/fast/exampleParseSmoke.test.ts -t 'luxo-lamp|classifies'
 ```
 
-`capture-raw.mp4` comes from the local `kernelcad animate --turntable` command
+`capture-raw.mp4` comes from the local `crispcad animate --turntable` command
 recorded in `capture-settings.json`. `render-demo.sh` overlays the two caption
 files to build [`demo.mp4`](demo.mp4). `inspection-frame.png` is the frame at
 3 seconds, inspected visually.

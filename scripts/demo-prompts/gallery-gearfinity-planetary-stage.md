@@ -1,6 +1,6 @@
-# Build a Gearfinity-inspired planetary gear stage as a parameterized kernelCAD assembly
+# Build a Gearfinity-inspired planetary gear stage as a parameterized CrispCAD assembly
 
-Inspired by Gearfinity's open-source `planetary_gear_stage` module (MIT, 3D-printable kit). Reproduce a complete planetary drive as a connected kernelCAD assembly with proper involute teeth and a single `driveAngleDeg` parameter that animates the meshing.
+Inspired by Gearfinity's open-source `planetary_gear_stage` module (MIT, 3D-printable kit). Reproduce a complete planetary drive as a connected CrispCAD assembly with proper involute teeth and a single `driveAngleDeg` parameter that animates the meshing.
 
 Required mechanism (12 : 8 : 28 planetary set, module 3.5 mm, 20° pressure angle, 3.33 : 1 reduction):
 

@@ -1,4 +1,4 @@
-# kernelCAD authoring reference — Workflow
+# CrispCAD authoring reference — Workflow
 
 The full authoring, inner render and assembly/mechanism loops, the source/artifact policy, and vendor geometry. SKILL.md has the essentials; this file has the detail.
 
@@ -12,9 +12,9 @@ Use this loop for every non-trivial model edit:
 4. **Plan parameters and artifacts**: identify the `.kcad.ts` source file, named parameters, imported STEP files, expected exports, and the smallest verification command set before writing geometry.
 5. **Edit source only**: treat `.kcad.ts`, prompt/brief markdown, and provenance metadata as source. Do not hand-edit generated PNG, MP4, STEP, STL, score JSON, or capture metadata.
 6. **Generate explicit targets**: run the exact render/export/capture command for the requested artifact. Avoid broad directory refreshes unless the task is a release/demo rebuild.
-7. **Validate deterministically**: run `kernelcad evaluate`, relevant exports, assembly/review tools, interference checks, and scorer gates before accepting visual evidence.
+7. **Validate deterministically**: run `crispcad evaluate`, relevant exports, assembly/review tools, interference checks, and scorer gates before accepting visual evidence.
 8. **Inspect visual artifacts honestly**: when a PNG/MP4/render is produced, open/read it and report what is visible. If the image shows wrong proportions, floating parts, occlusion, unreadable details, or a bad camera crop, repair source and regenerate.
-9. **Packetize visual evidence**: when visual evidence matters, run `kernelcad render inspect <file> <outDir>` to produce a deterministic inspection bundle: a manifest naming the source file, command, generated artifacts, and caveats, plus canonical RGB views. Add `--channels rgb,mask,depth,normals` when machine-readable object masks, depth, or view-space normals are needed. Use `--focus <names>` or `--hide <names>` to isolate feature ids or assembly part names when clutter would obscure the check. Keep richer channels in the same manifest packet; do not replace the canonical RGB views. Use `--shading flat` to expose tessellation / surface wobble (smooth vertex normals are the default), and `--screenshot-timeout <ms>` when a heavy single-span loft exceeds Playwright's 30 s default.
+9. **Packetize visual evidence**: when visual evidence matters, run `crispcad render inspect <file> <outDir>` to produce a deterministic inspection bundle: a manifest naming the source file, command, generated artifacts, and caveats, plus canonical RGB views. Add `--channels rgb,mask,depth,normals` when machine-readable object masks, depth, or view-space normals are needed. Use `--focus <names>` or `--hide <names>` to isolate feature ids or assembly part names when clutter would obscure the check. Keep richer channels in the same manifest packet; do not replace the canonical RGB views. Use `--shading flat` to expose tessellation / surface wobble (smooth vertex normals are the default), and `--screenshot-timeout <ms>` when a heavy single-span loft exceeds Playwright's 30 s default.
 10. **Repair one cause at a time**: target the smallest source change that addresses the failing check, then rerun the same check. Do not loosen gates or silently skip failing evidence.
 11. **Never present an unverified model**: if the latest `evaluate` failed, fix it or report the blocker — do not export, render, or hand over a script whose last check failed.
 
@@ -37,7 +37,7 @@ method. Fix the source until those are visibly satisfied.
 DFM checks walls, overhangs and clearance; it does NOT check whether text,
 logos, slots or other decorations overlap holes, sit off the part, or collide
 with each other. Only the pictures show that. Render
-(`render_preview` / `kernelcad render`) the top, front and iso views and look
+(`render_preview` / `crispcad render`) the top, front and iso views and look
 at each one before you report a layout as finished. For a whole part, check
 the seven-view sheet (`render_preview({ file, sheet: true })`): done means
 every tile matches the request, not that it compiles.
@@ -104,7 +104,7 @@ const sheet = box(width, depth, sheetT).translate(0, 0, tube).finish('aluminium-
 return union(sheet, front, back, left, right, s1 /* ... */);
 ```
 
-`evaluate_script` / `kernelcad evaluate` gate every `union()` (errors make `ok: false`):
+`evaluate_script` / `crispcad evaluate` gate every `union()` (errors make `ok: false`):
 
 - `union.disconnected` — the union is more than one solid; the message names the floating operand, its bbox and the gap. Move it until it touches (shared face, zero gap) or add the member that carries it. This applies inside `assembly().part(...)` too: a part that is several floating pieces fails evaluate (the assembly validator's `assembly.mechanical.part-disconnected` is only a warning; it is not a substitute).
 - `union.member-overlap` — two operands that each carry their own `.finish()`/`.material()` and the SAME one (two pieces of the same stock) share more than 1 mm³; the message names both, the volume and the overlap box. Most often this is one part finished piece by piece: fuse the same-material pieces first and call `.finish()` once on the result. If they really are separate members, cut one to fit (butt joint) instead of burying it in the other. This applies inside assembly parts too. Operands with DIFFERENT materials may overlap (inlay, over-mould, multi-material part).
@@ -124,7 +124,7 @@ Finish once, after the booleans: a boss or rib merged into a body BEFORE `.finis
 - Commit derived artifacts only when the repository already treats that directory as an artifact bundle (`docs/demos/**`, `examples/portfolio/**`) or the user explicitly requested a deliverable bundle.
 - When committing derived artifacts, keep the source file and provenance beside them and prefer existing capture scripts so hashes/metadata stay reproducible.
 - If an artifact changes but source/provenance did not, stop and explain why. Hidden artifact churn is not a valid CAD change.
-- Required visual packet: for review-worthy visual work, keep an inspection bundle beside the generated artifact by running `kernelcad render inspect <file> <outDir>`. The v1 bundle writes `manifest.json` and canonical RGB views, with optional `--channels rgb,mask,depth,normals`, `--focus <names>` / `--hide <names>` object filters, `--shading flat`, and `--screenshot-timeout <ms>` recorded in the command/manifest. Depth, normals, and mask channels extend the same packet as richer evidence; they do not replace the canonical RGB views.
+- Required visual packet: for review-worthy visual work, keep an inspection bundle beside the generated artifact by running `crispcad render inspect <file> <outDir>`. The v1 bundle writes `manifest.json` and canonical RGB views, with optional `--channels rgb,mask,depth,normals`, `--focus <names>` / `--hide <names>` object filters, `--shading flat`, and `--screenshot-timeout <ms>` recorded in the command/manifest. Depth, normals, and mask channels extend the same packet as richer evidence; they do not replace the canonical RGB views.
 
 ## Standard parts and vendor geometry
 
@@ -132,12 +132,12 @@ Use `lib.fromSTEP(...)` for off-the-shelf components whenever physical fit matte
 
 - Good candidates: motors, servos, bearings, shafts, fasteners, hinges, sensors, PCBs, connectors, rails, and purchased enclosures.
 - Store or reference the vendor STEP file deliberately; name the source, version, and license/terms in nearby metadata or README when the file is part of a demo/portfolio bundle.
-- Before placing a vendor STEP, run `kernelcad inspect step <file.step>` (or the `inspect({ of: 'step' })` MCP tool) to read the solid tree, per-solid exact bbox + volume, and detected cylindrical holes (axis, diameter, depth, blind/through) — find mounting-hole positions and verify the part-local frame from exact geometry instead of measuring renders.
+- Before placing a vendor STEP, run `crispcad inspect step <file.step>` (or the `inspect({ of: 'step' })` MCP tool) to read the solid tree, per-solid exact bbox + volume, and detected cylindrical holes (axis, diameter, depth, blind/through) — find mounting-hole positions and verify the part-local frame from exact geometry instead of measuring renders.
 - Build modeled brackets, mounts, clearances, cable paths, and keepouts around the imported part rather than approximating the part with generic boxes/cylinders.
 - Placeholder geometry is acceptable for early blockouts, but final review must label it as a placeholder or replace it with catalog geometry.
-- Format choice when the vendor offers several: STEP (`lib.fromSTEP`) is the default and the most portable. Native `.brep` (`lib.fromBREP`) is lossless and the fastest to load. Use it to round-trip kernelCAD geometry. Use STEP to interchange with other CAD systems. Reach for `.stl` (`lib.fromSTL`) or `.3mf` (`lib.from3MF`) when no exact solid exchange is available: these are triangle meshes, so a closed mesh can provide bbox/volume/booleans but loses analytic surfaces, which means no reliable fillet/chamfer on curved edges, no canonical face refs, and no hole detection. `lib.from3MF` applies declared units and build-item transforms; it refuses component assemblies, required extensions, and open or non-manifold meshes. If a mostly prismatic part is STL/OBJ/3MF-only and you need editable geometry (mounting holes, params), run `mesh_to_features` (CLI `kernelcad reconstruct`): it emits a feature-tree script and measures it against the mesh — use it when the verdict is faithful, otherwise model the interface yourself from the reported regions rather than trusting facet normals. The same tool takes a `.step`/`.stp` (`solid` picks one body of a multi-solid file): use it when a vendor or legacy STEP part must become an editable feature tree with named params instead of a fixed `lib.fromSTEP` body; the exact B-rep is tessellated finely and `source.tessellation.linearMm` says how tight the fidelity check is. Use `lib.meshFromSTL(path)` when the complete source triangle detail must display quickly (a robot or product shell imported for looks): it is a render-only body that supports rigid transforms, assembly placement, color and finish, but no booleans, volume, face queries or solid exports. Conversion to BRep is not automatic.
+- Format choice when the vendor offers several: STEP (`lib.fromSTEP`) is the default and the most portable. Native `.brep` (`lib.fromBREP`) is lossless and the fastest to load. Use it to round-trip CrispCAD geometry. Use STEP to interchange with other CAD systems. Reach for `.stl` (`lib.fromSTL`) or `.3mf` (`lib.from3MF`) when no exact solid exchange is available: these are triangle meshes, so a closed mesh can provide bbox/volume/booleans but loses analytic surfaces, which means no reliable fillet/chamfer on curved edges, no canonical face refs, and no hole detection. `lib.from3MF` applies declared units and build-item transforms; it refuses component assemblies, required extensions, and open or non-manifold meshes. If a mostly prismatic part is STL/OBJ/3MF-only and you need editable geometry (mounting holes, params), run `mesh_to_features` (CLI `crispcad reconstruct`): it emits a feature-tree script and measures it against the mesh — use it when the verdict is faithful, otherwise model the interface yourself from the reported regions rather than trusting facet normals. The same tool takes a `.step`/`.stp` (`solid` picks one body of a multi-solid file): use it when a vendor or legacy STEP part must become an editable feature tree with named params instead of a fixed `lib.fromSTEP` body; the exact B-rep is tessellated finely and `source.tessellation.linearMm` says how tight the fidelity check is. Use `lib.meshFromSTL(path)` when the complete source triangle detail must display quickly (a robot or product shell imported for looks): it is a render-only body that supports rigid transforms, assembly placement, color and finish, but no booleans, volume, face queries or solid exports. Conversion to BRep is not automatic.
 - For full-detail visualization of large STL assets, use `lib.meshFromSTL(path)`. It avoids BRep sewing and preserves every triangle; the result supports rigid transforms, assembly placement, color and finish, but not booleans, volume, topology queries or solid export.
-- For a composite GLB (a PCB assembly or product shell with per-part materials), use `lib.meshFromGLB(path)`. It preserves primitive material groups, UVs and vertex colours, and converts glTF Y-up to kernelCAD Z-up; it is display-only in the same way as `lib.meshFromSTL`.
+- For a composite GLB (a PCB assembly or product shell with per-part materials), use `lib.meshFromGLB(path)`. It preserves primitive material groups, UVs and vertex colours, and converts glTF Y-up to CrispCAD Z-up; it is display-only in the same way as `lib.meshFromSTL`.
 
 > For off-the-shelf fasteners, bearings, motors, headers, and connectors, prefer the bundled parts catalog: load the `kernelcad-parts` skill. The catalog exposes `lib.findPart`, `lib.fetchPart`, and a typed `lib.standard.*` namespace, plus four MCP tools for discovery. Bundled parts ship with pre-defined connector frames so they participate in mates without any `partRef.connector(...)` boilerplate.
 
@@ -145,7 +145,7 @@ Use `lib.fromSTEP(...)` for off-the-shelf components whenever physical fit matte
 
 ```bash
 curl -fsSL https://kernelcad.com/install.sh | sh
-kernelcad evaluate path/to/script.kcad.ts
+crispcad evaluate path/to/script.kcad.ts
 ```
 
-Verify the install with `kernelcad --version` (should print `0.1.0` or higher).
+Verify the install with `crispcad --version` (should print `0.1.0` or higher).

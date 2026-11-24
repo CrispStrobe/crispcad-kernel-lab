@@ -40,7 +40,7 @@ describe('helix', () => {
 });
 
 describe('helix script-runtime registration', () => {
-  it('helix is callable from a kernelCAD script', async () => {
+  it('helix is callable from a CrispCAD script', async () => {
     const { runScript } = await import('../../../src/modeling/runtime/runScript');
     const code = `
       const pts = helix({ radius: 10, pitch: 5, turns: 1 });

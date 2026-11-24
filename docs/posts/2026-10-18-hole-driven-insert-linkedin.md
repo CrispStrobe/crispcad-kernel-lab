@@ -20,7 +20,7 @@ Two honest edges. A bore that sits exactly on a larger thread's tap drill comes 
 The same script runs in Studio, in the browser, and from Claude or ChatGPT through MCP.
 
 Repo link in the first comment.
-#CAD #OpenSource #Manufacturing #kernelCAD
+#CAD #OpenSource #Manufacturing #CrispCAD
 ```
 
 *(954 chars · first comment: `github.com/w1ne/kernelCAD-web`)*

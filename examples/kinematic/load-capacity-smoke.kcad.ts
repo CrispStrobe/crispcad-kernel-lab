@@ -124,7 +124,7 @@ console.log(
     `plaFailed=${!pla.ok}, k7Fired=${k7}`,
 );
 
-// Return the cantilever scene at the load pose so `kernelcad evaluate`
+// Return the cantilever scene at the load pose so `crispcad evaluate`
 // finishes cleanly. The wall + beam don't share BREP volume here (the
 // connector frames are coincident on the +X face of the wall, the beam's
 // shape starts at x = 0 relative to its 'root' connector); the harness's

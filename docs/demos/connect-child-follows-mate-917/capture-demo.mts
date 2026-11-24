@@ -176,7 +176,7 @@ function svgFrame(poseDeg: number, parts: PartFrame[], mountPoint: XY): string {
 
     <rect x="72" y="625" width="592" height="34" rx="17" fill="#e0e9f7"/>
     <text x="92" y="647" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing=".5" fill="#31547f">LOCAL CAD LOWERER + FORWARD-KINEMATICS REPLAY · NO PHYSICS RUN</text>
-    <text x="1208" y="648" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">kernelCAD · issue #917</text>
+    <text x="1208" y="648" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">CrispCAD · issue #917</text>
   </svg>`;
 }
 

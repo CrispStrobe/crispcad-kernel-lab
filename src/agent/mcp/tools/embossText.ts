@@ -4,7 +4,7 @@ import type { SceneSummary } from '../../script-runtime/sceneSummary';
 // src/agent/mcp/tools/embossText.ts
 //
 // W3 MCP tool: AST-edit a `<shape>.embossText({...})` chained call into a
-// kernelCAD script. Defers insertion to `addEmbossText`, then re-evaluates
+// CrispCAD script. Defers insertion to `addEmbossText`, then re-evaluates
 // the modified script and returns diagnostics.
 
 import { addEmbossText, type AddEmbossTextInput } from '../edits/embossText';

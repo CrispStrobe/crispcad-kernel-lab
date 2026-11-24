@@ -70,7 +70,7 @@ const implementation = Object.fromEntries(await Promise.all(
 ));
 await writeFile(join(HERE, 'panel.step'), exported.bytes);
 const evidence = {
-  scope: 'Local kernelCAD Node API export, then re-import of the written bytes through the OCCT XCAF STEP reader.',
+  scope: 'Local CrispCAD Node API export, then re-import of the written bytes through the OCCT XCAF STEP reader.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),

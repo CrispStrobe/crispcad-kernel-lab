@@ -1,13 +1,13 @@
 ---
 name: render-inspect
-description: Interpret diagnostic hints from kernelcad evaluate during a reference reconstruction. Which hints mean "missing feature", which mean "wrong arg", which mean "illegal geometry". Cross-references kernelcad-features for feature details.
+description: Interpret diagnostic hints from crispcad evaluate during a reference reconstruction. Which hints mean "missing feature", which mean "wrong arg", which mean "illegal geometry". Cross-references kernelcad-features for feature details.
 ---
 
 # render-inspect
 
 ## Purpose
 
-`kernelcad evaluate` returns `diagnostics[]`. Each entry carries `code`,
+`crispcad evaluate` returns `diagnostics[]`. Each entry carries `code`,
 `message`, `severity`, and `hint`. This sub-skill is a quick lookup: given a
 diagnostic code seen during a from-reference build, what is the most likely
 cause and what is the fix.
@@ -78,7 +78,7 @@ These appear in the rendered image, not in `evaluate` output:
 |----------|-------|-----|
 | Flat grey surface (no gloss) | No finish/material applied, or applied after a boolean (no-op). | Apply `.finish(name)` (or `.material()` for raw PBR) to each leaf part BEFORE it enters a boolean. |
 | Floating sub-component | The part was not translated into contact with its parent. | Re-read the brief's hidden-side inference; verify Y-layer ordering. |
-| Clipped model on the right | `kernelcad render` run without `--width 1920 --height 1080`. | Re-run with the correct resolution flag. |
+| Clipped model on the right | `crispcad render` run without `--width 1920 --height 1080`. | Re-run with the correct resolution flag. |
 | Black render / all-black PNG | Frame sampling gate: output file is valid but content is near-black. | Check that the camera direction is correct and the model is not inside a solid. |
 
 ## Cross-reference

@@ -122,7 +122,7 @@ function sceneOne(evidence: Evidence): string {
   const lines = evidence.importedProject.scriptExcerpt.slice(2, 14).map(shortLine);
   const code = lines.map((line, index) => `<text x="98" y="${258 + index * 25}" fill="#e2e8f0" font-family="monospace" font-size="17" xml:space="preserve">${xml(line)}</text>`).join('');
   const content = `<rect x="72" y="140" width="1136" height="70" rx="14" fill="#142235" stroke="#29445c"/>
-    <text x="98" y="183" fill="#f8fafc" font-family="monospace" font-size="20">kernelcad import-step panel.step --out panel-import --name panel</text>
+    <text x="98" y="183" fill="#f8fafc" font-family="monospace" font-size="20">crispcad import-step panel.step --out panel-import --name panel</text>
     <rect x="72" y="222" width="1136" height="326" rx="20" fill="#111c2d" stroke="#334155"/>
     ${code}
     <rect x="72" y="560" width="1136" height="94" rx="14" fill="#142235" stroke="#29445c"/>
@@ -155,7 +155,7 @@ function sceneTwo(evidence: Evidence, geometry: ProductMesh[]): string {
     <text x="700" y="${284 + base}" fill="#37d6b0" font-family="Arial,sans-serif" font-size="17">Instance counts, colours and product volumes are equal.</text>
     <text x="700" y="${312 + base}" fill="#37d6b0" font-family="Arial,sans-serif" font-size="17">Largest placement difference: ${evidence.checks.maxPlacementErrorMm} mm (limit ${evidence.checks.placementToleranceMm} mm).</text>
     <text x="700" y="${340 + base}" fill="#37d6b0" font-family="Arial,sans-serif" font-size="17">Every instance keeps its part name.</text>`;
-  return shell('The second STEP export keeps the product tree', 'kernelcad export step panel-import/panel.kcad.ts: shape-placed parts are instances of one product.', content);
+  return shell('The second STEP export keeps the product tree', 'crispcad export step panel-import/panel.kcad.ts: shape-placed parts are instances of one product.', content);
 }
 
 const evidence = JSON.parse(await readFile(join(HERE, 'evidence.json'), 'utf8')) as Evidence;

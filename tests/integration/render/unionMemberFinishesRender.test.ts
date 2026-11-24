@@ -3,7 +3,7 @@
 //
 // Render path: a union of members that carry no face lineage (a sketch
 // extrude, raised extruded text) keeps each member finish. The mesh handed to
-// the headless player (`meshForHeadlessRender`, the path `kernelcad render`
+// the headless player (`meshForHeadlessRender`, the path `crispcad render`
 // and render_preview use) carries both finishes, and GLB export writes both.
 // The live check renders the default and publish looks and counts pixels of
 // both colours (gated on a playwright chromium and a built static player).

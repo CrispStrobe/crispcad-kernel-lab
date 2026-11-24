@@ -77,7 +77,7 @@ describe('writeReports', () => {
     expect(row.validator_status).toBe('unpublished');
     expect(readFileSync(join(root, 'summary.md'), 'utf8')).toContain('Forced-zero');
     expect(readFileSync(join(root, 'protocol.md'), 'utf8')).toContain('validator');
-    expect(readFileSync(join(root, 'leaderboard.csv'), 'utf8')).toContain('m+kcad + kernelCAD');
+    expect(readFileSync(join(root, 'leaderboard.csv'), 'utf8')).toContain('m+kcad + CrispCAD');
   });
 
   it('excludes infra cases from denominators and lists them', () => {

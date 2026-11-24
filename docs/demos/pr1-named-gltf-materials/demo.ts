@@ -67,7 +67,7 @@ export async function createDemoArtifacts(options: { write?: boolean } = {}): Pr
     }).join('\n');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <rect width="1280" height="720" fill="#0b1721"/>
-  <text x="78" y="86" fill="#f4f7fa" font-size="38" font-family="Arial, sans-serif" font-weight="700">kernelCAD · named GLB materials</text>
+  <text x="78" y="86" fill="#f4f7fa" font-size="38" font-family="Arial, sans-serif" font-weight="700">CrispCAD · named GLB materials</text>
   <text x="80" y="130" fill="#a9bdca" font-size="22" font-family="Arial, sans-serif">Local export replay · two original parts · names read back from the emitted GLB</text>
   <rect x="78" y="182" width="1124" height="142" rx="18" fill="#122431" stroke="#294252"/>
   <text x="110" y="232" fill="#8fa7b5" font-size="18" font-family="Arial, sans-serif" letter-spacing="2">AUTHORING</text>

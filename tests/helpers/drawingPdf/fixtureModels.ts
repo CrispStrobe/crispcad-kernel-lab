@@ -3,7 +3,7 @@
 // tests/helpers/drawingPdf/fixtureModels.ts
 //
 // Source models for the drawing-to-CAD round-trip fixtures. Each entry is the
-// ground truth a fixture PDF was generated from: kernelCAD's own svg-drawing
+// ground truth a fixture PDF was generated from: CrispCAD's own svg-drawing
 // exporter draws `code` with `annotations`, the sheet is converted to PDF
 // (see ./svgToPdf.ts), and the PDF is committed under
 // tests/fixtures/drawing-pdf/. The round-trip tests read the PDF back and

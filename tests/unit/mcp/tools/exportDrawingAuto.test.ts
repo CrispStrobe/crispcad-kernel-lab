@@ -86,7 +86,7 @@ describe('functional review public transport', () => {
   });
 });
 
-describe('kernelcad export svg-drawing --options', () => {
+describe('crispcad export svg-drawing --options', () => {
   it('parses the flag into an options bag with the positional format', () => {
     expect(parseExportOptionsFlag('{"autoAnnotate":true}', 'svg-drawing'))
       .toEqual({ ok: true, options: { format: 'svg-drawing', autoAnnotate: true } });

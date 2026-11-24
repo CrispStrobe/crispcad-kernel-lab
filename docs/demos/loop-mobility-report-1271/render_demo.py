@@ -57,7 +57,7 @@ def draw_linkage(draw: ImageDraw.ImageDraw) -> None:
 
 
 def report_slide() -> Image.Image:
-    image, draw = canvas("The mechanism result keeps solver evidence", "Local kernelCAD check")
+    image, draw = canvas("The mechanism result keeps solver evidence", "Local CrispCAD check")
     diag = next((d for d in EVIDENCE["mechanismTruth"]["failures"] if d["code"] == "kinematic.loop.lockup"), None)
     mobility = EVIDENCE["mechanismTruth"]["loopMobility"]
     draw.rounded_rectangle((72, 184, 1208, 315), radius=18, fill=PANEL)

@@ -39,7 +39,7 @@ describe('authorPluginJson', () => {
     expect(out.description.length).toBeGreaterThan(0);
   });
 
-  it('marks the kernelcad entry skill with entry: true; others have no entry key', () => {
+  it('marks the crispcad entry skill with entry: true; others have no entry key', () => {
     const entries = [
       entry('kernelcad', 'kernelcad/SKILL.md'),
       entry('kernelcad-mcp', 'kernelcad-mcp/SKILL.md'),
@@ -58,7 +58,8 @@ describe('authorPluginJson', () => {
     expect(out.kernelcad.mcp.default).toBe('local');
     expect(out.kernelcad.mcp.local.command).toBe('kernelcad');
     expect(out.kernelcad.mcp.local.args).toEqual(['mcp']);
-    expect(out.kernelcad.mcp.remote.url).toBe('https://mcp.kernelcad.com/mcp');
+    // CrispCAD: no hosted MCP endpoint is advertised.
+    expect(out.kernelcad.mcp.remote).toBeUndefined();
     expect(out.kernelcad.mcp.remote.authEnv).toBeUndefined();
   });
 

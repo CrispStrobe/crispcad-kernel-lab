@@ -45,7 +45,7 @@ function fixture(): { dir: string; file: string; cleanup: () => void } {
   return { dir, file: join(dir, 'bracket.kcad.ts'), cleanup: () => rmSync(dir, { recursive: true, force: true }) };
 }
 
-describe('kernelcad collab check', () => {
+describe('crispcad collab check', () => {
   it('reads a nested model path from a worktree directory', async () => {
     const root = mkdtempSync(join(tmpdir(), 'kc-collab-worktree-'));
     const repo = join(root, 'repo');

@@ -30,7 +30,7 @@ def frame(img_name, title, lines, idx):
     for ln in lines:
         d.text((720, y), ln, font=mono if ln.startswith(" ") else small, fill=(200, 210, 220))
         y += 30
-    d.text((40, 690), "kernelCAD local run (CLI on this machine) - render, not a printed part", font=small, fill=(140, 140, 140))
+    d.text((40, 690), "CrispCAD local run (CLI on this machine) - render, not a printed part", font=small, fill=(140, 140, 140))
     f.save(out / f"frame-{idx}.png")
 
 

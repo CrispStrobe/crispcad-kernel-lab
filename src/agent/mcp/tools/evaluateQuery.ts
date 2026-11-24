@@ -3,7 +3,7 @@
 // src/agent/mcp/tools/evaluateQuery.ts
 //
 // Q8a — the agent's discovery primitive for the Query DSL. Inspect a Query
-// against a kernelCAD script's lowered geometry before consuming it in a
+// against a CrispCAD script's lowered geometry before consuming it in a
 // feature op. The MCP-side companion to `kc.q.face(...).evaluate(scene)`:
 // pass either an @kc[...] ref string, an @kcq[...] DSL string, or a JSON-AST
 // `{ ast }` object, get back the resolved entity list (or the structured

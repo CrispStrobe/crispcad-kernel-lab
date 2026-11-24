@@ -17,7 +17,7 @@ const HEIGHT = 720;
 const FPS = 24;
 const SCENE_SECONDS = 5;
 const MAX_EDGE_MM = 6;
-// Colour kernelCAD draws a part that has none (DEFAULT_COLOR in src/shared/render/palette.ts).
+// Colour CrispCAD draws a part that has none (DEFAULT_COLOR in src/shared/render/palette.ts).
 const DEFAULT_COLOUR = '#bfc4c8';
 const hexRgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 const sha256 = (data: string | Uint8Array) => createHash('sha256').update(data).digest('hex');
@@ -131,8 +131,8 @@ function sceneOne(evidence: Evidence, geometry: ProductMesh[]): string {
   const content = `${panel(72, `BEFORE · develop ${before.commit}, recorded`, before.colourEntity, before.readColour, geometry, `${before.instancesReadWithColour} of ${tree.instanceCount} instances read as ${before.readColour}.`, '#fbbf24')}
     ${panel(652, 'NOW · measured in this run', `colour entities in the file: ${evidence.step.colourEntities}`, DEFAULT_COLOUR, geometry, `${tree.instancesReadWithColour} of ${tree.instanceCount} instances read with a colour.`, '#37d6b0')}
     <rect x="72" y="574" width="1136" height="80" rx="14" fill="#142235" stroke="#29445c"/>
-    <text x="98" y="606" fill="#f8fafc" font-family="monospace" font-size="18">kernelcad export step ${xml(evidence.source)}</text>
-    <text x="98" y="638" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="16">The script sets no colour. Left: the colour the file stated. Right: no colour in the file; drawn in the kernelCAD default ${DEFAULT_COLOUR}.</text>`;
+    <text x="98" y="606" fill="#f8fafc" font-family="monospace" font-size="18">crispcad export step ${xml(evidence.source)}</text>
+    <text x="98" y="638" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="16">The script sets no colour. Left: the colour the file stated. Right: no colour in the file; drawn in the CrispCAD default ${DEFAULT_COLOUR}.</text>`;
   return shell('STEP export writes no colour for a part that has none', `${tree.productCount} products, ${tree.instanceCount} placed instances. The geometry and the product tree are the same in both files.`, content);
 }
 
@@ -152,7 +152,7 @@ function sceneTwo(evidence: Evidence): string {
   const content = `${scriptPanel(72, `BEFORE · develop ${before.commit}, recorded`, before.importedScriptExcerpt, `${before.importedScriptLines} lines. Each part gets an explicit red colour.`, '#fbbf24')}
     ${scriptPanel(652, 'NOW · measured in this run', importedProject.scriptExcerpt, `${importedProject.scriptLines} lines. .color( calls: ${importedProject.colourCalls}.`, '#37d6b0')}
     <rect x="72" y="574" width="1136" height="80" rx="14" fill="#142235" stroke="#29445c"/>
-    <text x="98" y="606" fill="#f8fafc" font-family="monospace" font-size="18">kernelcad import-step panel.step --out panel-import --name panel</text>
+    <text x="98" y="606" fill="#f8fafc" font-family="monospace" font-size="18">crispcad import-step panel.step --out panel-import --name panel</text>
     <text x="98" y="638" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="16">Generated script, first lines. A colour that the source script sets is still written and read back.</text>`;
   return shell('The imported project gets no colour the author did not set', 'The exported file is imported as a KernelCAD project.', content);
 }

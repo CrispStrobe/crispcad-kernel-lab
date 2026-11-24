@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // tests/helpers/viewerDimensionParts.ts
 //
-// Test-only: build a kernelCAD script and return its world-frame parts, the
+// Test-only: build a CrispCAD script and return its world-frame parts, the
 // same input `computeViewerDimensions` gets in production. Lives under
 // tests/ because it reaches up into src/modeling, which src/kernel may not.
 

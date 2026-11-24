@@ -33,7 +33,7 @@ function renderSlide(title: string, section: string, lines: readonly string[], n
   <rect width="${WIDTH}" height="${HEIGHT}" fill="#f3f6fb"/>
   <rect width="${WIDTH}" height="10" fill="#2868d7"/>
   <text x="70" y="74" class="title">${xml(title)}</text>
-  <text x="72" y="118" class="subtitle">Root part placement · kernelCAD millimetres to MJCF coordinates</text>
+  <text x="72" y="118" class="subtitle">Root part placement · CrispCAD millimetres to MJCF coordinates</text>
   <rect x="64" y="166" width="1152" height="374" rx="18" fill="#ffffff" stroke="#d8e0ed" stroke-width="2"/>
   <text x="96" y="222" class="section">${xml(section)}</text>
   ${code}
@@ -90,7 +90,7 @@ async function main(): Promise<void> {
         '  at: [125, -40, 60],',
         '});',
       ], 'A free root part should keep its explicit at placement.'),
-      renderSlide('Serialize the root in the model coordinate system', 'EMITTED MJCF · metres from the kernelCAD converter', [
+      renderSlide('Serialize the root in the model coordinate system', 'EMITTED MJCF · metres from the CrispCAD converter', [
         bodyLine,
         `Input at: [${INPUT_AT_MM.join(', ')}] mm`,
         'Expected conversion: divide each coordinate by 1000',

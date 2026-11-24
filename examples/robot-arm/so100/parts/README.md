@@ -58,6 +58,6 @@ scripts pull them via `lib.fromSTEP(path)` so no other code needs changes.
 ## Why bundle vs. fetch on demand
 
 Bundling guarantees the example is reproducible offline + version-stable.
-Future kernelCAD versions may add a `lib.fromUrl(...)` for ad-hoc fetches
+Future CrispCAD versions may add a `lib.fromUrl(...)` for ad-hoc fetches
 of vendor catalogs (McMaster-Carr, Misumi). Bundled files cover the hero
 demo without touching the network.

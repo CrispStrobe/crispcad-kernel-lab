@@ -66,7 +66,7 @@ const implementation = Object.fromEntries(await Promise.all(
   IMPLEMENTATION_FILES.map(async (file) => [file, sha256(await readFile(file))] as const),
 ));
 const evidence = {
-  scope: 'Local kernelCAD Node API: STEP export of a coloured part, text check of the colour entity, and read-back through the OCCT XCAF STEP reader.',
+  scope: 'Local CrispCAD Node API: STEP export of a coloured part, text check of the colour entity, and read-back through the OCCT XCAF STEP reader.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),
@@ -91,7 +91,7 @@ const evidence = {
   limits: [
     'Other CAD systems were not used to open the file.',
     'The values under "before" are recorded from a run on the named commit; this script does not measure them again.',
-    'A project imported from STEP with an earlier kernelCAD version holds the darker colour that version read.',
+    'A project imported from STEP with an earlier CrispCAD version holds the darker colour that version read.',
   ],
   simulationRun: false,
   deployed: false,

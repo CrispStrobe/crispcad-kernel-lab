@@ -4,7 +4,7 @@
 //
 // Small-matrix helpers for the v0.6 mate solver (T7 — Newton-Raphson
 // closed-loop solver). Pure-TS, no external numerical library. Targets
-// matrices up to ~30×30 (the largest realistic kernelCAD closed-loop
+// matrices up to ~30×30 (the largest realistic CrispCAD closed-loop
 // assembly). Numerical robustness over peak throughput — partial-pivot
 // LU for inverse / linear solve, central-difference Jacobian.
 

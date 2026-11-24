@@ -12,7 +12,7 @@
 // RUN IT
 //
 //   # the gate: solves the study and fails the evaluation if SF < 2
-//   npx kernelcad evaluate examples/fea/shelf-bracket-fea.kcad.ts
+//   npx crispcad evaluate examples/fea/shelf-bracket-fea.kcad.ts
 //
 //   # the evidence: full summary, hot spots, and heatmap PNGs
 //   run_fea({ file: 'examples/fea/shelf-bracket-fea.kcad.ts', output_dir: '/tmp/bracket-fea' })

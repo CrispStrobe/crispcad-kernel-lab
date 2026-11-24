@@ -4,8 +4,8 @@
 # public npm registry, evaluates the v0.1 acceptance demo, and exports STL.
 # Pass criteria:
 #   - npm install exits 0
-#   - kernelcad evaluate exits 0 with status: ok
-#   - kernelcad export stl produces a non-empty file with a valid binary STL header
+#   - crispcad evaluate exits 0 with status: ok
+#   - crispcad export stl produces a non-empty file with a valid binary STL header
 #
 # Usage:
 #   bash scripts/smokeTest.sh
@@ -32,18 +32,18 @@ docker run --rm -v "$EXAMPLES_DIR:/work:ro" node:22-slim bash -c '
   apt-get update -qq && apt-get install -y -qq jq file > /dev/null
   echo "  - npm install -g kernelcad"
   npm install -g kernelcad@latest 2>&1 | tail -5
-  echo "  - kernelcad --version"
-  kernelcad --version
-  echo "  - kernelcad evaluate (json)"
-  kernelcad evaluate /work/bracket-with-hole.kcad.ts --json > /tmp/out.json
+  echo "  - crispcad --version"
+  crispcad --version
+  echo "  - crispcad evaluate (json)"
+  crispcad evaluate /work/bracket-with-hole.kcad.ts --json > /tmp/out.json
   status=$(jq -r ".ok" /tmp/out.json)
   if [ "$status" != "true" ]; then
     echo "FAIL: evaluate returned ok=$status (expected true)" >&2
     cat /tmp/out.json >&2
     exit 1
   fi
-  echo "  - kernelcad export stl"
-  kernelcad export stl /work/bracket-with-hole.kcad.ts -o /tmp/out.stl
+  echo "  - crispcad export stl"
+  crispcad export stl /work/bracket-with-hole.kcad.ts -o /tmp/out.stl
   if [ ! -s /tmp/out.stl ]; then
     echo "FAIL: STL is empty" >&2
     exit 1

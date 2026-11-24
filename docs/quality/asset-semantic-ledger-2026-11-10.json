@@ -494,7 +494,7 @@
       "preview_sha256": "0d818d5ecc111f8774317fe92ed5a626bc2a09b2b2f670d0c6cd8dac458b9511",
       "preview": "https://kernelcad.com/assets/grid-substation-substation-cable-ladder-section.png",
       "source": "https://kernelcad.com/assets/grid-substation-substation-cable-ladder-section.kcad.ts",
-      "issue": "https://github.com/w1ne/kernelCAD-web/issues/1296",
+      "issue": "https://github.com/CrispStrobe/kernelCAD-web/issues/1296",
       "tested": "live source+PNG inspected vs title; native GLB source evaluate PASS (default), triangle budget, knobs and title match repo index; no physical assembly/standards proof",
       "deployed": "live observed 2026-11-10; no proposed repair",
       "defaultEvaluates": true,

@@ -8,7 +8,7 @@ keywords:
   - upload gcode to OctoPrint Moonraker or Bambu Lab over the network
   - physical print loop from script to a networked FDM printer
   - bed size check before invoking the slicer export.gcode.exceeds-bed
-when_to_use: You have a finished, watertight kernelCAD part and want to go straight to a physical print — slice it to G-code with a real slicer (no manual GUI step), then upload it to a network-connected printer and start the print, without a human touching a slicer or a printer's touchscreen.
+when_to_use: You have a finished, watertight CrispCAD part and want to go straight to a physical print — slice it to G-code with a real slicer (no manual GUI step), then upload it to a network-connected printer and start the print, without a human touching a slicer or a printer's touchscreen.
 ---
 
 ```typescript

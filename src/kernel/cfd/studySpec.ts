@@ -3,7 +3,7 @@
 // src/kernel/cfd/studySpec.ts
 //
 // One validator for a CFD study, shared by `shape.cfdStudy({...})` (capture
-// time) and the inline fields of `run_cfd` / `kernelcad cfd run`. Malformed
+// time) and the inline fields of `run_cfd` / `crispcad cfd run`. Malformed
 // fields throw the shared invalid-args KernelError, naming the field, what
 // was received, and one correct call.
 

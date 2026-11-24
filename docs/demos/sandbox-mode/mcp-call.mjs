@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Demo helper: start `kernelcad mcp --sandbox` (stdio), print the initialize
+// Demo helper: start `crispcad mcp --sandbox` (stdio), print the initialize
 // sandbox title and the compact result of each tools/call given on argv as
 // JSON: [{ "name": ..., "arguments": {...} }, ...].
 import { spawn } from 'node:child_process';

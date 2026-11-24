@@ -84,7 +84,7 @@ export function planeSvg(plane: VtkPlane, meta: PreviewMeta, width = 1200): { sv
     text(barX + 12, 50 + plotH + 18, '0', 14, 'middle'),
     text(20, 50 + plotH + 26, `|U| on the ${axisName[a]}${axisName[b]} mid-plane, ${(w * 1000).toFixed(1)} x ${(h * 1000).toFixed(1)} mm` +
       (stretch > 1 ? ` (${axisName[b]} stretched ${stretch.toFixed(1)}x for legibility)` : ''), 15),
-    text(20, 50 + plotH + 46, 'kernelCAD run_cfd · OpenFOAM simpleFoam · cell values, not interpolated · not a certification', 13),
+    text(20, 50 + plotH + 46, 'CrispCAD run_cfd · OpenFOAM simpleFoam · cell values, not interpolated · not a certification', 13),
     '</svg>',
   ].join('\n');
   return { svg, maxSpeed: vmax, stretch };

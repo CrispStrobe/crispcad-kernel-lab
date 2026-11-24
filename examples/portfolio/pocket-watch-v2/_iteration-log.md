@@ -130,7 +130,7 @@ Each entry: the focused change + side-by-side diff against `/tmp/refcrop/watch_c
 2. Composition right-bias persists.
 3. Material rendering reads slightly desaturated vs the reference's coral.
 
-**Decision:** commit. Try a `loft` between the lower and upper trapezoid profiles for iter 5 — that's the kernelCAD-native way to get a smooth taper.
+**Decision:** commit. Try a `loft` between the lower and upper trapezoid profiles for iter 5 — that's the CrispCAD-native way to get a smooth taper.
 
 ## iter 5 — lofted pendant (smooth taper)
 
@@ -281,7 +281,7 @@ the rotate video reveals both.
 
 ### iter 15 — --no-watermark CLI flag
 
-Added a `--no-watermark` flag to `kernelcad render`. Wired through
+Added a `--no-watermark` flag to `crispcad render`. Wired through
 `headlessRender` → URL param `?nowatermark=1` →
 `DemoPlayerPage.noWatermark` → `ViewerPane.noWatermark` prop →
 conditional `<Watermark/>` render. Default behaviour unchanged

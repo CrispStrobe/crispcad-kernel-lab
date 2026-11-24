@@ -5,7 +5,7 @@
 // analytic validation cases. Needs a local OpenFOAM (native or the
 // opencfd/openfoam-run image). Writes, next to this file:
 //   result.json          the manifold summary (trimmed) and the invocation
-//   transcript.txt       `kernelcad cfd run` formatted output
+//   transcript.txt       `crispcad cfd run` formatted output
 //   validation.json      Hagen-Poiseuille and sphere-drag numbers vs analytic
 //   velocity-midplane.png  the tool's own preview PNG
 //   fluid-volume.stl     the extracted fluid volume in mm (input of
@@ -26,7 +26,7 @@ const work = resolve(process.argv[2] ?? '/tmp/kernelcad-cfd-demo');
 const manifold = await runCfdTool({ file: join(dir, 'manifold.kcad.ts'), output_dir: join(work, 'manifold') });
 if (manifold.summary === undefined) throw new Error(manifold.error ?? 'run_cfd failed');
 const s = manifold.summary;
-await writeFile(join(dir, 'transcript.txt'), `$ kernelcad cfd run docs/demos/cfd-manifold/manifold.kcad.ts\n${formatCfdResult({ ...manifold, out_dir: '<work>/manifold', images: ['<work>/manifold/velocity-midplane.png'] })}\n`);
+await writeFile(join(dir, 'transcript.txt'), `$ crispcad cfd run docs/demos/cfd-manifold/manifold.kcad.ts\n${formatCfdResult({ ...manifold, out_dir: '<work>/manifold', images: ['<work>/manifold/velocity-midplane.png'] })}\n`);
 await copyFile(manifold.images![0], join(dir, 'velocity-midplane.png'));
 const outlets = s.patches.filter(p => p.patch.startsWith('outlet'));
 const total = outlets.reduce((a, p) => a + p.flowM3s, 0);

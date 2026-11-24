@@ -27,9 +27,9 @@ export function authorReadme({ entries, version }: ReadmeInput): string {
     .map((e) => `- \`${e.frontmatter.name}\` — ${e.frontmatter.description}`)
     .join('\n');
 
-  return `# kernelCAD skills
+  return `# CrispCAD skills
 
-Cross-agent install for the kernelCAD skill tree. Local MCP by default; hosted MCP available as an opt-in fallback.
+Cross-agent install for the CrispCAD skill tree. Local MCP by default; hosted MCP available as an opt-in fallback.
 
 ## Install
 
@@ -46,7 +46,7 @@ The \`skills\` CLI drops each \`SKILL.md\` into your agent's skill directory:
 | Codex          | \`.agents/skills/\`  | \`~/.codex/skills/\`    |
 | GitHub Copilot | \`.agents/skills/\`  | \`~/.copilot/skills/\`  |
 
-## Connect the kernelCAD MCP
+## Connect the CrispCAD MCP
 
 ### Local (default)
 
@@ -61,7 +61,7 @@ Then register a local stdio MCP server in your agent (per-agent snippets below).
 #### Claude Code
 
 \`\`\`bash
-claude mcp add kernelcad -- kernelcad mcp
+claude mcp add crispcad -- crispcad mcp
 \`\`\`
 
 #### Cursor
@@ -90,19 +90,13 @@ Add the kernelcad MCP entry to your settings:
 { "mcp.servers": { "kernelcad": { "command": "kernelcad", "args": ["mcp"] } } }
 \`\`\`
 
-### Hosted
-
-\`\`\`bash
-claude mcp add --transport http kernelcad https://mcp.kernelcad.com/mcp
-\`\`\`
-
 ## Skills in this distribution
 
 ${skillList}
 
 ## Source
 
-This repo is generated from the kernelCAD source tree on each release tag. Edits to the SKILL.md files happen upstream — open a PR against the kernelCAD source repo, not here.
+This repo is generated from the CrispCAD source tree on each release tag. Edits to the SKILL.md files happen upstream — open a PR against the CrispCAD source repo, not here.
 `;
 }
 

@@ -4,7 +4,7 @@
 // Pins the FDM printability example so it cannot rot. `examples/print-prep/`
 // ships a wall hook that fails the check as modeled and its oriented twin
 // that passes; the numbers and the recommended rotation quoted in the file
-// headers must match what `kernelcad dfm` really prints.
+// headers must match what `crispcad dfm` really prints.
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { join, resolve } from 'node:path';

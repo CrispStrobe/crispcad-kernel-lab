@@ -3,13 +3,13 @@
 // src/render/views.ts
 //
 // Single-source-of-truth type for the engineering-view projections used by
-// `kernelcad render` and the demo-player's `setRenderView()` API. Lives in
+// `crispcad render` and the demo-player's `setRenderView()` API. Lives in
 // src/render/ so both the browser-side React component (which can't depend
 // on Node-only playwright) and the headless CLI renderer can import it.
 
 export type RenderView = 'front' | 'right' | 'top' | 'iso' | 'back' | 'left' | 'bottom';
 
-/** Default engineering views: what `kernelcad render` and `render_preview`
+/** Default engineering views: what `crispcad render` and `render_preview`
  *  capture when no views are requested (the 2×2 grid). */
 export const CANONICAL_VIEWS: readonly RenderView[] = ['front', 'right', 'top', 'iso'];
 

@@ -173,7 +173,7 @@ async function publishBuiltViewer(model: BuildOutcome['model'], buildSucceeded: 
 }
 
 /**
- * MCP `evaluate_script` tool — runs a kernelCAD script and reports
+ * MCP `evaluate_script` tool — runs a CrispCAD script and reports
  * pass/fail + feature count + diagnostics, plus a `parts` summary
  * (`{ count, names }`) when the scene is assembly-built. One-of `{ file }`
  * (path on disk) or `{ code }` (inline source). Returns a JSON-serializable

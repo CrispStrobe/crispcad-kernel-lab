@@ -165,10 +165,10 @@ export interface DemoPlayerWindow {
   startTerminalClock(originMs: number): void;
   setTitleCard(spec: { title: string; tagline: string; durationMs: number } | null): void;
   advance(dtMs: number): void;
-  /** Set kernelCAD module version string for watermark, e.g. "v0.21". */
+  /** Set CrispCAD module version string for watermark, e.g. "v0.21". */
   setVersion(v: string): void;
   /** Snap camera to one of four standard engineering views and force a
-   *  render. Used by `kernelcad render` for headless multi-view PNG
+   *  render. Used by `crispcad render` for headless multi-view PNG
    *  capture. Caller should `forceFullOpacity()` first so faded-in meshes
    *  appear at full visibility. `outputAspect` (optional) is the aspect of
    *  the centered region cropped out of the canvas for the output tile —
@@ -177,16 +177,16 @@ export interface DemoPlayerWindow {
   setRenderView(view: RenderView, outputAspect?: number, frameBounds?: { min: [number, number, number]; max: [number, number, number] }): void;
   /** Snap camera to an arbitrary az/el pose (degrees). az=0 looks down -Y
    *  (front view); az increases CCW around +Z (top-down); el increases looking
-   *  up (positive el = camera above the horizon). Used by `kernelcad render
+   *  up (positive el = camera above the horizon). Used by `crispcad render
    *  --pose <az,el>` for headless reference-photo-pose scoring.
    *  `outputAspect` as in `setRenderView`. */
   setRenderPose(azDeg: number, elDeg: number, outputAspect?: number): void;
   /** Set every loaded FeatureMesh material to opacity 1.0 and re-render.
-   *  Used by `kernelcad render` to skip the build-animation fade-in. */
+   *  Used by `crispcad render` to skip the build-animation fade-in. */
   forceFullOpacity(): void;
   /** Hide every feature-mesh group that another feature lists as a
    *  predecessor — i.e. keep only the tail records visible. Used by
-   *  `kernelcad render` so intermediate construction debris (cutter
+   *  `crispcad render` so intermediate construction debris (cutter
    *  boxes, pre-fillet bodies) doesn't bleed through the final shape in
    *  headless captures. */
   showOnlyTailFeatures(): void;
@@ -445,7 +445,7 @@ export function fitCameraToBounds(
     (bounds.min[1] + bounds.max[1]) / 2,
     (bounds.min[2] + bounds.max[2]) / 2,
   ];
-  // kernelCAD is Z-up. Each engineering view fixes the view direction +
+  // CrispCAD is Z-up. Each engineering view fixes the view direction +
   // up vector so the rendered tile matches first-angle drafting
   // convention. 'demo' shares the Z-up 3/4-front-right angle with 'iso'.
   const isoLen = Math.hypot(0.7, 0.7, 0.5);

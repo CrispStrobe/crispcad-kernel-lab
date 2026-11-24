@@ -6,7 +6,7 @@
 // gmsh mesher -> .inp writer -> CalculiX -> .frd/.dat parsers -> summary.
 //
 // Units throughout: mm, N, MPa. That triple is self-consistent for CalculiX
-// (which is unit-agnostic), matches kernelCAD's mm geometry, and is why the
+// (which is unit-agnostic), matches CrispCAD's mm geometry, and is why the
 // material table stores MPa rather than Pa.
 
 import type { FeaMaterialProps } from '../../shared/intent/feaStudyRecord';
@@ -32,7 +32,7 @@ export interface FeaMeshQuality {
 }
 
 /** A geometric surface of the meshed solid, as gmsh sees it. `ref` is filled
- *  in when the surface matched a kernelCAD face (centroid + area), which is
+ *  in when the surface matched a CrispCAD face (centroid + area), which is
  *  what turns a node-level stress peak into a named region. */
 export interface FeaSurface {
   tag: number;
@@ -111,7 +111,7 @@ export interface FeaDatResult {
 
 /** One high-stress region of the part. */
 export interface FeaHotSpot {
-  /** `@kc[...]` face ref when the surface matched a kernelCAD face,
+  /** `@kc[...]` face ref when the surface matched a CrispCAD face,
    *  otherwise `surface#<gmsh tag>`. */
   region: string;
   maxVonMisesMPa: number;

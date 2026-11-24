@@ -1,6 +1,6 @@
 # Release Hygiene
 
-kernelCAD releases have three public surfaces:
+CrispCAD releases have three public surfaces:
 
 - the npm package, for Node.js users
 - the GitHub Release, for self-contained platform archives, checksums, and provenance

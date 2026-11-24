@@ -16,7 +16,7 @@ export const geometryAuthoringToolEntries: ToolRegistryEntry[] = [
   {
     definition: {
       name: 'add_feature',
-      description: 'Use this when you need to insert a new feature line into a script. Insert a new feature line into a kernelCAD script before the last top-level return statement. Returns the modified code as text plus diagnostics from re-evaluating the result. Side-effect-free. Primitives that accept faceLabels (box, cylinder, extrudeRect, extrudeCircle, extrudePolygon, extrudeRoundedRect) can receive `opts.faceLabels` in the inserted code — use `lookup_api` to see `featureKindFaceLabels` for the full value schema.',
+      description: 'Use this when you need to insert a new feature line into a script. Insert a new feature line into a CrispCAD script before the last top-level return statement. Returns the modified code as text plus diagnostics from re-evaluating the result. Side-effect-free. Primitives that accept faceLabels (box, cylinder, extrudeRect, extrudeCircle, extrudePolygon, extrudeRoundedRect) can receive `opts.faceLabels` in the inserted code — use `lookup_api` to see `featureKindFaceLabels` for the full value schema.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -455,7 +455,7 @@ export const geometryAuthoringToolEntries: ToolRegistryEntry[] = [
     definition: {
       name: 'add_text',
       description:
-        'Use this when you need to author text into a kernelCAD script before the last top-level return. One authoring path, selected by `mode`:\n' +
+        'Use this when you need to author text into a CrispCAD script before the last top-level return. One authoring path, selected by `mode`:\n' +
         "- 'sketch' — insert a sketch.text(...) call. The emitted sketch is chainable: pair with subsequent .extrude(...) / cut(...) edits to land an engraved or raised text feature.\n" +
         "- 'emboss' — insert a `<shape>.embossText({...})` chained call onto an existing Shape `target`. Use for engraved brand text on faces (Ray-Ban temple, CE mark, model number). `depth > 0` raises text out of the face; `depth < 0` engraves text into the face. Lowers via replicad drawText → sketchOnFace → extrude → fuse|cut.\n" +
         'Default font is the runtime-bundled Liberation Sans. Side-effect-free; returns the modified code plus diagnostics from re-evaluating. Each mode fails closed on its own missing required params.',
@@ -492,7 +492,7 @@ export const geometryAuthoringToolEntries: ToolRegistryEntry[] = [
   {
     definition: {
       name: 'project_curve',
-      description: 'Use this when you need to project a 2D path onto a selected face. Insert `<shape>.projectCurve(...)` into a kernelCAD script. Closed mode wraps a path and returns a Sketch. Open mode (`as_edge: true`) takes an explicit `source_plane` and world-space `direction`, awaits the projection, and binds every resulting edge as a Curve3D array for downstream curve operations. The source is `{ kind: "sketchCommands", commands: [...] }`. Side-effect-free; returns modified code plus diagnostics.',
+      description: 'Use this when you need to project a 2D path onto a selected face. Insert `<shape>.projectCurve(...)` into a CrispCAD script. Closed mode wraps a path and returns a Sketch. Open mode (`as_edge: true`) takes an explicit `source_plane` and world-space `direction`, awaits the projection, and binds every resulting edge as a Curve3D array for downstream curve operations. The source is `{ kind: "sketchCommands", commands: [...] }`. Side-effect-free; returns modified code plus diagnostics.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -539,7 +539,7 @@ export const geometryAuthoringToolEntries: ToolRegistryEntry[] = [
   {
     definition: {
       name: 'add_pattern_feature',
-      description: "Use this when you need to repeat a feature in a pattern. Insert a Shape.patternLinear / .patternCircular / .patternGrid call into a kernelCAD script before the last top-level return. Pass structured args (kind + the matching spec object). Returns the modified code plus diagnostics from re-evaluating. Side-effect-free. The pattern feature is a single editable unit; pattern-instance face refs resolve via `<sourceId>_pattern_<i>` on the pattern feature's lineage. Geometric note: pattern is implemented as cumulative boolean union of transformed source copies — additive features (boxes, ribs, fins, spokes) pattern cleanly; patterning a subtractive feature (hole, cutout) only preserves the per-instance void when adjacent bodies are disjoint.",
+      description: "Use this when you need to repeat a feature in a pattern. Insert a Shape.patternLinear / .patternCircular / .patternGrid call into a CrispCAD script before the last top-level return. Pass structured args (kind + the matching spec object). Returns the modified code plus diagnostics from re-evaluating. Side-effect-free. The pattern feature is a single editable unit; pattern-instance face refs resolve via `<sourceId>_pattern_<i>` on the pattern feature's lineage. Geometric note: pattern is implemented as cumulative boolean union of transformed source copies — additive features (boxes, ribs, fins, spokes) pattern cleanly; patterning a subtractive feature (hole, cutout) only preserves the per-instance void when adjacent bodies are disjoint.",
       inputSchema: {
         type: 'object',
         properties: {
@@ -583,7 +583,7 @@ export const geometryAuthoringToolEntries: ToolRegistryEntry[] = [
   {
     definition: {
       name: 'remove_feature',
-      description: 'Use this when you need to remove a feature line from a script. Remove a single line from a kernelCAD script identified by a substring match. Returns the modified code plus diagnostics from re-evaluating. Refuses to remove the line containing the return statement. Side-effect-free.',
+      description: 'Use this when you need to remove a feature line from a script. Remove a single line from a CrispCAD script identified by a substring match. Returns the modified code plus diagnostics from re-evaluating. Refuses to remove the line containing the return statement. Side-effect-free.',
       inputSchema: {
         type: 'object',
         properties: {

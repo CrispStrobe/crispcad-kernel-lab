@@ -1,6 +1,6 @@
 # USD coupling warning demo
 
-This bundle runs a two-mate assembly through kernelCAD's `usd-isaac` serializer.
+This bundle runs a two-mate assembly through CrispCAD's `usd-isaac` serializer.
 The source couples `output` to `input` at a ratio of `-0.5`. The emitted stage
 contains an independent `PhysicsRevoluteJoint "output"` and a warning that
 names the dropped relation. The simple cylinders are a topology fixture; they

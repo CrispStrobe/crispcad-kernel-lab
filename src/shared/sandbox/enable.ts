@@ -4,7 +4,7 @@
 // Sandbox mode — switch-on, argv parsing and status.
 //
 // `enableSandbox()` is called once, by the CLI/MCP entry point, BEFORE any
-// other kernelCAD module runs (src/agent/cli/lib/sandboxBoot.ts is the first
+// other CrispCAD module runs (src/agent/cli/lib/sandboxBoot.ts is the first
 // import of src/agent/cli/index.ts). It:
 //
 //   1. resolves the workspace root (realpath; must be an existing directory);
@@ -57,7 +57,7 @@ function realOrNull(p: string): string | null {
   }
 }
 
-/** Directory holding kernelCAD's own package.json (source checkout or installed package). */
+/** Directory holding CrispCAD's own package.json (source checkout or installed package). */
 export function findPackageRoot(start = dirname(fileURLToPath(import.meta.url))): string | null {
   let dir = start;
   for (;;) {
@@ -193,7 +193,7 @@ export interface SandboxArgv {
 /**
  * Pull `--sandbox`, `--workspace <dir>` / `--workspace=<dir>` out of argv,
  * wherever they appear before a `--` terminator. Works for every subcommand
- * (`kernelcad --sandbox export …`, `kernelcad mcp --sandbox`).
+ * (`crispcad --sandbox export …`, `crispcad mcp --sandbox`).
  */
 export function parseSandboxArgv(argv: readonly string[]): SandboxArgv {
   const rest: string[] = [];

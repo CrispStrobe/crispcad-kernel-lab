@@ -1175,7 +1175,7 @@ describe('importDxfText — units', () => {
   it('refuses a $INSUNITS code it does not map, naming the line', () => {
     const text = dxf(...header([9, '$INSUNITS'], [70, 19])) + entities(...SQUARE_10x5);
     expect(() => importDxfText(text)).toThrowError(
-      /\$INSUNITS=19 is not a length unit kernelCAD maps/,
+      /\$INSUNITS=19 is not a length unit CrispCAD maps/,
     );
     expect(() => importDxfText(text)).toThrowError(/opts\.units/);
   });

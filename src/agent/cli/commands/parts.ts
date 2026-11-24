@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/parts.ts
 //
-// `kernelcad parts <file>` — list solved-assembly parts with exact bbox,
+// `crispcad parts <file>` — list solved-assembly parts with exact bbox,
 // volume, surface area, and export-mesh triangle count. Backed by
 // `listPartStats` so the MCP list_part_stats tool shares the same numbers.
 

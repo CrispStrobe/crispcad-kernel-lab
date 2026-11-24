@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// The kernelCAD version string, as stamped into exported STL/GLB/DXF/3MF
+// The CrispCAD version string, as stamped into exported STL/GLB/DXF/3MF
 // headers.
 //
 // Reading it means reading `package.json`, which the exporters did with

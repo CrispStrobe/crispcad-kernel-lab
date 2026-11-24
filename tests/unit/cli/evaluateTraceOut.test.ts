@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// `kernelcad evaluate --trace-out <json>` persists the feature trace so a
+// `crispcad evaluate --trace-out <json>` persists the feature trace so a
 // later repair pass (or a human reading a CI artifact) can see which script
 // line produced which modeling step without re-running the script.
 
@@ -27,7 +27,7 @@ async function scriptFile(): Promise<string> {
   return file;
 }
 
-describe('kernelcad evaluate --trace-out', () => {
+describe('crispcad evaluate --trace-out', () => {
   beforeAll(async () => { await initOcct(); }, 60000);
   afterEach(async () => {
     if (workDir !== undefined) await rm(workDir, { recursive: true, force: true });

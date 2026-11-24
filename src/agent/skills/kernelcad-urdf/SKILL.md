@@ -3,9 +3,9 @@ name: kernelcad-urdf
 description: Export multi-part assemblies to URDF — links, joints, inertial blocks, per-link STL meshes. Use when an assembly needs to be consumed by an external motion planner or simulator.
 ---
 
-# kernelCAD — URDF export
+# CrispCAD — URDF export
 
-URDF (Unified Robot Description Format) is a tree-shaped XML description of a multi-part assembly: links with inertial properties, joints with axes and limits, and visual + collision meshes. kernelCAD's `export({ target: 'model', format: 'urdf' })` writes a `.urdf` plus a sibling `meshes/` directory with one STL per link.
+URDF (Unified Robot Description Format) is a tree-shaped XML description of a multi-part assembly: links with inertial properties, joints with axes and limits, and visual + collision meshes. CrispCAD's `export({ target: 'model', format: 'urdf' })` writes a `.urdf` plus a sibling `meshes/` directory with one STL per link.
 
 ## When to use
 
@@ -37,11 +37,11 @@ Result: `out/robot.urdf` containing one `<link>` per part and one `<joint>` per 
 
 ## Geometry units
 
-Link STL meshes are written in kernelCAD-native mm; every `<mesh>` tag carries `scale="0.001 0.001 0.001"` so consumers see metres — consistent with the SI `<inertial>` blocks and joint origins. Do not strip the scale attribute.
+Link STL meshes are written in CrispCAD-native mm; every `<mesh>` tag carries `scale="0.001 0.001 0.001"` so consumers see metres — consistent with the SI `<inertial>` blocks and joint origins. Do not strip the scale attribute.
 
 ## Mate-to-joint mapping
 
-| kernelCAD mate | URDF joint | Notes |
+| CrispCAD mate | URDF joint | Notes |
 |---|---|---|
 | `fastened` | `fixed` | Direct. |
 | `revolute` with `limitsDeg` | `revolute` | Limits emitted in radians. |

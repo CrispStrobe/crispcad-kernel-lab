@@ -1,6 +1,6 @@
 // Original kernelCAD hinge assembly used to demonstrate GLB rig export.
 // A standard GLB export writes metres by default, scaling these mm dimensions
-// for glTF viewers; pass units: 'mm' only for consumers that read kernelCAD extras.
+// for glTF viewers; pass units: 'mm' only for consumers that read CrispCAD extras.
 // The boxes are intentional simple blockout geometry; no external mesh is
 // used. The base carries a hinge ear, the end face of the lid bears on the
 // inner face of that ear, and the hinge axis goes through both. The closed

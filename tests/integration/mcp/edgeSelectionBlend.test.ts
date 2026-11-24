@@ -3,7 +3,7 @@
 //
 // Core half of edge picking: the mesh carries a stable ID per edge range, the
 // IDs survive re-evaluation, and apply_surface_blend accepts the picked refs.
-// The Studio selection endpoint round-trip is tested in kernelCAD-app.
+// The Studio selection endpoint round-trip is tested in CrispCAD-app.
 import { beforeAll, describe, expect, it } from 'vitest';
 import { buildModel } from '../../../src/composition/buildModel';
 import { initOcct } from '../../../src/kernel/backends/occt/occtBackend';

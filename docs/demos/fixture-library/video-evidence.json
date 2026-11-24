@@ -33,5 +33,5 @@
     "npx tsx src/agent/cli/index.ts render examples/fixture/table-clamp-set.kcad.ts --preset publish --pose 55,42 -o docs/demos/fixture-library/fixture.hero.png",
     "convert fixture.hero.png -crop 760x660+700+360 +repage fixture-detail.png"
   ],
-  "provenance": "Annotated still sequence composed from local kernelcad render --preset publish outputs of the committed example source. Not a screen recording, turntable, deployed platform capture, physical setup or machining test."
+  "provenance": "Annotated still sequence composed from local crispcad render --preset publish outputs of the committed example source. Not a screen recording, turntable, deployed platform capture, physical setup or machining test."
 }

@@ -4,7 +4,7 @@
 //
 // P7 Task 0 — verify MuJoCo's <tendon><spatial> primitive applies force on
 // a minimal 1-DoF pendulum running in Node via @mujoco/mujoco. This is the
-// prerequisite for the kernelCAD `arm.tendon(...)` API: if MuJoCo can't
+// prerequisite for the CrispCAD `arm.tendon(...)` API: if MuJoCo can't
 // hold a non-vertical equilibrium under a spatial tendon's restoring
 // force, the whole closed-loop spring approach is broken.
 //

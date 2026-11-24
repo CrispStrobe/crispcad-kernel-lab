@@ -1,6 +1,6 @@
 # Mechanism physics: rest pose of a coupled mate
 
-`demo.mp4` is a 12-second text replay of recorded `kernelcad validate
+`demo.mp4` is a 12-second text replay of recorded `crispcad validate
 --include-interference` output for
 `examples/robot-arm/skill-built-supported-arm.kcad.ts`. The gripper declares
 `left-curl` with `pose: gripDeg` (10°) and couples `right-curl` to it with

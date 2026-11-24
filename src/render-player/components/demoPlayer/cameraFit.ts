@@ -19,7 +19,7 @@ export interface FitDistanceInput {
   /** Unit vector from target TOWARD the camera. */
   camDir: [number, number, number];
   /** World up for the screen basis. Pass [0, 1, 0] when camDir ∥ ±Z
-   *  (top view); default [0, 0, 1] (kernelCAD is Z-up). */
+   *  (top view); default [0, 0, 1] (CrispCAD is Z-up). */
   worldUp?: [number, number, number];
   fovYDeg: number;
   /** camera.aspect of the render canvas. */

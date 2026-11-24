@@ -90,7 +90,7 @@ const EPSILON_MM = 0.1;
  * Direction-vector parallelism threshold for line-plane intersection
  * denominators (and the equivalent ray-AABB slab degenerate case). 1e-4 is
  * well below any geometrically meaningful angular sensitivity for
- * kernelCAD's mm-scale parts — the smallest direction component a healthy
+ * CrispCAD's mm-scale parts — the smallest direction component a healthy
  * mate axis carries after FK is O(1), so 1e-4 only catches genuinely
  * axis-aligned-to-plane degeneracies, not numerical noise on real axes.
  *

@@ -26,7 +26,7 @@ title_f = ImageFont.truetype(FONT, 28)
 small = ImageFont.truetype(FONT, 18)
 mono = ImageFont.truetype(MONO, 17)
 COLORS = {"pass": (110, 200, 120), "fail": (235, 95, 85), "warn": (235, 190, 80), "not-checked": (130, 170, 235)}
-FOOT = "kernelCAD local validation (report.ts calls dfmReviewTool directly) - renders, not a molded or bent part"
+FOOT = "CrispCAD local validation (report.ts calls dfmReviewTool directly) - renders, not a molded or bent part"
 
 
 def base(title):

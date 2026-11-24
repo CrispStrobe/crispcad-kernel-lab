@@ -7,7 +7,7 @@ The upstream SG90 models are **CC-BY-SA-4.0**,
 <https://creativecommons.org/licenses/by-sa/4.0/>. The original FCStd metadata
 explicitly specifies this license; it is more specific than the repository's
 CC-BY-3.0 default. Retain attribution and this license when sharing geometry or
-adaptations. These third-party models are separate from kernelCAD's MIT code.
+adaptations. These third-party models are separate from CrispCAD's MIT code.
 The editable FCStd sources stay upstream at the pinned commit.
 
 The committed geometry is `assets/parts-seed/micro-servo/sg90-servo.step` and

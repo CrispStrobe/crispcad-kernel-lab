@@ -2,7 +2,7 @@
 
 ## Current state
 
-`kernelcad render inspect` emits an inspection-bundle shape with `rgb`, `mask`, `depth`, and `normals` channels. The CLI normalizes `--channels`, rejects anything outside those names before launching Chromium, calls `headlessRender`, writes `channels/<channel>/<view>.png`, and records the manifest in `src/agent/cli/commands/render.ts` (`SUPPORTED_INSPECT_CHANNELS`, `renderInspectBundle`).
+`crispcad render inspect` emits an inspection-bundle shape with `rgb`, `mask`, `depth`, and `normals` channels. The CLI normalizes `--channels`, rejects anything outside those names before launching Chromium, calls `headlessRender`, writes `channels/<channel>/<view>.png`, and records the manifest in `src/agent/cli/commands/render.ts` (`SUPPORTED_INSPECT_CHANNELS`, `renderInspectBundle`).
 
 The browser renderer is the source of truth for pixels. `src/agent/render/headlessRender.ts` launches Playwright, opens `/demo-player?headless=1`, loads serialized feature meshes through `window.__demoPlayer.loadFeatureMeshes`, applies object/reference/environment options, sets each view with `setRenderView`, then captures `page.screenshot()`. It has no direct access to the Three renderer, scene, camera, or GL context except through the demo-player bridge.
 
@@ -28,7 +28,7 @@ Implemented path:
 
 CLI:
 
-`kernelcad render inspect <file> <outDir> --channels rgb,depth,normals --views front,iso`
+`crispcad render inspect <file> <outDir> --channels rgb,depth,normals --views front,iso`
 
 Default stays `rgb` (channels) and all four canonical views (`--views` omitted). Unsupported channels/views should still fail before launching the browser. `requestedChannels` should preserve the user's normalized request; `emittedChannels` should list the channels actually written; `views` records the captured view subset.
 
@@ -126,5 +126,5 @@ Demo-player tests:
 
 Integration smoke:
 
-- Run `kernelcad render inspect examples/bracket-with-hole.kcad.ts /tmp/kcad-inspect-channels --channels rgb,depth,normals` against the dev server.
+- Run `crispcad render inspect examples/bracket-with-hole.kcad.ts /tmp/kcad-inspect-channels --channels rgb,depth,normals` against the dev server.
 - Assert all three channel directories contain four non-empty PNGs, the manifest records near/far and encoding metadata, and RGB remains byte-present after auxiliary passes.

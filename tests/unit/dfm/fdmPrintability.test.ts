@@ -168,7 +168,7 @@ describe('FDM printability check', () => {
     );
   }, 60000);
 
-  it('surfaces the FDM block in verify dfm and the kernelcad dfm summary', async () => {
+  it('surfaces the FDM block in verify dfm and the crispcad dfm summary', async () => {
     const { report } = await check(tee);
     expect(formatDfmSummary(report)).toBe(
       "DFM: 1 parts, 0 clearance pairs, 0 wall clusters, 0 voids, fdm[shape] '+z' up 200.0 mm² unsupported " +

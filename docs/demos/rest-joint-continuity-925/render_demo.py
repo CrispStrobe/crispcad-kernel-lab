@@ -57,7 +57,7 @@ def wrapped(draw: ImageDraw.ImageDraw, xy: tuple[int, int], value: str, width: i
 def base(title: str, subtitle: str, index: int) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     image = Image.new("RGB", (WIDTH, HEIGHT), BACKGROUND)
     draw = ImageDraw.Draw(image)
-    put(draw, (64, 36), "kernelCAD   /   ISSUE #925", 19, BLUE)
+    put(draw, (64, 36), "CrispCAD   /   ISSUE #925", 19, BLUE)
     put(draw, (64, 84), title, 40)
     put(draw, (64, 145), subtitle, 21, MUTED)
     draw.rounded_rectangle((64, 640, WIDTH - 64, 644), radius=2, fill=(45, 59, 82))

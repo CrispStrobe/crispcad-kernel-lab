@@ -3,9 +3,9 @@
 // src/modeling/parts/stepPartsAdapter.ts
 //
 // Adapter for the step.parts public catalog (https://api.step.parts). This is
-// the default remote source that lets kernelCAD *find* off-the-shelf parts it
+// the default remote source that lets CrispCAD *find* off-the-shelf parts it
 // does not bundle. step.parts returns its own JSON schema — this module maps a
-// step.parts record onto kernelCAD's canonical `PartRecord`.
+// step.parts record onto CrispCAD's canonical `PartRecord`.
 //
 // Two schema gaps are filled here, not at the API:
 //   - `connectors` — records without an authored, hash-bound connector manifest
@@ -43,7 +43,7 @@ export interface StepPartsRecord {
   standard?: { body?: string; number?: string; designation?: string } | string | null;
   attributes?: Record<string, unknown>;
   stepUrl?: string;
-  /** Display-mesh URL. kernelCAD's own catalog serves the authored `*-board`
+  /** Display-mesh URL. CrispCAD's own catalog serves the authored `*-board`
    *  records as GLB-only (no `stepUrl`) — see PartRecord.glbUrl. Must survive
    *  the mapping so fetchPartHost can explain *why* there is no BREP instead of
    *  reporting a bare "no stepUrl". */
@@ -56,7 +56,7 @@ export interface StepPartsRecord {
   connectorManifest?: unknown;
 }
 
-/** step.parts `standard` is an object `{body, number, designation}`; kernelCAD's
+/** step.parts `standard` is an object `{body, number, designation}`; CrispCAD's
  *  PartRecord wants a flat string. Tolerate the legacy string form too. */
 function flattenStandard(
   s: StepPartsRecord['standard'],
@@ -83,7 +83,7 @@ function coerceAttributes(
 }
 
 /**
- * Map a step.parts detail record onto a kernelCAD PartRecord.
+ * Map a step.parts detail record onto a CrispCAD PartRecord.
  *
  * Authored connector manifests are validated against the raw record and
  * transported intact; otherwise `connectors` remains empty for fetch-time

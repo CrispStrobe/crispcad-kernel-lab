@@ -3,7 +3,7 @@
 //
 // FIRST import of the CLI entry point (src/agent/cli/index.ts). Switches
 // sandbox mode on from KERNELCAD_SANDBOX=1 or the --sandbox / --workspace
-// flags (wherever they appear in argv) BEFORE any other kernelCAD module is
+// flags (wherever they appear in argv) BEFORE any other CrispCAD module is
 // evaluated, so the fs + network chokepoints are installed before anything
 // can capture an unguarded `fetch` or open a file. The flags are removed from
 // process.argv so commander and the heap re-exec never see them; the mode

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // STEP -> editable feature tree through the registered mesh_to_features tool:
-// a kernelCAD-exported STEP is rebuilt and verified against its own B-rep.
+// a CrispCAD-exported STEP is rebuilt and verified against its own B-rep.
 import { describe, expect, it, vi } from 'vitest';
 vi.setConfig({ hookTimeout: 60_000, testTimeout: 120_000 });
 import { initOcct } from '../../../src/kernel/backends/occt/occtBackend';

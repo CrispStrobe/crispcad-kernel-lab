@@ -12,7 +12,7 @@ to (and over) an orthographic render of the model:
 
 Usage: compare.py <view: side|front|rear|top> <render.png> <out.png>
 
-The render is a kernelCAD side / front / rear / top view on a plain
+The render is a CrispCAD side / front / rear / top view on a plain
 background (the model is found by background colour). The headless renderer
 uses a perspective camera: side and top frames are fitted on overall length,
 front and rear frames on the body width at bumper height, so in those two
@@ -101,7 +101,7 @@ def main():
         f = ImageFont.load_default()
     d.text((12, 8), f'reference: published E46 sedan dimensions ({view})', fill=(30, 30, 30), font=f)
     note = ' (perspective camera: fitted on bumper width)' if view in ('front', 'rear') else ''
-    d.text((img.width + 12, 8), 'kernelCAD render + same reference frame (red)' + note, fill=(30, 30, 30), font=f)
+    d.text((img.width + 12, 8), 'CrispCAD render + same reference frame (red)' + note, fill=(30, 30, 30), font=f)
     comp.save(out)
     print(out, 'mm/px', round(1 / mmpx, 2))
 

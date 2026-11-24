@@ -61,5 +61,5 @@
     "verify({ check: 'assembly-path', file: 'examples/assemblies/assembly-sequence-gearbox.kcad.ts', sequence: true })",
     "node docs/demos/assembly-sequence-planner/make-video.mjs"
   ],
-  "provenance": "Annotated still sequence composed from local kernelcad renders and the planner evidence JSON. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test."
+  "provenance": "Annotated still sequence composed from local crispcad renders and the planner evidence JSON. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test."
 }

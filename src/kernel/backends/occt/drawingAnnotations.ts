@@ -11,7 +11,7 @@
 //
 //   1. ADDRESSING — annotations name geometry with the same `EdgeQuery` /
 //      `FaceQuery` vocabulary that `fillet` / `chamfer` / `selectEdge` use, so
-//      there is one way to point at geometry in kernelCAD, not two. An
+//      there is one way to point at geometry in CrispCAD, not two. An
 //      explicit model-space point is accepted as the escape hatch.
 //   2. ANCHORING — every annotation resolves to MODEL-space 3D points, which
 //      are then pushed through exactly the transform the geometry took:

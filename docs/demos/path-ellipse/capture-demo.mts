@@ -106,7 +106,7 @@ const implementation = Object.fromEntries(await Promise.all(
   IMPLEMENTATION_FILES.map(async (file) => [file, sha256(await readFile(file))] as const),
 ));
 const evidence = {
-  scope: 'Local kernelCAD Node API: a 2:1 semi-elliptical vessel head revolved from two ellipseArc segments, and a turned elliptical gasket from two closed ellipses. OCCT volume, bounding box and validity checks against closed-form values.',
+  scope: 'Local CrispCAD Node API: a 2:1 semi-elliptical vessel head revolved from two ellipseArc segments, and a turned elliptical gasket from two closed ellipses. OCCT volume, bounding box and validity checks against closed-form values.',
   invocation: INVOCATION,
   headSource: HEAD_SOURCE,
   headSourceSha256: sha256(head.code),

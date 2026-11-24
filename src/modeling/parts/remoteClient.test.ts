@@ -14,7 +14,7 @@ describe('remoteClient', () => {
     vi.restoreAllMocks();
   });
 
-  it("defaults to kernelCAD's own catalog when no url is configured", async () => {
+  it("defaults to CrispCAD's own catalog when no url is configured", async () => {
     delete process.env.KERNELCAD_PARTS_BASE_URL;
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
       new Response(JSON.stringify({ items: [], total: 0 }), { status: 200 }),

@@ -3,7 +3,7 @@
 import type { SceneSummary } from '../../script-runtime/sceneSummary';
 // src/mcp/tools/addSketchText.ts
 //
-// MCP tool: AST-edit a `sketch.text(...)` call into a kernelCAD script.
+// MCP tool: AST-edit a `sketch.text(...)` call into a CrispCAD script.
 // Defers the actual line insertion to the existing `addFeature` edit helper,
 // then re-evaluates the modified script and returns diagnostics.
 

@@ -33,7 +33,7 @@ import type { DiagnosticCode } from '../diagnostics/registry';
  *  the requirement and the example at the end of the message. */
 export const MAX_GOT_CHARS = 120;
 
-/** Units kernelCAD arguments carry. Linear is always mm, angular always deg —
+/** Units CrispCAD arguments carry. Linear is always mm, angular always deg —
  *  naming the unit in the message is what stops the "I passed cm" retry. */
 export type ArgUnit = 'mm' | 'deg' | 'mm²' | 'mm³' | 'mm/s' | 'count' | 'ratio' | 'unitless';
 

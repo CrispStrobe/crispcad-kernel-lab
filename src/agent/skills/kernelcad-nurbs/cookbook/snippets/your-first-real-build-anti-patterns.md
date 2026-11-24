@@ -53,7 +53,7 @@ const glasses = body.subtract(lensHole)
   .union(lensInsert.finish('glass-tinted'))              // glass-dark
   .finish('abs', { color: '#1a1a1a' });                  // frame-black
 
-// kernelcad render emits a "material shadowing — leaf <X> has its own
+// crispcad render emits a "material shadowing — leaf <X> has its own
 // material but is unioned into <Y> which also has its own material" warning.
 ```
 

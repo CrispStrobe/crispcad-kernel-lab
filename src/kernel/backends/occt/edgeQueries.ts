@@ -400,7 +400,7 @@ export function isBoundaryEdge(shape: { faces: Face[] }, edge: Edge): boolean {
  * Two edges are considered the same if their endpoints match (in either
  * orientation) and their mid-parameter points match, within an absolute
  * tolerance of 1e-6. This is mm-scale
- * (1e-6 mm = 1 nanometer) — appropriate for all kernelCAD work today,
+ * (1e-6 mm = 1 nanometer) — appropriate for all CrispCAD work today,
  * which operates exclusively in millimeters. Callers working at radically
  * different scales would need a parameterized tolerance.
  *

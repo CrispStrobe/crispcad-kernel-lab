@@ -6,7 +6,7 @@ import type { ToolRegistryEntry } from './types';
 export const surfaceBlendToolEntries: ToolRegistryEntry[] = [{
   definition: {
     name: 'apply_surface_blend',
-    description: 'Use this when you need to author and evaluate a fillet or chamfer on a kernelCAD Shape. Inserts Shape.fillet(radius, selector, { continuity: G1|G2 }) or Shape.chamfer(distance, selector) through the existing public API and returns the patched source plus evaluation diagnostics. Selectors accept EdgeSelector syntax, including stable edge refs from get_selection (for example @kc[box_1/edge/s<hash>]), arrays of selected edge refs, query strings, or { face: canonical name, face label, or face query }. G2 continuity applies to fillets; chamfer uses the existing chamfer API. This authors the operation and does not extract blend-surface NURBS poles; that still requires kernel surface extraction.',
+    description: 'Use this when you need to author and evaluate a fillet or chamfer on a CrispCAD Shape. Inserts Shape.fillet(radius, selector, { continuity: G1|G2 }) or Shape.chamfer(distance, selector) through the existing public API and returns the patched source plus evaluation diagnostics. Selectors accept EdgeSelector syntax, including stable edge refs from get_selection (for example @kc[box_1/edge/s<hash>]), arrays of selected edge refs, query strings, or { face: canonical name, face label, or face query }. G2 continuity applies to fillets; chamfer uses the existing chamfer API. This authors the operation and does not extract blend-surface NURBS poles; that still requires kernel surface extraction.',
     inputSchema: {
       type: 'object',
       properties: {

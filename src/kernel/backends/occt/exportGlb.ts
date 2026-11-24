@@ -9,7 +9,7 @@
 // `_sheen` / `_volume` glTF extensions are written automatically by
 // GLTFExporter when the source material has the corresponding fields set.
 //
-// Axis convention: kernelCAD's world is Z-up (standard CAD); glTF's default
+// Axis convention: CrispCAD's world is Z-up (standard CAD); glTF's default
 // is Y-up. With `axis: 'y-up'` (default) we apply a -PI/2 rotation about the
 // X axis at the root of the scene graph so the GLB renders right-side-up in
 // glTF viewers. `axis: 'z-up'` skips the rotation. The choice is recorded in
@@ -93,7 +93,7 @@ export interface ExportGlbOptions {
   hierarchy?: 'rig' | 'flat';
   /** Axis convention. `y-up` (default, glTF convention) applies a -PI/2
    *  rotation about X at the scene root so viewers render the CAD body
-   *  upright. `z-up` preserves kernelCAD's native orientation. */
+   *  upright. `z-up` preserves CrispCAD's native orientation. */
   axis?: 'y-up' | 'z-up';
   /** Reserved for a future slice; runtime throws when `true` today. */
   draco?: false;
@@ -105,7 +105,7 @@ export interface ExportGlbOptions {
   /** Tessellation and triangle budget for `style: 'lowpoly'`. */
   lowpoly?: LowPolyGlbOptions;
   /** Length unit of the written file. Defaults to `m`, as required by glTF.
-   *  `mm` preserves native kernelCAD coordinates for consumers that read the
+   *  `mm` preserves native CrispCAD coordinates for consumers that read the
    *  `asset.extras.kernelcad.units` metadata. */
   units?: 'mm' | 'm';
   /** Directory relative-path texture refs resolve against. Mirrors
@@ -277,11 +277,11 @@ function createExportScene(
 } {
   const root = new THREE.Group();
   if (layout.axis === 'y-up') {
-    // kernelCAD world is Z-up; glTF default is Y-up. Rotate the scene root
+    // CrispCAD world is Z-up; glTF default is Y-up. Rotate the scene root
     // -PI/2 about X so +Z becomes +Y in viewer space.
     root.rotateX(-Math.PI / 2);
   }
-  // kernelCAD models in millimetres; a metre file scales at the root so rig
+  // CrispCAD models in millimetres; a metre file scales at the root so rig
   // pivots and part transforms below keep their authored values.
   if (layout.units === 'm') root.scale.setScalar(0.001);
   const rigPartNodes = rigTree === undefined ? undefined : createRigGroups(rigTree, root);

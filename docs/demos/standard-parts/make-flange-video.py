@@ -3,7 +3,7 @@
 # Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 #
 # Build docs/demos/standard-parts/flange-demo.mp4: an annotated still sequence
-# from the local `kernelcad render --preset publish` outputs of the committed
+# from the local `crispcad render --preset publish` outputs of the committed
 # bolted-flange example. Not a screen recording. Run from this directory:
 #   python3 make-flange-video.py
 import hashlib
@@ -186,7 +186,7 @@ def main():
             "convert flange-front.pose-0-0.png -crop 900x430+660+590 +repage flange-detail.png",
         ],
         "provenance": (
-            "Annotated still sequence composed from local kernelcad render --preset publish outputs "
+            "Annotated still sequence composed from local crispcad render --preset publish outputs "
             "of the committed example source. Not a screen recording, turntable, deployed platform "
             "capture, physical hardware or strength test."
         ),

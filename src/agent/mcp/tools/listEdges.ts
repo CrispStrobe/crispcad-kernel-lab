@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/mcp/tools/listEdges.ts
 //
-// MCP tool: list edges of a kernelCAD shape with optional EdgeQuery filter.
+// MCP tool: list edges of a CrispCAD shape with optional EdgeQuery filter.
 // Lets agents introspect any shape (primitives, booleans, transformed solids,
 // imported geometry) before running fillet/chamfer.
 //

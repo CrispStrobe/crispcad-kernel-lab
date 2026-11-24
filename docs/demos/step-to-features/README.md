@@ -1,6 +1,6 @@
 # STEP to editable feature tree demo
 
-`mesh_to_features` (CLI `kernelcad reconstruct`) now accepts a `.step`/`.stp`
+`mesh_to_features` (CLI `crispcad reconstruct`) now accepts a `.step`/`.stp`
 file. It reads one solid with the OCCT STEP reader and tessellates that exact
 B-rep finely. It then runs the existing fit → emit → evaluate → compare loop
 and returns an editable `.kcad.ts` with named params, plus a measured fidelity

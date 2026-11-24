@@ -1,6 +1,6 @@
 # Build full Ray-Ban Meta — Wayfarer-style smart glasses
 
-Reproduce a complete pair of Ray-Ban Meta-style Wayfarer smart glasses as a kernelCAD gallery model. Build the full physical product, not a front-face facade.
+Reproduce a complete pair of Ray-Ban Meta-style Wayfarer smart glasses as a CrispCAD gallery model. Build the full physical product, not a front-face facade.
 
 Targets:
 

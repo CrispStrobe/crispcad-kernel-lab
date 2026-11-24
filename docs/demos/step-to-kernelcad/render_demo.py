@@ -165,7 +165,7 @@ def main() -> None:
         "Translate STEP into a native KernelCAD bundle",
         "The import keeps exact OCCT BREP geometry and STEP product metadata.",
         [
-            ('$ kernelcad import-step source.step --name "Smoke Box" --out bundle', CYAN),
+            ('$ crispcad import-step source.step --name "Smoke Box" --out bundle', CYAN),
             (f"✓ {bundle['partAssets']} exact BREP asset  ·  {bundle['definitionCount']} definition  ·  {bundle['occurrenceCount']} occurrence", GREEN),
             (f"✓ Product name: {occurrence['originalName']}", TEXT),
             (f"✓ Source unit: {', '.join(manifest['sourceLengthUnits'])}  →  KernelCAD mm", TEXT),
@@ -188,7 +188,7 @@ def main() -> None:
         "Evaluate the generated KernelCAD project",
         "The existing parts command reloads the exact BREP asset through lib.fromBREP.",
         [
-            ('$ kernelcad parts "bundle/Smoke Box.kcad.ts" --json', CYAN),
+            ('$ crispcad parts "bundle/Smoke Box.kcad.ts" --json', CYAN),
             (f"✓ {part['name']}  ·  bbox {size} mm", GREEN),
             (f"✓ Volume {part['volumeMm3']:.3f} mm³  ·  surface {part['surfaceAreaMm2']:.3f} mm²", TEXT),
             (f"✓ Export mesh {part['triangleCount']} triangles  ·  BREP sha256 {asset_hash}…", TEXT),
@@ -206,7 +206,7 @@ def main() -> None:
         "Local multi-file STEP assemblies import as one project",
         "The importer resolves nested DOCUMENT_FILE references and tracks every source file hash.",
         [
-            ('$ kernelcad import-step s1-c5-214.stp --out bundle', CYAN),
+            ('$ crispcad import-step s1-c5-214.stp --out bundle', CYAN),
             (f"✓ {len(external_dependencies)} recursive STEP dependencies recorded", GREEN),
             (f"✓ {external_bundle['definitionCount']} BREP definitions  ·  {external_bundle['occurrenceCount']} placed occurrences", TEXT),
             (f"✓ Source units {external_units}  →  canonical KernelCAD mm", TEXT),

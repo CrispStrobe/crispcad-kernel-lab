@@ -179,7 +179,7 @@ const DXF_HINTS: Record<string, string> = {
   empty: 'the file is empty.',
   'not-dxf': 'the file is not group-code/value DXF text (binary DXF is not supported — re-export as ASCII DXF).',
   'no-entities': 'the file has no ENTITIES section, so it contains no drawable geometry.',
-  'unsupported-entity': 'convert the named entity to lines, arcs or polylines in the source tool and re-export. For SPLINE, use a clamped continuous planar XY control-point spline; kernelCAD refuses the entity rather than dropping it from the profile.',
+  'unsupported-entity': 'convert the named entity to lines, arcs or polylines in the source tool and re-export. For SPLINE, use a clamped continuous planar XY control-point spline; CrispCAD refuses the entity rather than dropping it from the profile.',
   'malformed-entity': 'the named entity is missing a required group code or carries a non-numeric value; the file is corrupt or truncated.',
   'bad-units': 'state the intended unit with { units: "mm" | "in" | ... }.',
   contour: 'the drawing does not resolve into closed regions — close the contour in the source tool, or raise { tolerance } if the gap is only a rounding artefact.',
@@ -196,7 +196,7 @@ const DXF_HINTS: Record<string, string> = {
  * `<use>` targets are REFUSED — they carry geometry this importer will not
  * silently omit.
  *
- * Y AXIS: SVG's Y points down, kernelCAD's points up. Every point is
+ * Y AXIS: SVG's Y points down, CrispCAD's points up. Every point is
  * reflected about the top of the `viewBox` (or the `height` when there is no
  * viewBox), so the drawing lands upright in positive Y.
  *

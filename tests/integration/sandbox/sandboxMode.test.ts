@@ -3,7 +3,7 @@
 //
 // End-to-end sandbox mode through the real CLI entry point (tsx, no build
 // needed): KERNELCAD_SANDBOX=1 and the --sandbox / --workspace flags, for
-// both `kernelcad <command>` and the stdio MCP server.
+// both `crispcad <command>` and the stdio MCP server.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
@@ -116,7 +116,7 @@ describe('kernelcad CLI in sandbox mode', () => {
   }, 120_000);
 });
 
-describe('kernelcad mcp in sandbox mode', () => {
+describe('crispcad mcp in sandbox mode', () => {
   it('flag form: initialize reports the sandbox, tools enforce it', async () => {
     const msgs = await mcp(['--sandbox'], [
       { name: 'export', arguments: { target: 'model', file: 'plate.kcad.ts', format: 'stl', output_path: 'out/mcp.stl' } },
@@ -125,7 +125,7 @@ describe('kernelcad mcp in sandbox mode', () => {
       { name: 'fetch_part', arguments: { id: 'bearing-608', partsBaseUrl: 'https://parts.example.com' } },
     ]);
     const init = msgs[0]!.result!;
-    expect((init.serverInfo as { title?: string }).title).toBe('kernelCAD (sandbox mode)');
+    expect((init.serverInfo as { title?: string }).title).toBe('CrispCAD (sandbox mode)');
     expect(String(init.instructions)).toContain('SANDBOX MODE is ON');
     expect(String(init.instructions)).toContain(ws);
     const tools = (msgs[1]!.result!.tools as Array<{ name: string; description: string }>);

@@ -48,5 +48,5 @@
     "npx tsx docs/demos/assembly-stability-p3/make-evidence.ts",
     "node docs/demos/assembly-stability-p3/make-video.mjs"
   ],
-  "provenance": "Annotated still sequence composed from local kernelcad renders and the real P3 verifier result. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test. Static stability is an approximate support projection, not a physics simulation."
+  "provenance": "Annotated still sequence composed from local crispcad renders and the real P3 verifier result. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test. Static stability is an approximate support projection, not a physics simulation."
 }

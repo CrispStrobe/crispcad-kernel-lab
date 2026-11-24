@@ -4,7 +4,7 @@
 //
 // Finds an OpenFOAM install and runs its utilities, reporting absence as
 // ACTIONABLE data (`cfd.solver.unavailable` + the install command), never
-// as an ENOENT crash. OpenFOAM is GPL and is not bundled: kernelCAD shells
+// as an ENOENT crash. OpenFOAM is GPL and is not bundled: CrispCAD shells
 // out to whatever the host provides.
 //
 // Discovery order:
@@ -29,7 +29,7 @@ export const CFD_INSTALL_HINT =
   'Install OpenFOAM (ESI, v2312 or newer) natively — Ubuntu/Debian: add the repository with ' +
   '`curl -s https://dl.openfoam.com/add-debian-repo.sh | sudo bash` then `sudo apt-get install -y openfoam2406-default` — ' +
   'or pull the slim container image `docker pull opencfd/openfoam-run:2406` (about 250 MB download, 1 GB on disk). ' +
-  'Point kernelCAD at a specific install with KERNELCAD_OPENFOAM=/usr/bin/openfoam2406 or KERNELCAD_OPENFOAM_IMAGE=<image>.';
+  'Point CrispCAD at a specific install with KERNELCAD_OPENFOAM=/usr/bin/openfoam2406 or KERNELCAD_OPENFOAM_IMAGE=<image>.';
 
 export interface CfdToolchain {
   ok: boolean;

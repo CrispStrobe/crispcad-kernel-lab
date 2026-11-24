@@ -1,5 +1,5 @@
 {
-  "invocation": "kernelcad export ply docs/demos/ply-export/mount.kcad.ts -o docs/demos/ply-export/mount.ply",
+  "invocation": "crispcad export ply docs/demos/ply-export/mount.kcad.ts -o docs/demos/ply-export/mount.ply",
   "format": "binary_little_endian",
   "bytes": 1233449,
   "parts": [

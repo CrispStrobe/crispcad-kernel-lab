@@ -67,7 +67,7 @@ export function runInRealm(
   }
 
   // Injected API. Reserved names are refused exactly like the vm runner,
-  // except `require`: that is the kernelCAD requirement API (S2), and the
+  // except `require`: that is the CrispCAD requirement API (S2), and the
   // injection is what keeps the host module loader out of reach.
   const shadowed = new Set<string>(SHADOWED_GLOBALS);
   const injectedKeys = new Set<string>();

@@ -36,7 +36,7 @@ the face counts are equal; the window alone removes π·rx·ry·t within 1 part
 in 1 000 000; and the wall created refs are 4 and 2.
 
 The three solid views (`lid-front.png`, `lid-back.png`, `lid-top.png`) are
-`kernelcad render` output from the built CLI.
+`crispcad render` output from the built CLI.
 
 ## Behavior
 

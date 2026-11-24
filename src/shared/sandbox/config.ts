@@ -16,7 +16,7 @@ export interface SandboxConfig {
   /** Realpath of the workspace root. Reads and writes are allowed inside it. */
   readonly workspaceRoot: string;
   /**
-   * Realpaths of read-only roots the runtime itself needs (the kernelCAD
+   * Realpaths of read-only roots the runtime itself needs (the CrispCAD
    * package and its node_modules, the Playwright browser cache, PATH
    * directories for helper binaries, plus `KERNELCAD_SANDBOX_READ_PATHS`).
    * Writes there are refused.

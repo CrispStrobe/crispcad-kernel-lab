@@ -1,12 +1,12 @@
-# kernelCAD authoring reference — API surface
+# CrispCAD authoring reference — API surface
 
 Every top-level function, Shape / Sketch / PathBuilder method, selector algebra, 2D text, constrained sketches, and face labels.
 
 ## API Surface
 
-### Before you say "kernelCAD can't make that"
+### Before you say "CrispCAD can't make that"
 
-NEVER tell a user a shape is impossible, or that it needs other software, without first calling `lookup_api` and `lookup_cookbook`. kernelCAD does NURBS freeform surfacing — lofts, sweeps, boundary-fill patches, G2 Hermite blends, and variable-section sweeps — so organic forms (body shells, panels, fairings, ergonomic curves, bottles, horns) ARE in scope. Its two real limits, state them precisely and do not overgeneralize past them:
+NEVER tell a user a shape is impossible, or that it needs other software, without first calling `lookup_api` and `lookup_cookbook`. CrispCAD does NURBS freeform surfacing — lofts, sweeps, boundary-fill patches, G2 Hermite blends, and variable-section sweeps — so organic forms (body shells, panels, fairings, ergonomic curves, bottles, horns) ARE in scope. Its two real limits, state them precisely and do not overgeneralize past them:
 - It is a **solid/NURBS** kernel, not a **polygon/subdivision sculptor** (Blender/Maya).
 - Its viewer renders clean CAD, not **photoreal** images — for a photoreal hero shot, export STEP/GLB and finish in a render tool.
 
@@ -244,7 +244,7 @@ lib.meshFromSTL(path: string): Promise<Shape>;
 lib.meshFromSTL(path: string): Promise<Shape>;
 
 // Composite GLB import as a display-only body with material groups intact.
-// Node transforms are flattened, glTF Y-up becomes kernelCAD Z-up, and each
+// Node transforms are flattened, glTF Y-up becomes CrispCAD Z-up, and each
 // primitive keeps its PBR material, UVs and vertex colours (PCB assemblies
 // keep solder mask, copper, gold pads and component bodies). Units come from
 // asset.extras.kernelcad.units or the raw extent; override with opts.
@@ -303,7 +303,7 @@ setCameraDistance(distance: number): CameraTargetHandle;
 
 // Declare an animation timeline for offline kinematic-motion MP4 capture.
 // Two author-surface forms — both normalize to the same stored track shape,
-// captured by `kernelcad animate` / the `capture_animation` MCP tool (full
+// captured by `crispcad animate` / the `capture_animation` MCP tool (full
 // authoring contract in the "Animation timelines" section below):
 //
 //   1. Legacy sweep — ONE previously-declared `param()` swept linearly from

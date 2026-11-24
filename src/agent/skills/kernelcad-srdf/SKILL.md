@@ -3,9 +3,9 @@ name: kernelcad-srdf
 description: Add planning-group, end-effector, virtual-joint, and allowed-collision metadata on top of an assembly. Use after kernelcad-urdf when the downstream consumer needs motion-planner semantics layered on the URDF.
 ---
 
-# kernelCAD — SRDF export
+# CrispCAD — SRDF export
 
-SRDF layers planning-group and motion-planner semantics on top of a URDF: which joints form an arm, which links form a gripper, which link pairs are safe to ignore for collision-checking, and named pose snapshots. kernelCAD's `export({ target: 'model', format: 'srdf' })` writes the `.srdf` file; the allowed-collision matrix is auto-derived from the existing mate graph.
+SRDF layers planning-group and motion-planner semantics on top of a URDF: which joints form an arm, which links form a gripper, which link pairs are safe to ignore for collision-checking, and named pose snapshots. CrispCAD's `export({ target: 'model', format: 'srdf' })` writes the `.srdf` file; the allowed-collision matrix is auto-derived from the existing mate graph.
 
 ## When to use
 
@@ -29,7 +29,7 @@ arm.disableCollision('linkA', 'linkB', { reason: 'User' });
 
 ## Allowed-collision matrix (ACM)
 
-Auto-derived from the existing kernelCAD data. Four reasons:
+Auto-derived from the existing CrispCAD data. Four reasons:
 
 - **Adjacent** — link pair shares a joint or mate; never collides during motion.
 - **Never** — link pair never overlaps across pose-envelope samples (default 4 samples per limited mate; full sampling pass lands in a follow-up slice — today the deriver returns Adjacent + User only).

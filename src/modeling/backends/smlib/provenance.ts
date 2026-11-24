@@ -107,7 +107,7 @@ function copyUnnamedFace(history: HistoryMap, reference: OcctBackend, placed: Oc
   }
 }
 
-/** STEP has no kernelCAD lineage. Re-seed primitive names geometrically;
+/** STEP has no CrispCAD lineage. Re-seed primitive names geometrically;
  * never pretend that old face hashes address the reconstructed solid.
  * Non-primitive lineage needs certified face correspondence, so fail closed. */
 export function preserveProvenance(reference: OcctBackend, imported: OcctBackend): OcctBackend {

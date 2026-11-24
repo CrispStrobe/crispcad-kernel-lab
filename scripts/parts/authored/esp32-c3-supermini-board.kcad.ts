@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/esp32-c3-supermini-board.kcad.ts
 //
-// ESP32-C3 SuperMini development board — kernelCAD model composed from REAL
+// ESP32-C3 SuperMini development board — CrispCAD model composed from REAL
 // component STEP geometry (KiCad packages3D) on an original modeled PCB.
 //
 // Follows the esp32-devkit-board.kcad.ts template: the PCB is our own primitive
@@ -35,7 +35,7 @@ const PCB_L = 22.5; // X  (length)
 const PCB_W = 18.0; // Y  (width)
 const PCB_T = 1.0;  // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render and LabWired both key off these,
+// Explicit part colors — the CrispCAD render and LabWired both key off these,
 // so every composed component is tinted (imported STEP would otherwise be gray).
 // NOTE: .color() takes a '#RRGGBB' STRING; a numeric 0xRRGGBB is NOT honored.
 const PCB_BLUE    = '#1b2a4a'; // dark-blue solder mask (SuperMini)

@@ -19,7 +19,7 @@ export const CHEAT_SHEET_PATH = 'docs/cheat-sheet.md';
 const HEADER = [
   '<!-- GENERATED — do not edit by hand, run `npx tsx scripts/buildCheatSheet.ts` -->',
   '',
-  '# kernelCAD cheat sheet',
+  '# CrispCAD cheat sheet',
   '',
   'The script API, grouped by the job you are doing rather than by the object you',
   'call it on. Rows come from `src/agent/mcp/tools/listApi.ts`; for the full',
@@ -113,7 +113,7 @@ function appendGlbRigNotes(lines: string[]): void {
     '### GLB assembly rigs',
     '',
     'GLB linear distances are metres by default, matching the glTF specification.',
-    'The writer scales kernelCAD millimetre geometry at the scene root, including',
+    'The writer scales CrispCAD millimetre geometry at the scene root, including',
     'rig transforms, so a standard glTF viewer displays the authored physical size.',
     'Set `units: \'mm\'` only when the receiving tool reads',
     '`asset.extras.kernelcad.units`; ordinary glTF viewers treat those raw values',

@@ -1,6 +1,6 @@
 # RoboParty ROBOTO 01 (RP1) — 24-DoF kinematic assembly
 
-This kernelCAD assembly follows RoboParty's `urdf/rp1_24dof.urdf`: 25 named
+This CrispCAD assembly follows RoboParty's `urdf/rp1_24dof.urdf`: 25 named
 links and 24 revolute joints across the biped legs, waist and two arms. The 25 URDF-referenced visual STLs are bundled in `meshes/` as byte-for-byte
 copies of the full-detail upstream files. Each of the 25 imported files is below the 50 MiB per-import limit
 (`IMPORT_MAX_BYTES`); they total 65,154,800 bytes (62.1 MiB). The upstream

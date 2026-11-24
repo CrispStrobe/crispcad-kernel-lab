@@ -1,7 +1,7 @@
 # Assembly placement diagnostics
 
 When mate forward kinematics places a non-root part, it supplies that part's
-pose. If the part also has a non-zero authored `at:` placement, kernelCAD emits
+pose. If the part also has a non-zero authored `at:` placement, CrispCAD emits
 the informational diagnostic `assembly.placement-ignored-by-mate-fk` because
 the mate-derived pose takes precedence.
 

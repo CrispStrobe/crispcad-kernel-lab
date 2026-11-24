@@ -33,7 +33,7 @@
   "posterSha256": "594615d114bd33c15a742ae6497ec19cce306f5e4ee274c1a3d025b78b9f6315",
   "videoSha256": "37915bb51c40f2073e04a3c0f21eda77a6029c7e271c953992d20b302495e11c",
   "inspection": "Both scenes extracted from the final MP4 and visually reviewed after generation.",
-  "scope": "Local kernelCAD Node API: a drawer-pull backplate built from one smoothSpline quarter profile and its three mirror images, and one quarter with a stated end tangent. OCCT volume, bounding box and validity checks against closed-form values.",
+  "scope": "Local CrispCAD Node API: a drawer-pull backplate built from one smoothSpline quarter profile and its three mirror images, and one quarter with a stated end tangent. OCCT volume, bounding box and validity checks against closed-form values.",
   "simulationRun": false,
   "deployed": false,
   "hardwareAccepted": false

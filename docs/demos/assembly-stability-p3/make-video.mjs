@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Compose the P3 demo from local kernelcad renders and the P3 evidence.
+// Compose the P3 demo from local crispcad renders and the P3 evidence.
 // Not a screen recording and not a physics simulation. Run from the repo root:
 //   node docs/demos/assembly-stability-p3/make-video.mjs
 // Set FFMPEG to an ffmpeg binary if it is not on PATH.
@@ -75,7 +75,7 @@ slides.push([3.5, await slide('00-title', {
     'Approximate support test. No gravity simulation, friction or fixture solve.',
   ],
   accent: true,
-  footer: 'kernelCAD · examples/assemblies/assembly-stability-bracket.kcad.ts',
+  footer: 'CrispCAD · examples/assemblies/assembly-stability-bracket.kcad.ts',
 })]);
 slides.push([4.5, await slide('01-assembled', {
   title: 'Cantilever on a pedestal, support built later',
@@ -83,7 +83,7 @@ slides.push([4.5, await slide('01-assembled', {
     'Base: left pedestal, lower shelf, tall post. Cantilever rests on the pedestal.',
     'Narrow support stands on the shelf under the free end.',
   ],
-  footer: 'Assembled render · local kernelcad render --preset publish',
+  footer: 'Assembled render · local crispcad render --preset publish',
   image: join(HERE, 'bracket-assembled.png'),
   imageBox: { left: 120, top: 280, width: 1680, height: 620 },
 })]);
@@ -141,7 +141,7 @@ slides.push([3.5, await slide('06-end', {
     '',
     'Not a deployed-platform capture, physical build or strength test.',
   ],
-  footer: 'kernelCAD P3 · approximate static stability',
+  footer: 'CrispCAD P3 · approximate static stability',
 })]);
 
 const list = [];
@@ -177,7 +177,7 @@ const videoEvidence = {
     'npx tsx docs/demos/assembly-stability-p3/make-evidence.ts',
     'node docs/demos/assembly-stability-p3/make-video.mjs',
   ],
-  provenance: 'Annotated still sequence composed from local kernelcad renders and the real P3 verifier result. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test. Static stability is an approximate support projection, not a physics simulation.',
+  provenance: 'Annotated still sequence composed from local crispcad renders and the real P3 verifier result. Not a screen recording, turntable, deployed-platform capture, physical hardware or strength test. Static stability is an approximate support projection, not a physics simulation.',
 };
 writeFileSync(join(HERE, 'video-evidence.json'), JSON.stringify(videoEvidence, null, 2) + '\n');
 console.log(`wrote ${OUT} (${videoEvidence.videoSha256})`);

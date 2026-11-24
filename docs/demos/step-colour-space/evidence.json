@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: STEP export of a coloured part, text check of the colour entity, and read-back through the OCCT XCAF STEP reader.",
+  "scope": "Local CrispCAD Node API: STEP export of a coloured part, text check of the colour entity, and read-back through the OCCT XCAF STEP reader.",
   "invocation": "node --import tsx docs/demos/step-colour-space/capture-demo.mts",
   "source": "docs/demos/step-single-body-roundtrip/motor-plate.kcad.ts",
   "sourceSha256": "538a7067968b3aedee2c736088eaab98477f3aea9d188f7118fc8f677edc4ed9",
@@ -45,7 +45,7 @@
   "limits": [
     "Other CAD systems were not used to open the file.",
     "The values under \"before\" are recorded from a run on the named commit; this script does not measure them again.",
-    "A project imported from STEP with an earlier kernelCAD version holds the darker colour that version read."
+    "A project imported from STEP with an earlier CrispCAD version holds the darker colour that version read."
   ],
   "simulationRun": false,
   "deployed": false,

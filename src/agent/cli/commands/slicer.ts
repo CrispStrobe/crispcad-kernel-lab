@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/slicer.ts
 //
-// `kernelcad slicer open <file>` opens an already-exported STEP or 3MF file in
+// `crispcad slicer open <file>` opens an already-exported STEP or 3MF file in
 // a locally installed slicer. Detection order: `KERNELCAD_SLICER` env var,
 // then `orca-slicer`, `prusa-slicer`, `PrusaSlicer`, `bambu-studio`,
 // `BambuStudio`, `cura` on PATH. If no slicer is found the command returns a
@@ -41,7 +41,7 @@ function openSlicerErrorLabel(error: OpenSlicerError): string {
 }
 
 /**
- * Action behind `kernelcad slicer open`. Returns exit code 2 for input
+ * Action behind `crispcad slicer open`. Returns exit code 2 for input
  * problems (bad extension, missing file), 1 when no slicer is available or the
  * slicer could not be launched, and 0 on success.
  */

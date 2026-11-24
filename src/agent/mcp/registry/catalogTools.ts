@@ -12,7 +12,7 @@ export const catalogToolEntries: ToolRegistryEntry[] = [
       name: 'lookup_cookbook',
       description:
         'Use this when you need a canonical pattern snippet for a CAD task. ' +
-        'Search the kernelCAD cookbook for canonical pattern snippets. ' +
+        'Search the CrispCAD cookbook for canonical pattern snippets. ' +
         'Returns top-k snippets matching the natural-language query, ' +
         'ranked by BM25 over title/tags/keywords/trigger. ' +
         'Use when you need a canonical pattern for fillet-after-subtract, ' +
@@ -58,7 +58,7 @@ export const catalogToolEntries: ToolRegistryEntry[] = [
           tag: { type: 'string' },
           limit: { type: 'number' },
           source: { type: 'string', enum: ['local', 'remote', 'auto'] },
-          parts_base_url: { type: 'string', description: 'Opt-in remote endpoint; no default value ships with kernelCAD.' },
+          parts_base_url: { type: 'string', description: 'Opt-in remote endpoint; no default value ships with CrispCAD.' },
         },
       },
     },
@@ -79,7 +79,7 @@ export const catalogToolEntries: ToolRegistryEntry[] = [
           category: { type: 'string' },
           family: { type: 'string' },
           standard: { type: 'string' },
-          parts_base_url: { type: 'string', description: 'Opt-in remote endpoint; no default value ships with kernelCAD.' },
+          parts_base_url: { type: 'string', description: 'Opt-in remote endpoint; no default value ships with CrispCAD.' },
           include_model: { type: 'boolean', description: 'Resolve a hash-verified STEP/GLB model file instead of the plain catalog STEP record.' },
           model: {
             type: 'object',

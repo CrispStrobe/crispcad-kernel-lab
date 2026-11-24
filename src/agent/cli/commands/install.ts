@@ -2,8 +2,8 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/install.ts
 //
-// `kernelcad install <target> [--token X] [--dry-run]` — auto-configures
-// one of four MCP-client targets to talk to kernelCAD.
+// `crispcad install <target> [--token X] [--dry-run]` — auto-configures
+// one of four MCP-client targets to talk to CrispCAD.
 //
 // Targets:
 //   --claude-desktop : writes <ConfigDir>/claude_desktop_config.json directly
@@ -17,13 +17,13 @@
 //                      Codex config; the CLI is the supported edit path.
 //
 // `--token <X>` (optional): if provided, the generated server entry runs
-// `kernelcad mcp --cloud --token <X>`; otherwise local stdio (`kernelcad mcp`).
+// `crispcad mcp --cloud --token <X>`; otherwise local stdio (`crispcad mcp`).
 //
 // `--dry-run`: print the resulting config (or the CLI command we would
 // invoke) without touching the filesystem.
 //
 // Idempotency: re-running with identical args is a no-op. Re-running with a
-// new token replaces the kernelcad entry's token but preserves other
+// new token replaces the crispcad entry's token but preserves other
 // `mcpServers` entries. For delegated targets we run the CLI's `remove`-then-
 // `add` so the entry ends up matching the requested token.
 
@@ -227,16 +227,16 @@ function writeJsonTarget(target: InstallTarget, opts: InstallOptions): MergeResu
   }
 
   const restartHint = target === 'claude-desktop'
-    ? 'Restart Claude Desktop to load kernelCAD tools.'
-    : 'Restart Cursor to load kernelCAD tools.';
+    ? 'Restart Claude Desktop to load CrispCAD tools.'
+    : 'Restart Cursor to load CrispCAD tools.';
 
   let summary: string;
   if (!changed) {
-    summary = `kernelCAD MCP entry already up to date at ${filePath}. (no-op)`;
+    summary = `CrispCAD MCP entry already up to date at ${filePath}. (no-op)`;
   } else if (opts.dryRun) {
-    summary = `Would write kernelCAD MCP entry to ${filePath} (dry-run; no changes made).`;
+    summary = `Would write CrispCAD MCP entry to ${filePath} (dry-run; no changes made).`;
   } else {
-    summary = `Wrote kernelCAD MCP entry to ${filePath}. ${restartHint}`;
+    summary = `Wrote CrispCAD MCP entry to ${filePath}. ${restartHint}`;
   }
 
   return {
@@ -283,14 +283,14 @@ function delegateCli(
       ? 'Install Claude Code from https://claude.ai/code, then re-run.'
       : 'Install OpenAI Codex CLI from https://developers.openai.com/codex/, then re-run.';
     throw new Error(
-      `${binary} CLI not found on PATH. kernelcad install --${target} delegates to the ${binary} CLI. ${installHint}`,
+      `${binary} CLI not found on PATH. crispcad install --${target} delegates to the ${binary} CLI. ${installHint}`,
     );
   }
 
   // Build the `<bin> mcp add` argv.
   //
-  // Claude Code: `claude mcp add kernelcad --scope user -- npx -y kernelcad mcp [...]`
-  // Codex:       `codex mcp add kernelcad -- npx -y kernelcad mcp [...]`
+  // Claude Code: `claude mcp add crispcad --scope user -- npx -y crispcad mcp [...]`
+  // Codex:       `codex mcp add crispcad -- npx -y crispcad mcp [...]`
   //
   // We `remove`-then-`add` to keep idempotency in the face of a previously
   // configured (possibly token-stale) entry. `remove` is allowed to fail
@@ -334,12 +334,12 @@ function delegateCli(
   }
 
   const restartHint = binary === 'claude'
-    ? 'Restart Claude Code (or open a fresh session) to load kernelCAD tools.'
-    : 'Restart Codex (or open a fresh session) to load kernelCAD tools.';
+    ? 'Restart Claude Code (or open a fresh session) to load CrispCAD tools.'
+    : 'Restart Codex (or open a fresh session) to load CrispCAD tools.';
   return {
     command: commandLine,
     changed: true,
-    summary: `Configured kernelCAD MCP entry via ${binary} CLI. ${restartHint}`,
+    summary: `Configured CrispCAD MCP entry via ${binary} CLI. ${restartHint}`,
   };
 }
 
@@ -366,14 +366,14 @@ export function runInstall(target: InstallTarget, opts: InstallOptions = {}): Me
 export function installCommand(): Command {
   const cmd = new Command('install')
     .description(
-      'Auto-configure an MCP client to talk to kernelCAD. Pass exactly one ' +
+      'Auto-configure an MCP client to talk to CrispCAD. Pass exactly one ' +
       'target flag.',
     )
     .option('--claude-desktop', 'install into Claude Desktop config')
     .option('--claude-code', 'install into Claude Code (via `claude mcp add`)')
     .option('--codex', 'install into OpenAI Codex CLI (via `codex mcp add`)')
     .option('--cursor', 'install into Cursor config (~/.cursor/mcp.json)')
-    .option('--token <token>', 'kernelCAD cloud token; if omitted, local stdio mode is used')
+    .option('--token <token>', 'CrispCAD cloud token; if omitted, local stdio mode is used')
     .option('--dry-run', 'print the resulting config without writing it')
     .option('--config-dir <dir>', 'override the target config directory (advanced; mainly for tests)')
     .action((opts: {
@@ -420,7 +420,7 @@ export function installCommand(): Command {
         process.stdout.write(result.summary + '\n');
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        process.stderr.write(`kernelcad install --${target}: ${msg}\n`);
+        process.stderr.write(`crispcad install --${target}: ${msg}\n`);
         process.exitCode = 1;
       }
     });

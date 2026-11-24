@@ -20,7 +20,7 @@
 //     ratios (sun = (Zs+Zr)/Zs x carrier; planet spin relative to the carrier
 //     = -(Zr/Zp) x carrier), with gear-pair transmissions naming the physical
 //     drive path.
-//   - kernelCAD's mechanism-truth check sweeps the carrier through its limits
+//   - CrispCAD's mechanism-truth check sweeps the carrier through its limits
 //     WITH the couplings applied, checks every unmated pair (sun-planet,
 //     planet-ring) for interpenetration at each sampled pose, and nudges each
 //     joint +-0.5 deg on its own to confirm it really is a revolute.

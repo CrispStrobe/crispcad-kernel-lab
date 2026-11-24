@@ -1,11 +1,11 @@
 ---
 name: kernelcad-authoring
-description: kernelCAD model authoring API — primitives, transforms, booleans, sketches, path-builder, sketch-text, return-single-shape rule, conventions, CLI commands, and verification gates. Load this when writing or modifying .kcad.ts geometry.
+description: CrispCAD model authoring API — primitives, transforms, booleans, sketches, path-builder, sketch-text, return-single-shape rule, conventions, CLI commands, and verification gates. Load this when writing or modifying .kcad.ts geometry.
 ---
 
-# kernelCAD — authoring
+# CrispCAD — authoring
 
-Write or edit `.kcad.ts` TypeScript models; run `kernelcad evaluate <file>` or `kernelcad export stl|step|dxf|3mf|glb <file> -o <out>`.
+Write or edit `.kcad.ts` TypeScript models; run `crispcad evaluate <file>` or `crispcad export stl|step|dxf|3mf|glb <file> -o <out>`.
 
 Single-file scripts refuse top-level `import`/`require` with `feature.invalid-args`; define helpers in the same file.
 
@@ -34,7 +34,7 @@ The rules that prevent most failed evaluations (from the diagnostics catalogue a
 8. **Face names exist only where a primitive defines them.** Box: all six (`top`, `bottom`, `left`, `right`, `front`, `back`); cylinder: `top`/`bottom` only; sphere, extruded sketches, `extrudeRoundedRect`, revolves and lofts: none (`feature.face-ref.not-applicable`). Pick those faces, and faces a cavity cut duplicated, by query: `{ byNormal: 'Z' }`, `{ byNormal: '-Z', atZ: 0 }`, `{ byNormal: 'Z', extreme: 'Z' }`.
 9. **Await async helpers.** `selectEdges`, `lib.fromSTEP`, `lib.from3MF`, `lib.fetchPart`, `.boundingBox()`, `.recenter()` and `.seatOnFloor()` return promises (`feature.async-result.missing-await`).
 10. **Read the diagnostic, then repair one cause.** Every diagnostic carries a `hint`; follow it. `recompute.input.missing` means an upstream feature failed — call `why_did_this_fail`. Never export or hand over a script whose last evaluate failed.
-11. **Do not declare something impossible** without calling `lookup_api` and `lookup_cookbook` first. `lookup_api({ query: 'arcTo' })` maps other tools' names (`references/idioms.md`). kernelCAD does NURBS lofts, sweeps, boundary patches and G2 blends; it is not a polygon sculptor or a photoreal renderer.
+11. **Do not declare something impossible** without calling `lookup_api` and `lookup_cookbook` first. `lookup_api({ query: 'arcTo' })` maps other tools' names (`references/idioms.md`). CrispCAD does NURBS lofts, sweeps, boundary patches and G2 blends; it is not a polygon sculptor or a photoreal renderer.
 12. **Helical geometry**: rail from `helix(...)`, sweep with `spine: 'helix'` (threads, worms) or `spine: 'smooth'` (wire springs). Internal threads are `hole({ thread })`, never a sweep. `.mirror(plane)` = source + reflection; `.reflect(plane)` = reflection only.
 
 ## Manufacturing intent → API
@@ -78,9 +78,9 @@ A clean evaluate proves the script ran, not that it is the part the user asked f
 2. **Measure, do not trust your summary.** `inspect({ of: 'shape' })` (bbox, volume) must match the stated outer dimensions; hollow volume is far below bbox volume.
 3. **Holes**: count, diameter, position, through vs blind as asked; threads made with `thread`, counterbores and countersinks with their options.
 4. **Walls**: hollow parts are hollow with the stated wall (`inspect({ of: 'section' })` or a section render); printed parts declare `dfmSpec({ minWall })`.
-5. **Parts and motion**: separate components are separate named parts; joints carry mates with limits; `kernelcad interference` is clean and nothing floats.
+5. **Parts and motion**: separate components are separate named parts; joints carry mates with limits; `crispcad interference` is clean and nothing floats.
 6. **Manufacturing method**: printed → clearances + `dfmSpec`; sheet metal → `sheetMetal()` + flat pattern; bought parts → catalog or STEP, or labelled placeholders.
-7. **Look**: render top, front and iso (`render_preview` / `kernelcad render`) and check that openings, text and holes are where the request put them.
+7. **Look**: render top, front and iso (`render_preview` / `crispcad render`) and check that openings, text and holes are where the request put them.
 8. **Deliver**: the last `evaluate` is clean and the requested exports (STEP, STL, 3MF) were produced from it.
 
 ## Workflow
@@ -97,7 +97,7 @@ Full loop and artifact policy: `agent-authoring-loop` (`references/workflow.md`)
 <!-- OUT-OF-SCOPE:START -->
 ## Out of Scope
 
-These are not available today; do not generate code that uses them. Anything not listed here is fair game — call `lookup_api` / `lookup_cookbook` before concluding kernelCAD lacks a capability.
+These are not available today; do not generate code that uses them. Anything not listed here is fair game — call `lookup_api` / `lookup_cookbook` before concluding CrispCAD lacks a capability.
 
 - Asymmetric chamfer (only symmetric 45° supported) — deferred
 - Param-bound (auto-updating) dimensions on `svg-drawing` — deferred; dimensions DO ship derived from the geometry (`options.autoAnnotate`: datums, hole callouts with position tolerances, positions, radii, chamfers, flatness, ISO 2768 note), authored (`options.annotations`), and as section views on any plane (`options.sections`)

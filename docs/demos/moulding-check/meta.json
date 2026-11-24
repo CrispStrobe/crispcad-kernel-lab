@@ -1,10 +1,10 @@
 {
   "feature": "dfmSpec({ process: 'moulding' }) — injection-moulding DFM check",
-  "demoKind": "local run of the evaluate / kernelcad dfm path on a development machine (not the hosted service, no moulded part)",
+  "demoKind": "local run of the evaluate / crispcad dfm path on a development machine (not the hosted service, no moulded part)",
   "heroArtifact": "docs/demos/moulding-check/demo.mp4",
   "source": "docs/demos/moulding-check/enclosure.kcad.ts",
   "record": "npx tsx docs/demos/moulding-check/demo.ts",
-  "invocation": "kernelcad dfm docs/demos/moulding-check/{straight-walls,wrong-draft,enclosure}.kcad.ts",
+  "invocation": "crispcad dfm docs/demos/moulding-check/{straight-walls,wrong-draft,enclosure}.kcad.ts",
   "settings": {
     "dfmSpec": "process 'moulding', pullDirection '+z', minDraftDeg 1, minWallMm 1.2, maxWallMm 3.5, minRadiusMm 0.5",
     "render": "software rasterizer over the kernel per-face tessellation, colours from the report's face refs; sharp; ffmpeg libx264 960x540, 24 fps, 3 x 4 s"

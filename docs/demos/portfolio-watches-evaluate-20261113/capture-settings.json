@@ -6,7 +6,7 @@
     "sha256": "437d2297b5973eacedc5cdaebba44f0fc649c0a0c50e79e3209754d6c9b7add5"
   },
   "animation": {
-    "tool": "kernelcad animate (local CLI)",
+    "tool": "crispcad animate (local CLI)",
     "command": "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright npx tsx src/agent/cli/index.ts animate examples/portfolio/pocket-watch/build.kcad.ts docs/demos/portfolio-watches-evaluate-20261113/capture-raw.mp4 --turntable --preset default --width 960 --height 540 --duration-ms 6000 --elevation 20",
     "frames": 180,
     "fps": 30,

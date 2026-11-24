@@ -1,6 +1,6 @@
 [
   {
-    "invocation": "kernelcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-1.step",
+    "invocation": "crispcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-1.step",
     "exitCode": 0,
     "stepWritten": true,
     "mcp": {
@@ -107,7 +107,7 @@
     }
   },
   {
-    "invocation": "kernelcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-2.step --quality-gate block",
+    "invocation": "crispcad export step docs/demos/export-quality-gate/plate-sliver.kcad.ts -o /tmp/out/plate-2.step --quality-gate block",
     "exitCode": 1,
     "stepWritten": false,
     "mcp": {
@@ -214,7 +214,7 @@
     }
   },
   {
-    "invocation": "kernelcad export step docs/demos/export-quality-gate/plate-fixed.kcad.ts -o /tmp/out/plate-3.step",
+    "invocation": "crispcad export step docs/demos/export-quality-gate/plate-fixed.kcad.ts -o /tmp/out/plate-3.step",
     "exitCode": 0,
     "stepWritten": true,
     "mcp": {

@@ -4,7 +4,7 @@
 #
 # Reproducible local demo for S7+S8 Part A. It builds a throwaway git repo from
 # examples/collab/bracket-and-motor-plate.kcad.ts, creates three agent branches,
-# runs the real `kernelcad collab check` CLI on each, and renders the captured
+# runs the real `crispcad collab check` CLI on each, and renders the captured
 # CLI output to an MP4. This is a local replay of local validation; it does not
 # show a deployed server or hosted queue.
 set -euo pipefail
@@ -42,7 +42,7 @@ git -C "$WORK" checkout -q main
 run_case() {
   local name="$1" base="$2" head="$3" yours="$4"
   {
-    echo "\$ kernelcad collab check --file bracket.kcad.ts --base $base --head $head --yours $yours"
+    echo "\$ crispcad collab check --file bracket.kcad.ts --base $base --head $head --yours $yours"
     (cd "$WORK" && npx --prefix "$REPO" tsx "$REPO/src/agent/cli/index.ts" collab check \
       --file bracket.kcad.ts --base "$base" --head "$head" --yours "$yours") 2>&1 || true
   } > "$OUT/$name.txt"

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/modeling/export/urdf/mateToJoint.ts
 //
-// Lowers a kernelCAD MateRecord to one or more URDF <joint> blocks
+// Lowers a CrispCAD MateRecord to one or more URDF <joint> blocks
 // per the mate-mapping table in the B-rest design spec.
 //
 // Lossy mappings emit `export.urdf.<kind>-lossy` diagnostics with hint +

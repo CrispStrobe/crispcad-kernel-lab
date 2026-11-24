@@ -157,7 +157,7 @@ const implementation = Object.fromEntries(await Promise.all(
 ));
 const commandsOf = (record: { metadata?: unknown }) => (record.metadata as { commands: Command[] }).commands.map(compact);
 const evidence = {
-  scope: 'Local kernelCAD Node API: a drawer-pull backplate built from one smoothSpline quarter profile and its three mirror images, and one quarter with a stated end tangent. OCCT volume, bounding box and validity checks against closed-form values.',
+  scope: 'Local CrispCAD Node API: a drawer-pull backplate built from one smoothSpline quarter profile and its three mirror images, and one quarter with a stated end tangent. OCCT volume, bounding box and validity checks against closed-form values.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(plate.code),

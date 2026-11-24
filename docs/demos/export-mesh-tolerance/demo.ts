@@ -66,7 +66,7 @@ const evidence = {
 const transcript = [
   `$ ${invocation}`,
   scope,
-  'PART   native kernelCAD plate, 30 x 20 x 4 mm, two 6 mm through-holes',
+  'PART   native CrispCAD plate, 30 x 20 x 4 mm, two 6 mm through-holes',
   "CALL   export(target=model, format=stl, options.tolerance=0.01 mm)",
   `WRITE  tolerance-plate.stl (${stl.length} bytes; ${triangleCount} triangles)`,
   'CHECK  STL header contains requested-mesh-tolerance=0.01mm',

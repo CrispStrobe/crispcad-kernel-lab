@@ -25,7 +25,7 @@ export type PartSource = 'local-catalog' | 'remote';
  */
 export type LicenseClass = 'permissive' | 'share-alike' | 'fetch-only';
 
-/** Whether kernelCAD re-hosts the geometry ('mirror') or only fetches it on demand. */
+/** Whether CrispCAD re-hosts the geometry ('mirror') or only fetches it on demand. */
 export type RedistributionMode = 'mirror' | 'fetch-only';
 
 /** Where an ingested part came from, for provenance + attribution audit. */
@@ -89,7 +89,7 @@ export interface PartRecord {
    * and the biggest exceeds Cloudflare Pages' 25 MiB per-file limit, so the
    * catalog drops `stepUrl` and serves `glbUrl`.
    *
-   * A GLB is a triangle mesh, NOT a BREP body — kernelCAD's OCCT kernel has no
+   * A GLB is a triangle mesh, NOT a BREP body — CrispCAD's OCCT kernel has no
    * mesh-import lowerer, so a record with only `glbUrl` cannot be turned into a
    * Shape. `fetchPartHost` detects that case and fails with
    * `parts.fetch.geometry-not-brep` naming this field, rather than reporting a

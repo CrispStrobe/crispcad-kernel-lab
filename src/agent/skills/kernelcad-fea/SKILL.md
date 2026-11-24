@@ -3,7 +3,7 @@ name: kernelcad-fea
 description: Answer "will this part hold this load?" with solver evidence — declare a linear-static structural study with shape.feaStudy({ material, fixed, loads | loadsFrom, minSafetyFactor? }), then run it with run_fea for peak von Mises stress, peak displacement, minimum safety factor against yield, named hot-spot regions, mesh-trust flags and stress-heatmap PNGs. A declared minSafetyFactor turns the study into a gate that fails evaluate_script. Use when sizing a bracket, mount, tab, clevis or any load-bearing part, when a load-capacity check reported beam-not-applicable, or before committing to a wall thickness or material grade.
 ---
 
-# kernelCAD — structural FEA
+# CrispCAD — structural FEA
 
 Declare the study in the model, run the solver, read the evidence.
 
@@ -238,7 +238,7 @@ study name and mesh size override work exactly as for `run_fea`.
 ## The gate
 
 A study with `minSafetyFactor` runs on every `evaluate_script` /
-`kernelcad evaluate` and fails it with `fea.safety-factor.below-min` when the
+`crispcad evaluate` and fails it with `fea.safety-factor.below-min` when the
 margin is not met — the same seam the `dfmSpec` gates use. A study *without*
 `minSafetyFactor` costs nothing at evaluate: it is a report you fetch with
 `run_fea`.

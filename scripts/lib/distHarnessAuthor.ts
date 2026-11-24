@@ -25,7 +25,7 @@ parallelize only within a bucket:
   \`evaluate_script\`, \`inspect\`, \`query\`,
   \`lookup_diagnostics\`, \`why_did_this_fail\`, \`verify\`.
 - **Render / review** — anything that produces a visual artifact:
-  \`kernelcad render inspect\`, \`review_cad\`, screenshot capture.
+  \`crispcad render inspect\`, \`review_cad\`, screenshot capture.
 
 Two agents inspecting the same source in parallel is fine. Two agents
 rendering it in parallel is fine. Mixing buckets against the same
@@ -44,7 +44,7 @@ export function authorHarnessAgentsMd(claudeMd: string): string {
     );
   }
   const head =
-    '# Agent rules for kernelCAD skills\n\nThese rules apply to every agent that loads a kernelCAD skill, regardless of host.\n\n';
+    '# Agent rules for CrispCAD skills\n\nThese rules apply to every agent that loads a CrispCAD skill, regardless of host.\n\n';
   return head + cadDiscipline.trim() + '\n\n' + PARALLELIZATION_SECTION;
 }
 

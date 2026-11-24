@@ -42,7 +42,7 @@ export interface MeshData {
  *
  * @param mesh    Vertex/index mesh data
  * @param header  Up to 80 ASCII characters written to the header field.
- *                Defaults to "kernelCAD <version> (https://kernelcad.com)
+ *                Defaults to "CrispCAD <version> (https://kernelcad.com)
  *                <YYYY-MM-DD>" (shared/links/attribution.ts). The header
  *                MUST NOT start with "solid" — some lenient parsers use the
  *                prefix to detect ASCII vs binary format.

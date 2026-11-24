@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { addPatternFeatureTool } from '../../../src/agent/mcp/tools/addPatternFeature';
 
-// kernelCAD scripts have a top-level `return`. The MCP add_pattern_feature
+// CrispCAD scripts have a top-level `return`. The MCP add_pattern_feature
 // tool inserts the patternX call before that return; the script then gets
 // re-evaluated. We don't assert on eval diagnostics here (the inserted call
 // references a `plate` Shape that's bound earlier in the same script).

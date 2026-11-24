@@ -13,7 +13,7 @@ manifold.cfdStudy({
 });
 ```
 
-`kernelcad cfd run docs/demos/cfd-manifold/manifold.kcad.ts` (the `run_cfd`
+`crispcad cfd run docs/demos/cfd-manifold/manifold.kcad.ts` (the `run_cfd`
 tool) extracts the fluid (bounding box minus part; the four M4 bolt holes are
 dropped because no inlet reaches them), meshes it with snappyHexMesh, solves
 with simpleFoam and returns:
@@ -61,7 +61,7 @@ npx playwright install chromium
 ./docs/demos/cfd-manifold/record.sh
 ```
 
-The renders are kernelCAD's headless publish preset; the velocity image is the
+The renders are CrispCAD's headless publish preset; the velocity image is the
 cell-centred cutting plane OpenFOAM wrote, drawn by `run_cfd`. This is a local
 run on a development machine with OpenFOAM v2406 in Docker. It does not show
 the hosted MCP service, and the manifold was not printed or flow-tested.

@@ -4,7 +4,7 @@
 // interference + floating-part checks from the assembly validator; a model
 // fused with `union()` used to bypass both. The guard runs at the shared
 // evaluate seam (`evaluateAndBuildScript`), so `evaluate_script`,
-// `kernelcad evaluate` and the review payload all report:
+// `crispcad evaluate` and the review payload all report:
 //   - union.disconnected   — the union result is more than one solid;
 //   - union.member-overlap — two operands that each carry their own
 //                            finish/material share > 1 mm³ of volume.

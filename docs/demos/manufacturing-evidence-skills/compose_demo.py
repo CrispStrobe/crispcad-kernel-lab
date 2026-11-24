@@ -60,7 +60,7 @@ stale=json.loads((ROOT/'evaluate-stale-example.json').read_text())['result']['st
 slides=[]
 
 # 1 — title
-im=canvas(); d=ImageDraw.Draw(im); header(d,'kernelCAD','Manufacturing evidence, not generic reports','Revision-bound readiness + computed trade studies')
+im=canvas(); d=ImageDraw.Draw(im); header(d,'CrispCAD','Manufacturing evidence, not generic reports','Revision-bound readiness + computed trade studies')
 card(d,(54,174,1226,650),WHITE,28)
 hero=fit_image(ROOT/'render-iso.png',(80,194,720,626)); im.paste(hero,(80,194))
 text(d,(765,225),'Exact source',18,MUTED,True)

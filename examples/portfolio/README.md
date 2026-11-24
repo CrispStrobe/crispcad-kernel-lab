@@ -1,6 +1,6 @@
-# kernelCAD portfolio
+# CrispCAD portfolio
 
-Real engineering parts and assemblies built end-to-end by an agent driving kernelCAD MCP. Every entry is sourced from a public engineering ask (GitHub issue, forum thread, design-marketplace request) and links back to the original.
+Real engineering parts and assemblies built end-to-end by an agent driving CrispCAD MCP. Every entry is sourced from a public engineering ask (GitHub issue, forum thread, design-marketplace request) and links back to the original.
 
 ## What an entry contains
 

@@ -60,6 +60,6 @@ export const PARTS_CODES = {
     defaultSeverity: 'error',
     group: 'parts',
     description:
-      'fetch_part resolved a remote record whose only geometry is a GLB display mesh; kernelCAD has no mesh-import lowerer, so no Shape can be built.',
+      'fetch_part resolved a remote record whose only geometry is a GLB display mesh; CrispCAD has no mesh-import lowerer, so no Shape can be built.',
   },
 } as const satisfies Record<`parts.${string}`, DiagnosticCodeSpec>;

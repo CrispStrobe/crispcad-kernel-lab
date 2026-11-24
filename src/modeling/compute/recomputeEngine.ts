@@ -266,7 +266,7 @@ export interface RecomputeResult {
    *
    * See `docs/specs/2026-06-01-physics-grounded-loop-design.md` for the
    * truth criteria and `src/modeling/runtime/mechanismTruth.ts` for the
-   * implementation. Downstream consumers (CLI `kernelcad validate`,
+   * implementation. Downstream consumers (CLI `crispcad validate`,
    * Studio runtime, render-inspect) opt in to reading this field in P1.
    */
   mechanism?: 'real' | 'broken' | 'unverified';

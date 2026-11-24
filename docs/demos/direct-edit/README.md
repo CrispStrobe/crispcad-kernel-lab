@@ -52,7 +52,7 @@ planner, same spec, same staged-edit payload.
 ## Evidence
 
 `before/` is the shipped (interpenetrating) pose, `after/` is the pose after
-the accepted `PX = 50` edit. Both are `kernelcad render inspect` bundles
+the accepted `PX = 50` edit. Both are `crispcad render inspect` bundles
 (`manifest.json` + canonical `channels/rgb/{front,right,top,iso}.png`).
 Manifest bounds move from `max.x = 30` (slider touching the base's face) to
 `max.x = 60` (slider clear).

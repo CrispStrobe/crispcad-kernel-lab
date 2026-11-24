@@ -62,7 +62,7 @@ frames = []
 for heading, panel, seconds in panels:
     image = Image.new('RGB', (1280, 720), '#0b1120')
     draw = ImageDraw.Draw(image)
-    draw.text((48, 34), 'kernelCAD / mesh tolerance export', font=title, fill='#f0f5ff')
+    draw.text((48, 34), 'CrispCAD / mesh tolerance export', font=title, fill='#f0f5ff')
     draw.text((48, 86), heading, font=small, fill='#8ab4f8')
     if heading.startswith('2 / 3'):
         view = mesh_view()

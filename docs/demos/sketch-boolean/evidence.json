@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: Sketch.intersect, Sketch.union and Sketch.subtract of line-and-arc profiles, extrude to a keyhole hanger plate, OCCT area, volume, validity, overlap and distance measurement against two screw gauges.",
+  "scope": "Local CrispCAD Node API: Sketch.intersect, Sketch.union and Sketch.subtract of line-and-arc profiles, extrude to a keyhole hanger plate, OCCT area, volume, validity, overlap and distance measurement against two screw gauges.",
   "invocation": "node --import tsx docs/demos/sketch-boolean/capture-demo.mts",
   "source": "docs/demos/sketch-boolean/keyhole-hanger.kcad.ts",
   "sourceSha256": "6188aeed8c6b001c24fe7a6c4f28e5c8d63ed457b2e28207c71e3a04bda6452b",

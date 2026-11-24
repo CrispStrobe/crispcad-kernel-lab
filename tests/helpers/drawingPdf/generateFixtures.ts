@@ -3,7 +3,7 @@
 // tests/helpers/drawingPdf/generateFixtures.ts
 //
 // Regenerates the committed drawing-to-CAD fixtures:
-//   tests/fixtures/drawing-pdf/<name>.svg  — kernelCAD's own svg-drawing sheet
+//   tests/fixtures/drawing-pdf/<name>.svg  — CrispCAD's own svg-drawing sheet
 //   tests/fixtures/drawing-pdf/<name>.pdf  — that sheet converted to PDF
 //   tests/fixtures/drawing-pdf/raster-only.pdf — an image-only (scanned) page
 //   examples/drawing-to-cad/motor-mount-bracket.pdf — the example's input sheet

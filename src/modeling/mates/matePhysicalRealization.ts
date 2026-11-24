@@ -89,7 +89,7 @@ const DEFAULT_POSE_SAMPLES = 8;
 /**
  * Direction-vector parallelism floor. Matches Gate 2 / Gate 4's
  * convention — 1e-4 is well below any geometrically meaningful angular
- * sensitivity for kernelCAD's mm-scale parts.
+ * sensitivity for CrispCAD's mm-scale parts.
  */
 const PARALLEL_DIRECTION_EPSILON = 1e-4;
 

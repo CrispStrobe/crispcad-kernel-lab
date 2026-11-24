@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // tests/unit/cli/renderHuman.test.ts
 //
-// Characterisation tests for the human-readable `kernelcad validate` renderer
+// Characterisation tests for the human-readable `crispcad validate` renderer
 // (`renderHuman`, reached through `runValidateCli` with `json: false`).
 // Pins the exact console lines for the clean, warning, mechanism-broken and
 // physical-diagnostic paths ahead of the complexity split.

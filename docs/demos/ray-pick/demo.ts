@@ -21,7 +21,7 @@ const rows = result.hits.map((hit, index) => {
   return `<circle cx="${x}" cy="360" r="9" fill="#36d399"/><text x="80" y="${y}" class="row">face ${hit.face_id} · ${hit.distance.toFixed(2)} mm · point (${hit.point.map(n => n.toFixed(1)).join(', ')}) · normal (${hit.normal.map(n => n.toFixed(2)).join(', ')})</text>`;
 }).join('');
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
-<rect width="1280" height="720" fill="#101820"/><text x="80" y="90" class="title">kernelCAD · ray_pick</text>
+<rect width="1280" height="720" fill="#101820"/><text x="80" y="90" class="title">CrispCAD · ray_pick</text>
 <text x="80" y="135" class="sub">Local model evaluation · 10 mm box · ray from [-5, 5, 5] along +X</text>
 <path d="M330 250h470v220H330z M400 190h470v220H400z M330 250l70-60m470 60 70-60M800 470l70-60M330 470l70-60" fill="#1d3442" stroke="#90b4c5" stroke-width="3"/>
 <path d="M180 360H1010" stroke="#ffc857" stroke-width="4" marker-end="url(#arrow)"/><text x="90" y="335" class="sub">ray</text>${rows}

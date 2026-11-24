@@ -104,7 +104,7 @@ export async function runScriptCore(input: RunScriptCoreInput): Promise<RunScrip
       gotText: importStatement,
       requires: 'helpers to be defined in the same file; imports are stripped before execution',
       example: 'const body = box(10, 10, 10); return body;',
-      hint: 'Move the imported helper into this .kcad.ts file. The kernelCAD API (box, path, assembly, …) and the lib.* loaders are injected as globals — no import needed.',
+      hint: 'Move the imported helper into this .kcad.ts file. The CrispCAD API (box, path, assembly, …) and the lib.* loaders are injected as globals — no import needed.',
     });
   }
 

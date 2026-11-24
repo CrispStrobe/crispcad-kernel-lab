@@ -33,7 +33,7 @@
   "posterSha256": "5452ab2f536e5f6e98c3765a6227fb4b379648415b025d4b4dda56a6a765eebd",
   "videoSha256": "be67c65614518a19fa7ced1f4d71141d0549e873dcf8890b24ee39e74dc39011",
   "inspection": "Both scenes extracted from the final MP4 and visually reviewed after generation.",
-  "scope": "Local kernelCAD Node API export, then re-import of the written bytes through the OCCT XCAF STEP reader.",
+  "scope": "Local CrispCAD Node API export, then re-import of the written bytes through the OCCT XCAF STEP reader.",
   "simulationRun": false,
   "deployed": false,
   "hardwareAccepted": false

@@ -24,13 +24,13 @@ export function DemoPlayerPage(): React.JSX.Element {
   } = useDemoPlayerApi();
   const { scriptLoadStatus, buildRecord, buildRecordStep } = useDemoAutoLoad(isDemoApiReady, elapsedMsRef);
 
-  // Headless renders (kernelcad render, scoreReference) navigate with
+  // Headless renders (crispcad render, scoreReference) navigate with
   // ?headless=1. Suppress the TerminalPane so the ViewerPane (and its model)
   // fills the entire viewport. Without this, TerminalPane's 640px sidebar eats
   // half the canvas at 1024×1024 capture → silhouette IoU bimodality.
   const isHeadless = typeof window !== 'undefined'
     && new URLSearchParams(window.location.search).get('headless') === '1';
-  // ?nowatermark=1 suppresses the kernelCAD version badge for clean hero
+  // ?nowatermark=1 suppresses the CrispCAD version badge for clean hero
   // artifacts (public posts, gallery entries). Wired to the CLI's
   // --no-watermark flag via headlessRender.
   const noWatermark = typeof window !== 'undefined'

@@ -1,25 +1,24 @@
 {
-  "name": "kernelcad",
-  "mcpName": "com.kernelcad/kernelcad",
+  "name": "crispcad",
   "private": false,
   "version": "0.17.4",
   "license": "MIT",
-  "author": "Andrii Shylenko <andrii@shylenko.com>",
+  "author": "CrispCAD contributors",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/w1ne/kernelCAD-web.git"
+    "url": "git+https://github.com/CrispStrobe/kernelCAD-web.git"
   },
-  "homepage": "https://github.com/w1ne/kernelCAD-web#readme",
+  "homepage": "https://github.com/CrispStrobe/kernelCAD-web#readme",
   "bugs": {
-    "url": "https://github.com/w1ne/kernelCAD-web/issues"
+    "url": "https://github.com/CrispStrobe/kernelCAD-web/issues"
   },
   "engines": {
     "node": ">=24.0.0",
     "npm": ">=10.0.0"
   },
   "bin": {
-    "kernelcad": "dist/cli/index.js"
+    "crispcad": "dist/cli/index.js"
   },
   "exports": {
     "./package.json": "./package.json"
@@ -67,7 +66,6 @@
     "skill:out-of-scope": "npx tsx scripts/buildOutOfScopeSection.ts",
     "lint": "eslint .",
     "preview": "vite preview --config vite.player.config.ts",
-    "release": "npx tsx scripts/release.ts",
     "prepack": "npm run build",
     "setup-hooks": "git config core.hooksPath .githooks",
     "generate:parts": "npx tsx scripts/generateSeedCatalog.ts assets/parts",
@@ -98,8 +96,6 @@
     "qc:build": "npm run typecheck && npm run build:cli && npm run cookbook:build && npm run skill:out-of-scope && git diff --exit-code src/agent/skills && npm run cookbook:evaluate && npm run test:standard-part-ranges",
     "qc:test": "npm test",
     "qc": "npm run qc:lint && npm run qc:build && npm run qc:test",
-    "listing:zip": "node scripts/agentPlugin/buildChatGptZip.mjs",
-    "listing:verify-mcp": "node scripts/listing/verifyHostedMcp.mjs",
     "capture-demo": "npx tsx scripts/captureDemo.ts",
     "capture-demo:hero": "npx tsx scripts/captureDemo.ts --task bracket-holes --module v0.21 --output docs/demos/v0.21/bracket-holes/ --hero-artifact bracket-holes --override-approved-by 'pre-Task-10: bracket-holes scheduled for replacement by donut'",
     "capture-demo:donut": "npx tsx scripts/captureDemo.ts --script examples/v0.21/donut.kcad.ts --prompt scripts/demo-prompts/v0.21-donut.md --module v0.21 --output docs/demos/v0.21/donut/ --hero-artifact donut",
@@ -201,5 +197,9 @@
   },
   "optionalDependencies": {
     "playwright": "^1.58.0"
-  }
+  },
+  "description": "CrispCAD: agent-first parametric CAD, derived from kernelCAD (MIT). Not affiliated with or endorsed by the kernelCAD project.",
+  "contributors": [
+    "Andrii Shylenko and kernelCAD contributors (upstream kernelCAD, MIT)"
+  ]
 }

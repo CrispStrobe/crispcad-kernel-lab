@@ -10,7 +10,7 @@ changed. The previous build's shapes are reused for everything else.
 
 ```bash
 npx tsx docs/demos/params-plain-math/bench.ts > docs/demos/params-plain-math/bench-output.jsonl
-# renders: kernelcad render docs/demos/params-plain-math/tab-<30|45|60>.kcad.ts --preset publish -o verification/render-<v>.png
+# renders: crispcad render docs/demos/params-plain-math/tab-<30|45|60>.kcad.ts --preset publish -o verification/render-<v>.png
 python3 docs/demos/params-plain-math/render_demo.py
 ```
 

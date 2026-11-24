@@ -221,7 +221,7 @@ async function main(): Promise<void> {
         <text x="190" y="410" fill="#ffffff" font-family="${FONT}" font-size="39">Editable .kcad.ts parameters and named geometry</text>
         <path d="M190 480H1700" stroke="#34445b" stroke-width="2"/>
         <text x="190" y="565" fill="#7dd3c7" font-family="${FONT}" font-size="27" font-weight="700" letter-spacing="2">EVALUATE</text>
-        <text x="190" y="630" fill="#ffffff" font-family="${FONT}" font-size="39">kernelcad evaluate --json → diagnostics</text>
+        <text x="190" y="630" fill="#ffffff" font-family="${FONT}" font-size="39">crispcad evaluate --json → diagnostics</text>
         <path d="M190 680H1700" stroke="#34445b" stroke-width="2"/>
         <text x="190" y="750" fill="#7dd3c7" font-family="${FONT}" font-size="27" font-weight="700" letter-spacing="2">EXPORT + CHECK</text>
         <text x="190" y="815" fill="#ffffff" font-family="${FONT}" font-size="39">DXF · STEP · STL · 3MF · independent readback tests</text>
@@ -266,7 +266,7 @@ async function main(): Promise<void> {
       const detailSections: Array<[string, string]> = [
         ['SOURCE', item.source.split('/').at(-1)!],
         ['EDITABLE INPUTS', item.parameters],
-        ['REAL CLI STEPS', `kernelcad evaluate --json → export ${item.format.toUpperCase()}`],
+        ['REAL CLI STEPS', `crispcad evaluate --json → export ${item.format.toUpperCase()}`],
         ['EXPORT RESULT', `No error diagnostics · ${artifact.byteLength.toLocaleString()} bytes · SHA-256 ${sha256(artifact).slice(0, 12)}`],
         ['EXAMPLE TESTS', item.testCheck],
         ['STILL OPEN', item.openWork],

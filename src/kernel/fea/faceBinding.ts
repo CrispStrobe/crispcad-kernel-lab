@@ -2,13 +2,13 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/kernel/fea/faceBinding.ts
 //
-// Binds kernelCAD's face vocabulary to the mesh.
+// Binds CrispCAD's face vocabulary to the mesh.
 //
 // The study says "hold the face at minX"; the mesher knows only its own surface
 // tags. Rather than invent a naming convention that would have to survive the
-// file handoff (the B-rep file does not carry kernelCAD's lineage names), we
+// file handoff (the B-rep file does not carry CrispCAD's lineage names), we
 // match on INVARIANTS the handoff preserves: a face's centre of mass and its area.
-// Both are computed by OCCT on the kernelCAD side and by OCC inside gmsh on
+// Both are computed by OCCT on the CrispCAD side and by OCC inside gmsh on
 // the other side, from the same B-rep — so they agree to numerical noise.
 //
 // Running the same match over EVERY surface (not just the declared ones) is
@@ -27,7 +27,7 @@ import type { FaceQuery } from '../../shared/intent/queryTypes';
 import type { FeaFaceSelector } from '../../shared/intent/feaStudyRecord';
 import type { FeaSurface } from './types';
 
-/** A kernelCAD face reduced to the two quantities that survive the file
+/** A CrispCAD face reduced to the two quantities that survive the file
  *  handoff, plus the ref used to name it in results. */
 export interface FaceDescriptor {
   centroid: [number, number, number];
@@ -249,7 +249,7 @@ export function describeAllFaces(shape: OcctBackend, owner: string): FaceDescrip
   );
 }
 
-/** Distance-and-area match between a kernelCAD face and a meshed surface. */
+/** Distance-and-area match between a CrispCAD face and a meshed surface. */
 export function surfaceMatches(surface: FeaSurface, face: FaceDescriptor, scaleMm: number): boolean {
   const tol = Math.max(CENTROID_TOL_MM, scaleMm * 1e-5);
   const d = Math.hypot(
@@ -301,7 +301,7 @@ export function nodesForFaces(
   return { nodes: [...nodes].sort((a, b) => a - b), tris, matchedRefs, unmatchedRefs };
 }
 
-/** Label each meshed surface with the kernelCAD face ref it corresponds to,
+/** Label each meshed surface with the CrispCAD face ref it corresponds to,
  *  where one exists. Surfaces with no counterpart keep a `surface#<tag>` name
  *  rather than being dropped — a hot spot on an unnamed surface still needs
  *  reporting. */

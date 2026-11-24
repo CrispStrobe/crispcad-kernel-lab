@@ -14,7 +14,7 @@ import type { ShapeBackend } from '../../../../src/kernel/backends/backend';
 
 afterEach(() => clearActiveMcpSession());
 
-/** Axis-aligned box in kernelCAD millimetres. Two triangles per face (12). */
+/** Axis-aligned box in CrispCAD millimetres. Two triangles per face (12). */
 function boxMesh(
   sizeMm: readonly [number, number, number],
   originMm: readonly [number, number, number] = [0, 0, 0],

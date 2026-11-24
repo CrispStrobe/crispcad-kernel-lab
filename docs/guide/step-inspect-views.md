@@ -1,6 +1,6 @@
 # Labeled views of a STEP import
 
-`inspect_step_views` imports one `.step` file through the same normalized path as `lib.fromSTEP` and returns four PNGs: front, right, top, and iso. kernelCAD is Z-up. Front looks along +Y from −Y, right looks along −X from +X, top looks down from +Z with screen up +Y, and iso sits in the +X, −Y, +Z octant.
+`inspect_step_views` imports one `.step` file through the same normalized path as `lib.fromSTEP` and returns four PNGs: front, right, top, and iso. CrispCAD is Z-up. Front looks along +Y from −Y, right looks along −X from +X, top looks down from +Z with screen up +Y, and iso sits in the +X, −Y, +Z octant.
 
 Each image labels the largest visible faces and the longest visible edges. The legend band under the model names at most 18 remaining face ids and 18 remaining edge ids, then a `+N` count. `height` is the model viewport in pixels (default 260). The PNG is 56 px taller than `height`. `width` defaults to 360.
 

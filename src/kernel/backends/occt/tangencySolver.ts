@@ -51,7 +51,7 @@
 // Worth knowing before writing a test around it: `Circ2d2TanRad` reports zero
 // solutions for two PARALLEL lines at EVERY radius and every qualifier
 // combination, including a radius that exactly fits between them. That is an
-// OCCT limitation, not a kernelCAD one, and it is why the no-solution
+// OCCT limitation, not a CrispCAD one, and it is why the no-solution
 // diagnostic leads with the parallel-lines case.
 
 import { getOC } from 'replicad';
@@ -87,7 +87,7 @@ export class TangencyError extends Error {
   }
 }
 
-/** Map a kernelCAD `side` onto the OCCT enum value. */
+/** Map a CrispCAD `side` onto the OCCT enum value. */
 function gccPosition(oc: any, side: TangentSide): unknown {
   switch (side) {
     case 'outside': return oc.GccEnt_Position.GccEnt_outside;

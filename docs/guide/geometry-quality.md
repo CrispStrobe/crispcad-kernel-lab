@@ -90,7 +90,7 @@ them.
 - `qualityGate: "off"`: the gate does not run.
 
 `target: "part"` per-part STL exports take the same keys. On the CLI, use
-`kernelcad export step part.kcad.ts -o part.step --quality-gate block`, with
+`crispcad export step part.kcad.ts -o part.step --quality-gate block`, with
 `--tiny-face-area-mm2` and `--short-edge-length-mm` for the thresholds.
 
 Some bodies are skipped, each with an info diagnostic

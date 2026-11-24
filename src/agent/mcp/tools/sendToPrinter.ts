@@ -5,7 +5,7 @@
 // MCP `send_to_printer` tool: upload a G-code file to a real network
 // printer and (by default) start the print. Closes the physical-print
 // loop started by `export_model`'s `gcode` format — an agent can go from
-// a kernelCAD script to a physical part on a printer with no manual hop.
+// a CrispCAD script to a physical part on a printer with no manual hop.
 
 import { readFile } from 'node:fs/promises';
 import {
@@ -30,7 +30,7 @@ export interface SendToPrinterInput {
   /** Bambu LAN mode only: model 3MF (export format '3mf') that carries the
    *  G-code as `Metadata/plate_1.gcode` in the uploaded `.gcode.3mf`. */
   model_3mf_path?: string;
-  /** Printer profile id (see `kernelcad print printers`); checked against
+  /** Printer profile id (see `crispcad print printers`); checked against
    *  `protocol` before upload. */
   printer?: string;
   filename?: string;

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/cli/commands/render.ts
 //
-// `kernelcad render <file.kcad.ts>` — multi-view headless renderer.
+// `crispcad render <file.kcad.ts>` — multi-view headless renderer.
 //
 // Default: 2×2 composite PNG (front, right, top, iso) saved next to the
 // script. Use `--separate` to emit four individual files, or `--sheet` for
@@ -68,7 +68,7 @@ export interface RenderInput {
   shading?: 'smooth' | 'flat';
   /** Playwright screenshot deadline in ms (default: Playwright's 30 s). */
   screenshotTimeoutMs?: number;
-  /** Suppress the kernelCAD version watermark on the captured frames.
+  /** Suppress the CrispCAD version watermark on the captured frames.
    *  Used for clean hero artifacts intended for public posts. */
   noWatermark?: boolean;
   /** Show only matching objects by feature/part name. */
@@ -224,7 +224,7 @@ export function isRenderStrictMode(): boolean {
 
 /**
  * Print the broken-mechanism failure list to stderr in the same
- * "MECHANISM BROKEN" shape `kernelcad validate` uses, so an agent that
+ * "MECHANISM BROKEN" shape `crispcad validate` uses, so an agent that
  * already learned to read the validate output sees the same surface
  * when render-inspect refuses.
  */
@@ -318,7 +318,7 @@ async function withRenderBase<T>(
 ): Promise<T> {
   const surface = await resolveRenderBaseUrl(explicit);
   if (surface.source !== 'explicit') {
-    console.error(`kernelcad render: render surface = ${surface.source} (${surface.baseUrl})`);
+    console.error(`crispcad render: render surface = ${surface.source} (${surface.baseUrl})`);
   }
   try {
     return await fn(surface.baseUrl);
@@ -739,7 +739,7 @@ function buildInspectManifest(
     views: [...requestedViews],
     bounds: result.bounds,
     command: {
-      name: 'kernelcad render inspect',
+      name: 'crispcad render inspect',
       channels: requestedChannels,
       views: requestedViews,
       ...(input.shading !== undefined ? { shading: input.shading } : {}),
@@ -840,7 +840,7 @@ function configureRenderInspectSubcommand(cmd: Command): void {
     )
     .option(
       '--no-watermark',
-      'suppress the kernelCAD version badge in the bottom-right of the captured frame (clean hero artifacts)',
+      'suppress the CrispCAD version badge in the bottom-right of the captured frame (clean hero artifacts)',
       false,
     )
     .option('--channels <list>', 'comma-separated inspection channels to emit (rgb, mask, depth, normals)').option('--views <list>', 'comma-separated views to capture (front, back, left, right, top, bottom, iso; default front, right, top, iso)')
@@ -906,7 +906,7 @@ function configureRenderCommandOptions(cmd: Command): void {
     .option('--environment <preset|url|none>', "HDRI environment preset ('studio', 'softbox', 'neutral', 'outdoor', 'warehouse'), a custom URL/path, or 'none' to force the default three-light rig")
     .option('--shading <mode>', "mesh shading: 'smooth' (kernel vertex normals, default) or 'flat' (face normals)")
     .option('--screenshot-timeout <ms>', 'Playwright screenshot deadline in milliseconds (default 30000)', (v) => parseInt(v, 10))
-    .option('--no-watermark', 'suppress the kernelCAD version badge in the bottom-right of the captured frame (clean hero artifacts)', false)
+    .option('--no-watermark', 'suppress the CrispCAD version badge in the bottom-right of the captured frame (clean hero artifacts)', false)
     .option('--focus <names>', 'show only comma-separated feature ids or assembly part names')
     .option('--hide <names>', 'hide comma-separated feature ids or assembly part names')
     .option('--section <axis>=<pos>', 'clip the model with a section plane, e.g. --section z=10 (keeps the negative-axis side; see --section-flip)')

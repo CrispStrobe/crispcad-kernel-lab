@@ -2,13 +2,13 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/dfm.ts
 //
-// `kernelcad dfm <file.kcad.ts>` — run the print-readiness gates declared
+// `crispcad dfm <file.kcad.ts>` — run the print-readiness gates declared
 // by the script's dfmSpec(...): part-pair clearance (exact BREP distance),
 // minimum wall thickness (inward ray sampling), void/channel topology
 // (voxel flood-fill), and — with `process: 'fdm'` — the FDM printability
 // check. W3 Task 8 surface over `runDfmChecksOnModel`.
 //
-// Exit codes (pipe-friendly: `kernelcad dfm part.kcad.ts && echo ok`):
+// Exit codes (pipe-friendly: `crispcad dfm part.kcad.ts && echo ok`):
 //   0 — every declared gate passed,
 //   1 — a gate failed (error-severity diagnostic present) or the build
 //       itself had fatal diagnostics (which short-circuit the gates),

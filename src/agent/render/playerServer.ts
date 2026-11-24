@@ -178,7 +178,7 @@ export async function resolveRenderBaseUrl(explicit?: string): Promise<ResolvedR
   throw new Error(
     'No render surface available: the bundled static player (dist/headless-player) was not found ' +
       `and no studio dev server answered at ${devBase}. ` +
-      'Run `npm run build:player` once (in-repo), reinstall the kernelcad package (published builds bundle the player), ' +
+      'Run `npm run build:player` once (in-repo), reinstall the crispcad package (published builds bundle the player), ' +
       'or start `npm run dev` and retry.',
   );
 }

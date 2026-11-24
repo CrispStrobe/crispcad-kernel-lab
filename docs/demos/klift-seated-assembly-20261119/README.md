@@ -12,12 +12,12 @@ face the two parts share. A grown part changes size from a fixed corner.
 | Measurement | Before | After |
 | --- | --- | --- |
 | `evaluate_script` | `ok: false`, `broken`, 32 errors | `ok: true`, `real`, 0 diagnostics |
-| `kernelcad animate` pose verification | not measured | 93 poses, 0 collisions |
+| `crispcad animate` pose verification | not measured | 93 poses, 0 collisions |
 | Interfering pairs at 5 working poses | not measured | 0 |
 | `typecheckExamples` errors in the file | 37 | 0 |
 
 [demo.mp4](demo.mp4) shows 7 key poses of the service cycle, 2 s each. Each
-still is a `kernelcad render --pose 225,25` of the example with the param
+still is a `crispcad render --pose 225,25` of the example with the param
 defaults set to the animation values at that time
 ([poses.json](verification/poses.json)). The contact sheet is
 [video-contact-sheet.png](verification/video-contact-sheet.png).
@@ -38,7 +38,7 @@ python3 docs/demos/klift-seated-assembly-20261119/make_demo.py /tmp/klift-poses 
 ## Limits
 
 - The demo is a sequence of stills, not a continuous capture. The 534-frame
-  `kernelcad animate` capture stopped 2 times with `Target crashed` in the
+  `crispcad animate` capture stopped 2 times with `Target crashed` in the
   browser page (frame 104 at 30 fps, frame 38 at 5 fps) on a loaded machine.
 - `examples/gallery/kspray-klift/renders/` is not refreshed and shows the
   scene before this change.

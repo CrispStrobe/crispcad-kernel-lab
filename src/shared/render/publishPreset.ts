@@ -61,7 +61,7 @@ export interface PublishFrameCapture {
 
 export const PUBLISH_PRESET = {
   /** 3/4 front-right hero: az=30° right of the front view, el=22° above
-   *  the horizon (setRenderPose convention; kernelCAD is Z-up). */
+   *  the horizon (setRenderPose convention; CrispCAD is Z-up). */
   heroAzDeg: 30,
   heroElDeg: 22,
   margin: 1.3,

@@ -28,7 +28,7 @@ asm.part('pump', pumpShape, { at: [pumpX, -130, -282] })
 return asm.model();
 ```
 
-The connector `origin` is in the part's own frame and `at` moves the part, so a port sits at `at` plus `origin`. `kernelcad evaluate --json` lists every port in `ports`, in assembly space: `out-a` is at [60, -172, -232] and `out-b` at [60, -197, -232], both pointing up. A tube that ends on a port takes its OD and its system from it.
+The connector `origin` is in the part's own frame and `at` moves the part, so a port sits at `at` plus `origin`. `crispcad evaluate --json` lists every port in `ports`, in assembly space: `out-a` is at [60, -172, -232] and `out-b` at [60, -197, -232], both pointing up. A tube that ends on a port takes its OD and its system from it.
 <!-- check: ports[part=pump,name=out-a].origin = [60, -172, -232] -->
 <!-- check: ports[part=pump,name=out-b].origin = [60, -197, -232] -->
 
@@ -133,7 +133,7 @@ via: [[manifoldX.add(20), -190, hydRunZ], [act2X, -190, hydRunZ]],
 
 ## Bend tables and STEP
 
-`kernelcad export bend-table` writes one CSV per tube, named after the tube:
+`crispcad export bend-table` writes one CSV per tube, named after the tube:
 
 ```bash
 node dist/cli/index.js export bend-table examples/tube-routing-engine/engine-lines.kcad.ts -o out/bend-tables
@@ -163,7 +163,7 @@ last_straight_mm,46.400
 
 The bend-table export refuses a script that fails a tube rule, so the broken twin gives no tables. STEP, STL (including per-part STL), DXF, 3MF and G-code also run the tube gate before writing fabrication output: a tube error gives no new file and leaves any previous output untouched. Tube warnings still allow export. GLB and rendering remain available to inspect a failing route. These checks cover the declared tube rules and clearance, not pressure or structural acceptance.
 
-`kernelcad export step` writes a passing assembly as one STEP file, with each tube as its own solid:
+`crispcad export step` writes a passing assembly as one STEP file, with each tube as its own solid:
 
 ```bash
 node dist/cli/index.js export step examples/tube-routing-engine/engine-lines.kcad.ts -o out/engine-lines.step

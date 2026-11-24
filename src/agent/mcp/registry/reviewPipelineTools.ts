@@ -17,7 +17,7 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
         type: 'object',
         properties: {
           file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-          code: { type: 'string', description: 'Inline kernelCAD script source.' },
+          code: { type: 'string', description: 'Inline CrispCAD script source.' },
           assembly: { type: 'string', description: 'Assembly name; defaults to the first captured assembly.' },
           design_goal: { type: 'string', description: 'Original user design prompt or goal. Included in suggestedRepairPrompt so topology-redesign repairs restart from the intended physical design instead of local coordinate nudges.' },
           preserve_interfaces: {
@@ -205,7 +205,7 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
         type: 'object',
         properties: {
           file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-          code: { type: 'string', description: 'Inline kernelCAD script source.' },
+          code: { type: 'string', description: 'Inline CrispCAD script source.' },
           field_name: { type: 'string', description: "sdf.bind binding name holding the SdfField." },
           point: {
             type: 'array',
@@ -225,7 +225,7 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
       name: 'capture_animation',
       description:
         "Use this when you need to render a script's animation timeline to a video, or a 360° turntable of a model for sharing. " +
-        "Capture a kernelCAD script's animationView({...}) timeline to an MP4 (ffmpeg) or a PNG frame sequence, " +
+        "Capture a CrispCAD script's animationView({...}) timeline to an MP4 (ffmpeg) or a PNG frame sequence, " +
         'verifying the sampled poses for part interference. FILE ONLY: pass { file } (a .kcad.ts path) — there is no ' +
         '{ code } mode, because the capture engine renders from a file on disk (its relative lib.fromSTEP imports resolve ' +
         'against the script directory). MP4 by default; pass { frames_dir } to write frame-0000.png... and skip ffmpeg ' +
@@ -233,7 +233,7 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
         '(keyframe times + segment midpoints) BEFORE any browser/ffmpeg cost; { no_verify: true } skips it and ' +
         '{ verify_every: n } additionally samples every n-th frame time. Pass { focus } or { hide } (arrays of feature ids ' +
         'or assembly part names, mutually exclusive) to isolate parts in the rendered frames — same semantics as ' +
-        '`kernelcad render --focus/--hide`; visibility is render-only and does NOT affect the pose verification. ' +
+        '`crispcad render --focus/--hide`; visibility is render-only and does NOT affect the pose verification. ' +
         'Collisions DO NOT fail the call — the artifact ' +
         'is still written as evidence with ok: true; read verified: false + the collisions[] array. ' +
         'TURNTABLE MODE: pass { turntable: true } for a seamless 360° orbit of the model (no animationView record needed) — ' +
@@ -279,7 +279,7 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
     definition: {
       name: 'render_preview',
       description:
-        'Use this when you need to LOOK at a kernelCAD model — render its script to deterministic PNG views ' +
+        'Use this when you need to LOOK at a CrispCAD model — render its script to deterministic PNG views ' +
         'for visual self-check (the visual half of the evaluate → render → inspect → fix loop), with NO studio or ' +
         'dev server required. Pass { code } (inline source) or { file } (a .kcad.ts path), exactly one. ' +
         'Renders the canonical engineering views (front, right, top, iso — pass { views } for a subset, e.g. ["iso"] for ' +
@@ -288,13 +288,13 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
         '(dist/headless-player) is served from an ephemeral local port automatically; a running studio dev server is used ' +
         'as fallback, and { base_url } forces one. The only environment dependency is playwright chromium ' +
         '(npx playwright install chromium). Pass { focus } or { hide } (arrays of feature ids or assembly part names, ' +
-        'mutually exclusive) to isolate parts — same semantics as `kernelcad render --focus/--hide`. Pass ' +
+        'mutually exclusive) to isolate parts — same semantics as `crispcad render --focus/--hide`. Pass ' +
         '{ section: { axis, position, flip? } } to cut a cross-section and inspect INTERIOR geometry (wall thickness, ' +
         'internal pockets, whether a bore runs through) rather than only the outer shell. Pass ' +
         '{ explode: { factor, mode? } } to pull a multi-part assembly apart (mode: "mate-axis" default, or "radial") ' +
-        'using the same mesher as `kernelcad render --explode` — requires assembly.model()/solvedModel(). PNGs are written to ' +
+        'using the same mesher as `crispcad render --explode` — requires assembly.model()/solvedModel(). PNGs are written to ' +
         '{ out_dir } (default: a fresh temp session directory) and returned as absolute paths with per-view camera ' +
-        'descriptions (kernelCAD is Z-up). Mechanism truth runs first, same protocol as `kernelcad render`: a broken ' +
+        'descriptions (CrispCAD is Z-up). Mechanism truth runs first, same protocol as `crispcad render`: a broken ' +
         'mechanism still renders but every tile is watermarked MECHANISM BROKEN (KERNELCAD_RENDER_STRICT=1 refuses ' +
         'instead); read { mechanism, mechanism_failure_codes }. The probe runs full BREP interference sweeps and can ' +
         'dominate latency on large assemblies — pass { no_mechanism_check: true } for fast iteration (the preview then ' +
@@ -319,7 +319,7 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
       inputSchema: {
         type: 'object',
         properties: {
-          code: { type: 'string', description: 'Inline kernelCAD script source. Mutually exclusive with file. Relative imports resolve against a temp dir — use file for scripts with relative lib.fromSTEP(...) imports.' },
+          code: { type: 'string', description: 'Inline CrispCAD script source. Mutually exclusive with file. Relative imports resolve against a temp dir — use file for scripts with relative lib.fromSTEP(...) imports.' },
           file: { type: 'string', description: 'Path to a .kcad.ts script on disk. Mutually exclusive with code.' },
           views: { type: 'array', items: { type: 'string', enum: ['front', 'back', 'left', 'right', 'top', 'bottom', 'iso'] }, description: 'Views to render (default: front, right, top, iso; all seven with sheet). Fewer views = faster.' },
           sheet: { type: 'boolean', description: "Also write one labelled image 'sheet' tiling every rendered view. With no views it renders all seven (adds back, left, bottom) — use it before calling a model done, so a missing cutout on the back or underside is not missed.", default: false },
@@ -332,12 +332,12 @@ export const reviewPipelineToolEntries: ToolRegistryEntry[] = [
           environment: { type: 'string', description: "HDRI environment override: preset ('studio', 'softbox', 'neutral', 'outdoor', 'warehouse'), a URL, or 'none' for the default three-light rig." },
           shading: { type: 'string', enum: ['smooth', 'flat'], description: "Mesh shading: 'smooth' uses the kernel's vertex normals (default); 'flat' uses face normals to expose tessellation / surface wobble." },
           screenshot_timeout_ms: { type: 'integer', minimum: 1000, maximum: 600000, description: "Playwright screenshot deadline in milliseconds. Default leaves Playwright's 30 s in place; raise it for heavy lofts or a slow machine." },
-          no_watermark: { type: 'boolean', description: 'Suppress the kernelCAD version watermark.', default: false },
+          no_watermark: { type: 'boolean', description: 'Suppress the CrispCAD version watermark.', default: false },
           no_mechanism_check: { type: 'boolean', description: "Skip the mechanism-truth probe for fast iteration on large assemblies; the preview reports mechanism: 'unverified'. Ignored under KERNELCAD_RENDER_STRICT=1.", default: false },
           base_url: { type: 'string', description: 'Advanced: force a specific render server (e.g. a running studio dev server) instead of the bundled static player.' },
           section: {
             type: 'object',
-            description: "Cut the model with one axis-aligned section plane to inspect INTERIOR structure (wall thickness, internal pockets, whether a bore runs through) instead of only the outer shell. position is in mm along the axis (kernelCAD Z-up frame); flip keeps the +axis side (default keeps the -axis side).",
+            description: "Cut the model with one axis-aligned section plane to inspect INTERIOR structure (wall thickness, internal pockets, whether a bore runs through) instead of only the outer shell. position is in mm along the axis (CrispCAD Z-up frame); flip keeps the +axis side (default keeps the -axis side).",
             properties: {
               axis: { type: 'string', enum: ['x', 'y', 'z'] },
               position: { type: 'number' },

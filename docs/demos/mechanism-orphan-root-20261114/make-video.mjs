@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Build a text replay of the recorded strict `kernelcad render` output in before.txt and after.txt.
+// Build a text replay of the recorded strict `crispcad render` output in before.txt and after.txt.
 // Run: node docs/demos/mechanism-orphan-root-20261114/make-video.mjs
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -59,7 +59,7 @@ const orphanRows = (result, y0) => result.orphans
   .join('\n');
 const resultSlide = (title, subtitle, slideNo, result, verdict, verdictColor) => `${background(title, subtitle, slideNo)}
     ${panel}
-    ${mono(`$ KERNELCAD_RENDER_STRICT=1 kernelcad render ${MODEL}`, 160, 310, 24, MUTED)}
+    ${mono(`$ KERNELCAD_RENDER_STRICT=1 crispcad render ${MODEL}`, 160, 310, 24, MUTED)}
     ${mono(`MECHANISM BROKEN — render refused (${result.failureCount} failures) · exit ${result.exitCode}`, 160, 380, 28, INK)}
     ${orphanRows(result, 470)}
     ${text(`Other failures, unchanged: ${result.codes.filter(c => c !== 'mechanism.orphan-part').join(', ')}`, 160, 700, 24, MUTED)}

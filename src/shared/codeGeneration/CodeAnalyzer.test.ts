@@ -57,7 +57,7 @@ describe('CodeAnalyzer', () => {
         expect(analyzer.getVariableAtIndex(1)).toBe('part2');
     });
 
-    it('handles return outside function correctly (kernelCAD template style)', () => {
+    it('handles return outside function correctly (CrispCAD template style)', () => {
         const code = `
             const a = 1;
             return a;

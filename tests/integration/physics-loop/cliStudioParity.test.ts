@@ -2,7 +2,7 @@
 //
 //
 // PR #341's failure mode was a surface split: the legacy CLI
-// `kernelcad validate` returned "clean" while the Studio runtime
+// `crispcad validate` returned "clean" while the Studio runtime
 // surfaced a broken mechanism. The physics-grounded loop (P0)
 // introduced a single source of truth — `mechanism: 'real' | 'broken'`
 // on `RecomputeResult` — but P0 only wired the engine field. P1's job

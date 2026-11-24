@@ -52,7 +52,7 @@ assert.deepEqual(first.diagnostics.filter((d) => d.severity === 'error'), []);
 const firstSnapshot = await importStepAssembly(first.bytes, 'panel.step');
 const firstTree = describeTree(firstSnapshot);
 
-// 2. Import it as a KernelCAD project (the writer behind `kernelcad import-step`).
+// 2. Import it as a KernelCAD project (the writer behind `crispcad import-step`).
 const workDir = await mkdtemp(join(tmpdir(), 'kcad-step-roundtrip-demo-'));
 let importedScript: string;
 let second: Awaited<ReturnType<typeof runAndExport>>;
@@ -113,14 +113,14 @@ const implementation = Object.fromEntries(await Promise.all(
 ));
 await writeFile(join(HERE, 'panel-roundtrip.step'), second.bytes);
 const evidence = {
-  scope: 'Local kernelCAD Node API: STEP export, import as a KernelCAD project, second STEP export. Both files are read back through the OCCT XCAF STEP reader.',
+  scope: 'Local CrispCAD Node API: STEP export, import as a KernelCAD project, second STEP export. Both files are read back through the OCCT XCAF STEP reader.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),
   implementationSha256: implementation,
   firstExport: { bytes: first.bytes.length, sha256: sha256(first.bytes), productCount: firstTree.length, instanceCount: firstSnapshot.occurrences.length },
   importedProject: {
-    writer: 'writeStepBundle (kernelcad import-step)',
+    writer: 'writeStepBundle (crispcad import-step)',
     scriptSha256: sha256(importedScript),
     scriptLines: importedScript.split('\n').length,
     scriptExcerpt: importedScript.split('\n').slice(0, 14),

@@ -16,7 +16,7 @@ const skillsRoot = join(
   'skills',
 );
 
-describe('kernelcad skill install (recursion fix)', () => {
+describe('crispcad skill install (recursion fix)', () => {
   it('installs every nested SKILL.md, not just top-level', async () => {
     const dst = mkdtempSync(join(tmpdir(), 'kc-install-'));
     try {
@@ -44,7 +44,7 @@ describe('kernelcad skill install (recursion fix)', () => {
     const dst = mkdtempSync(join(tmpdir(), 'kc-install-shape-'));
     try {
       await installCommand(dst);
-      // Top-level kernelcad skill at the install root.
+      // Top-level crispcad skill at the install root.
       expect(existsSync(join(dst, 'kernelcad/SKILL.md'))).toBe(true);
       // Nested sub-skill at preserved relative depth.
       expect(existsSync(join(dst, 'kernelcad-from-reference/blockout-model/SKILL.md'))).toBe(true);

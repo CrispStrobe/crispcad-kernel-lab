@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Build a text replay of the recorded `kernelcad validate` output in before.txt and after.txt.
+// Build a text replay of the recorded `crispcad validate` output in before.txt and after.txt.
 // Run: node docs/demos/coupled-physics-rest-20261114/make-video.mjs
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -59,7 +59,7 @@ const countCodes = codes => Object.entries(codes.reduce((acc, code) => ({ ...acc
   .map(([code, n]) => `${n} × ${code}`);
 const resultSlide = (title, subtitle, slideNo, result, restPose, verdict, verdictColor) => `${background(title, subtitle, slideNo)}
     ${panel}
-    ${mono(`$ kernelcad validate ${MODEL} --include-interference`, 160, 310, 24, MUTED)}
+    ${mono(`$ crispcad validate ${MODEL} --include-interference`, 160, 310, 24, MUTED)}
     ${mono(`MECHANISM BROKEN (${result.failureCount} failures) · exit ${result.exitCode}`, 160, 375, 28, INK)}
     ${mono(`physics rest pose   left-curl ${restPose.left}   right-curl ${restPose.right}`, 160, 450, 28, INK, 700)}
     ${result.couplingResidual === null

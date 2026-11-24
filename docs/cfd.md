@@ -1,6 +1,6 @@
 # CFD with OpenFOAM: `run_cfd`
 
-kernelCAD runs steady, incompressible flow studies on the model you built,
+CrispCAD runs steady, incompressible flow studies on the model you built,
 through an external [OpenFOAM](https://www.openfoam.com) (ESI v2312 or newer).
 Use it to size a duct, pipe, nozzle or coolant manifold (pressure drop, how the
 flow splits between outlets) or to estimate the drag on a part in a stream.
@@ -11,7 +11,7 @@ Surfaces:
 | --- | --- |
 | Script | `shape.cfdStudy({ flow, fluid, inlet, outlet, velocity \| flowRateLpm, ... })` (declaration only) |
 | MCP | `run_cfd({ file \| code, study? \| inline fields, output_dir?, cores? })`, `cfd_summary({ output_dir? })` |
-| CLI | `kernelcad cfd run <file> [--flow ... --inlet '{"atX":0}' --outlet ... --velocity ...]`, `kernelcad cfd status [--out dir]` |
+| CLI | `crispcad cfd run <file> [--flow ... --inlet '{"atX":0}' --outlet ... --velocity ...]`, `crispcad cfd status [--out dir]` |
 
 The field reference, the result fields and how to read the convergence
 verdict are in the `kernelcad-cfd` skill (`src/agent/skills/kernelcad-cfd/SKILL.md`).
@@ -58,7 +58,7 @@ functions, no boundary-layer cells) are estimates; the result carries a
 
 ## Installing OpenFOAM
 
-Either works; kernelCAD never downloads it for you.
+Either works; CrispCAD never downloads it for you.
 
 ```sh
 # Native (Ubuntu / Debian)
@@ -92,7 +92,7 @@ again. `cfd_summary({ output_dir })` returns the summary, or the
 ## Sandbox mode
 
 `run_cfd`'s `file` (read) and `output_dir` (write) are in the audited
-argument tables, as are `kernelcad cfd run <file> --out`. OpenFOAM is a child
+argument tables, as are `crispcad cfd run <file> --out`. OpenFOAM is a child
 process: like CalculiX it inherits the sandbox environment but not the
 in-process guards. The Docker route bind-mounts only the run directory and
 runs with `--network none`.

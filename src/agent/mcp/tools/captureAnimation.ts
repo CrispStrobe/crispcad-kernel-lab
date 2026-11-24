@@ -2,10 +2,10 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/mcp/tools/captureAnimation.ts
 //
-// MCP `capture_animation` tool — runs a kernelCAD script's animationView({...})
+// MCP `capture_animation` tool — runs a CrispCAD script's animationView({...})
 // timeline through the typed capture engine (src/agent/render/captureAnimation.ts)
 // and writes an MP4 (ffmpeg) or a PNG frame sequence (framesDir mode). Thin
-// request/response wrapper over the engine; mirrors the `kernelcad animate` CLI
+// request/response wrapper over the engine; mirrors the `crispcad animate` CLI
 // semantics (animate.ts) on the MCP surface.
 //
 // FILE-ONLY (no { code } mode) — DELIBERATE asymmetry vs export_model. The

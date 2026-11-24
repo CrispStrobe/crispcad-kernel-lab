@@ -3,7 +3,7 @@
 # Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 #
 # Build docs/demos/fixture-library/demo.mp4: an annotated still sequence from
-# the local `kernelcad render --preset publish` outputs of the committed
+# the local `crispcad render --preset publish` outputs of the committed
 # example. Not a screen recording. Run from this directory:
 #   python3 make-review-video.py
 import hashlib
@@ -175,7 +175,7 @@ def main():
             "convert fixture.hero.png -crop 760x660+700+360 +repage fixture-detail.png",
         ],
         "provenance": (
-            "Annotated still sequence composed from local kernelcad render --preset publish outputs "
+            "Annotated still sequence composed from local crispcad render --preset publish outputs "
             "of the committed example source. Not a screen recording, turntable, deployed platform "
             "capture, physical setup or machining test."
         ),

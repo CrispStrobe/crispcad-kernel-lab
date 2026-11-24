@@ -329,7 +329,7 @@ for a single topological entity (face, edge, or vertex) at any point in the mode
 ```typescript
 /**
  * Stable, serialisable identifier for a single topological entity.
- * This is the kernelCAD equivalent of Fusion's entityToken composite string.
+ * This is the CrispCAD equivalent of Fusion's entityToken composite string.
  */
 interface EntityId {
   /** UUID of the feature whose buildShape() created or last gave identity to this entity. */
@@ -892,7 +892,7 @@ The `EntityId` is always resolved to a canonical string for storage and display.
 string format is what appears in:
 - The `.f3d`-equivalent JSON model file under `features[N].params.references[M].entityToken`
 - Error messages: "Reference 'ExtrudeFace_1_3' is broken because the face was deleted"
-- The debug inspector panel in the kernelCAD UI
+- The debug inspector panel in the CrispCAD UI
 
 ### 5.1 Format Grammar
 
@@ -1073,7 +1073,7 @@ class ReferenceResolver {
 
 ### 6.3 DependencyGraph and Entity Reference Edges
 
-The `DependencyGraph` (kernelCAD's `RelationshipGraph` equivalent) uses `EntityId` as
+The `DependencyGraph` (CrispCAD's `RelationshipGraph` equivalent) uses `EntityId` as
 labels on its edges. An edge from Feature A to Feature B labelled with `entityId` means:
 "Feature B references entity `entityId` which was produced by Feature A (or transitively
 through A)."
@@ -1150,7 +1150,7 @@ local `entityToken`:
 assemblyEntityToken = occurrence.fullPathName + "/" + face.entityToken
 ```
 
-In kernelCAD, an `AssemblyEntityId` extends `EntityId` with an occurrence path:
+In CrispCAD, an `AssemblyEntityId` extends `EntityId` with an occurrence path:
 
 ```typescript
 interface AssemblyEntityId extends EntityId {
@@ -1278,7 +1278,7 @@ const NAMING_TOLERANCES = {
 
 ## Appendix A: Quick-Reference Summary Table
 
-| Fusion 360 Concept | kernelCAD Equivalent |
+| Fusion 360 Concept | CrispCAD Equivalent |
 |--------------------|---------------------|
 | `entityToken` string | `EntityId` struct + `entityIdToToken()` |
 | `Ns::ASMInterface::prependFeatureId` | `buildEvolutionRecord()` |

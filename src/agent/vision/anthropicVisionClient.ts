@@ -130,7 +130,7 @@ export interface VisionLlmClientLike {
  * 3. Neither → throws, naming both options.
  *
  * Either way the operator's own key pays for the calls — nothing is proxied
- * through a kernelCAD service.
+ * through a CrispCAD service.
  */
 export function defaultVisionClient(opts: DefaultVisionClientOptions = {}): VisionLlmClientLike {
   const configured = opts.timeoutMs ?? Number(process.env.KERNELCAD_TRACE_BACKEND_TIMEOUT_MS);

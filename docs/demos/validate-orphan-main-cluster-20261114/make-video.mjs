@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Build a text replay of the recorded `kernelcad validate` output in before.json and after.json.
+// Build a text replay of the recorded `crispcad validate` output in before.json and after.json.
 // Run: node docs/demos/validate-orphan-main-cluster-20261114/make-video.mjs
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -49,7 +49,7 @@ const mainHint = result => {
 };
 const resultSlide = (title, subtitle, slideNo, result, verdict, verdictColor) => `${background(title, subtitle, slideNo)}
     ${panel}
-    ${mono(`$ kernelcad validate ${MODEL} --json`, 160, 310, 26, MUTED)}
+    ${mono(`$ crispcad validate ${MODEL} --json`, 160, 310, 26, MUTED)}
     ${mono(`status: ${result.status} · parts: ${result.partCount} · joints: ${result.jointCount} · diagnostics: ${result.diagnostics.length}`, 160, 380, 28, INK)}
     ${diagnosticRows(result, 470)}
     ${text(mainHint(result), 160, 700, 28, INK)}

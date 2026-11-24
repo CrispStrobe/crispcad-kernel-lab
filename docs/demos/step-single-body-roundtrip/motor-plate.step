@@ -2,7 +2,7 @@ ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('Open CASCADE Model'),'2;1');
 FILE_NAME('Open CASCADE Shape Model','1970-01-01T00:00:00',('Author'),(
-    'Open CASCADE'),'Open CASCADE STEP processor 8.0','kernelCAD 0.17.4 (https://kernelcad.com)','Unknown');
+    'Open CASCADE'),'Open CASCADE STEP processor 8.0','CrispCAD 0.17.4 (https://kernelcad.com)','Unknown');
 FILE_SCHEMA((
 'AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF {1 0 10303 442 1 1 4 }'
     ));

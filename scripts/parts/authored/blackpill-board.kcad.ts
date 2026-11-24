@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/blackpill-board.kcad.ts
 //
-// WeAct STM32 BlackPill (STM32F4x1) development board — kernelCAD model composed
+// WeAct STM32 BlackPill (STM32F4x1) development board — CrispCAD model composed
 // from REAL component STEP geometry (KiCad packages3D) on an original modeled PCB.
 //
 // Follows the ESP32 DevKitC template (esp32-devkit-board.kcad.ts) EXACTLY: the PCB
@@ -34,7 +34,7 @@ const PCB_L = 53.0; // X  (length)
 const PCB_W = 21.0; // Y  (width)
 const PCB_T = 1.6;  // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render and LabWired both key off these, so
+// Explicit part colors — the CrispCAD render and LabWired both key off these, so
 // every composed component is tinted (imported STEP would otherwise be gray).
 // NOTE: .color() takes a '#RRGGBB' STRING; a numeric 0xRRGGBB is NOT honored
 // (the imported STEP falls back to gray). Keep every color a string.

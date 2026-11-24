@@ -3,7 +3,7 @@
 # Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 #
 # Build docs/demos/standard-parts/demo.mp4: an annotated still sequence from
-# the local `kernelcad render --preset publish` outputs of the two committed
+# the local `crispcad render --preset publish` outputs of the two committed
 # examples. Not a screen recording. Run from this directory:
 #   python3 make-review-video.py
 import hashlib
@@ -199,7 +199,7 @@ def main():
             "convert stack-front.pose-0-0.png -crop 1400x1100+330+210 +repage stack-detail.png",
         ],
         "provenance": (
-            "Annotated still sequence composed from local kernelcad render --preset publish outputs "
+            "Annotated still sequence composed from local crispcad render --preset publish outputs "
             "of the committed example sources. Not a screen recording, turntable, deployed platform "
             "capture, physical hardware or strength test."
         ),

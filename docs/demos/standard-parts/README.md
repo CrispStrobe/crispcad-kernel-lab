@@ -1,7 +1,7 @@
 # Standard parts library (`lib.part` / `lib.stack`)
 
 The 23-second `demo.mp4` is an annotated still sequence composed from local
-`kernelcad render --preset publish` captures of the two committed examples. It
+`crispcad render --preset publish` captures of the two committed examples. It
 is not a screen recording, turntable, deployed-platform capture or hardware
 test.
 
@@ -56,7 +56,7 @@ Evidence:
 - `catalog-evidence.json` — the current-catalog lineup: source hash, parts,
   spans, 55 pairs with zero positive-volume overlaps and the family list.
 - `inspect/manifest.json` and `inspect/channels/rgb/` — deterministic
-  `kernelcad render inspect` bundle for `bolt-stack.kcad.ts`.
+  `crispcad render inspect` bundle for `bolt-stack.kcad.ts`.
 - `src/modeling/runtime/browserRuntime.test.ts` covers the browser path
   ("lib.part builds an envelope without a filesystem").
 

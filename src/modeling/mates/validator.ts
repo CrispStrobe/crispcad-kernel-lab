@@ -15,7 +15,7 @@
 //     "main mechanism"). A sub-cluster floats as a unit.
 //
 // Interference results are folded in via the optional `interferencePairs`
-// input — keeps `kernelcad validate` a single source of truth instead of
+// input — keeps `crispcad validate` a single source of truth instead of
 // asking agents to run two separate CLIs.
 //
 // Status enum mirrors Solvespace's solver outcomes (SOLVED / INCONSISTENT /

@@ -116,7 +116,7 @@ function sceneTwo(evidence: Evidence): string {
     <text x="98" y="528" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="17">faceSketch, sectionSketch, the flat and section DXF profiles and the inspect section report read arcs through one function.</text>
     <text x="98" y="556" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="17">An arc that runs clockwise in the sketch frame and sweeps less than 180° got the bulge of the opposite arc.</text>
     <text x="98" y="584" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="17">Lines, full circles, counter-clockwise arcs and arcs of 180° or more were correct before and are unchanged.</text>
-    <text x="98" y="626" fill="#9fb0c4" font-family="monospace" font-size="16">kernelcad export dxf cover-gasket.kcad.ts  →  ${now.dxf.bytes} bytes; flat profile: ${now.flatLoops} loops</text>`;
+    <text x="98" y="626" fill="#9fb0c4" font-family="monospace" font-size="16">crispcad export dxf cover-gasket.kcad.ts  →  ${now.dxf.bytes} bytes; flat profile: ${now.flatLoops} loops</text>`;
   return shell('Measured against the closed form', `${evidence.source} · before: develop ${before.commit}`, content);
 }
 

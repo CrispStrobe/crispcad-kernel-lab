@@ -10,6 +10,6 @@ export const RENDER_CODES = {
     nextAction: { kind: 'rewrite-feature', guidance: 'wrap bodies in assembly().part(...) and return arm.model() before requesting explode' },
     defaultSeverity: 'error',
     group: 'render',
-    description: 'render_preview / kernelcad render --explode / svg-drawing options.exploded was requested on a script that did not capture an assembly().',
+    description: 'render_preview / crispcad render --explode / svg-drawing options.exploded was requested on a script that did not capture an assembly().',
   },
 } as const satisfies Record<`render.${string}`, DiagnosticCodeSpec>;

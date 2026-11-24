@@ -1,9 +1,9 @@
 > **Ported from `kernelCAD-private` research; revised for v0.1+ implementation.**
 > See the kernelcad-NORTHSTAR architecture spec (in kernelCAD-private) for current architecture.
 
-# kernelCAD High-Performance Compute Engine
+# CrispCAD High-Performance Compute Engine
 
-This document details the internal evaluation loop and multithreading strategy for the kernelCAD recompute engine.
+This document details the internal evaluation loop and multithreading strategy for the CrispCAD recompute engine.
 
 ## 1. The Core Compute Loop (Pseudocode)
 
@@ -44,7 +44,7 @@ void RelationshipGraph::recomputeAll() {
 
 ## 2. Multithreaded SMI Workflow
 
-To achieve "High-Performance", kernelCAD parallelizes at the **Component level**.
+To achieve "High-Performance", CrispCAD parallelizes at the **Component level**.
 
 ### Job System Architecture
 - **Worker Threads**: N threads (one per CPU core).

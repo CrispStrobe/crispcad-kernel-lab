@@ -1,6 +1,6 @@
 # Mechanism banner: severity of each entry
 
-`demo.mp4` is a 12-second text replay of recorded `kernelcad validate
+`demo.mp4` is a 12-second text replay of recorded `crispcad validate
 --include-interference` output for
 `examples/robot-arm/skill-built-supported-arm.kcad.ts`. Two free passive
 joints of this example swing in the 0.5 s release check. The gate reports each

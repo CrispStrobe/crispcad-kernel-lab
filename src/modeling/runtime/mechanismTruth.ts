@@ -868,7 +868,7 @@ function restGroupsFor(arm: Assembly, scene: SceneBackend): Map<string, string[]
 
 /**
  * The cheap part of criterion 9 for surfaces that skip the full mechanism
- * probe (default `kernelcad validate`, a review_cad without the pose
+ * probe (default `crispcad validate`, a review_cad without the pose
  * envelope): every FASTENED mate's two parts must touch at rest. A fastened
  * mate has no motion to sweep, so a gap is a defect on every surface, never
  * an "unverified" mechanism. Same measurement and message as the full probe.

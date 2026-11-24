@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/inspect.ts
 //
-// W4 inspection — Task 4: `kernelcad inspect step <file>`. Pure-analysis
+// W4 inspection — Task 4: `crispcad inspect step <file>`. Pure-analysis
 // interrogation of an external STEP file: solid tree, exact bbox, volume,
 // face count, cylindrical holes. The `inspect` parent leaves room for
 // future subcommands (same parent/subcommand shape as `render`).
@@ -31,7 +31,7 @@ export interface InspectStepCliResult {
 }
 
 /**
- * Action behind `kernelcad inspect step`. Exit codes follow the CLI
+ * Action behind `crispcad inspect step`. Exit codes follow the CLI
  * convention: 2 = input file unreadable (inspectStepFile throws
  * `feature.invalid-args` for that — same class of failure as
  * `cli.file-read`), 1 = parse/kernel failure, 0 = success.

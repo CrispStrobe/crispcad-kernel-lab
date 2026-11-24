@@ -95,7 +95,7 @@ arm.mate('wristRoll', 'link5.wristRollAxis', 'tip.wristRollAxis', 'revolute', { 
 const reachableTarget = [250, 100, 200] as const;
 
 // Seed pose hints the solver toward a nearby branch. Values are DEGREES
-// (kernelCAD's joint-angle convention everywhere) — a 17° / 11° / -11°
+// (CrispCAD's joint-angle convention everywhere) — a 17° / 11° / -11°
 // hint, not radians. Use 0 for "no preference."
 const seed = {
   shoulderYaw: 17, shoulderPitch: 11, elbowPitch: -11,

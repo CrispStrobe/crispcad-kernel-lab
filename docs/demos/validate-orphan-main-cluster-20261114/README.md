@@ -1,6 +1,6 @@
 # Assembly validate: main mechanism with a standalone first part
 
-`demo.mp4` is a 12-second text replay of recorded `kernelcad validate` output
+`demo.mp4` is a 12-second text replay of recorded `crispcad validate` output
 for `examples/exploded/clamshell-table-first.kcad.ts`. The model declares an
 unmated `table` before a `base`/`lid` hinge pair.
 

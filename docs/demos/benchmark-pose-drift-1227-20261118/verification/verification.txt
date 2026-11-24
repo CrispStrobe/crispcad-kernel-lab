@@ -23,4 +23,4 @@ Demo:
   SHA-256: 57a3053b4055758783a700afc78300c39d6593d8bc29654dec22a5324ac70252.
   Inspection: representative frames captured at 1 s, 5 s, and 9 s; contact sheet reviewed.
 
-Scope: local kernelCAD evaluation and fixture pose checks only. No deployment, physical fit, or hardware acceptance was tested.
+Scope: local CrispCAD evaluation and fixture pose checks only. No deployment, physical fit, or hardware acceptance was tested.

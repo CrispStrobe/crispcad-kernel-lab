@@ -5,7 +5,7 @@
 // Wrapper typechecker for `.kcad.ts` scripts (gap #8).
 //
 // `.kcad.ts` files are FUNCTION BODIES, not modules: the runtime injects the
-// kernelCAD DSL as globals (`param`, `path`, `box`, `assembly`, ...) and reads
+// CrispCAD DSL as globals (`param`, `path`, `box`, `assembly`, ...) and reads
 // the model from a top-level `return` (see `runScriptCore.ts` and
 // `kernel/backends/occt/worker.ts`). No tsconfig can include them directly, so
 // this script generates a temporary wrapper per target that

@@ -474,7 +474,7 @@ async function fetchRemotePart(
           'parts.fetch.geometry-not-brep',
           `Catalog record ${idOrQuery} is GLB-only: it has glbUrl (${meta.glbUrl}) but no stepUrl, so there is no BREP geometry to import.`,
           undefined,
-          'parts.fetch.geometry-not-brep — the authored dev-board records are served as display meshes (GLB) because their STEP exceeds the catalog file-size limit. kernelCAD has no mesh-import lowerer, so fetch_part cannot build a Shape from a GLB. Use the authored source instead: compile scripts/parts/authored/<board>.kcad.ts to STEP and load it with lib.fromSTEP(path), or pick a catalog part that exposes stepUrl.',
+          'parts.fetch.geometry-not-brep — the authored dev-board records are served as display meshes (GLB) because their STEP exceeds the catalog file-size limit. CrispCAD has no mesh-import lowerer, so fetch_part cannot build a Shape from a GLB. Use the authored source instead: compile scripts/parts/authored/<board>.kcad.ts to STEP and load it with lib.fromSTEP(path), or pick a catalog part that exposes stepUrl.',
         );
       }
       throw new KernelError(

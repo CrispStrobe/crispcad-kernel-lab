@@ -3,7 +3,7 @@
 // src/agent/cli/lib/walkSkillTree.ts
 //
 // Depth-unbounded SKILL.md discoverer. Shared by the legacy
-// `kernelcad skill install` command and the dist-publish generator.
+// `crispcad skill install` command and the dist-publish generator.
 // Returns deterministic, sort-stable entries so generator output is
 // reproducible across machines.
 

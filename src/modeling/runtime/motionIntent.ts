@@ -19,7 +19,7 @@
 // One code, `mechanism.motion-on-fixed-joint`, kept apart from the solver,
 // over-constraint and collision codes. Every message names the param or
 // drive and the joint. `checkMechanismTruth` runs this first, so
-// evaluate_script, review_cad and `kernelcad validate` all report it.
+// evaluate_script, review_cad and `crispcad validate` all report it.
 
 import type { CompilerDiagnostic } from '../../shared/diagnostics/diagnostic';
 import { HINT_TEMPLATES } from '../../shared/diagnostics/registry';

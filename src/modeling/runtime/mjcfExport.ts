@@ -16,7 +16,7 @@
 // elements, not URDF's flat <link>+<joint> table.
 //
 // Coordinate system:
-//   - kernelCAD: millimetres, world +Z up.
+//   - CrispCAD: millimetres, world +Z up.
 //   - MJCF:      metres, world +Z up by default. We convert lengths by /1000.
 //
 // Mate handling:
@@ -42,7 +42,7 @@
 //
 // Closed-loop handling:
 //   - If the mate graph has a closed loop, the converter throws. MuJoCo
-//     supports closed loops via <equality> constraints but kernelCAD's
+//     supports closed loops via <equality> constraints but CrispCAD's
 //     v0.7 corpus is all open-tree, and the P6 gate doesn't yet model
 //     tendons / equalities (that's #361). For now, reject closed loops
 //     in the runtime check and return `mechanism: 'unverified'` upstream.
@@ -93,7 +93,7 @@ export interface MjcfExportResult {
     /**
      * Ordered list of joint names that map to the MuJoCo qpos / qfrc
      * vectors. Index `i` is the model's joint #i. Each entry pairs the
-     * MJCF joint name with the kernelCAD mate name so criterion outputs
+     * MJCF joint name with the CrispCAD mate name so criterion outputs
      * (e.g. "joint <kc-mate-name> drifted N°") read in agent-native
      * terms rather than internal MJCF identifiers.
      */
@@ -101,7 +101,7 @@ export interface MjcfExportResult {
     /**
      * Ordered list of body names that map to MuJoCo body indices (0 =
      * worldbody). Used by criterion 6's drop-test to translate xpos
-     * deltas back to kernelCAD part names.
+     * deltas back to CrispCAD part names.
      */
     readonly bodyOrder: readonly string[];
     /** One line per part whose inertia the emitter had to correct (a
@@ -927,7 +927,7 @@ function mateToMjcfJoint(
 
 /**
  * Slugified per-part mesh asset name. MJCF mesh names must be unique
- * inside `<asset>`; we slug the kernelCAD part name into a stable
+ * inside `<asset>`; we slug the CrispCAD part name into a stable
  * `part-<slug>` form so `<geom mesh="...">` references stay readable
  * in diagnostic output. Run-collapses non-alphanumeric chars to single
  * '-' separators; leading/trailing separators are trimmed.
@@ -1039,7 +1039,7 @@ function crossProduct(a: Vec3, b: Vec3): Vec3 {
  * that would be serialised as a literal `0` in `fullinertia="..."`, which
  * is exactly the non-positive value MuJoCo rejects, silently undoing the
  * regularization. (2) A principal moment of 1e-9 kg·m² is sub-milligram
- * point-mass scale; any genuine kernelCAD part has far larger moments, so
+ * point-mass scale; any genuine CrispCAD part has far larger moments, so
  * the absolute floor only ever bites a degenerate/near-2D body that has no
  * meaningful rotational inertia about that axis anyway. A HEALTHY body
  * whose eigenvalues are all already ≥ eps is returned bit-for-bit

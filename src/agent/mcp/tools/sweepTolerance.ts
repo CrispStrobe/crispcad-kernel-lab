@@ -18,7 +18,7 @@ import { defaultSweepEvaluator } from '../../../composition/scriptEvaluation';
 export interface SweepToleranceInput {
   /** Path to a .kcad.ts script file. Mutually exclusive with `code`. */
   file?: string;
-  /** Inline kernelCAD script source. Mutually exclusive with `file`. */
+  /** Inline CrispCAD script source. Mutually exclusive with `file`. */
   code?: string;
   /** Assembly name when the script defines more than one. */
   assembly?: string;

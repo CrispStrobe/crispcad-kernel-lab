@@ -2,7 +2,7 @@
 //
 // DEPRECATED — superseded by the first-class CLI command:
 //
-//   kernelcad animate <script.kcad.ts> [out.mp4] [--frames <dir>] [--fps <n>] [--json]
+//   crispcad animate <script.kcad.ts> [out.mp4] [--frames <dir>] [--fps <n>] [--json]
 //   (from source: npx tsx src/agent/cli/index.ts animate ...)
 //
 // This wrapper is kept working for the docs/plans that reference it; it now
@@ -25,7 +25,7 @@ import { formatHuman } from '../src/shared/diagnostics/formatter.ts';
 
 const USAGE = `Usage: npx tsx scripts/captureAnimationView.mjs <script.kcad.ts> [outFile.mp4] [--frames <dir>]
 
-DEPRECATED: use \`kernelcad animate <script.kcad.ts> [out.mp4] [--frames <dir>]\` instead.
+DEPRECATED: use \`crispcad animate <script.kcad.ts> [out.mp4] [--frames <dir>]\` instead.
 
 Captures the script's animationView({...}) timeline.
 
@@ -75,7 +75,7 @@ if (positionals.length === 0) {
   process.exit(2);
 }
 
-console.error('DEPRECATED: scripts/captureAnimationView.mjs is superseded by `kernelcad animate <script.kcad.ts> [out.mp4] [--frames <dir>]` — delegating.');
+console.error('DEPRECATED: scripts/captureAnimationView.mjs is superseded by `crispcad animate <script.kcad.ts> [out.mp4] [--frames <dir>]` — delegating.');
 
 const scriptPath = resolve(positionals[0]);
 const framesDir = framesArg !== undefined ? resolve(framesArg) : undefined;

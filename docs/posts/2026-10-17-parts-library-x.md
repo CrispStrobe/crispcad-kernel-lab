@@ -7,7 +7,7 @@
 ## Single tweet
 
 ```
-Standard fasteners are now one call in kernelCAD.
+Standard fasteners are now one call in CrispCAD.
 
 lib.part: screws, bolts, nuts and washers by family and size (M2 to M20).
 lib.stack: give it a grip, it picks the screw length and places the washers and nut.

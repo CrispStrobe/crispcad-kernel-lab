@@ -35,7 +35,7 @@ return cap.model();
 //     options:{ format:'3mf', arrange:'assembled', printer:'bambu-a1', tolerance:0.01 }
 //   printer picks the bed (A1: 256x256x256 mm) and the slicer family
 //   (bambu here; pass slicer to override). List the ids and volumes with
-//   `kernelcad print printers` (default 'generic-fdm', 220x220x250 mm).
+//   `crispcad print printers` (default 'generic-fdm', 220x220x250 mm).
 //   -> result.mesh_deviation reports a capped sampled B-rep-to-triangle
 //      maximum and p95 in mm; it is not a certified global deviation bound.
 //   -> one 'keycap' object with parts 'shell' (filament 1, #202020) and

@@ -29,7 +29,7 @@ CAPTIONS = [
     'The exported STEP is real: 15830 mm3, one 22.5 mm bore and four 3.4 mm holes',
     'Path escape with ".." is refused before anything is written: cli.sandbox-path-denied',
     'Symlink escape: workspace/escape -> /etc is followed and refused',
-    'kernelcad mcp --sandbox: network tool arguments refused up front (cli.sandbox-network-denied)',
+    'crispcad mcp --sandbox: network tool arguments refused up front (cli.sandbox-network-denied)',
 ]
 BG, FG, DIM, PROMPT, ERR, OK, CAP = (18, 20, 24), (220, 223, 228), (130, 136, 146), (120, 200, 255), (255, 120, 110), (130, 220, 140), (255, 210, 120)
 
@@ -76,7 +76,7 @@ def frame(caption, step, cmd_typed, out_lines):
     img = Image.new('RGB', (W, H), BG)
     d = ImageDraw.Draw(img)
     d.rectangle([0, 0, W, 100], fill=(30, 33, 40))
-    d.text((40, 14), f'kernelCAD sandbox mode  ·  step {step}/6', font=FC, fill=DIM)
+    d.text((40, 14), f'CrispCAD sandbox mode  ·  step {step}/6', font=FC, fill=DIM)
     d.text((40, 54), caption, font=FC, fill=CAP)
     y = 124
     for seg in wrap('$ ' + cmd_typed):

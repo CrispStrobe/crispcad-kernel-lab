@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/modeling/export/srdf/acmDerive.ts
 //
-// Allowed-collision matrix auto-derivation from kernelCAD's existing
+// Allowed-collision matrix auto-derivation from CrispCAD's existing
 // joint graph + pose-envelope interference data. Four reasons:
 //   Adjacent  - link pair shares a joint or mate; never collides in motion
 //   Never     - pose-envelope sampling found no interference across samples

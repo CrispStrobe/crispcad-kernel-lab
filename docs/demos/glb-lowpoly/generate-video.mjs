@@ -116,7 +116,7 @@ for (let f = 0; f < frames; f++) {
     ${labels}
     <rect x="64" y="${H - 52}" width="610" height="32" rx="16" fill="#e0e9f7"/>
     <text x="84" y="${H - 31}" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing=".6" fill="#31547f">SOFTWARE RENDER OF THE EXPORTED GLB TRIANGLES · NOT THREE.JS</text>
-    <text x="${W - 64}" y="${H - 31}" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">kernelCAD · native geometry</text>
+    <text x="${W - 64}" y="${H - 31}" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#66758b">CrispCAD · native geometry</text>
   </svg>`;
   await sharp(Buffer.from(svg)).png().toFile(join(frameDir, `frame-${String(f).padStart(4, '0')}.png`));
 }

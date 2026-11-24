@@ -1,4 +1,4 @@
-# kernelCAD authoring reference — Verification
+# CrispCAD authoring reference — Verification
 
 Diagnostics and recovery, the verification gate table, and the dfmSpec print-readiness gates.
 
@@ -33,10 +33,10 @@ After authoring, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate <script>` exits 0, zero diagnostics |
+| G-eval | `crispcad evaluate <script>` exits 0, zero diagnostics |
 | G-return | Script returns a single `Shape` or `Scene` (not undefined, not an array) |
-| G-no-overlap | `kernelcad interference <script>` reports zero overlapping volumes |
-| G-no-floaters | Every named part appears at the intended position in `kernelcad render` output — nothing hovers in empty space |
+| G-no-overlap | `crispcad interference <script>` reports zero overlapping volumes |
+| G-no-floaters | Every named part appears at the intended position in `crispcad render` output — nothing hovers in empty space |
 | G-conventions | Units mm + degrees, Z-up, all transforms after edge/face features when face-ref names matter |
 
 For visual / reference-driven tasks the gate set extends — see `kernelcad-from-reference`.
@@ -112,5 +112,5 @@ Semantics that matter when authoring the declaration:
   across the parts of a posed assembly. The raw `walls[]` / `voids[]` report
   structs keep part-local coordinates.
 
-Surfaces: automatic on `kernelcad evaluate` / MCP `evaluate_script`; standalone
-report via `kernelcad dfm <file>` (`--json`) and MCP `verify({ check: 'dfm' })`.
+Surfaces: automatic on `crispcad evaluate` / MCP `evaluate_script`; standalone
+report via `crispcad dfm <file>` (`--json`) and MCP `verify({ check: 'dfm' })`.

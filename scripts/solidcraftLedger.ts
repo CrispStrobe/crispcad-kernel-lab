@@ -262,7 +262,7 @@ function validateCase(entry: LedgerCase): void {
     throw new Error(`${entry.id} has an unsupported status`);
   }
   if (entry.status === 'pending' && entry.source) {
-    throw new Error(`${entry.id} is pending and must not declare a kernelCAD source`);
+    throw new Error(`${entry.id} is pending and must not declare a CrispCAD source`);
   }
   if (entry.status !== 'pending' && !entry.source?.endsWith('.kcad.ts')) {
     throw new Error(`${entry.id} needs a .kcad.ts source`);
@@ -470,7 +470,7 @@ export function renderLedger(manifest: LedgerManifest, results: readonly LedgerR
     '',
     manifest.tolerances.notes,
     '',
-    'The table lists every vendored case. PENDING rows have no kernelCAD source and are not failures. NOT RUN rows are implemented outside this PR tier; the nightly job builds them. Measurements below are from the PR tier only, so this file does not lock a pass-count baseline and does not change when the nightly job runs.',
+    'The table lists every vendored case. PENDING rows have no CrispCAD source and are not failures. NOT RUN rows are implemented outside this PR tier; the nightly job builds them. Measurements below are from the PR tier only, so this file does not lock a pass-count baseline and does not change when the nightly job runs.',
     '',
     'Regenerate with `npm run solidcraft-ledger:regenerate`. PR CI runs `npm run test:solidcraft-ledger`. The full implemented set runs with `npm run test:solidcraft-ledger:all`. Face counts are kept in the vendored expected.json files and are not gated.',
     '',

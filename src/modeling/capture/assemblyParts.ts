@@ -814,7 +814,7 @@ export function recordPartInternal(
  * Compose another assembly into this one as a sub-assembly (Slice 1:
  * flattening import). Surfaced by Exp-E nested-sub-assembly: every CAD
  * competitor (Fusion / Onshape / ForgeCAD) treats sub-assemblies as
- * first-class, but kernelCAD had no composition API at all — agents had
+ * first-class, but CrispCAD had no composition API at all — agents had
  * to flatten by hand, losing the namespace boundary.
  *
  * This Slice copies all of `other`'s parts and mates into `state`, with

@@ -16,7 +16,7 @@
 // iterates `arm.__joints()` internally and returns an empty/no-pose result
 // on mate-only assemblies — migrating the facade to be mate-aware is a
 // separate follow-up slice. Until then the assertions below are demoted to
-// console.log so the script renders cleanly under `kernelcad render inspect`.
+// console.log so the script renders cleanly under `crispcad render inspect`.
 
 // ---- 6-DOF spherical-wrist arm ------------------------------------------
 
@@ -186,7 +186,7 @@ console.log(
     `unreachableK3=${k3}`,
 );
 
-// Return a valid Scene for kernelcad evaluate. Zero-pose puts the arm in its
+// Return a valid Scene for crispcad evaluate. Zero-pose puts the arm in its
 // nominal layout — interference gate stays clean.
 return arm.solvedModel({
   shoulderYaw: 0,

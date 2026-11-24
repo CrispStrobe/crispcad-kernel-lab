@@ -63,7 +63,7 @@ export interface RigEntry {
 export interface RigNode {
   readonly name: string;
   readonly kind: 'part' | 'pivot';
-  /** Column-major local transform in kernelCAD millimetres/Z-up coordinates. */
+  /** Column-major local transform in CrispCAD millimetres/Z-up coordinates. */
   matrix: number[];
   readonly children: RigNode[];
   readonly rig?: RigEntry;

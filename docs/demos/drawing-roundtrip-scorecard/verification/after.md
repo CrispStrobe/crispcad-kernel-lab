@@ -2,9 +2,9 @@
 
 **Result:** 15/27 parts rebuilt to the right volume and size from their drawing alone (10 wrong, 1 refused, 1 errors).
 
-Each reference part in `assets/reference-parts/scorecard.json` is drawn by kernelCAD's `pdf-drawing` exporter (automatic dimensions, A3, third-angle). `drawing_to_cad` reads only that PDF and emits a script. The script is rebuilt and measured against the analytic values. A part passes when its volume is within ±0.1% (a mass check) and every bbox extent is within 0.05 mm.
+Each reference part in `assets/reference-parts/scorecard.json` is drawn by CrispCAD's `pdf-drawing` exporter (automatic dimensions, A3, third-angle). `drawing_to_cad` reads only that PDF and emits a script. The script is rebuilt and measured against the analytic values. A part passes when its volume is within ±0.1% (a mass check) and every bbox extent is within 0.05 mm.
 
-**Scope:** these are clean vector sheets drawn by kernelCAD itself, so the score is an upper bound on what the reader does with third-party drawings. Scanned or raster drawings are out of scope for this reader (see the last section).
+**Scope:** these are clean vector sheets drawn by CrispCAD itself, so the score is an upper bound on what the reader does with third-party drawings. Scanned or raster drawings are out of scope for this reader (see the last section).
 
 Regenerate with `npm run drawing-roundtrip:scorecard`.
 

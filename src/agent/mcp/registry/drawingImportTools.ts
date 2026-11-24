@@ -31,10 +31,10 @@ const drawingToCadToolEntry: ToolRegistryEntry = {
     inputSchema: {
       type: 'object',
       properties: {
-        path: { type: 'string', description: 'Path to the drawing PDF on the machine running kernelCAD.' },
+        path: { type: 'string', description: 'Path to the drawing PDF on the machine running CrispCAD.' },
         pdf_base64: {
           type: 'string',
-          description: 'The PDF inline, base64-encoded. Use this instead of `path` against a hosted kernelCAD server.',
+          description: 'The PDF inline, base64-encoded. Use this instead of `path` against a hosted CrispCAD server.',
         },
         page: { type: 'integer', minimum: 1, description: '1-based page to read. Default 1.' },
         projection: {

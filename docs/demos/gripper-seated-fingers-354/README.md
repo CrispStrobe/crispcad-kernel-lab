@@ -2,7 +2,7 @@
 
 `demo.mp4` (H.264, 1280×720, 20 fps, 10.1 s) shows
 `examples/robot-hand/two-finger-coupled-gripper.kcad.ts` before and after
-the repair. Every frame is a local `kernelcad render` of the example source;
+the repair. Every frame is a local `crispcad render` of the example source;
 no frame is edited.
 
 | Segment | Source | View |

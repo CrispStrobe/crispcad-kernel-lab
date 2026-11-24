@@ -13,7 +13,7 @@ Build a polished pop-art octagonal pocket watch with a vivid coral frame, yellow
 
 | File | Description |
 |------|-------------|
-| `build.kcad.ts` | kernelCAD source script |
+| `build.kcad.ts` | CrispCAD source script |
 | `build.mp4` | Build + rotate demo video |
 | `build.step` | STEP export (multi-body, preserves part names) |
 | `build.stl` | STL export (merged mesh) |

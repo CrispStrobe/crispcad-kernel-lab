@@ -1,11 +1,11 @@
 ---
 name: use-the-available-kernel
-description: Hard rules for which kernelCAD primitive to reach for when authoring from a reference photo. The from-reference loop fails most often because the author defaults to easy primitives and skips ones that exist. Read before writing any geometry.
+description: Hard rules for which CrispCAD primitive to reach for when authoring from a reference photo. The from-reference loop fails most often because the author defaults to easy primitives and skips ones that exist. Read before writing any geometry.
 ---
 
 # use-the-available-kernel
 
-The from-reference loop fails most often not because kernelCAD lacks a
+The from-reference loop fails most often not because CrispCAD lacks a
 primitive, but because the author did not reach for one that exists. This skill
 is a checklist of hard rules: when condition X holds in the reference, USE
 primitive Y.
@@ -202,7 +202,7 @@ If the eval task ships a reference STL (check `eval/tasks/<task>/reference.stl`)
 USE the geometric scorer:
 
 ```bash
-kernelcad export stl my-build.kcad.ts -o build.stl
+crispcad export stl my-build.kcad.ts -o build.stl
 npx tsx scripts/scoreMeshVsMesh.ts \
   --generated build.stl \
   --reference eval/tasks/<task>/reference.stl --json
@@ -229,7 +229,7 @@ boolean-ing:
    the coincident edges into one closed shell. `requireClosed: true` throws
    `feature.surface-sew.open-shell` immediately if the result is still open,
    letting you catch authoring gaps early rather than at export.
-3. **check the result is closed** — run `kernelcad evaluate` and confirm there
+3. **check the result is closed** — run `crispcad evaluate` and confirm there
    are no open-shell or watertight diagnostics.
 4. **draft for mold release** — if the finished solid must release from a mold,
    call `.draft(angleDeg, { face, neutralPlane?, pullDir? })` on the face(s)

@@ -11,8 +11,8 @@ export const referenceExportToolEntries: ToolRegistryEntry[] = [
     definition: {
       name: 'lookup_api',
       description:
-        'Use this when you need to list the kernelCAD script-runtime surface: global functions (box, path, selectEdges, helix, etc), Shape methods (fillet, sweep, lower, etc), Sketch methods (extrude, revolve, sweep), PathBuilder methods, EdgeQuery/FaceQuery key sets, and featureKindFaceLabels (which globals accept opts.faceLabels and valid value shapes). Use this to discover what is callable from a .kcad.ts script.' +
-        ' Call this BEFORE concluding kernelCAD lacks a capability — its NURBS freeform surfacing (loft, sweep, boundary-fill, G2 blend) is easy to miss from tool names alone.' +
+        'Use this when you need to list the CrispCAD script-runtime surface: global functions (box, path, selectEdges, helix, etc), Shape methods (fillet, sweep, lower, etc), Sketch methods (extrude, revolve, sweep), PathBuilder methods, EdgeQuery/FaceQuery key sets, and featureKindFaceLabels (which globals accept opts.faceLabels and valid value shapes). Use this to discover what is callable from a .kcad.ts script.' +
+        ' Call this BEFORE concluding CrispCAD lacks a capability — its NURBS freeform surfacing (loft, sweep, boundary-fill, G2 blend) is easy to miss from tool names alone.' +
         ' Pass { query } to search by what you want to do or by the name you would reach for in another CAD scripting vocabulary ("counterbore", "polar array", "arcTo", "workplane", ">Z"): matching entries come back with full signatures, and `idioms` says what to write here instead. Without a query every entry comes back in compact form.',
       inputSchema: {
         type: 'object',
@@ -30,7 +30,7 @@ export const referenceExportToolEntries: ToolRegistryEntry[] = [
     definition: {
       name: 'lookup_diagnostics',
       description:
-        'Use this when you need the kernelCAD 26-code diagnostic catalogue with hint templates. ' +
+        'Use this when you need the CrispCAD 26-code diagnostic catalogue with hint templates. ' +
         'Tiny one-shot call; useful for an agent that wants to pre-populate ' +
         'retry strategies. Hints are also inline on every emitted diagnostic — ' +
         'this tool just gives you the canonical list up front.',
@@ -102,7 +102,7 @@ export const referenceExportToolEntries: ToolRegistryEntry[] = [
             description: "Which exporter to run: 'model' (whole-script geometry to one file) or 'part' (per-part STLs from a solved assembly).",
           },
           file: { type: 'string', description: 'Path to a .kcad.ts script file.' },
-          code: { type: 'string', description: 'Inline kernelCAD script source.' },
+          code: { type: 'string', description: 'Inline CrispCAD script source.' },
           output_path: { type: 'string', description: "Destination path (a directory for format 'bend-table'). target:'model' — the export file (required). target:'part' — single-part .stl path." },
           format: {
             type: 'string',
@@ -117,10 +117,10 @@ export const referenceExportToolEntries: ToolRegistryEntry[] = [
               'step: { unit?: "mm"|"cm"|"in", verify?: boolean } (verify defaults to true and checks B-rep validity plus mesh watertightness; false skips both). ' +
               'stl: { verify?: boolean, tolerance?: mm (finite, >= 0.001; absolute sampled chord-deviation target), angularToleranceDeg?: degrees }. ' +
               'dxf: { layers?, unit?: "mm"|"cm"|"in", tolerance?, section?: { axis: "x"|"y"|"z", at: mm }, layout?: "per-part"|"sheet" }. ' +
-              '3mf: { tolerance?: mm (finite, >= 0.001), angularToleranceDeg?: degrees, printUnit?: "mm"|"cm"|"in", embedSource?, arrange?: "none"|"plate"|"assembled", orient?: boolean, slicer?: "generic"|"bambu"|"orca"|"prusa", printer?: printer profile id, one of ' + PRINTER_PROFILE_IDS.map(id => `"${id}"`).join('|') + ' (default "generic-fdm"; sets the bed for arrange and the slicer default; an unknown id is refused with the valid list; CLI: kernelcad print printers) }; parts that do not fit the bed are still written and reported as warn diagnostics export.3mf.plate-overflow / export.3mf.exceeds-bed, whose hint names the smallest profiles the layout fits on. ' +
+              '3mf: { tolerance?: mm (finite, >= 0.001), angularToleranceDeg?: degrees, printUnit?: "mm"|"cm"|"in", embedSource?, arrange?: "none"|"plate"|"assembled", orient?: boolean, slicer?: "generic"|"bambu"|"orca"|"prusa", printer?: printer profile id, one of ' + PRINTER_PROFILE_IDS.map(id => `"${id}"`).join('|') + ' (default "generic-fdm"; sets the bed for arrange and the slicer default; an unknown id is refused with the valid list; CLI: crispcad print printers) }; parts that do not fit the bed are still written and reported as warn diagnostics export.3mf.plate-overflow / export.3mf.exceeds-bed, whose hint names the smallest profiles the layout fits on. ' +
               'gcode: { printer?: printer profile id, layerHeight?: mm, infill?: percent, supports?: boolean, material?: string }; requires a locally installed OrcaSlicer. Returns slicer predictions as gcode_stats; does not start a printer. ' +
               'glb: { axis?: "y-up"|"z-up", draco?: false, style?: "pbr"|"lowpoly", lowpoly?: { angularDeg?: 5..60 (default 30, about 12 segments per circle), maxTriangles?: number }, units?: "mm"|"m" (default "m", the glTF length unit) }. ' +
-              'Both GLB styles default to metres and scale kernelCAD millimetre geometry at the scene root, so standard glTF viewers show the authored physical size. units:"mm" keeps raw millimetre coordinates and records that choice in asset.extras.kernelcad.units for consumers that read kernelCAD metadata; standard viewers still interpret raw coordinates as metres. style "lowpoly" writes a faceted, flat-shaded game asset with every opaque part coloured through COLOR_0 on one shared material "kernelcad-palette" (merges to one draw call); asset.extras.kernelcad carries stats { triangles, sizeM, minUpM, materials, drawCalls, parts, hasRig, hasIk } and palette zones; exceeding maxTriangles fails with export.glb.triangle-budget. ' +
+              'Both GLB styles default to metres and scale CrispCAD millimetre geometry at the scene root, so standard glTF viewers show the authored physical size. units:"mm" keeps raw millimetre coordinates and records that choice in asset.extras.kernelcad.units for consumers that read CrispCAD metadata; standard viewers still interpret raw coordinates as metres. style "lowpoly" writes a faceted, flat-shaded game asset with every opaque part coloured through COLOR_0 on one shared material "kernelcad-palette" (merges to one draw call); asset.extras.kernelcad carries stats { triangles, sizeM, minUpM, materials, drawCalls, parts, hasRig, hasIk } and palette zones; exceeding maxTriangles fails with export.glb.triangle-budget. ' +
               'asset-pack takes no extra keys: it zips the default-parameter GLB (named materials and mesh stats) with the script when the licence allows it, params JSON, a knob README, an SPDX licence, a three.js viewer and a sha256 manifest. ' +
               'obj: { tolerance?: mm (finite, >= 0.001), angularToleranceDeg?: degrees }; usd writes ASCII USDA (millimeter, Z-up). ' +
               'ply: { encoding?: "binary"|"ascii" (default "binary" = binary_little_endian), normals?: boolean (default true; vertices split at creases over 30°), colors?: "vertex"|"face"|"none" (default "vertex": uchar red/green/blue per vertex; "face" puts them on the face element) }; any other key or value fails with export.ply.invalid-options. ' +

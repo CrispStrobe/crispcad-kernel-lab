@@ -127,7 +127,7 @@ function sceneOne(evidence: Evidence): string {
   const content = `<rect x="72" y="140" width="1136" height="416" rx="20" fill="#111c2d" stroke="#334155"/>
     <text x="98" y="186" fill="#37d6b0" font-family="Arial,sans-serif" font-size="19" font-weight="700">${xml(evidence.source)} (excerpt)</text>${code}
     <rect x="72" y="574" width="1136" height="70" rx="14" fill="#142235" stroke="#29445c"/>
-    <text x="98" y="617" fill="#f8fafc" font-family="monospace" font-size="21">kernelcad export step panel-with-fasteners.kcad.ts -o panel.step</text>`;
+    <text x="98" y="617" fill="#f8fafc" font-family="monospace" font-size="21">crispcad export step panel-with-fasteners.kcad.ts -o panel.step</text>`;
   return shell('Export an assembly with repeated parts to STEP', 'The script places one standoff shape three times and one catalog screw four times.', content);
 }
 

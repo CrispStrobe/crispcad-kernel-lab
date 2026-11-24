@@ -15,7 +15,7 @@
 // Cache layout (server only):
 //   ~/.cache/kernelcad/textures/<sha256(url)>.<ext>
 //
-// Note: this is the FIRST kernelCAD module to use a user-cache pattern; the
+// Note: this is the FIRST CrispCAD module to use a user-cache pattern; the
 // fonts loader (src/shared/fonts/index.ts) does not yet — fonts will follow
 // when bundle-shipped fonts become insufficient. Mirroring this loader's
 // directory layout is the intended convergence path.

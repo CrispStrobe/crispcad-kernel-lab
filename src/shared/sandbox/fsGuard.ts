@@ -3,7 +3,7 @@
 //
 // Sandbox filesystem CHOKEPOINT.
 //
-// kernelCAD reaches the filesystem from ~75 modules (exporters, importers,
+// CrispCAD reaches the filesystem from ~75 modules (exporters, importers,
 // render/inspect bundles, caches, the parts catalog, user scripts through the
 // host-fs port). Rather than sprinkle a check into each, sandbox mode wraps
 // the path-taking functions of `node:fs` and `node:fs/promises` ONCE and then

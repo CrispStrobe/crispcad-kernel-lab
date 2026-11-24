@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/reconstruct.ts
 //
-// `kernelcad reconstruct <mesh> [-o out.kcad.ts]` — the CLI face of the
+// `crispcad reconstruct <mesh> [-o out.kcad.ts]` — the CLI face of the
 // `mesh_to_features` MCP tool: STL / OBJ / 3MF / STEP → editable .kcad.ts
 // feature tree, verified against the source (volume IoU + surface deviation).
 //

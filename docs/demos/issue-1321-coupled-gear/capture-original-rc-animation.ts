@@ -154,7 +154,7 @@ async function main(): Promise<void> {
       durationMs: 4000,
       fps: 24,
       encodedFrameCount: 0,
-      encodingFailure: 'ffmpeg was not found on the kernelCAD server PATH.',
+      encodingFailure: 'ffmpeg was not found on the CrispCAD server PATH.',
     },
     hostedPhysicsVerification: {
       ok: true,

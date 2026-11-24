@@ -16,7 +16,7 @@ export const sketchAssemblyToolEntries: ToolRegistryEntry[] = [
       name: 'solve_sketch',
       description:
         'Use this when you need to solve a 2D sketch constraint set. ' +
-        'Solve a 2D sketch constraint set. Side-effect-free: pass { entities, constraints } and receive solved entities plus the original constraints. Entities are POINT, LINE, and CIRCLE records; constraints use the kernelCAD constraint vocabulary.',
+        'Solve a 2D sketch constraint set. Side-effect-free: pass { entities, constraints } and receive solved entities plus the original constraints. Entities are POINT, LINE, and CIRCLE records; constraints use the CrispCAD constraint vocabulary.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -105,7 +105,7 @@ export const sketchAssemblyToolEntries: ToolRegistryEntry[] = [
     definition: {
       name: 'add_part',
       description:
-        'Use this when you need to add a part to an assembly. Durably insert `const <binding> = <assembly>.part(partName, shapeExpression, opts?)` before the final top-level return in a kernelCAD source string. Returns modified source plus diagnostics from re-evaluating it. Side-effect-free: caller persists the returned source.',
+        'Use this when you need to add a part to an assembly. Durably insert `const <binding> = <assembly>.part(partName, shapeExpression, opts?)` before the final top-level return in a CrispCAD source string. Returns modified source plus diagnostics from re-evaluating it. Side-effect-free: caller persists the returned source.',
       inputSchema: {
         type: 'object',
         properties: {

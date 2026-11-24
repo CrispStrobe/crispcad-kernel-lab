@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
 // Injection-moulding DFM demo: run the dfmSpec({ process: 'moulding' }) gate
-// (the `kernelcad dfm` evaluate path) on three revisions of an enclosure base
+// (the `crispcad dfm` evaluate path) on three revisions of an enclosure base
 // and render each one coloured by its own moulding report — red: undercut
 // face, amber: face below minDraftDeg, blue-grey: face that passes. Every
 // colour is a face ref the report named; the mesh is the kernel's own
@@ -132,9 +132,9 @@ async function frame(tris: Tri[], yaw: number, lines: string[], verdict: 'pass' 
 
 function captionFor(name: string, r: Awaited<ReturnType<typeof evaluate>>['result']): string[] {
   const head: Record<string, string> = {
-    'straight-walls': '1/3  Straight walls — kernelcad dfm straight-walls.kcad.ts',
-    'wrong-draft': '2/3  1.5° draft the wrong way — kernelcad dfm wrong-draft.kcad.ts',
-    enclosure: '3/3  1.5° outward draft + r1 inside fillets — kernelcad dfm enclosure.kcad.ts',
+    'straight-walls': '1/3  Straight walls — crispcad dfm straight-walls.kcad.ts',
+    'wrong-draft': '2/3  1.5° draft the wrong way — crispcad dfm wrong-draft.kcad.ts',
+    enclosure: '3/3  1.5° outward draft + r1 inside fillets — crispcad dfm enclosure.kcad.ts',
   };
   const c = r.diagnosticCounts;
   const line2 = `draft min ${r.minDraftDeg.toFixed(2)}° · ${r.underDraftedFaces.length} faces under 1° · undercut ${r.undercutAreaMm2.toFixed(1)} mm² on ${r.undercutFaces} faces`;

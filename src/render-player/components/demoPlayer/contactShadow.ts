@@ -12,7 +12,7 @@
 // plane only carries alpha. Baked once per stage apply (the turntable's
 // model is static), so the per-frame cost is one textured quad.
 //
-// kernelCAD is Z-up: the ground is the XY plane at the model's min Z.
+// CrispCAD is Z-up: the ground is the XY plane at the model's min Z.
 
 import * as THREE from 'three';
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';

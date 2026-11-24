@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// Export quality gate demo. Runs the real `kernelcad export` CLI on a plate
+// Export quality gate demo. Runs the real `crispcad export` CLI on a plate
 // with a 0.005 mm sliver step (default warn, then --quality-gate block) and
 // on the fixed plate. It captures the terminal output, renders each model
 // from its own exported OBJ mesh with the gate's worst findings marked, and

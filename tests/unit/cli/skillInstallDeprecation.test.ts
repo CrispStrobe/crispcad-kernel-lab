@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { installCommand } from '../../../src/agent/cli/commands/skill';
 
-describe('kernelcad skill install (deprecation notice)', () => {
+describe('crispcad skill install (deprecation notice)', () => {
   let errSpy: ReturnType<typeof vi.spyOn>;
   beforeEach(() => {
     errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

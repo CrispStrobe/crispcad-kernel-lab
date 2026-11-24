@@ -54,7 +54,7 @@ type ReplicadShape3D = replicad.Shape3D;
 /**
  * `ShapeBackend` implementation backed by Replicad / OpenCascade.
  *
- * Wraps a `replicad.Shape3D` and exposes the canonical kernelCAD operations
+ * Wraps a `replicad.Shape3D` and exposes the canonical CrispCAD operations
  * (transforms, booleans, measurements, exports). Static factories
  * (`box`, `cylinder`, `sphere`, plus extrude/revolve helpers) build new
  * shapes; instance methods are immutable — every transform/boolean returns
@@ -873,7 +873,7 @@ export class OcctBackend implements ShapeBackend {
    * Note on naming: this method calls the underlying Replicad `mirror()`
    * primitive, which is a pure-reflection operation (replaces the shape
    * with its reflection — does NOT perform a boolean union with the source).
-   * kernelCAD's user-facing `Shape.mirror()` is a separate higher-level
+   * CrispCAD's user-facing `Shape.mirror()` is a separate higher-level
    * method that does perform the union (the symmetric-part shortcut);
    * see `Shape.mirror` in `src/modeling/capture/proxy.ts`. Different verbs, different
    * layers — both names appear in our API for clarity.
@@ -888,7 +888,7 @@ export class OcctBackend implements ShapeBackend {
    *              plane at the given offset along the plane's normal axis.
    */
   reflect(plane: PlaneSpec): OcctBackend {
-    // Map kernelCAD cardinal names to Replicad's PlaneName (uppercase).
+    // Map CrispCAD cardinal names to Replicad's PlaneName (uppercase).
     const cardinalToReplicad: Record<CardinalPlane, 'XY' | 'XZ' | 'YZ'> = {
       xy: 'XY',
       xz: 'XZ',
@@ -1315,7 +1315,7 @@ export class OcctBackend implements ShapeBackend {
    *
    * BREP is lossless (exact surfaces + full topology, no schema translation
    * and no tessellation), which is what makes it the honest format for
-   * moving kernel state between kernelCAD processes. It is OCCT-specific:
+   * moving kernel state between CrispCAD processes. It is OCCT-specific:
    * for interchange with other CAD systems, use STEP.
    */
   exportBREP(): Uint8Array {

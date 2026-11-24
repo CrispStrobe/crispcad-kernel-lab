@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/cli/commands/validate.ts
 //
-// `kernelcad validate <file.kcad.ts>` — runs the MVP assembly validator
+// `crispcad validate <file.kcad.ts>` — runs the MVP assembly validator
 // against the script's resulting Scene. Catches floating parts, orphan
 // sub-assemblies, and interferences in one pass.
 //
@@ -19,7 +19,7 @@
 // agent can't claim a working build while the loop disagrees.
 //
 // Pipe-friendly:
-//   kernelcad validate so100.kcad.ts && echo "fits"
+//   crispcad validate so100.kcad.ts && echo "fits"
 
 import { Command } from 'commander';
 import { readFile } from 'node:fs/promises';
@@ -52,10 +52,10 @@ export interface ValidateCliInput {
   json: boolean;
   /** Fold interference results into the validator stream. Off by default —
    *  intentional joint contacts (shaft-through-bore, yoke embracing a
-   *  servo) routinely clash by design; `kernelcad interference` remains
+   *  servo) routinely clash by design; `crispcad interference` remains
    *  the dedicated surface for clash review. */
   includeInterference: boolean;
-  /** Same epsilon as `kernelcad interference`; only consulted when
+  /** Same epsilon as `crispcad interference`; only consulted when
    *  --include-interference is set. */
   epsilon: number;
   /** Run lowered-geometry physical plausibility checks in addition to the
@@ -66,7 +66,7 @@ export interface ValidateCliInput {
   /** P6: run the MuJoCo-based physics gate (static-equilibrium + drop-
    *  on-release). Off unless requested. Defaults to ON whenever
    *  --include-interference is set, mirroring the kinematic gate's
-   *  opt-in posture — the cheap default `kernelcad validate` stays free
+   *  opt-in posture — the cheap default `crispcad validate` stays free
    *  of the ~9 MB WASM load. */
   includePhysics: boolean;
 }
@@ -101,7 +101,7 @@ export async function runValidateCli(input: ValidateCliInput): Promise<ValidateC
   // Interferences are off by default — intentional joint contacts
   // routinely clash by design. Agents who want them in the validator
   // stream pass --include-interference (and get the same epsilon
-  // semantics as `kernelcad interference`).
+  // semantics as `crispcad interference`).
   //
   // The script is executed ONCE and its record stream lowered ONCE; the
   // same session feeds the mechanism probe below. Previously this path ran
@@ -353,7 +353,7 @@ export function validateCommand(): Command {
   return new Command('validate')
     .description('Validate an assembly: floating parts, orphan clusters, interferences')
     .argument('<file>', 'path to .kcad.ts script')
-    .option('--include-interference', 'also report BREP clashes (off by default; use kernelcad interference for the dedicated surface)', false)
+    .option('--include-interference', 'also report BREP clashes (off by default; use crispcad interference for the dedicated surface)', false)
     .option('--physical', 'also run lowered-geometry physical plausibility checks for disconnected solids and unsupported fixed joints', false)
     .option('--epsilon <mm3>', 'interference volume threshold (only consulted with --include-interference)', (v) => parseFloat(v), 0.01)
     .option('--include-physics', 'run the MuJoCo-based physics gate (static equilibrium + drop-on-release). Defaults to on whenever --include-interference is set.')

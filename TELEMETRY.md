@@ -1,40 +1,15 @@
-# kernelCAD Telemetry
+# Telemetry
 
-kernelCAD collects **anonymous** usage statistics to understand how the tool
-is used and where it fails, so we can improve it. Participation is optional.
+CrispCAD sends no telemetry by default and ships no collector endpoint.
 
-## What is collected
+- Telemetry is off unless you run `crispcad telemetry enable` **and** set
+  `CRISPCAD_TELEMETRY_URL` to a collector you operate. Without that URL nothing is
+  sent, even when enabled.
+- Off-switches always win: `KERNELCAD_TELEMETRY=0`, `KERNELCAD_TELEMETRY_DISABLED=1`,
+  `DO_NOT_TRACK=1`, `CI=true`, and sandbox mode.
+- When enabled, events contain only the allow-listed fields in
+  `src/shared/telemetry/types.ts` (tool name, outcome, diagnostic code, versions,
+  durations, an anonymous install id) — never prompts, code, designs or paths.
+- `KERNELCAD_TELEMETRY_DEBUG=1` prints events to stderr instead of sending them.
 
-Each event contains only:
-
-- the tool name invoked (e.g. `extrude`, `fillet`)
-- outcome (`ok` / `error`) and a canonical diagnostic code on failure
-- duration in milliseconds
-- derived structural counts: feature count, interference count, eval-ok flag,
-  number of tool calls in the session, and which operation kinds were used
-- kernelCAD CLI + kernel version, OS, Node.js version
-- whether you ran locally or via the hosted gateway
-- a random, anonymous install id and a per-run session id
-
-## What is NEVER collected
-
-We do not collect — and the client physically refuses to send (enforced by a
-field allowlist) — any of the following: your prompts, your `.kcad.ts` code,
-geometry or coordinates, file paths or names, environment variables, logs,
-serialized errors, or any account identity on the local path.
-
-## How to disable
-
-Any one of these turns telemetry off:
-
-- `kernelcad telemetry disable`
-- `KERNELCAD_TELEMETRY=0` or `KERNELCAD_TELEMETRY_DISABLED=1`
-- `DO_NOT_TRACK=1`
-- running in CI (`CI=true`) — off by default
-- sandbox mode (`--sandbox` / `KERNELCAD_SANDBOX=1`): telemetry is forced off,
-  no first-run notice is shown, no install id is written, and outbound network
-  is refused anyway ([docs/sandbox.md](docs/sandbox.md))
-
-Check the current state with `kernelcad telemetry status`. Inspect exactly what
-would be sent without sending anything with `KERNELCAD_TELEMETRY_DEBUG=1`
-(payloads print to stderr). `kernelcad telemetry reset` forgets your install id.
+There is no first-run notice because nothing is collected by default.

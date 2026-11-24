@@ -3,7 +3,7 @@
 // src/agent/mcp/tools/diffScripts.ts
 //
 // MCP `diff_scripts` — structured geometric delta between two versions of a
-// kernelCAD script (a baseline and a revision). Built for the agent
+// CrispCAD script (a baseline and a revision). Built for the agent
 // iteration loop: after editing a `.kcad.ts` source, diff it against the
 // saved baseline to see exactly WHAT changed physically — per-part
 // added/removed/renamed/changed (volume + bbox deltas), total
@@ -17,7 +17,7 @@
 //   `volume()` / `boundingBox({ exact: true })` calls as `list_part_stats`,
 //   so part numbers match that tool exactly,
 // - interference: `detectInterferences` (the same primitive behind
-//   `kernelcad interference` and the mechanism-validity gate),
+//   `crispcad interference` and the mechanism-validity gate),
 // - mates: `arm.__mates()` (the `list_mates` accessor),
 // - params: `session.params.list()` (the `params_list` accessor).
 //
@@ -59,7 +59,7 @@ export interface DiffScriptsInput {
 export const ROOT_PART_NAME = '(root)';
 
 /** Treat an intersection below this volume as "touching", matching the
- *  `kernelcad interference` CLI default. */
+ *  `crispcad interference` CLI default. */
 const INTERFERENCE_EPSILON_MM3 = 0.01;
 
 /** Absolute tolerance (mm / mm³) below which a numeric delta is noise. */

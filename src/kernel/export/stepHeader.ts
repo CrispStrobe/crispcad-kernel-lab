@@ -6,8 +6,8 @@
 //
 // OCCT writes FILE_NAME(name, time_stamp, (author), (organization),
 // preprocessor_version, originating_system, authorization) with
-// originating_system = 'Open CASCADE <ver>'. kernelCAD is the originating
-// system of a kernelCAD export, and OCCT stays named as the preprocessor, so
+// originating_system = 'Open CASCADE <ver>'. CrispCAD is the originating
+// system of a CrispCAD export, and OCCT stays named as the preprocessor, so
 // only the 6th argument changes. The 2nd (time_stamp) can be pinned for
 // reproducible output. The DATA section is never touched.
 

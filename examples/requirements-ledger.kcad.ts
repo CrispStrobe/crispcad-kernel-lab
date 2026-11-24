@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-/* eslint-disable @typescript-eslint/no-require-imports -- require() is the kernelCAD requirements API (S2), not a module import. */
+/* eslint-disable @typescript-eslint/no-require-imports -- require() is the CrispCAD requirements API (S2), not a module import. */
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
 // One requirements ledger (S2). Every declared requirement is measured by the
 // kernel on every evaluation and reported in `requirements`:
-//   kernelcad evaluate examples/requirements-ledger.kcad.ts --json
+//   crispcad evaluate examples/requirements-ledger.kcad.ts --json
 //   npx tsx src/agent/cli/index.ts evaluate examples/requirements-ledger.kcad.ts
 //
 // The bore count, envelope, volume and wall gap below are deliberately

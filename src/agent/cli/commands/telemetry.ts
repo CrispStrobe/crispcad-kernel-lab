@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/telemetry.ts
 //
-// `kernelcad telemetry status|enable|disable|reset` — manage anonymous
+// `crispcad telemetry status|enable|disable|reset` — manage anonymous
 // usage telemetry. See TELEMETRY.md for exactly what is collected.
 import { Command } from 'commander';
 import { randomUUID } from 'node:crypto';

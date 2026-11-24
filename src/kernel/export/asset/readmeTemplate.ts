@@ -91,11 +91,11 @@ function loadBlock(id: string): string {
     '',
     '### Unity',
     '',
-    `Import \`${glb}\` with glTFast or another glTF importer. The bundled GLB uses Y-up and glTF's metre units; kernelCAD's millimetre coordinates are scaled by 0.001 at the scene root.`,
+    `Import \`${glb}\` with glTFast or another glTF importer. The bundled GLB uses Y-up and glTF's metre units; CrispCAD's millimetre coordinates are scaled by 0.001 at the scene root.`,
     '',
     '### Blender',
     '',
-    `Use File → Import → glTF 2.0 and choose \`${glb}\`. Material names on the meshes are the names kernelCAD wrote into the file.`,
+    `Use File → Import → glTF 2.0 and choose \`${glb}\`. Material names on the meshes are the names CrispCAD wrote into the file.`,
     '',
   ].join('\n');
 }
@@ -106,7 +106,7 @@ function regenerateBlock(input: AssetPackReadmeInput): string {
     '## Regenerate',
     '',
     '```',
-    `kernelcad export asset-pack ${source} -o ${input.id}.zip`,
+    `crispcad export asset-pack ${source} -o ${input.id}.zip`,
     '```',
     '',
   ].join('\n');

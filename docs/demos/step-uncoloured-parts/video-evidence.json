@@ -33,7 +33,7 @@
   "posterSha256": "7dac35da305847e45b4858e4cf7cfa55fbc9cac772a1911bfb815eed456b6660",
   "videoSha256": "481b58c53e18a57cafad5e8bd98ab6ddd4c622034513dab3728d1a3f477c7724",
   "inspection": "Both scenes extracted from the final MP4 and visually reviewed after generation.",
-  "scope": "Local kernelCAD Node API: STEP export of an assembly that sets no colours, text check for colour entities, read-back through the OCCT XCAF STEP reader, and import as a KernelCAD project.",
+  "scope": "Local CrispCAD Node API: STEP export of an assembly that sets no colours, text check for colour entities, read-back through the OCCT XCAF STEP reader, and import as a KernelCAD project.",
   "simulationRun": false,
   "deployed": false,
   "hardwareAccepted": false

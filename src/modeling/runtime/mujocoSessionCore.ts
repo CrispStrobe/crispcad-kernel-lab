@@ -20,7 +20,7 @@
 //   - Session.dispose()
 //
 // Coordinate units: MuJoCo SI throughout (radians, metres, kg, seconds).
-// The MJCF emitter converts kernelCAD's mm/deg up-front; downstream
+// The MJCF emitter converts CrispCAD's mm/deg up-front; downstream
 // criterion code converts back as needed for diagnostic messages.
 
 // We type the mujoco module loosely; the generated package declarations

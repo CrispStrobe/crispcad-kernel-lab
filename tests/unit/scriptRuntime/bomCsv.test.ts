@@ -42,7 +42,7 @@ const ROWS: BomRow[] = [
 const EXPECTED_CSV =
   'item,name,quantity,kind,material,densityKgM3,massGPerUnit,massGTotal,bboxMinX,bboxMinY,bboxMinZ,bboxMaxX,bboxMaxY,bboxMaxZ,process,stock,vendor,partNumber,license,source,instancePaths\n' +
   '1,plate,1,fabricated,aluminum,2700,194.4,194.4,0,0,0,200,120,3,3d-print,plate 200x120x3 mm,,,,,plate\n' +
-  '2,screw_0,4,purchased,,,,,-1.9,-1.89,-4,1.9,1.89,2,,,kernelCAD catalog,ISO 4762,MIT,,screw_0;screw_1;screw_2;screw_3\n';
+  '2,screw_0,4,purchased,,,,,-1.9,-1.89,-4,1.9,1.89,2,,,CrispCAD catalog,ISO 4762,MIT,,screw_0;screw_1;screw_2;screw_3\n';
 
 describe('bomToCsv', () => {
   it('matches the golden header + row layout', () => {

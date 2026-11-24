@@ -3,7 +3,7 @@
 // src/agent/mcp/tools/diffGeometry.ts
 //
 // MCP `diff_geometry` — MATERIAL-level delta between two versions of a
-// kernelCAD model. The deeper sibling of `diff_scripts`.
+// CrispCAD model. The deeper sibling of `diff_scripts`.
 //
 // `diff_scripts` answers "which parts changed, and by how much volume".
 // That number is sign-ambiguous about WHERE material moved: a boss that grew

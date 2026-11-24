@@ -1,9 +1,9 @@
 ---
 name: kernelcad-cfd
-description: Answer "how much pressure does this duct, pipe or manifold cost, how does the flow split, and how much drag does this part see?" with OpenFOAM evidence — declare a steady incompressible flow study with shape.cfdStudy({ flow, fluid, inlet, outlet, velocity | flowRateLpm }) or pass it on the call, then run it with run_cfd (or `kernelcad cfd run`) for pressure drop, per-outlet flow and mass balance, drag / lift with Cd / Cl, max velocity, the Reynolds number and turbulence model, a residual history with a convergence verdict, checkMesh quality and a mid-plane velocity PNG. Use when sizing a coolant manifold, air duct, nozzle or pipe run, or when a part sits in a stream.
+description: Answer "how much pressure does this duct, pipe or manifold cost, how does the flow split, and how much drag does this part see?" with OpenFOAM evidence — declare a steady incompressible flow study with shape.cfdStudy({ flow, fluid, inlet, outlet, velocity | flowRateLpm }) or pass it on the call, then run it with run_cfd (or `crispcad cfd run`) for pressure drop, per-outlet flow and mass balance, drag / lift with Cd / Cl, max velocity, the Reynolds number and turbulence model, a residual history with a convergence verdict, checkMesh quality and a mid-plane velocity PNG. Use when sizing a coolant manifold, air duct, nozzle or pipe run, or when a part sits in a stream.
 ---
 
-# kernelCAD — CFD (OpenFOAM)
+# CrispCAD — CFD (OpenFOAM)
 
 Declare the flow in the model, run the solver, read the evidence.
 
@@ -35,8 +35,8 @@ run_cfd({ file: 'manifold.kcad.ts', output_dir: '/tmp/manifold-cfd' })
 
 The same study on the call, without a declaration:
 `run_cfd({ code, flow: 'external', fluid: 'air', velocity: 10, direction: '+X' })`.
-From the shell: `kernelcad cfd run part.kcad.ts [--flow ... --inlet '{"atX":0}' ...]`;
-`kernelcad cfd status` (= `cfd_summary`) says whether OpenFOAM is installed.
+From the shell: `crispcad cfd run part.kcad.ts [--flow ... --inlet '{"atX":0}' ...]`;
+`crispcad cfd status` (= `cfd_summary`) says whether OpenFOAM is installed.
 
 ## The fluid domain
 

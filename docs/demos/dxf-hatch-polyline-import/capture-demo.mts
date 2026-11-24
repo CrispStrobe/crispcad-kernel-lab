@@ -63,7 +63,7 @@ function frameSvg(index: number, measuredVolume: number): string {
   const steps = [
     'Read a single HATCH boundary path',
     'Keep the group 42 bulge as an exact arc',
-    'Return an ordinary kernelCAD Sketch',
+    'Return an ordinary CrispCAD Sketch',
     'Extrude 5 mm and measure the OCCT B-rep',
   ];
   const stepRows = steps.map((label, i) => {
@@ -102,7 +102,7 @@ function frameSvg(index: number, measuredVolume: number): string {
     <rect x="870" y="580" width="320" height="27" rx="13" fill="#e7eefb"/>
     <text x="887" y="599" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#315c9e">BULGE ARC · ${measured} mm³</text>
     <text x="64" y="670" font-family="Arial,sans-serif" font-size="15" fill="#586982">Local geometry validation · deployment, simulation and hardware acceptance are not shown</text>
-    <text x="1216" y="670" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#718096">kernelCAD · DXF import</text>
+    <text x="1216" y="670" text-anchor="end" font-family="Arial,sans-serif" font-size="15" fill="#718096">CrispCAD · DXF import</text>
   </svg>`;
 }
 

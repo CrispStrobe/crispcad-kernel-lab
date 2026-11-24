@@ -10,7 +10,7 @@ import {
 } from './attribution';
 
 describe('attribution', () => {
-  it('names kernelCAD, its version and homepage', () => {
+  it('names CrispCAD, its version and homepage', () => {
     expect(attributionGenerator('1.2.3')).toBe('kernelCAD 1.2.3 (https://kernelcad.com)');
     expect(KERNELCAD_HOMEPAGE).toBe('https://kernelcad.com');
     expect(KERNELCAD_APP_URL).toBe('https://app.kernelcad.com');

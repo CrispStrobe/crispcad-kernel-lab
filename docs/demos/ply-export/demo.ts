@@ -107,7 +107,7 @@ const mesh = toMesh(ply);
 const bbox = plyBbox(ply);
 const colours = [...new Set(ply.data.vertex!.map(v => `${v.red},${v.green},${v.blue}`))];
 const summary = {
-  invocation: 'kernelcad export ply docs/demos/ply-export/mount.kcad.ts -o docs/demos/ply-export/mount.ply',
+  invocation: 'crispcad export ply docs/demos/ply-export/mount.kcad.ts -o docs/demos/ply-export/mount.ply',
   format: ply.format,
   bytes: bytes.length,
   parts: ply.comments.filter(c => c.startsWith('part ')),
@@ -124,7 +124,7 @@ console.log(JSON.stringify(summary, null, 2));
 const centre = [0, 1, 2].map(i => (bbox.min[i]! + bbox.max[i]!) / 2);
 const scale = (H * 0.62) / Math.hypot(bbox.max[0]! - bbox.min[0]!, bbox.max[1]! - bbox.min[1]!, bbox.max[2]! - bbox.min[2]!) * 1.25;
 const caption = [
-  'kernelcad export ply mount.kcad.ts -o mount.ply',
+  'crispcad export ply mount.kcad.ts -o mount.ply',
   `binary_little_endian PLY · ${summary.vertices.toLocaleString('en-US')} vertices (x y z nx ny nz red green blue) · ${summary.faces.toLocaleString('en-US')} triangles`,
   'plate (anodized-black finish) · shaft (steel finish) · collar (#e8742a) — one file, world space',
 ];

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // tests/unit/cli/renderPublishPreset.test.ts
 //
-// `kernelcad render --preset publish`: flag parsing, the publish stage
+// `crispcad render --preset publish`: flag parsing, the publish stage
 // reaching the shared renderer (headlessRender's `publish` option — the same
 // path render_preview takes), output files, and the refusals that mirror
 // render_preview (background/shadow without the preset, bad values). The

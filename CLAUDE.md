@@ -1,32 +1,30 @@
-# Repo conventions for Claude Code agents working in kernelCAD-web
+# Repo conventions for agents working in CrispCAD
 
-## Every feature and tool
+CrispCAD is a renamed fork of kernelCAD (MIT). Read [AGENTS.md](AGENTS.md).
 
-Follow [AGENTS.md](AGENTS.md): check current comparable websites and the existing
-kernelCAD website before implementation, update discovery/docs, and produce and
-visually inspect a short MP4 demonstration for every new or materially changed
-feature/tool. This expands the release-only demo rule below. Keep dated competitor
-comparisons private; retain source, verification and truthful demo provenance.
+## No deployment
 
-## Deployment
+CrispCAD has no hosted app, website, MCP gateway or npm release pipeline. Never
+deploy or publish. Upstream workflows are archived inactive in
+`ci/upstream-workflows/`; run checks locally (`npm run typecheck`, `npm test`,
+`npm run lint`, `npm run licence:audit`).
 
-Before deploying anything, read `docs/DEPLOY.md`. Short version: one trunk
-(`develop`, no `main`); the Studio (`src/`) auto-deploys to app.kernelcad.com on
-push to `develop`; eligible pushes to `develop` also trigger the private
-marketing deploy for kernelcad.com, including `docs/guide/**` blog sources and
-`docs/demos/**` media. The listed top-level prose files and unrelated docs-only
-changes do not trigger it. Manual
-`gh workflow run deploy-kernelcad-com.yml -R w1ne/kernelCAD-server -f
-web_ref=develop` remains available as an override. Blog drafts still require
-editorial approval before publication. Verify the actual deploy and live URLs;
-upload success does not prove the separate cache purge passed. A `v*` tag is a
-full npm release, not a per-surface deploy.
-Don't guess the deploy path — match the changed surface to the runbook.
+## Licence policy
+
+Runtime dependencies, including their transitive, native and WASM closure, must be
+MIT/Apache/BSD-like. LGPL/GPL components are being removed (OpenCASCADE, libvips);
+do not add new ones. `npm run licence:audit` must not report new findings.
+
+## Naming
+
+Use "CrispCAD" for the product, `crispcad` for the CLI and package. Name kernelCAD
+only to state provenance or `.kcad.ts` format compatibility. Keep upstream copyright
+lines, attribution records and catalog provenance verbatim.
 
 ## CAD authoring discipline
 
 For any task that creates or modifies CAD output, use the bundled
-`kernelcad` skill first and load `kernelcad-authoring` before editing a
+CrispCAD skill (`skills/kernelcad-*`) first and load `kernelcad-authoring` before editing a
 `.kcad.ts` model. The source file is the design source of truth; generated
 PNG/MP4/STEP/STL/score artifacts are evidence or deliverables, not files to
 hand-edit.
@@ -54,17 +52,6 @@ Prefer `lib.fromSTEP(...)` for real purchased components such as servos,
 bearings, motors, fasteners, sensors, PCBs, and connectors. Hand-modeled
 placeholder boxes/cylinders are acceptable for blockouts, but final review must
 either replace them with vendor/catalog geometry or label the limitation.
-
-## Demo discipline (v0.X.0-tag PR review rule)
-
-When reviewing a PR that ships a `v0.X.0` tag (cuts a per-module release):
-
-1. Verify `docs/demos/v0.X/<task>/whats-new.md` contains a `## Hero artifact` section, a `## Why memorable` section with all three bullets filled (no `TODO:`), and a `## What's new` section.
-2. Verify `docs/demos/v0.X/<task>/meta.json` contains `heroArtifact`, `catalogSource`, and `overrideApprovedBy` keys.
-3. Judge the *artifact itself*, not the prose. From v0.18 the hero must be a real user job taken end to end (for example a Pi 5 case with heat-set inserts, a motor mount, a coupler with set screws), and `meta.json.proof` must name that job and point at a passing verify report or a photo of the printed or fabricated part. Fail the review if the hero is a bare primitive (box, cube, cylinder), if the new tool isn't visibly central to the build, or if the proof doesn't show the part working. A recognisable object with no proof is not enough.
-4. If `meta.json.overrideApprovedBy` is non-null, the override path was used. Surface this to the controller for traceability — it is not automatically a fail, but should not be a default.
-
-This rule binds the `superpowers:code-reviewer` agent and any human reviewer working in this repo.
 
 ## Quality ratchet
 

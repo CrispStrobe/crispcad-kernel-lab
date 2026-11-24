@@ -18,7 +18,7 @@ B-reps.
 ## Replay and verification
 
 - Capture invocation: `node --import tsx docs/demos/sketch-offset/capture-demo.mts`
-- Section image: `kernelcad render docs/demos/sketch-offset/tray-and-lid.kcad.ts -o section.png --section y=0 --section-flip --pose 12,18 --width 1000 --height 640`
+- Section image: `crispcad render docs/demos/sketch-offset/tray-and-lid.kcad.ts -o section.png --section y=0 --section-flip --pose 12,18 --width 1000 --height 640`
   (the pose file it writes is stored as [`section.png`](./section.png))
 - Video invocation: `node --import tsx docs/demos/sketch-offset/make-video.mts`
 - Values and file hashes: [`evidence.json`](./evidence.json)

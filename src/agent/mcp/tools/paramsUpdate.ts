@@ -40,7 +40,7 @@ export async function paramsUpdateTool(input: ParamsUpdateInput): Promise<Params
   if (!active) {
     return {
       ok: false,
-      error: 'No active kernelCAD session. Run evaluate_script successfully before calling kcad.params.update.',
+      error: 'No active CrispCAD session. Run evaluate_script successfully before calling kcad.params.update.',
       errorCode: 'feature.invalid-args',
       errorHint: 'invalid-args.session.no-active-session',
     };

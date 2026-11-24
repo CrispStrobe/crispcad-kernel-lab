@@ -4,7 +4,7 @@
   "method": "Built the 659 static catalog pages and reviewed the rolling-suitcase page in the existing Chrome session; screenshot captured for visual review.",
   "samplePage": {
     "route": "http://127.0.0.1:4329/catalog/travel-gear/rolling-suitcase/",
-    "title": "Rolling suitcase - free low-poly prop model (CC0) | kernelCAD",
+    "title": "Rolling suitcase - free low-poly prop model (CC0) | CrispCAD",
     "previewVisible": true,
     "studioLinkVisible": true,
     "triangleCount": 312,

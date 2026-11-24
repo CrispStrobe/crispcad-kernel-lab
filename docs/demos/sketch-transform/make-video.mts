@@ -17,7 +17,7 @@ const HEIGHT = 720;
 const FPS = 24;
 const SCENE_SECONDS = 5;
 const VIEW_INVOCATION =
-  'kernelcad render docs/demos/sketch-transform/fan-guard.kcad.ts -o view.png --pose 25,55 --width 1000 --height 640';
+  'crispcad render docs/demos/sketch-transform/fan-guard.kcad.ts -o view.png --pose 25,55 --width 1000 --height 640';
 const sha256 = (data: string | Uint8Array) => createHash('sha256').update(data).digest('hex');
 const xml = (value: string) => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
@@ -135,7 +135,7 @@ function sceneTwo(evidence: Evidence, viewPng: Buffer): string {
     ${rows.map((row, r) => row.map((text, i) => `<text x="${columns[i]}" y="${230 + r * 38}" fill="${i === 1 ? '#37d6b0' : '#e2e8f0'}" font-family="${i === 0 ? 'Arial,sans-serif' : 'monospace'}" font-size="16">${xml(text)}</text>`).join('')).join('')}`;
   const content = `<rect x="72" y="140" width="548" height="400" rx="18" fill="#111c2d" stroke="#334155"/>
     <image x="84" y="172" width="524" height="335" xlink:href="data:image/png;base64,${viewPng.toString('base64')}"/>
-    <text x="96" y="166" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="16">kernelcad render of the extruded profile, 2 mm thick</text>
+    <text x="96" y="166" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="16">crispcad render of the extruded profile, 2 mm thick</text>
     <text x="96" y="528" fill="#9fb0c4" font-family="Arial,sans-serif" font-size="16">Blue: plate. Grey: Ø4 pin gauges in the four mounting holes.</text>
     <rect x="636" y="140" width="572" height="400" rx="18" fill="#111c2d" stroke="#334155"/>
     ${table}

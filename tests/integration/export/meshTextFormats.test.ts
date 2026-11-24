@@ -43,7 +43,7 @@ describe('standalone OBJ and USD mesh exports', () => {
     const result = await runAndExport({ code: 'return box(10, 20, 30);', fileName: 'box.kcad.ts', format: 'obj' });
     const { obj: text, mtl } = objBundle(result.bytes);
     expect(result.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
-    expect(text).toMatch(/^# kernelCAD OBJ mesh export/);
+    expect(text).toMatch(/^# CrispCAD OBJ mesh export/);
     expect(text).toContain('mtllib model.mtl');
     expect(text).toContain('usemtl part');
     expect(mtl).toContain('newmtl part');

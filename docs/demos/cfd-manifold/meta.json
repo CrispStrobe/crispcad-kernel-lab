@@ -4,11 +4,11 @@
   "heroArtifact": "docs/demos/cfd-manifold/demo.mp4",
   "source": "docs/demos/cfd-manifold/manifold.kcad.ts",
   "record": "./docs/demos/cfd-manifold/record.sh",
-  "invocation": "kernelcad cfd run docs/demos/cfd-manifold/manifold.kcad.ts (run_cfd via record.ts)",
+  "invocation": "crispcad cfd run docs/demos/cfd-manifold/manifold.kcad.ts (run_cfd via record.ts)",
   "settings": {
     "openfoam": "opencfd/openfoam-run:2406, simpleFoam, 1 core, --network none",
     "mesh": "snappyHexMesh, meshSize medium (14 cells across the 8 mm inlet), 17504 cells",
-    "render": "kernelcad render --preset publish --background dark 1200x800; frames composed with sharp; ffmpeg libx264 1280x720, 5 frames x 3.5 s"
+    "render": "crispcad render --preset publish --background dark 1200x800; frames composed with sharp; ffmpeg libx264 1280x720, 5 frames x 3.5 s"
   },
   "proof": {
     "job": "pressure drop and flow split of a printed two-way coolant splitter at 0.3 L/min water",

@@ -1,6 +1,6 @@
 // tests/integration/cli/dfmCommand.test.ts
 //
-// W3 Task 8 — `kernelcad dfm <file>` CLI surface + evaluate enforcement.
+// W3 Task 8 — `crispcad dfm <file>` CLI surface + evaluate enforcement.
 //
 //   - thin-wall single-shape script → exit 1; the human-facing diagnostics
 //     name the part, the measured thickness, and a world-frame xyz,
@@ -50,7 +50,7 @@ afterEach(() => {
   process.exitCode = 0;
 });
 
-describe('kernelcad dfm (CLI)', () => {
+describe('crispcad dfm (CLI)', () => {
   it('fails a thin-wall single-shape script with part + thickness + xyz', async () => {
     const r = await dfmScript({ file: thinPath });
     expect(r.exitCode).toBe(1);

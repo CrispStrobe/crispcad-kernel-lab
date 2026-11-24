@@ -116,7 +116,7 @@ export function createPaletteCollector(): {
 }
 
 /**
- * Measure world-frame meshes (kernelCAD millimetres, Z up) in metres, in the
+ * Measure world-frame meshes (CrispCAD millimetres, Z up) in metres, in the
  * axes of the written file: Y up (glTF default) or Z up.
  */
 export function measureMeshes(

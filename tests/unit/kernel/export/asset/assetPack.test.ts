@@ -96,12 +96,12 @@ describe('buildAssetPack', () => {
     expect(readme).toContain('Surface finish');
     expect(readme).toContain('Wide');
     expect(readme).toContain('12');
-    expect(readme).toContain('kernelcad export asset-pack');
+    expect(readme).toContain('crispcad export asset-pack');
   });
 
   it('documents the bundled GLB metre scale in its handoff README', () => {
     const readme = text(unzip(buildAssetPack(model(), { generatorVersion: '0.17.4', year: 2026 })), 'README.md');
-    expect(readme).toContain("The bundled GLB uses Y-up and glTF's metre units; kernelCAD's millimetre coordinates are scaled by 0.001 at the scene root.");
+    expect(readme).toContain("The bundled GLB uses Y-up and glTF's metre units; CrispCAD's millimetre coordinates are scaled by 0.001 at the scene root.");
     expect(readme).not.toContain('millimetre layout for a PBR GLB');
   });
 
@@ -120,7 +120,7 @@ describe('buildAssetPack', () => {
       generatorVersion: string;
       files: Record<string, string>;
     };
-    expect(manifest.generator).toBe('kernelCAD');
+    expect(manifest.generator).toBe('CrispCAD');
     expect(manifest.generatorVersion).toBe('9.9.9');
     const names = Object.keys(files).filter((name) => name !== 'manifest.json').sort();
     expect(Object.keys(manifest.files)).toEqual(names);

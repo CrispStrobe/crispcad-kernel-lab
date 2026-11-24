@@ -3,7 +3,7 @@
 // src/shared/intent/apiIdioms.ts
 //
 // Names an author tends to reach for from other scripting CAD vocabularies
-// ("workplane", "arcTo", "polarArray", ">Z"), each mapped to the kernelCAD way
+// ("workplane", "arcTo", "polarArray", ">Z"), each mapped to the CrispCAD way
 // to say the same thing. One table feeds two readers: `lookup_api` (a query
 // such as "polar array" surfaces the pattern entry) and the script-runtime
 // diagnostic for `x.arcTo is not a function` (the hint names the real method).
@@ -17,7 +17,7 @@ export interface ApiIdiom {
   id: string;
   /** What the author may type or ask for. */
   aliases: readonly string[];
-  /** The kernelCAD way, one or two sentences. */
+  /** The CrispCAD way, one or two sentences. */
   use: string;
   /** A fragment that evaluates, in the same words as `use`. */
   example: string;
@@ -176,7 +176,7 @@ export const API_IDIOMS: readonly ApiIdiom[] = [
   {
     id: 'export',
     aliases: ['exporters', 'export stl', 'export step', 'show object', 'show_object', 'result'],
-    use: "A script does not export; it RETURNS one Shape (or assembly.model()). Export from the CLI (kernelcad export stl|step|dxf|3mf|glb <file> -o <out>) or the MCP export tool.",
+    use: "A script does not export; it RETURNS one Shape (or assembly.model()). Export from the CLI (crispcad export stl|step|dxf|3mf|glb <file> -o <out>) or the MCP export tool.",
     example: 'return body;',
     entries: [],
   },

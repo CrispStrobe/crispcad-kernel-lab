@@ -4,7 +4,7 @@
 
 Please **do not open a public GitHub issue** for security vulnerabilities.
 Send a confidential report to **support@kernelcad.com**, with the subject
-`Security report: kernelCAD`.
+`Security report: CrispCAD`.
 
 Include the affected component and version or URL, reproducible steps,
 observed impact, and a safe proof of concept if available. Do not include
@@ -12,7 +12,7 @@ credentials, access tokens, personal customer data or live exploitation logs.
 The team can ask for additional details and coordinate disclosure after
 triage.
 
-For ordinary bugs, use [GitHub Issues](https://github.com/w1ne/kernelCAD-web/issues).
+For ordinary bugs, use [GitHub Issues](https://github.com/CrispStrobe/kernelCAD-web/issues).
 
 ## Supported versions
 

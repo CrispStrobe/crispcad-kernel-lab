@@ -2,8 +2,8 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/cfd.ts
 //
-// `kernelcad cfd run <file>`    — the run_cfd MCP tool from the shell.
-// `kernelcad cfd status [--out]` — the cfd_summary tool: OpenFOAM availability,
+// `crispcad cfd run <file>`    — the run_cfd MCP tool from the shell.
+// `crispcad cfd status [--out]` — the cfd_summary tool: OpenFOAM availability,
 //                                  fluid presets, a stored run's summary.
 //
 // Exit codes: 0 converged, 1 solved but not converged, 2 no result (bad
@@ -115,10 +115,10 @@ export function formatCfdResult(r: RunCfdOutput): string {
 }
 
 export function cfdCommand(): Command {
-  const cmd = new Command('cfd').description('Steady incompressible CFD (OpenFOAM simpleFoam) on a kernelCAD model.');
+  const cmd = new Command('cfd').description('Steady incompressible CFD (OpenFOAM simpleFoam) on a CrispCAD model.');
   cmd
     .command('run')
-    .description("Run a cfdStudy declared in the script, or the study given by flags. Example: kernelcad cfd run pipe.kcad.ts --flow internal --inlet '{\"atX\":0}' --outlet '{\"atX\":200}' --velocity 0.002")
+    .description("Run a cfdStudy declared in the script, or the study given by flags. Example: crispcad cfd run pipe.kcad.ts --flow internal --inlet '{\"atX\":0}' --outlet '{\"atX\":200}' --velocity 0.002")
     .argument('<file>', 'path to a .kcad.ts script')
     .option('--study <name>', 'declared cfdStudy name (default: the last one)')
     .option('--flow <kind>', 'internal | external (sets an inline study)')

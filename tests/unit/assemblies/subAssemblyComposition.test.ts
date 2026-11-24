@@ -3,7 +3,7 @@
 // Slice 1 of sub-assembly composition: flattening import. Surfaced by
 // Exp-E nested-sub-assembly — every competing CAD package (Fusion /
 // Onshape / ForgeCAD / SolidWorks) treats sub-assemblies as first-class,
-// kernelCAD had no composition API at all. Slice 1: `arm.subAssembly(name,
+// CrispCAD had no composition API at all. Slice 1: `arm.subAssembly(name,
 // other)` copies parts + mates with `${name}_` prefix.
 
 import { describe, expect, it, beforeAll } from 'vitest';

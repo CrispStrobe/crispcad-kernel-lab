@@ -16,7 +16,7 @@ import type { CompilerDiagnostic } from '../../../shared/diagnostics/diagnostic'
 import { HINT_TEMPLATES, NEXT_ACTIONS } from '../../../shared/diagnostics/registry';
 
 export interface DrawingToCadToolInput {
-  /** Path to the drawing PDF on the machine running kernelCAD. */
+  /** Path to the drawing PDF on the machine running CrispCAD. */
   path?: string;
   /** The PDF inline, base64-encoded — works against a hosted server. */
   pdfBase64?: string;
@@ -80,7 +80,7 @@ async function readDrawingPdf(
         severity: 'error',
         message:
           `Cannot read file: ${e instanceof Error ? e.message : String(e)}. Either the path does not exist locally, ` +
-          'or this kernelCAD server is hosted/remote and cannot see your filesystem. Pass the PDF inline via `pdfBase64` instead of `path` — that works on both.',
+          'or this CrispCAD server is hosted/remote and cannot see your filesystem. Pass the PDF inline via `pdfBase64` instead of `path` — that works on both.',
         hint: HINT_TEMPLATES[FILE_READ_CODE].template,
         nextAction: NEXT_ACTIONS[FILE_READ_CODE],
       };

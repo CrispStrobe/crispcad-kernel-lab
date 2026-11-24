@@ -24,7 +24,7 @@ AMBER = (241, 196, 15)
 SANS = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
 SANS_B = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 MONO = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf'
-FOOTER = 'Local validation: kernelCAD diff_geometry run on this machine (not the hosted service, not a fabricated part).'
+FOOTER = 'Local validation: CrispCAD diff_geometry run on this machine (not the hosted service, not a fabricated part).'
 
 
 def font(path, size):

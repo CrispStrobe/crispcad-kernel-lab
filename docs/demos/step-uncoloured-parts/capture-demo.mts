@@ -92,7 +92,7 @@ const products = snapshot.definitions.map((definition) => ({
   instances: snapshot.occurrences.filter((o) => o.definitionId === definition.id).map((o) => ({ name: o.name, color: o.color?.hex ?? null })),
 }));
 const evidence = {
-  scope: 'Local kernelCAD Node API: STEP export of an assembly that sets no colours, text check for colour entities, read-back through the OCCT XCAF STEP reader, and import as a KernelCAD project.',
+  scope: 'Local CrispCAD Node API: STEP export of an assembly that sets no colours, text check for colour entities, read-back through the OCCT XCAF STEP reader, and import as a KernelCAD project.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),
@@ -106,7 +106,7 @@ const evidence = {
     products,
   },
   importedProject: {
-    writer: 'writeStepBundle (kernelcad import-step)',
+    writer: 'writeStepBundle (crispcad import-step)',
     scriptSha256: sha256(importedScript),
     scriptLines: importedScript.split('\n').length,
     colourCalls,
@@ -116,7 +116,7 @@ const evidence = {
   limits: [
     'Other CAD systems were not used to open the file.',
     'The values under "before" are recorded from a capture on the named commit; this script does not measure them again.',
-    'A project imported from STEP with an earlier kernelCAD version keeps the explicit red colour that version wrote into its script.',
+    'A project imported from STEP with an earlier CrispCAD version keeps the explicit red colour that version wrote into its script.',
   ],
   simulationRun: false,
   deployed: false,

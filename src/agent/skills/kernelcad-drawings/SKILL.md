@@ -3,7 +3,7 @@ name: kernelcad-drawings
 description: Export 2D engineering-drawing sheets (SVG, or a printable PDF on a standard sheet) from any model or assembly — third-angle front/top/left + isometric views with hidden-line removal, overall dimensions, and a title block. Use when the deliverable is a human-readable fabrication or review drawing.
 ---
 
-# kernelCAD — engineering drawings
+# CrispCAD — engineering drawings
 
 `export({ target: 'model', format: 'svg-drawing' })` renders a `.kcad.ts` model as a standard third-angle engineering-drawing sheet in SVG. It works on single bodies and on assemblies (`assembly.model()` / `solvedModel(...)`) — assembly parts are projected together in world frame, so one part occluding another renders correctly as hidden lines.
 
@@ -21,7 +21,7 @@ description: Export 2D engineering-drawing sheets (SVG, or a printable PDF on a 
 
 - **Sheet**: `sheet` is `'a4'` `'a3'` (default) `'a2'` `'a1'` `'a0'` or `'ansi-a'` … `'ansi-e'`, always landscape; `'auto'` / `'auto-ansi'` pick the smallest sheet that holds the views at 1:1, else the largest one with a reduced scale. The scale is snapped to the standard series and printed in the title block. Section views take room inside the sheet instead of growing the page.
 - **Projection**: `projection: 'third'` (default) or `'first'`. First angle puts the top view below the front view, the left view right of it, the isometric lower-left, and draws the first-angle symbol; automatic dimensions move to each view's free side.
-- **Title block**: TITLE (`title`, default the model name), PART NAME (`partName`), MATERIAL (`material`, default the shared material of the assembly parts), REV (`revision`), SCALE, UNITS, SHEET size, DATE (`date`, default today). Unset fields print `—`. The DATE cell also carries a small "Made with kernelCAD · kernelcad.com" line, a clickable link in the PDF; the PDF Producer is the kernelCAD version.
+- **Title block**: TITLE (`title`, default the model name), PART NAME (`partName`), MATERIAL (`material`, default the shared material of the assembly parts), REV (`revision`), SCALE, UNITS, SHEET size, DATE (`date`, default today). Unset fields print `—`. The DATE cell also carries a small "Made with CrispCAD · kernelcad.com" line, a clickable link in the PDF; the PDF Producer is the CrispCAD version.
 - **Annotations**: `autoAnnotate` is on unless you pass `annotations`; pass `autoAnnotate: false` for the overall bounding-box dimensions only.
 
 ```json
@@ -30,7 +30,7 @@ description: Export 2D engineering-drawing sheets (SVG, or a printable PDF on a 
 ```
 
 ```bash
-kernelcad export pdf-drawing bracket.kcad.ts -o out/bracket.pdf --title "L mounting bracket" --revision B --material AlMg3 --sheet a3
+crispcad export pdf-drawing bracket.kcad.ts -o out/bracket.pdf --title "L mounting bracket" --revision B --material AlMg3 --sheet a3
 ```
 
 Text is set in the standard Helvetica face, so the PDF needs no embedded font; `⌀` prints as `Ø`, and the GD&T and hole symbols (⌖ ⏥ ⟂ ∥ ⌴ ⌵ ↧ …) are drawn as vector strokes.
@@ -76,7 +76,7 @@ MCP:
 CLI:
 
 ```bash
-kernelcad export svg-drawing bracket.kcad.ts -o out/bracket-drawing.svg
+crispcad export svg-drawing bracket.kcad.ts -o out/bracket-drawing.svg
 ```
 
 ## Options

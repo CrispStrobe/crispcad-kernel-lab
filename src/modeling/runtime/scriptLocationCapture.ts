@@ -85,7 +85,7 @@ export class ScriptLocationResolver {
 /**
  * Take the innermost call-site frame that belongs to `fileName`.
  *
- * The kernelCAD API functions are host functions outside the sandbox, so the
+ * The CrispCAD API functions are host functions outside the sandbox, so the
  * stack at capture time interleaves host frames with the user-script frame;
  * matching on the script's filename picks the authoring line regardless of how
  * many API layers sit between. `skipAbove` keeps this helper's own frame (and

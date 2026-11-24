@@ -21,7 +21,7 @@ async function run(...argv: string[]) {
   await telemetryCommand().parseAsync(['node', 'kernelcad', ...argv]);
 }
 
-describe('kernelcad telemetry', () => {
+describe('crispcad telemetry', () => {
   it('disable then enable flips the persisted flag', async () => {
     await run('disable');
     expect(loadConfig()?.enabled).toBe(false);

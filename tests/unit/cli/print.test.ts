@@ -35,7 +35,7 @@ afterAll(() => {
   rmSync(tmpDir, { recursive: true, force: true });
 });
 
-describe('kernelcad print send', () => {
+describe('crispcad print send', () => {
   it('exits 2 with a clear message when the gcode file does not exist', async () => {
     const r = await printSendScript({ gcodeFile: '/nonexistent.gcode', protocol: 'octoprint', host: '127.0.0.1' });
     expect(r.exitCode).toBe(2);
@@ -60,7 +60,7 @@ describe('kernelcad print send', () => {
   });
 });
 
-describe('kernelcad print printers / --printer', () => {
+describe('crispcad print printers / --printer', () => {
   it('lists every profile id with its build volume, nozzle and slicer family', () => {
     const profiles = listPrinterProfiles();
     expect(profiles.map(p => p.name)).toEqual([...PRINTER_PROFILE_IDS]);

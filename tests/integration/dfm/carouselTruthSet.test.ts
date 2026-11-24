@@ -50,7 +50,7 @@ beforeAll(async () => {
   // Build + gate each fixture ONCE (30–90 s each); every test below reads
   // these shared results. evaluateScript(input) is literally
   // evaluateAndBuildScript(input).evaluation, so `r761.evaluation` IS the
-  // end-to-end `kernelcad evaluate` outcome for the wiring test.
+  // end-to-end `crispcad evaluate` outcome for the wiring test.
   r73 = await evaluateAndBuildScript({ file: V73 });
   r761 = await evaluateAndBuildScript({ file: V761 });
   expect(r73.dfmReport).toBeDefined();

@@ -1,6 +1,6 @@
 # Pipe saddle clamp: replace a vertical donut with a two-piece pipe seat
 
-13 November 2026. Fixes [catalog defect #1366](https://github.com/w1ne/kernelCAD-web/issues/1366). This is an illustrative CC0 low-poly scene prop. It is not vendor CAD, a dimensioned pipe standard, a verified fastening solution or a load-rated design.
+13 November 2026. Fixes [catalog defect #1366](https://github.com/CrispStrobe/kernelCAD-web/issues/1366). This is an illustrative CC0 low-poly scene prop. It is not vendor CAD, a dimensioned pipe standard, a verified fastening solution or a load-rated design.
 
 ## Confirmed semantic defect
 

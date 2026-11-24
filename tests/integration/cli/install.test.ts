@@ -1,6 +1,6 @@
 // tests/integration/cli/install.test.ts
 //
-// Integration tests for `kernelcad install <target>`. For each target we
+// Integration tests for `crispcad install <target>`. For each target we
 // simulate the on-disk config layout in a tmpdir (via `--config-dir`) and
 // assert the resulting JSON / delegated invocation. For the two delegated
 // targets (claude-code, codex) we inject a fake `runCommand` runner so the
@@ -273,7 +273,7 @@ describe.each<{ target: InstallTarget; bin: string }>([
     expect(addCall!.args).not.toContain('--token');
   });
 
-  it('passes --cloud --token <X> through to `npx kernelcad mcp` when token is set', () => {
+  it('passes --cloud --token <X> through to `npx crispcad mcp` when token is set', () => {
     const { runner, calls } = makeRunner({});
     runInstall(target, { runCommand: runner, token: 'kcl_DELEGATED_TOKEN' });
 

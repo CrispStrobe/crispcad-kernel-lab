@@ -3,7 +3,7 @@
 // scripts/ingestElectronics.ts
 //
 // Ingest the electronics parts (chips, modules, IC packages) declared in
-// scripts/electronics-parts.json into the kernelCAD parts catalog. Mirrors the
+// scripts/electronics-parts.json into the CrispCAD parts catalog. Mirrors the
 // FreeCAD-library ingest, but the source models are fetched at run time from a
 // CC-licensed remote (KiCad packages3D) per the manifest — nothing binary is
 // committed to this repo. Each part becomes a catalog record with a MEASURED
@@ -73,9 +73,9 @@ interface ManifestPart {
   /** Full model URL (overrides baseModelUrl + model) — for parts from a
    *  different CC-licensed source than the default catalog base. */
   url?: string;
-  /** Path to a kernelCAD `.kcad.ts` authored source (relative to repo root).
+  /** Path to a CrispCAD `.kcad.ts` authored source (relative to repo root).
    *  When set, the ingest step compiles the script and exports it to STEP using
-   *  the bundled kernelCAD CLI (`node dist/cli/index.js export -f step …`).
+   *  the bundled CrispCAD CLI (`node dist/cli/index.js export -f step …`).
    *  Takes priority over `url` and `model`. */
   kcad_source?: string;
   tags?: string[];
@@ -145,7 +145,7 @@ export async function ingestElectronics(
   const src = mkdtempSync(join(tmpdir(), 'kc-electronics-'));
   mkdirSync(src, { recursive: true });
 
-  // Resolve the kernelCAD CLI so authored parts can be compiled to STEP.
+  // Resolve the CrispCAD CLI so authored parts can be compiled to STEP.
   // The CLI is built into dist/cli/index.js relative to the repo root.
   const repoRoot = resolve(dirname(manifestPath), '..');
   const cliPath = join(repoRoot, 'dist', 'cli', 'index.js');
@@ -163,7 +163,7 @@ export async function ingestElectronics(
       ok++;
       continue;
     } else if (part.kcad_source) {
-      // Authored model: compile the .kcad.ts script to STEP using the kernelCAD CLI.
+      // Authored model: compile the .kcad.ts script to STEP using the CrispCAD CLI.
       const scriptPath = resolve(repoRoot, part.kcad_source);
       const stepOut = join(src, `${part.id}.step`);
       const manifestOut = join(src, `${part.id}.connector-manifest.json`);
@@ -184,7 +184,7 @@ export async function ingestElectronics(
         }
         const err = e as { stderr?: Buffer; message?: string };
         const detail = err.stderr?.toString().trim() || err.message || String(e);
-        console.warn(`SKIP ${part.id}: kernelcad export failed — ${detail}`);
+        console.warn(`SKIP ${part.id}: crispcad export failed — ${detail}`);
         continue;
       }
       if (!existsSync(manifestOut)) {

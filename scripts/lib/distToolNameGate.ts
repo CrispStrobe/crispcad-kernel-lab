@@ -39,7 +39,7 @@ const CLI_SUBCOMMANDS = new Set<string>([
 // Identifier-like patterns inside backticks. We only check patterns that
 // look like a tool-or-command call:
 //   `snake_case_name`              (MCP tool)
-//   `kernelcad <subcommand> ...`   (CLI invocation)
+//   `crispcad <subcommand> ...`   (CLI invocation)
 //
 // We deliberately ignore quoted strings that look like values (`M3`,
 // `0.05`, hex colors, file paths, etc.) — they're identified by lack of
@@ -164,7 +164,7 @@ const NON_TOOL_ALLOWLIST = new Set<string>([
   'pull_dir',
   'angle_deg',
   'require_closed',
-  // send_to_printer / kernelcad print send parameter names (documented
+  // send_to_printer / crispcad print send parameter names (documented
   // alongside the real send_to_printer tool name and the print CLI
   // subcommand, which DO resolve — these are input fields, not calls).
   'dry_run',

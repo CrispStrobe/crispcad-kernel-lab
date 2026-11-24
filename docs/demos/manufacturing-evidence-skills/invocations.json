@@ -1,6 +1,6 @@
 {
   "schema": "kernelcad.manufacturing-evidence-invocations.v1",
-  "surface": "authenticated connected kernelCAD MCP tool",
+  "surface": "authenticated connected CrispCAD MCP tool",
   "sourceFiles": [
     "mounting-plate-4mm.kcad.ts",
     "mounting-plate.kcad.ts",
@@ -94,5 +94,5 @@
     "dfm-baseline.json",
     "mass-baseline.json"
   ],
-  "note": "The first baseline calls used the public MCP endpoint. The daily anonymous compute allowance was then exhausted, so the complete 3-variant matrix was repeated through the connected authenticated kernelCAD tool. Values match for the shared baseline."
+  "note": "The first baseline calls used the public MCP endpoint. The daily anonymous compute allowance was then exhausted, so the complete 3-variant matrix was repeated through the connected authenticated CrispCAD tool. Values match for the shared baseline."
 }

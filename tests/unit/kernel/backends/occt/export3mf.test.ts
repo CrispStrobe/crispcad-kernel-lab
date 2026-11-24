@@ -102,7 +102,7 @@ describe('export3mfAsync', () => {
         },
       ],
     };
-    const sourceText = '// kernelCAD source\nreturn box(10, 10, 10);';
+    const sourceText = '// CrispCAD source\nreturn box(10, 10, 10);';
     const bytes = await export3mfAsync(sceneToWorldFrameParts(scene), {
       format: '3mf',
       embedSource: true,

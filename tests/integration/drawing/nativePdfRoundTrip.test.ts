@@ -13,7 +13,7 @@ const init = initOcct();
 const corpus = JSON.parse(readFileSync(new URL('../../../assets/reference-parts/scorecard.json', import.meta.url), 'utf8')) as { parts: CorpusPart[] };
 const part = (id: string): CorpusPart => corpus.parts.find((p) => p.id === id)!;
 
-describe('drawing_to_cad on kernelCAD pdf-drawing sheets', () => {
+describe('drawing_to_cad on CrispCAD pdf-drawing sheets', () => {
   it.each([
     ['rectangular-block'],
     ['plate-blind-hole'],

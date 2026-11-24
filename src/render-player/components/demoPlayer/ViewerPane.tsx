@@ -11,7 +11,7 @@ export interface ViewerPaneProps {
   onSceneReady: (ctx: { scene: THREE.Scene; camera: THREE.PerspectiveCamera; renderer: THREE.WebGLRenderer }) => void;
   width: number;
   height: number;
-  /** Suppress the kernelCAD vN.N.N badge in the bottom-right of the viewport.
+  /** Suppress the CrispCAD vN.N.N badge in the bottom-right of the viewport.
    *  Used by the headless render CLI's `--no-watermark` flag for clean
    *  hero artifacts intended for public posts; tests / studio default
    *  retains the watermark for traceability. */

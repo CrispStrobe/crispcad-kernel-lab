@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: Sketch.translate, Sketch.rotate and Sketch.scale of line-and-arc profiles, Sketch.subtract, extrude to a 60 mm fan guard plate, loop areas and centres computed from the kernel result, OCCT volume, validity, overlap and distance measurement against four pin gauges.",
+  "scope": "Local CrispCAD Node API: Sketch.translate, Sketch.rotate and Sketch.scale of line-and-arc profiles, Sketch.subtract, extrude to a 60 mm fan guard plate, loop areas and centres computed from the kernel result, OCCT volume, validity, overlap and distance measurement against four pin gauges.",
   "invocation": "node --import tsx docs/demos/sketch-transform/capture-demo.mts",
   "source": "docs/demos/sketch-transform/fan-guard.kcad.ts",
   "sourceSha256": "8f806d1d79f1aa2472dcd44b1d610a17915ca5c502a1890f59b3c9e05f5ebe1b",

@@ -13,7 +13,7 @@ required (uses the deterministic `opencv` backend).
   (scale comes back `missing`), resolves it with `resolve_assumptions`, then
   retraces with a `scaleAnchor` supplied up front to show `unresolvedCount`
   drop to zero immediately.
-- `bracket-from-trace.kcad.ts` — a real, buildable kernelCAD model whose
+- `bracket-from-trace.kcad.ts` — a real, buildable CrispCAD model whose
   `plateSide` param default is derived from the ledger-resolved scale. Its
   header comment records the Real Object Brief + `// Ledger:` pointer, per
   the `kernelcad-from-reference` skill convention.
@@ -52,7 +52,7 @@ scale: { mmPerPixel: 0.1548, source: 'scale-anchor' }
 ## Verify the model builds
 
 ```bash
-npx kernelcad evaluate examples/from-reference/assumption-ledger/bracket-from-trace.kcad.ts
+npx crispcad evaluate examples/from-reference/assumption-ledger/bracket-from-trace.kcad.ts
 ```
 
 Expected: `ok: true`, `featureCount: 1`, zero diagnostics — the box's side

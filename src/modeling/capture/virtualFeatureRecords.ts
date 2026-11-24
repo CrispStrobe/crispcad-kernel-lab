@@ -145,7 +145,7 @@ function resolveReferenceImageFile(
       severity: 'error',
       message:
         `referenceImage('${args.path}'): this runtime has no filesystem, so the image cannot be read. ` +
-        `referenceImage() works in the kernelCAD CLI and MCP server, not in the in-browser script engine.`,
+        `referenceImage() works in the CrispCAD CLI and MCP server, not in the in-browser script engine.`,
       hint: HINT_TEMPLATES['cli.host-fs-unavailable'].template,
     });
   } else if (validExts.has(ext) && hostFs !== null) {

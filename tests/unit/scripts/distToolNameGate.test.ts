@@ -51,13 +51,13 @@ describe('distToolNameGate', () => {
     }
   });
 
-  it('also resolves CLI commands like `kernelcad evaluate` / `kernelcad export`', () => {
+  it('also resolves CLI commands like `crispcad evaluate` / `crispcad export`', () => {
     const out = mkdtempSync(join(tmpdir(), 'kc-tn-cli-'));
     try {
       mkdirSync(join(out, 'skills/x'), { recursive: true });
       writeFileSync(
         join(out, 'skills/x/SKILL.md'),
-        '---\nname: x\ndescription: y\n---\nRun `kernelcad evaluate file.kcad.ts` then `kernelcad export step file.kcad.ts -o out.step`.\n',
+        '---\nname: x\ndescription: y\n---\nRun `crispcad evaluate file.kcad.ts` then `crispcad export step file.kcad.ts -o out.step`.\n',
       );
       const r = runToolNameGate({ outDir: out, repoRoot });
       expect(r.ok).toBe(true);

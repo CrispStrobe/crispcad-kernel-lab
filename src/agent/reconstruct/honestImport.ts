@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 
 /**
- * A mesh becomes a kernelCAD script only when it is one extruded or revolved
+ * A mesh becomes a CrispCAD script only when it is one extruded or revolved
  * profile, with no leftover boolean and no region the features missed.
  * Anything else stays a labeled imported solid. A volume match is not enough.
  */

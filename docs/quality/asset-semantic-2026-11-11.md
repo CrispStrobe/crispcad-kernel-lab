@@ -224,7 +224,7 @@ The live `assets.json` generation was `2026-11-11T17:45:06.972Z`. The public gla
 | `data-center-infrastructure/standby-generator-enclosure` | Genset canopy, louvred doors, sub-base tank, exhaust silencer, control window and emergency stop are visible. | No mismatch found. |
 | `data-center-infrastructure/clean-agent-cylinder-bank` | Five cylinders, brass valves/gauges, common manifold and galvanized rack read as a suppression bank. | No mismatch found. |
 
-The public kernelCAD preview/source matched the pre-fix local baseline; the detail route returned HTTP 404. This correction is local to the feature branch and is not deployed. It is a visual material-control correction, not an equipment specification, performance claim, or physical acceptance.
+The public CrispCAD preview/source matched the pre-fix local baseline; the detail route returned HTTP 404. This correction is local to the feature branch and is not deployed. It is a visual material-control correction, not an equipment specification, performance claim, or physical acceptance.
 
 ## Twelfth sample — postal-logistics sortation equipment
 

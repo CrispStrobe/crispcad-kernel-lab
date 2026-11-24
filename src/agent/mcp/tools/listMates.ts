@@ -35,7 +35,7 @@ export async function listMatesTool(input: ListMatesInput): Promise<ListMatesOut
   if (!active) {
     return {
       ok: false,
-      error: 'No active kernelCAD session. Run evaluate_script successfully before calling list_mates.',
+      error: 'No active CrispCAD session. Run evaluate_script successfully before calling list_mates.',
       errorCode: 'feature.invalid-args',
       errorHint: 'invalid-args.session.no-active-session',
     };

@@ -3,26 +3,26 @@ name: kernelcad-assemblies
 description: Multi-part assemblies — assembly(), parts, connectors, 7 mate types, fixed and revolute joints, .model()/.solvedModel(). Use for any model with two or more mechanical parts that need joint metadata.
 ---
 
-# kernelCAD — assemblies
+# CrispCAD — assemblies
 
 Use `assembly()` when the model needs named mechanical parts, connector frames, and joint metadata that a human or agent can inspect later. Call `.model()` after adding parts to return a `Scene` with per-part bodies; iterate `.parts` for per-part rendering / export, call `.toCompound()` to group bodies without booleaning (keeps color, name, and identity; default for STEP), or `.toUnion()` for one fused solid (lossy on color/name — antipattern except when downstream truly needs a single Shape). Connector and joint records remain metadata for now; `.model()` does not solve motion (use `.solvedModel(poses)` for that). Use MCP `inspect({ of: 'assemblies', file? code? })` to inspect the captured assembly intent without recomputing topology.
 
 ## Assembly validity
 
-`kernelcad validate <file.kcad.ts>` runs the assembly validator over the script's Scene. Three checks today:
+`crispcad validate <file.kcad.ts>` runs the assembly validator over the script's Scene. Three checks today:
 
 - **`assembly.part.floating`** / **`mechanism.orphan-part`** — disconnected body/component (no mate/joint into the graph). Fix: connectors + mates — shafts/hinges/gears use `type: 'axis'` + `arm.mate(..., 'revolute')`; rigid mounts use `type: 'frame'` + `mate(..., 'fastened')`; or `arm.fixed/.revolute/.prismatic/.ball`. Connector types are only `frame|axis|planar|ball`. Only a mechanism (any mate, joint, transmission or `.solvedModel()`) must be fully linked: a plain multi-part assembly with no mates (enclosure base + lid, print layout) is valid as-is. Don't invent mates for a deliberately free part next to a mechanism — pass `skipMechanismCheck: true` to `evaluate_script`.
 - **`assembly.part.orphan`** — a part is in a sub-assembly disconnected from the main mechanism, the largest connected cluster (same connector/mate fix as floating).
 - **`assembly.mate.connector-not-found`** / **`assembly.pose-envelope.connector-unresolved`** — mate ref did not resolve. Declare `partRef.connector(...)` on **each** part **before** `arm.mate(...)`, use `'partName.connectorName'` refs, and prefer numeric `{ kind: 'vec3', value: [x,y,z] }` origins (topology origins often stay unresolved).
 - **`assembly.interference.overlap`** / **`mechanism.interpenetration`** after an edit — often stale duplicate/orphaned overlapping bodies from an in-place workaround. Keep only the intended connected mechanism graph; delete leftover copies before tweaking geometry.
-- **`assembly.interference.overlap`** — two parts share volume (promoted from `kernelcad interference`).
+- **`assembly.interference.overlap`** — two parts share volume (promoted from `crispcad interference`).
 - **`mechanism.mate-gap`** / **`mechanism.joint-mesh-gap`** — at rest the two sides of a mate do not touch within 1 mm, or a joint pivot has no material within 1 mm (plus a declared `jointClearanceRadius` bore) and the sides have no bearing contact within 1 mm near the axis. For a moving mate each side is a rigid group: the mated part plus every part fastened to it that touches it. A servo joint (link → servo, fastened → revolute → horn, fastened → link) passes on the servo output and the horn, so do not add posts or pillars that bridge the two printed links just for the check. A fastened part that floats off its host does not count. A fastened mate is still measured between its own two parts.
 - **`assembly.structure.unstructured-bodies`** (info) — a multi-body model returns loose top-level bodies with no `assembly().part(...)` structure, so the parts carry no identity for `inspect --focus`, `inspect({ of: 'part-stats' })`, or per-part review. The fix: wrap each distinct body in a named `assembly().part(name, shape)`.
 
 Exit codes: 0 (solved) / 1 (warnings) / 2 (errors). Pipe-friendly:
 
 ```bash
-kernelcad validate so100.kcad.ts && echo "fits"
+crispcad validate so100.kcad.ts && echo "fits"
 ```
 
 Authoring rule: every `arm.part(name, shape)` should also appear in at least one `arm.mate(name, 'a.connector', 'b.connector', kind, opts)` call (kind ∈ `fastened` | `revolute` | `prismatic` | `ball`). Raw `at: [x, y, z]` placement without a mate produces a working geometric output but fails validation — the agent has authored a position but not a connection.
@@ -128,7 +128,7 @@ Typical raw densities: steel `7850`, aluminum `2700`, ABS plastic `1050`, brass 
 
 ### Bill of materials
 
-Exploded views reuse that same assembly: `render_preview({ explode: { factor, mode } })` / `kernelcad render --explode` pull parts apart along mate axes (`mate-axis`) or from the centroid (`radial`); `export` svg-drawing with `exploded` + `balloons` + `partsList` numbers those parts from the BOM. In mate-axis mode, an earlier standalone part does not prevent later mated components from following their connector axes. There is no `arm.explode()` hook — render and export consume the poses directly. See `examples/exploded/clamshell-table-first.kcad.ts` for a reproducible case.
+Exploded views reuse that same assembly: `render_preview({ explode: { factor, mode } })` / `crispcad render --explode` pull parts apart along mate axes (`mate-axis`) or from the centroid (`radial`); `export` svg-drawing with `exploded` + `balloons` + `partsList` numbers those parts from the BOM. In mate-axis mode, an earlier standalone part does not prevent later mated components from following their connector axes. There is no `arm.explode()` hook — render and export consume the poses directly. See `examples/exploded/clamshell-table-first.kcad.ts` for a reproducible case.
 
 `inspect({ of: 'bom' })` / `export({ format: 'bom-csv' | 'bom-json' })` read this same `material`/`density` declaration to build a real bill of materials: one row per DISTINCT part. A part created with `assembly.instance` groups by part file plus configuration name (two sizes of one file stay two rows; repeated instances of one configuration share a row and add up in `quantity`). Anything else groups by geometry/catalog identity, never by part name — a `for` loop that places the same source shape under `N` distinct names collapses to one row with `quantity: N`. Rows split into `kind: 'fabricated'` vs `kind: 'purchased'` (purchased = came from `lib.fetchPart`/`fetch_part`, carries `catalog: { id, vendor, partNumber, source, license }`).
 
@@ -489,7 +489,7 @@ Six diagnostic codes on `ValidatorDiagnostic`:
 | `'error'` | Throws `KernelError('feature.invalid-args')` on the first error-severity diagnostic. `scene.warnings` is empty on success. |
 | `'off'`   | Skip validation entirely. `scene.warnings` is the empty array. |
 
-`kernelcad evaluate` flips the default to `'error'` via the `KERNELCAD_VALIDATE_DEFAULT=error` env var, so authoring scripts surface malformed assemblies as CLI failures.
+`crispcad evaluate` flips the default to `'error'` via the `KERNELCAD_VALIDATE_DEFAULT=error` env var, so authoring scripts surface malformed assemblies as CLI failures.
 
 Under `validate:'error'`, kinematic grounding gates fire — mounting-hole consistency, joint-axis binding, declared-load capacity, joint visual exposure.
 
@@ -667,7 +667,7 @@ Switching to `validate: 'warn'` returns a Scene whose `warnings` array contains 
 
 ### CLI surface
 
-`kernelcad evaluate <file> [--envelope] [--samples-per-mate N] [--combinatorial]` runs the envelope review across every captured assembly. Exit 0 (clean) / 1 (script error, or sampling flags used without `--envelope`) / 2 (envelope-error diagnostics surfaced). Passing `--samples-per-mate` or `--combinatorial` without `--envelope` is rejected to prevent silent no-ops.
+`crispcad evaluate <file> [--envelope] [--samples-per-mate N] [--combinatorial]` runs the envelope review across every captured assembly. Exit 0 (clean) / 1 (script error, or sampling flags used without `--envelope`) / 2 (envelope-error diagnostics surfaced). Passing `--samples-per-mate` or `--combinatorial` without `--envelope` is rejected to prevent silent no-ops.
 
 ### MCP surface
 
@@ -775,11 +775,11 @@ For serial chains, preserve at least these interfaces between repair attempts wh
 
 A mechanism build is **not deliverable** if any of these fail. No `ignore[]` workarounds for joint pairs; no shipping with a render that looks right while the assembly is broken.
 
-1. `kernelcad validate --include-interference` returns CLEAN. `ignore[]` is reserved for true intra-part design contacts (a spring "bolted" to a beam, a captured washer); joint-pair contacts (the parts on either side of a `revolute` / `prismatic` mate) **may not be ignored** — they are the test signal for whether the mechanism is physically realized.
+1. `crispcad validate --include-interference` returns CLEAN. `ignore[]` is reserved for true intra-part design contacts (a spring "bolted" to a beam, a captured washer); joint-pair contacts (the parts on either side of a `revolute` / `prismatic` mate) **may not be ignored** — they are the test signal for whether the mechanism is physically realized.
 2. Every declared mate passes Gate 6 (mate physical realization): the pin/equivalent feature actually constrains the two parts, the pin stays in both holes at every pose in the mate's limits, and bearing surfaces align. Surfaces an advisory `assembly.mate.not-physically-realized` (`info` severity) only for revolute mates built with `joint.clevis(...)` whose `clevis.structural` is attached as `capacity: { structure }` on the mate; its pin, plate and knuckle dimensions come from that record. Other mates are not evaluated. The merge gates under the physics-grounded loop are `mechanism.disconnect` and `mechanism.interpenetration`, which fire under motion at validate-time. `joint.clevis(...)` passes by construction only when its returned geometry and connectors are actually used.
 3. Every revolute joint passes Gate 4 (visual exposure) when it opts in with `exposure: 'exposed'` on the mate: the hinge mechanism reads as a hinge (fork daylight + pin stickout). Mates without the declaration are not checked.
-4. The render-inspect loop is followed: a `kernelcad render inspect` pass after every geometry change, with visible issues called out.
-5. (Opt-in) `kernelcad validate --include-interference --include-physics` adds the physics-based gate. Two extra failure codes: `mechanism.unstable-under-gravity` (non-finite required torque at a sampled pose) and `mechanism.drops-on-release` (joints drift > 5° or bodies translate > 50 mm in a 0.5 s drop-test from rest). Bare revolutes without a closed-loop spring / declared actuator fail this gate; single-body springs fastened to one arm don't help — see issue #361 (closed-loop tendon API). A closed-loop mate graph does not fail this gate: it reports warning `mechanism.physics-unsupported` and stays unverified.
+4. The render-inspect loop is followed: a `crispcad render inspect` pass after every geometry change, with visible issues called out.
+5. (Opt-in) `crispcad validate --include-interference --include-physics` adds the physics-based gate. Two extra failure codes: `mechanism.unstable-under-gravity` (non-finite required torque at a sampled pose) and `mechanism.drops-on-release` (joints drift > 5° or bodies translate > 50 mm in a 0.5 s drop-test from rest). Bare revolutes without a closed-loop spring / declared actuator fail this gate; single-body springs fastened to one arm don't help — see issue #361 (closed-loop tendon API). A closed-loop mate graph does not fail this gate: it reports warning `mechanism.physics-unsupported` and stays unverified.
 
 **Collision geometry (`part.collision`).** The physics export collides each part as the convex hull of its whole shape. For a non-convex part (a plate with rods, a shaft with side lugs, an L bracket) that hull fills empty space, and the physics gate reports contacts where no material exists. Declare convex pieces in the part's own frame: `arm.part('base', shape).collision([plate, rodA, rodB])`. It returns the part ref for chaining, each call appends, and an empty array or a non-Shape entry throws an invalid-args error. The export then emits one mesh asset and one geom per piece (`<mesh>` named `<part>__c0`, `__c1`, ...) instead of one hull. Parts without `collision` keep the single hull. Mass and inertia still come from the real shape, so the pieces must cover the part's material (extra overlap between pieces is fine). Mate-adjacent pairs stay excluded from contact either way. Example: `examples/kinematic/collision-shapes.kcad.ts`.
 
@@ -890,7 +890,7 @@ Agents often work in separate git worktrees or branches. Before merging an
 assembly edit, check it locally against current head:
 
 ```bash
-kernelcad collab check --file examples/collab/bracket-and-motor-plate.kcad.ts \
+crispcad collab check --file examples/collab/bracket-and-motor-plate.kcad.ts \
   --base origin/develop --head origin/develop --yours my-branch --json
 ```
 
@@ -922,8 +922,8 @@ After authoring a multi-part assembly, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 — no `assembly.*` diagnostics |
-| G-no-interference | `kernelcad interference` reports zero pairs — non-clashing models are mandatory for harness gates |
+| G-eval | `crispcad evaluate` exits 0 — no `assembly.*` diagnostics |
+| G-no-interference | `crispcad interference` reports zero pairs — non-clashing models are mandatory for harness gates |
 | G-frame-not-floating | Every part is reachable in the mate graph from at least one fixed or grounded connector — disconnected parts fail Solvespace-style 5-way status |
 | G-mate-pair-compatible | Each `arm.mate(a, b, type, …)` connects two connectors whose types are compatible with the mate type (capture-time validation surfaces `assembly.mate.type-mismatch`) |
 | G-pose-paramref-bound | If pose ParamRefs are used for revolute / prismatic mates, each ParamRef is declared at script top with `param('joint-name', default, { min, max })` |

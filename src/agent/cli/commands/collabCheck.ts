@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 //
-// `kernelcad collab check` — the local gate for agents working in separate git
+// `crispcad collab check` — the local gate for agents working in separate git
 // worktrees/branches. Composition: capture base/head/yours → lift the
 // change-set → merge onto head → footprint → gate the merged candidate.
 //

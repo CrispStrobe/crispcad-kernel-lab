@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: an instrument enclosure lid with an elliptical through-window and a spline-bounded blind thumb recess, both made with Shape.cutout(). OCCT volume, validity, face and created-ref checks against a closed form and against the same lid built from explicit booleans.",
+  "scope": "Local CrispCAD Node API: an instrument enclosure lid with an elliptical through-window and a spline-bounded blind thumb recess, both made with Shape.cutout(). OCCT volume, validity, face and created-ref checks against a closed form and against the same lid built from explicit booleans.",
   "invocation": "node --import tsx docs/demos/cutout-nurbs-profile/capture-demo.mts",
   "source": "docs/demos/cutout-nurbs-profile/instrument-lid.kcad.ts",
   "sourceSha256": "10cff96e892aebf3536b9aebe0ea3356f1e4068c82bad193d3786493f8c93a17",

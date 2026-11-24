@@ -1,4 +1,4 @@
-# Reproduce Ray-Ban Meta smart glasses (Wayfarer) as a kernelCAD model
+# Reproduce Ray-Ban Meta smart glasses (Wayfarer) as a CrispCAD model
 
 Build the iconic Ray-Ban Meta Wayfarer silhouette from primitives — recognizable as Meta smart glasses, not generic eyewear. Front-face only (skip temples in v1).
 

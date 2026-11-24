@@ -3,7 +3,7 @@
 // scripts/parts/sources.ts
 //
 // The Phase-1 parts-ingestion SOURCE REGISTRY: the machine-readable form of the
-// open-STEP source sweep. Each entry is an upstream collection kernelCAD can
+// open-STEP source sweep. Each entry is an upstream collection CrispCAD can
 // ingest at scale, pinned to a real commit for reproducible runs.
 //
 // Only MIRRORABLE sources live here:

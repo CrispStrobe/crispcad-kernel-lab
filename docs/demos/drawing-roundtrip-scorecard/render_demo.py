@@ -23,7 +23,7 @@ def base(title: str) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     img = Image.new("RGB", (W, H), "white")
     d = ImageDraw.Draw(img)
     d.text((40, 28), title, font=ImageFont.truetype(BOLD, 32), fill="#1b2a3a")
-    d.text((40, H - 38), "kernelCAD drawing_to_cad — local scorecard run on sheets kernelCAD drew itself; not third-party or scanned drawings",
+    d.text((40, H - 38), "CrispCAD drawing_to_cad — local scorecard run on sheets CrispCAD drew itself; not third-party or scanned drawings",
            font=ImageFont.truetype(FONT, 15), fill="#7a8794")
     return img, d
 
@@ -38,7 +38,7 @@ def main() -> None:
     cb, ca = Counter(r["status"] for r in before.values()), Counter(r["status"] for r in after.values())
     slides = []
 
-    img, d = base("Input: a kernelCAD PDF drawing, nothing else")
+    img, d = base("Input: a CrispCAD PDF drawing, nothing else")
     sheet = Image.open(HERE / "verification" / "stepped-shaft-sheet.png").convert("RGB")
     sheet.thumbnail((1180, 560))
     img.paste(sheet, ((W - sheet.width) // 2, 85))

@@ -55,7 +55,7 @@ This is what previous iterations failed at. Reading the photo carefully:
 - Subdial: pink ring (~4 mm OD, ~3 mm ID), white face inside, red hand, at roughly the 3-4 o'clock dial location, center offset ~7 mm from dial center.
 - Hour hand (~7 mm long, broad blade), minute hand (~10 mm long, slimmer). Both yellow, set to roughly 10:10 in the photo.
 - Pinion cap in the center, yellow.
-- A small "AP" emblem (or its kernelCAD equivalent — leave generic) bottom-left around 7-8 o'clock.
+- A small "AP" emblem (or its CrispCAD equivalent — leave generic) bottom-left around 7-8 o'clock.
 
 ### Crystal
 

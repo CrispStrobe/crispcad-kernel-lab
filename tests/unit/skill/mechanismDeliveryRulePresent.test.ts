@@ -15,7 +15,7 @@ const REQUIRED_PHRASES = [
   'render-inspect loop',
 ];
 const REQUIRED_ITEM_ORDER = [
-  '1. `kernelcad validate --include-interference` returns CLEAN',
+  '1. `crispcad validate --include-interference` returns CLEAN',
   '2. Every declared mate passes Gate 6',
   '3. Every revolute joint passes Gate 4',
   '4. The render-inspect loop',

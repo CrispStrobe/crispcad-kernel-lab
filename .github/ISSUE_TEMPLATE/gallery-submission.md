@@ -1,6 +1,6 @@
 ---
 name: Gallery submission
-about: Submit your build for the kernelCAD gallery
+about: Submit your build for the CrispCAD gallery
 title: '[gallery] '
 labels: ['gallery-submission']
 ---
@@ -10,7 +10,7 @@ labels: ['gallery-submission']
 - **Title (2–6 words):**
 - **Author handle (e.g. X / GitHub):**
 - **Author URL:**
-- **kernelCAD version used:**
+- **CrispCAD version used:**
 
 ## The prompt
 
@@ -33,4 +33,4 @@ Link to a public `.kcad.ts` file (gist, your own repo, this repo, etc.).
 - [ ] Video is mine or I have permission to share it
 - [ ] Prompt is the actual prompt I used (no embellishment)
 - [ ] Source code is publicly viewable
-- [ ] I'm OK with the gallery framing "Built with kernelCAD" + author credit
+- [ ] I'm OK with the gallery framing "Built with CrispCAD" + author credit

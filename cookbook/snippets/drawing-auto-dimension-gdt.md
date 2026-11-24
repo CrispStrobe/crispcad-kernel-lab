@@ -14,7 +14,7 @@ when_to_use: You need a quotable engineering drawing without writing every callo
 
 ```typescript
 // Export:
-//   kernelcad export svg-drawing mount.kcad.ts -o mount.svg --options '{"autoAnnotate":true}'
+//   crispcad export svg-drawing mount.kcad.ts -o mount.svg --options '{"autoAnnotate":true}'
 //   MCP: export({ target: 'model', file, format: 'svg-drawing', output_path,
 //                 options: { format: 'svg-drawing', autoAnnotate: true } })
 // Sheet: datums A (bottom, declared) / B / C, "4× ⌀6.5 THRU" over "⌖ ⌀0.05 A B C"

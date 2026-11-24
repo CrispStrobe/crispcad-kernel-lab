@@ -6,7 +6,7 @@
     "sha256": "808d9a2fb7208f8f8f44a3e31e3b608a38aa756c1b0e87abd5d00233b41ed9a3"
   },
   "preview": {
-    "tool": "kernelCAD.render_preview",
+    "tool": "CrispCAD.render_preview",
     "views": ["iso"],
     "width": 1280,
     "height": 720,
@@ -23,7 +23,7 @@
     }
   },
   "animation": {
-    "tool": "kernelCAD.capture_animation",
+    "tool": "CrispCAD.capture_animation",
     "file": "project:OsdlASSu",
     "durationMs": 6000,
     "fps": 24,

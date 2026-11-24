@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/esp32-s3-zero-board.kcad.ts
 //
-// Waveshare ESP32-S3-Zero development board — kernelCAD model composed from
+// Waveshare ESP32-S3-Zero development board — CrispCAD model composed from
 // REAL component STEP geometry (KiCad packages3D) on an original modeled PCB.
 //
 // Follows the esp32-devkit-board.kcad.ts template: the PCB is our own primitive
@@ -40,7 +40,7 @@ const PCB_L = 25.0; // X  (length)
 const PCB_W = 24.0; // Y  (width)
 const PCB_T = 1.0;  // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render and LabWired both key off these,
+// Explicit part colors — the CrispCAD render and LabWired both key off these,
 // so every composed component is tinted (imported STEP would otherwise be gray).
 // NOTE: .color() takes a '#RRGGBB' STRING; a numeric 0xRRGGBB is NOT honored.
 const PCB_BLACK   = '#141414'; // black solder mask (Waveshare)

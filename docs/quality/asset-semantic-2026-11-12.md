@@ -31,7 +31,7 @@
 
 The [handoff bundle](../../artifacts/catalog-demos/shipyard-blast-dust-collector-filter-media-material-review-20261112/README.md) retains the five sample sources and renders, before/after target images, exact open-target output, current public baseline, source/settings, generated-index checks, test and lint logs, local page check, and visually inspected MP4.
 
-This is a material assignment correction to a generic native kernelCAD scene asset. It is not a vendor-specific design, filtration specification, equipment performance claim, deployment verification, or physical acceptance.
+This is a material assignment correction to a generic native CrispCAD scene asset. It is not a vendor-specific design, filtration specification, equipment performance claim, deployment verification, or physical acceptance.
 
 ## Second sample — recycling-facility machinery
 
@@ -68,13 +68,13 @@ The [review bundle](../../artifacts/catalog-demos/recycling-facility-five-previe
 - The focused exported-GLB regression passed, asserting the nine copper tube runs, retained steel/polymer assignments, both presets, triangle count, and envelope. The full catalog integration suite passed: 42 files / 67 tests, including the 2,402-asset export and fresh-index check. ESLint passed for the kit and regression. Results are retained in the [handoff bundle](../../artifacts/catalog-demos/data-center-rear-door-heat-exchanger-copper-material-review-20261112/README.md).
 - A short MP4 shows the five reviewed previews, target before/after, material controls/presets, and local verification. It is branch-local preview evidence, not deployment verification, simulation, or hardware acceptance.
 
-The dated comparison of current official equipment material documentation is retained privately in `kernelCAD-private`; the public artifact describes only native kernelCAD asset behavior.
+The dated comparison of current official equipment material documentation is retained privately in `kernelCAD-private`; the public artifact describes only native CrispCAD asset behavior.
 
 ## Fourth sample — wind-energy equipment previews
 
 - Rechecked PR [#1258](https://github.com/w1ne/kernelCAD-web/pull/1258) before editing at `3e87e4e35486577ed29a32093980046560d23282`: it was open and mergeable, all 17 reported checks succeeded, and no review had been submitted.
 - Reviewed `wind-energy/blade-root-protector`, `cable-entry-boot`, `nacelle-transport-frame`, `wind-farm-meter-pedestal`, and `wind-farm-pad-mount-transformer`. The exact open issue/PR target scan found no competing fix; source-path matches were limited to destination PR #1258. Each checked-in preview was opened. The first three are recognizable with coherent material zones. The meter pedestal is recognizable, though its status light floats 18 mm below the cabinet; that geometry observation is recorded for a future review. The transformer reads as a tank on a concrete pad with ceramic bushings and a side cooling bank.
-- Before the change, five transformer cooling fins used a separate `aluminium` parameter while the modeled tank and fins represent one coated-steel radiator assembly. The dated review of current manufacturer material documentation is retained privately in `kernelCAD-private`; this public record describes only the native kernelCAD asset and its material mapping.
+- Before the change, five transformer cooling fins used a separate `aluminium` parameter while the modeled tank and fins represent one coated-steel radiator assembly. The dated review of current manufacturer material documentation is retained privately in `kernelCAD-private`; this public record describes only the native CrispCAD asset and its material mapping.
 
 | Asset | Baseline envelope (m) | Baseline source SHA-256 | Baseline preview SHA-256 | Observation and result |
 |---|---:|---|---|---|
@@ -89,7 +89,7 @@ The dated comparison of current official equipment material documentation is ret
 - The catalog-wide mechanical scan remains 2,401/2,402 (99.96%); `standard-components/beam-coupling` is the unchanged structural outlier. This scan does not certify semantic realism.
 - All five current public preview, source, and detail routes returned HTTP 200 before the branch change, and live files matched the checked-in baseline. The correction is local to this branch and is not deployed.
 
-The [wind-energy review bundle](../../artifacts/catalog-demos/wind-energy-pad-mount-transformer-radiator-material-review-20261112/README.md) retains the sample sources/renders, public baseline, duplicate-target scan, before/after source and preview, generated-index verification, test/lint logs, and inspected MP4. The work is a generic native kernelCAD asset material correction; it does not establish a vendor-specific design, equipment performance, deployment, simulation, or hardware acceptance.
+The [wind-energy review bundle](../../artifacts/catalog-demos/wind-energy-pad-mount-transformer-radiator-material-review-20261112/README.md) retains the sample sources/renders, public baseline, duplicate-target scan, before/after source and preview, generated-index verification, test/lint logs, and inspected MP4. The work is a generic native CrispCAD asset material correction; it does not establish a vendor-specific design, equipment performance, deployment, simulation, or hardware acceptance.
 
 ## Fifth sample — grid-substation voltage-transformer material review
 

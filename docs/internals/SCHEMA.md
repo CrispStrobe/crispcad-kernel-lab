@@ -1,9 +1,9 @@
 > **Ported from `kernelCAD-private` research; revised for v0.1+ implementation.**
 > See the kernelcad-NORTHSTAR architecture spec (in kernelCAD-private) for current architecture.
 
-# kernelCAD Unified Model Schema
+# CrispCAD Unified Model Schema
 
-This document defines the core data structures for `kernelCAD`, optimizing for high-performance dependency tracking and persistent topological stability.
+This document defines the core data structures for `CrispCAD`, optimizing for high-performance dependency tracking and persistent topological stability.
 
 ## 1. The `RelationshipGraph` (Master State)
 
@@ -40,9 +40,9 @@ The `RelationshipGraph` is the single source of truth for the entire design. It 
 
 ## 2. Stable ID Generation (Persistent Naming)
 
-To avoid the "Lost Appointment" problem during topology changes, kernelCAD uses a **Hierarchical Trace ID**.
+To avoid the "Lost Appointment" problem during topology changes, CrispCAD uses a **Hierarchical Trace ID**.
 
-### The Algorithm: `kernelCAD::generateStableID(entity)`
+### The Algorithm: `CrispCAD::generateStableID(entity)`
 1.  **Origin Trace**: Identify the `FeatureID` that birthed the entity (e.g., `feat_extrude_1`).
 2.  **Ordinal Trace**: If the feature produces multiple entities (e.g., side faces), assign an index based on the generator's local topology (0 = Start Cap, 1 = Side, 2 = End Cap).
 3.  **Parent Context**: Append the IDs of the parent entities used as inputs.

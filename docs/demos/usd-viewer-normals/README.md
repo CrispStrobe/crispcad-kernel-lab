@@ -2,7 +2,7 @@
 
 `format: 'usd'` had two viewer faults.
 
-1. The three.js `USDLoader` found **0 meshes** in a kernelCAD stage. Its USDA
+1. The three.js `USDLoader` found **0 meshes** in a CrispCAD stage. Its USDA
    parser does not read prim children when the opening brace is on the same
    line as `def Xform "Model" {`. The writer now puts each brace on its own
    line, as `usdcat` does.

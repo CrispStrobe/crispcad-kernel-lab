@@ -57,7 +57,7 @@ export function isSolidMeshBackend(shape: unknown): shape is SolidMeshBackend {
   return shape instanceof SolidMeshBackend;
 }
 
-export function binaryStlBytes(P: Float32Array, I: Uint32Array, header = 'kernelCAD mesh solid'): Uint8Array {
+export function binaryStlBytes(P: Float32Array, I: Uint32Array, header = 'CrispCAD mesh solid'): Uint8Array {
   const n = I.length / 3;
   const out = new Uint8Array(84 + 50 * n);
   const view = new DataView(out.buffer);

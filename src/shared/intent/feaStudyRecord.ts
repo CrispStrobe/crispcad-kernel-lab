@@ -38,7 +38,7 @@ type EditableNumbers<T> = T extends number
 export type FeaFaceSelectorInput = EditableNumbers<FaceQuery> | string;
 
 /** Explicit material properties, for a grade outside the named table.
- *  Units are the kernelCAD solver units: mm / N / MPa. */
+ *  Units are the CrispCAD solver units: mm / N / MPa. */
 export interface FeaMaterialProps {
   /** Young's modulus, MPa (N/mm^2). Steel is 200000. */
   E: number;

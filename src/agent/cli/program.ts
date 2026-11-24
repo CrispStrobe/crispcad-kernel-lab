@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// src/agent/cli/program.ts — the kernelcad command tree.
+// src/agent/cli/program.ts — the crispcad command tree.
 import { Command } from 'commander';
 import { createRequire } from 'node:module';
 import { animateCommand } from './commands/animate';
@@ -45,8 +45,8 @@ const pkg = loadPkg();
 export function buildProgram(): Command {
   const program = new Command();
   program
-    .name('kernelcad')
-    .description('kernelCAD — agent-first parametric CAD CLI')
+    .name('crispcad')
+    .description('CrispCAD — agent-first parametric CAD CLI')
     // Positional options: required so `render` (which has both its own
     // options and an `inspect` subcommand sharing flag names like --width /
     // --focus) routes options written after the subcommand name to the

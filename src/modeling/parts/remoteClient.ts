@@ -2,8 +2,8 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/modeling/parts/remoteClient.ts
 //
-// Remote parts tier. Defaults to kernelCAD's own public catalog
-// (kernelcad-parts.pages.dev) so kernelCAD can find off-the-shelf parts out of
+// Remote parts tier. Defaults to CrispCAD's own public catalog
+// (kernelcad-parts.pages.dev) so CrispCAD can find off-the-shelf parts out of
 // the box with no third-party dependency. Override the source with a
 // partsBaseUrl argument or the KERNELCAD_PARTS_BASE_URL env var (e.g. point it
 // at api.step.parts, or any catalog serving the same /v1/parts schema); set
@@ -59,7 +59,7 @@ function resolveBaseUrl(arg: string | undefined): string {
   if (raw.toLowerCase() === 'off' || raw.toLowerCase() === 'none') {
     throw new RemoteDisabledError();
   }
-  // Zero-config default: kernelCAD's own catalog. An explicit arg/env URL
+  // Zero-config default: CrispCAD's own catalog. An explicit arg/env URL
   // overrides it (e.g. api.step.parts, or any catalog serving /v1/parts).
   const url = raw.length === 0 ? KERNELCAD_PARTS_BASE_URL : raw;
   return url.replace(/\/$/, '');
@@ -121,7 +121,7 @@ export async function remoteFetchPartMeta(
     `${base}/v1/parts/${encodeURIComponent(opts.id)}`,
     5000,
   );
-  // Remote catalog records use their own schema rather than a kernelCAD
+  // Remote catalog records use their own schema rather than a CrispCAD
   // PartRecord — map them. Mapping preserves authored hash-bound manifest names;
   // fetch-time connector enrichment is handled separately.
   const raw = (await res.json()) as StepPartsRecord;

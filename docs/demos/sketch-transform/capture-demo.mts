@@ -189,7 +189,7 @@ const implementation = Object.fromEntries(await Promise.all(
   IMPLEMENTATION_FILES.map(async (file) => [file, sha256(await readFile(file))] as const),
 ));
 const evidence = {
-  scope: 'Local kernelCAD Node API: Sketch.translate, Sketch.rotate and Sketch.scale of line-and-arc profiles, Sketch.subtract, extrude to a 60 mm fan guard plate, loop areas and centres computed from the kernel result, OCCT volume, validity, overlap and distance measurement against four pin gauges.',
+  scope: 'Local CrispCAD Node API: Sketch.translate, Sketch.rotate and Sketch.scale of line-and-arc profiles, Sketch.subtract, extrude to a 60 mm fan guard plate, loop areas and centres computed from the kernel result, OCCT volume, validity, overlap and distance measurement against four pin gauges.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),

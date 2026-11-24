@@ -21,7 +21,7 @@ when_to_use: >-
   that minimises unsupported area ("rotate -90° about Y ... drops from 938.2
   to 0.0 mm²"). Apply it by declaring that buildDirection, which the gcode
   export also slices in. Full report per orientation via
-  verify({ check: 'dfm' }) or kernelcad dfm.
+  verify({ check: 'dfm' }) or crispcad dfm.
 ---
 
 ```typescript

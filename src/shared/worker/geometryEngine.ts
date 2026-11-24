@@ -22,7 +22,7 @@ import { isOcctWasmPoisoned } from '../occt/wasmPoison';
 export type { ExecutionResult, GeometryResult, SketchGeometry, FaceGeometry };
 
 /**
- * Default starter script — kernelCAD v0.1 web demo.
+ * Default starter script — CrispCAD v0.1 web demo.
  *
  * v0.1 is script-as-source-of-truth (`.kcad.ts` files): top-level statements
  * with a final `return` of the root shape. The browser worker exposes the
@@ -111,8 +111,8 @@ export class GeometryEngine {
                 // the original code path stays.
                 if (typeof __KERNELCAD_EMBED__ !== 'undefined' && __KERNELCAD_EMBED__) {
                     throw new Error(
-                        'kernelCAD in-browser geometry worker is disabled in embed mode. ' +
-                        'Configure `StudioConfig.backendUrl` so geometry routes to the kernelCAD backend instead.',
+                        'CrispCAD in-browser geometry worker is disabled in embed mode. ' +
+                        'Configure `StudioConfig.backendUrl` so geometry routes to the CrispCAD backend instead.',
                     );
                 }
                 this.worker = new Worker(new URL('../../kernel/backends/occt/worker.ts', import.meta.url), { type: 'module' });

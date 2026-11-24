@@ -447,11 +447,11 @@ export function makeScene(
  * `assembly.interference.overlap` error-severity diagnostics in its
  * decision.
  *
- * This is the agent-safety closure for v0.6: `kernelcad evaluate`
+ * This is the agent-safety closure for v0.6: `crispcad evaluate`
  * (`KERNELCAD_VALIDATE_DEFAULT=error`) MUST refuse a clashing assembly,
  * not silently emit it. Reuses `detectInterferences` (BREP common-volume,
  * bbox pre-filter) on the lowered `SceneBackend` — same code path as the
- * standalone `kernelcad interference` CLI.
+ * standalone `crispcad interference` CLI.
  *
  * Cost: full lower of the assembly's records + O(n²) bbox overlaps + a
  * boolean intersect per overlapping pair. Only called when
@@ -858,7 +858,7 @@ function gatherSolvedModelGateInputs(
   } | undefined>;
   envelopeResultPromise: Promise<import('../mates/poseEnvelope').PoseEnvelopeReviewResult | undefined>;
 } {
-  // Under `'error'` mode (the harness gate set by `kernelcad evaluate`), also
+  // Under `'error'` mode (the harness gate set by `crispcad evaluate`), also
   // run pairwise BREP interference detection and fold the results into the
   // validator. Solid bodies sharing volume is mechanically invalid, so the
   // harness MUST refuse to ship a clashing assembly. The interference check
@@ -890,7 +890,7 @@ function gatherSolvedModelGateInputs(
   //     output. This nudges agents to declare limits in the first place.
   //   - The `posesGate: 'envelope'` opt remains the path to actually run
   //     envelope review; agents wanting the v0.6.2 auto-coverage simply
-  //     pass `posesGate: 'envelope'` (or use `kernelcad evaluate --envelope`).
+  //     pass `posesGate: 'envelope'` (or use `crispcad evaluate --envelope`).
   //
   // See the v0.7.5 CHANGELOG entry and the merge commit message for the
   // full rationale.
@@ -1107,7 +1107,7 @@ function finalizeSolvedModelScene(
  * truth pass so it can report `mechanism.rest-interpenetration`. The default
  * flips to `'error'` when
  * `KERNELCAD_VALIDATE_DEFAULT=error` is set in the environment (T10
- * wires this from `kernelcad evaluate`).
+ * wires this from `crispcad evaluate`).
  *
  * Capture-time pose validation (unknown joint, ball-vs-scalar pose
  * shape) throws SYNCHRONOUSLY from this method — the validator gate
@@ -1163,7 +1163,7 @@ export function recordSolvedModel(
   const limitWarnings = checkPoseLimits(state.joints, poses, state.session);
 
   // Mode resolution: explicit opts win; otherwise read the env override
-  // (T10 sets this from `kernelcad evaluate`). Default for everything else
+  // (T10 sets this from `crispcad evaluate`). Default for everything else
   // is `'warn'` — never breaking, never silent.
   const envDefault = process.env.KERNELCAD_VALIDATE_DEFAULT === 'error' ? 'error' : 'warn';
   const mode: 'warn' | 'error' | 'off' = opts?.validate ?? envDefault;

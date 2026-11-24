@@ -39,7 +39,7 @@ import type { SketchCommand } from '../../shared/capture/sketchCommand';
 import { toParam } from '../../shared/runtime/editableHelpers';
 
 /**
- * One line or circular-arc segment in millimetres, kernelCAD frame (Y up).
+ * One line or circular-arc segment in millimetres, CrispCAD frame (Y up).
  *
  * `bulge` is the DXF convention: `tan(includedAngle / 4)`, signed, positive
  * counter-clockwise, `|bulge| > 1` for a major arc. Absent or 0 means a

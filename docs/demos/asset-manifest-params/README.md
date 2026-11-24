@@ -1,7 +1,7 @@
 # Asset manifest local demo
 
 This bundle demonstrates the actual checked-in mounting-plate example through
-the local kernelCAD build path and the registered `asset_manifest` MCP handler.
+the local CrispCAD build path and the registered `asset_manifest` MCP handler.
 It does not start a browser, deploy, publish, or claim fabrication acceptance.
 
 ## Reproduce

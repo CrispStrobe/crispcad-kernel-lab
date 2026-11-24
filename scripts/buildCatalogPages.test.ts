@@ -44,7 +44,7 @@ describe('catalog SEO page export', () => {
         for (const a of index.assets) {
             const html = readFileSync(join(out, assetPath(a), 'index.html'), 'utf8');
             const title = first(html, /<title>([^<]+)<\/title>/);
-            expect(title, `${a.kit}/${a.id} title`).toBe(escapeHtml(`${a.title} - free low-poly ${a.category} model (CC0) | kernelCAD`));
+            expect(title, `${a.kit}/${a.id} title`).toBe(escapeHtml(`${a.title} - free low-poly ${a.category} model (CC0) | CrispCAD`));
             titles.add(title!);
             expect(first(html, /<link rel="canonical" href="([^"]+)"/)).toBe(assetUrl(a));
             const description = first(html, /<meta name="description" content="([^"]*)"/)!;
@@ -53,7 +53,7 @@ describe('catalog SEO page export', () => {
             expect(first(html, /<meta property="og:image" content="([^"]+)"/)).toBe(`${assetUrl(a)}preview.png`);
             expect(first(html, /<meta name="twitter:card" content="([^"]+)"/)).toBe('summary_large_image');
             expect(html).toContain(`<h1>${escapeHtml(a.title)}</h1>`);
-            expect(html).toContain(`https://app.kernelcad.com/studio?catalog=${a.kit}/${a.id}`);
+            expect(html).toContain(`https://github.com/CrispStrobe/kernelCAD-web/blob/develop/catalog/kits/${a.kit}/${a.id}.kcad.ts`);
             for (const p of a.params) expect(html, `${a.kit}/${a.id} knob ${p.name}`).toContain(`<td><code>${escapeHtml(p.name)}</code></td>`);
 
             const product = jsonLd(html).find((d) => d['@type'] === 'Product');
@@ -73,17 +73,17 @@ describe('catalog SEO page export', () => {
         const urls = ['catalog/index.html', kitPath(index.kits[0]) + 'index.html', assetPath(index.assets[0]) + 'index.html'];
         for (const url of urls) {
             const html = readFileSync(join(out, url), 'utf8');
-            expect(html, url).toContain('https://static.cloudflareinsights.com/beacon.min.js');
+            expect(html, url).not.toContain('cloudflareinsights');
             expect(html, url).toContain('e5f5f4c6464f456d8f5376411e77f545');
             expect(html.match(/data-cf-beacon=/g)).toHaveLength(1);
         }
     });
 
-    it('turns asset pages into truthful kernelCAD product entry points', () => {
+    it('turns asset pages into truthful CrispCAD product entry points', () => {
         for (const a of index.assets.slice(0, 20)) {
             const html = readFileSync(join(out, assetPath(a), 'index.html'), 'utf8');
-            expect(html).toContain('aria-label="Continue with kernelCAD"');
-            expect(html).toContain(`Start with ${escapeHtml(a.title)} in kernelCAD Studio`);
+            expect(html).toContain('aria-label="Continue with CrispCAD"');
+            expect(html).toContain(`Start with ${escapeHtml(a.title)} in CrispCAD Studio`);
             expect(html).toContain('href="/code-cad/"');
             expect(html).toContain('href="/mcp/"');
             expect(html).toContain('MCP tools for AI assistants');
@@ -124,8 +124,8 @@ describe('catalog SEO page export', () => {
             expect(html, `${asset.kit}/${asset.id} viewer`).toContain('<model-viewer id="asset-viewer"');
             expect(html, `${asset.kit}/${asset.id} default GLB`).toContain(`href="${asset.id}.glb" download="${asset.id}.glb"`);
             expect(html, `${asset.kit}/${asset.id} default STEP`).toContain(`href="${asset.id}.step" download="${asset.id}.step"`);
-            expect(html, `${asset.kit}/${asset.id} Studio link`).toContain(`https://app.kernelcad.com/studio?catalog=${asset.kit}/${asset.id}`);
-            expect(html, `${asset.kit}/${asset.id} honest MCP handoff`).toContain('does not expose catalog lookup or fetch tools');
+            expect(html, `${asset.kit}/${asset.id} source link`).toContain(`https://github.com/CrispStrobe/kernelCAD-web/blob/develop/catalog/kits/${asset.kit}/${asset.id}.kcad.ts`);
+            expect(html, `${asset.kit}/${asset.id} local MCP handoff`).toContain('crispcad mcp');
             expect(html, `${asset.kit}/${asset.id} copied prompt`).toContain('data-copy-prompt');
             expect(html, `${asset.kit}/${asset.id} default download path`).toContain(assetGlbPath(asset).split('/').at(-1)!);
             expect(html, `${asset.kit}/${asset.id} STEP path`).toContain(assetStepPath(asset).split('/').at(-1)!);
@@ -204,7 +204,7 @@ describe('catalog SEO page export', () => {
         const graph = markup[0]['@graph'] as Record<string, unknown>[];
         expect(graph.find((item) => item['@type'] === 'CollectionPage')).toMatchObject({
             url: `${ORIGIN}catalog/`,
-            name: 'Free low-poly 3D model catalog (CC0) | kernelCAD',
+            name: 'Free low-poly 3D model catalog (CC0) | CrispCAD',
             mainEntity: { '@type': 'ItemList', numberOfItems: index.assets.length },
         });
         expect(graph.find((item) => item['@type'] === 'BreadcrumbList')).toMatchObject({
@@ -213,7 +213,7 @@ describe('catalog SEO page export', () => {
                 { position: 2, item: `${ORIGIN}catalog/` },
             ],
         });
-        expect(hub).toContain('aria-label="Use models with kernelCAD"');
+        expect(hub).toContain('aria-label="Use models with CrispCAD"');
         expect(hub).toContain('href="/code-cad/"');
         expect(hub).toContain('href="/mcp/"');
         expect(hub).not.toMatch(/aggregateRating|reviewCount|fake customer/i);

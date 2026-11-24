@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/esp32-devkit-board.kcad.ts
 //
-// ESP32 DevKitC / DevKit V1 development board — kernelCAD model composed from
+// ESP32 DevKitC / DevKit V1 development board — CrispCAD model composed from
 // REAL component STEP geometry (KiCad packages3D) on an original modeled PCB.
 //
 // This is the TEMPLATE every other authored board follows: the PCB is our own
@@ -34,7 +34,7 @@ const PCB_L = 52.0; // X  (length)
 const PCB_W = 28.0; // Y  (width)
 const PCB_T = 1.6;  // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render and LabWired both key off these,
+// Explicit part colors — the CrispCAD render and LabWired both key off these,
 // so every composed component is tinted (imported STEP would otherwise be gray).
 // NOTE: .color() takes a '#RRGGBB' STRING; a numeric 0xRRGGBB is NOT honored
 // (the imported STEP falls back to gray). Keep every color a string.

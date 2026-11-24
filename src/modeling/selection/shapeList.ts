@@ -46,7 +46,7 @@ import {
 } from '../../shared/intent/queryNormalize';
 
 /** Digits kept when quantizing a metric. 1e-6 mm is a nanometre at the mm
- *  scale kernelCAD works in — far below any real geometric distinction, and
+ *  scale CrispCAD works in — far below any real geometric distinction, and
  *  far above OCCT's accumulated float noise. */
 const DEFAULT_METRIC_DIGITS = 6;
 

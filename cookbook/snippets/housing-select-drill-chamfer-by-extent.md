@@ -14,7 +14,7 @@ when_to_use: >-
   pushPoints, cboreHole, slot2D, extrude both) and need the same part here:
   round the vertical edges, shell it open at the top, drill a point pattern
   with counterbores, chamfer a face's edges, cut a slot, pick the highest face
-  after a union, and mirror an ear. Each line is the kernelCAD form of one such
+  after a union, and mirror an ear. Each line is the CrispCAD form of one such
   step.
 ---
 

@@ -589,7 +589,7 @@
       }
     },
     "cli.invalid-args": {
-      "template": "CLI was called with missing or malformed arguments. Run `kernelcad --help`.",
+      "template": "CLI was called with missing or malformed arguments. Run `crispcad --help`.",
       "nextAction": {
         "kind": "check-cli-args"
       }
@@ -601,19 +601,19 @@
       }
     },
     "cli.host-fs-unavailable": {
-      "template": "This feature reads files from disk and is unavailable in the browser runtime. Run the script through the kernelCAD CLI or MCP server, or drop the call.",
+      "template": "This feature reads files from disk and is unavailable in the browser runtime. Run the script through the CrispCAD CLI or MCP server, or drop the call.",
       "nextAction": {
         "kind": "inspect-message"
       }
     },
     "cli.file-read": {
-      "template": "kernelCAD could not read the script file. Either the path does not exist locally, or this server is hosted/remote and cannot see your filesystem — pass the script inline via `code` instead of `file`.",
+      "template": "CrispCAD could not read the script file. Either the path does not exist locally, or this server is hosted/remote and cannot see your filesystem — pass the script inline via `code` instead of `file`.",
       "nextAction": {
         "kind": "check-file-path"
       }
     },
     "cli.file-write": {
-      "template": "kernelCAD could not write the output file. Check the output path is writable and that -o points at a directory when exporting multiple parts.",
+      "template": "CrispCAD could not write the output file. Check the output path is writable and that -o points at a directory when exporting multiple parts.",
       "nextAction": {
         "kind": "check-file-path"
       }
@@ -1057,7 +1057,7 @@
       }
     },
     "assembly.interference.overlap": {
-      "template": "Translate one part along its mating direction, or add a coupling part (washer / spacer / bracket) to clear the overlap. Use --ignore '<a>,<b>' on `kernelcad interference` if the contact is intentional.",
+      "template": "Translate one part along its mating direction, or add a coupling part (washer / spacer / bracket) to clear the overlap. Use --ignore '<a>,<b>' on `crispcad interference` if the contact is intentional.",
       "nextAction": {
         "kind": "rewrite-feature",
         "guidance": "translate one part or insert a spacer/bracket to remove the BREP overlap"
@@ -2066,7 +2066,7 @@
       }
     },
     "animation.bake.geometry-param": {
-      "template": "A track param drives part GEOMETRY (a dimension, extrude depth, hole radius, …) rather than a mate pose, so Studio baked playback — which only re-applies rigid per-part world transforms — would show the wrong shape. Studio playback supports POSE-ONLY (mate-driven) timelines; render geometry-animating timelines with the capture_animation MCP tool or `kernelcad animate` (offline MP4 re-meshes every frame).",
+      "template": "A track param drives part GEOMETRY (a dimension, extrude depth, hole radius, …) rather than a mate pose, so Studio baked playback — which only re-applies rigid per-part world transforms — would show the wrong shape. Studio playback supports POSE-ONLY (mate-driven) timelines; render geometry-animating timelines with the capture_animation MCP tool or `crispcad animate` (offline MP4 re-meshes every frame).",
       "nextAction": {
         "kind": "call-tool",
         "tool": "capture_animation",

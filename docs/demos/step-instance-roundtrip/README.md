@@ -17,8 +17,8 @@ drawn once for each instance placement.
 - Video settings and output hashes: [`video-evidence.json`](./video-evidence.json)
 - Preview: [`poster.png`](./poster.png)
 
-The capture uses kernelCAD's Node API: the export path behind
-`kernelcad export step` and the project writer behind `kernelcad import-step`.
+The capture uses CrispCAD's Node API: the export path behind
+`crispcad export step` and the project writer behind `crispcad import-step`.
 It reads both STEP files back with the OCCT XCAF STEP reader and fails unless:
 
 - the product count and the instance count are equal in both files;

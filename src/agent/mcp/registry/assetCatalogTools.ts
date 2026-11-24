@@ -21,7 +21,7 @@ export const assetCatalogToolEntries: ToolRegistryEntry[] = [
       name: 'search_assets',
       description:
         'Use this when a game, three.js scene or 3D page needs a ready low-poly model (tree, bench, lamp, crate, building piece) '
-        + 'instead of modelling it from scratch. Searches the kernelCAD asset catalog: original parametric .kcad.ts programs '
+        + 'instead of modelling it from scratch. Searches the CrispCAD asset catalog: original parametric .kcad.ts programs '
         + 'that export as flat-shaded GLB at real-world scale with one shared material. Filter by kit, category or a triangle '
         + `budget for mobile. ${ROW_NOTE} `
         + 'When q or a filter is given, coverage says how far to trust the answer: none (nothing answers: say so, do not '

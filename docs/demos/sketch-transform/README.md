@@ -25,7 +25,7 @@ clearance.
 ## Replay and verification
 
 - Capture invocation: `node --import tsx docs/demos/sketch-transform/capture-demo.mts`
-- View image: `kernelcad render docs/demos/sketch-transform/fan-guard.kcad.ts -o view.png --pose 25,55 --width 1000 --height 640`
+- View image: `crispcad render docs/demos/sketch-transform/fan-guard.kcad.ts -o view.png --pose 25,55 --width 1000 --height 640`
   (the pose file it writes is stored as [`view.png`](./view.png))
 - Video invocation: `node --import tsx docs/demos/sketch-transform/make-video.mts`
 - Values and file hashes: [`evidence.json`](./evidence.json)

@@ -103,7 +103,7 @@ function writeSceneProductTree(
  * stepAssemblyExport.ts.)
  *
  * Why a free function instead of a `Scene.exportSTEP()` method: the agent-
- * facing Scene surface stays lean (per the kernelCAD product strategy —
+ * facing Scene surface stays lean (per the CrispCAD product strategy —
  * generic tools, not convenience methods). `runAndExport` calls this
  * directly when the script returns a Scene. Callers outside the runtime
  * (CLI, MCP, future Studio export panel) can import this free function.

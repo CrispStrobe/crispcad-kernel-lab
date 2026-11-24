@@ -27,7 +27,7 @@ while you design it.
 4. [Floor-to-wall corners](#4-floor-to-wall-corners)
 5. [Mating square parts: dogbone and T-bone reliefs](#5-mating-square-parts-dogbone-and-t-bone-reliefs)
 6. [Undercuts and setups](#6-undercuts-and-setups)
-7. [Checking it in kernelCAD](#7-checking-it-in-kernelcad)
+7. [Checking it in CrispCAD](#7-checking-it-in-kernelcad)
 8. [FAQ](#8-faq)
 
 ## The rules at a glance
@@ -53,7 +53,7 @@ puts it, a milled internal corner always has some radius.
 A truly sharp corner needs another process, such as EDM. That adds cost
 and lead time, so it is usually better to change the design.
 
-**How kernelCAD helps.** The model is a `.kcad.ts` source file, so the
+**How CrispCAD helps.** The model is a `.kcad.ts` source file, so the
 corner radius is a named value with its reason beside it, such as
 `cornerR = 4 // > R3 of a 6 mm end mill`. The next person to edit the part
 sees why, and the fillet survives the cleanup.
@@ -79,7 +79,7 @@ In practice, pick the largest end mill the pocket allows and make the
 corner 0.5–1 mm larger than its radius. Bigger tools cut faster and bend
 less, so a generous radius also lowers the price.
 
-**How kernelCAD helps.** `dfm_review` checks every vertical inside corner
+**How CrispCAD helps.** `dfm_review` checks every vertical inside corner
 against the end mill you name. It reports both sharp corners and fillets
 that are too small for the tool, with their positions. That's a check in
 seconds, not a question from the shop two days later.
@@ -101,7 +101,7 @@ which must be thicker to stay stiff, which needs a bigger corner. If a
 pocket must be deep, step it, so a large tool clears most of it and a
 small tool finishes only the bottom.
 
-**How kernelCAD helps.** Because the part is code, the depth can be
+**How CrispCAD helps.** Because the part is code, the depth can be
 computed from the tool, for example `const pocketDepth = 3 * toolD`. The
 rule then holds when someone changes the tool or the pocket later.
 
@@ -136,7 +136,7 @@ the corner.
 
 If nothing mates with the corner, a plain fillet is simpler.
 
-**How kernelCAD helps.** A dogbone is four lines of code: one cylinder
+**How CrispCAD helps.** A dogbone is four lines of code: one cylinder
 subtracted at each corner, positioned from the insert size and the tool
 radius. Change the insert or the tool and every relief moves with it.
 
@@ -159,11 +159,11 @@ Three or four setups are usually acceptable; more gets expensive. Features that 
 should be cut in the same setup
 ([Hubs](https://www.hubs.com/knowledge-base/how-design-parts-cnc-machining/)).
 
-**How kernelCAD helps.** `dfm_review` takes the setups you plan as a list
+**How CrispCAD helps.** `dfm_review` takes the setups you plan as a list
 of approach directions. It reports the unreachable area in mm², so you know
 before quoting whether a part needs one setup or two.
 
-## 7. Checking it in kernelCAD
+## 7. Checking it in CrispCAD
 
 The examples below are real runs of the MCP `dfm_review` tool with
 `processes: ["cnc"]`. All four parts are in
@@ -268,5 +268,5 @@ special tools.
 A round relief cut past the corner of a pocket, along the diagonal, so a
 square part can seat fully. Its radius follows the cutter.
 
-**Try kernelCAD free. Connect it to ChatGPT or Claude in a minute:
+**Try CrispCAD free. Connect it to ChatGPT or Claude in a minute:
 https://app.kernelcad.com/connect**

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/render/palette.ts
 //
-// Role-based color tokens for kernelCAD assemblies. Tokens carry semantic
+// Role-based color tokens for CrispCAD assemblies. Tokens carry semantic
 // authoring intent ('servo', 'gear', etc.); the renderer resolves them to
 // hex via ROLE_PALETTE at render time.
 //

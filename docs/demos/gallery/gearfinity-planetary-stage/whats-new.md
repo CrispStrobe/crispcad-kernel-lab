@@ -12,7 +12,7 @@ gearfinity-planetary-stage
 
 ## What's new
 
-This gallery demo shows the agent building a Gearfinity-inspired 12 : 8 : 28 planetary gear stage as a connected kernelCAD assembly with proper 20° pressure-angle involute teeth — bolted rear flange, internal ring gear, drive sun, three planets on carrier pins, slewing roller bearing race, output shaft, and a 5-blade turbine fan — all driven by one `driveAngleDeg` ParamRef. A parameterized kinematic preview, not a full involute meshing simulation; the visible scrub through the rotate phase is mate-pose math, and the mesh-cache fast path keeps live param edits responsive (~5 ms on the engine side after the initial build).
+This gallery demo shows the agent building a Gearfinity-inspired 12 : 8 : 28 planetary gear stage as a connected CrispCAD assembly with proper 20° pressure-angle involute teeth — bolted rear flange, internal ring gear, drive sun, three planets on carrier pins, slewing roller bearing race, output shaft, and a 5-blade turbine fan — all driven by one `driveAngleDeg` ParamRef. A parameterized kinematic preview, not a full involute meshing simulation; the visible scrub through the rotate phase is mate-pose math, and the mesh-cache fast path keeps live param edits responsive (~5 ms on the engine side after the initial build).
 
 ![Demo](./demo.mp4)
 ![Panel](./panel.png)

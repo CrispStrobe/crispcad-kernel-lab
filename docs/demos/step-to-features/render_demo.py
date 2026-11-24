@@ -45,7 +45,7 @@ def slide(render: pathlib.Path | None, title: str, lines: list[str], mono: list[
         for line in mono:
             draw.text((text_x, y), line, font=code, fill="#0b5394")
             y += 26
-    draw.text((40, H - 40), "kernelCAD mesh_to_features — local CLI run; geometry check only, not a physical part test",
+    draw.text((40, H - 40), "CrispCAD mesh_to_features — local CLI run; geometry check only, not a physical part test",
               font=ImageFont.truetype(FONT, 16), fill="#7a8794")
     return img
 
@@ -62,7 +62,7 @@ def main() -> None:
             "source.step — exact B-rep, no feature history.",
             "lib.fromSTEP would give a fixed body.",
             "",
-            "kernelcad reconstruct source.step \\",
+            "crispcad reconstruct source.step \\",
             "    -o rebuilt.kcad.ts",
         ]),
         slide(renders / "rebuilt.png", "Output: an editable feature tree", [
@@ -74,7 +74,7 @@ def main() -> None:
             f"holes: {holes}",
             f"fillets: {fillets}",
         ], params),
-        slide(renders / "edited.png", "Edit it like any kernelCAD part", [
+        slide(renders / "edited.png", "Edit it like any CrispCAD part", [
             "edited.kcad.ts changes three params",
             "of rebuilt.kcad.ts:",
             "",

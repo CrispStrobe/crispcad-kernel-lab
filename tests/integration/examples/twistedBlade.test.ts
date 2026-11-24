@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { evaluateAndBuildScript } from '../../../src/agent/cli/commands/evaluate';
 
-// Measured from the fixture (rootShape + `kernelcad inspect step`); keep in
+// Measured from the fixture (rootShape + `crispcad inspect step`); keep in
 // sync with the expected envelope documented in the fixture header.
 const EXPECTED_VOLUME_MM3 = 9191;
 const EXPECTED_SPAN_MM = 60;

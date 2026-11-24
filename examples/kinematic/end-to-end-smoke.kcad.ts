@@ -6,7 +6,7 @@
 // Joints are declared with the mate vocabulary (`arm.connector(...)` +
 // `arm.mate(..., 'revolute', ...)`); checkSweptCollision and checkReachable
 // take mate names. Results are logged rather than asserted so the script
-// renders cleanly under `kernelcad render inspect`.
+// renders cleanly under `crispcad render inspect`.
 
 const baseH = 80;
 const L1 = 150;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 /**
- * Plane utility functions for kernelCAD
+ * Plane utility functions for CrispCAD
  * Centralizes plane creation and validation logic
  */
 

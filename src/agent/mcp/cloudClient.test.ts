@@ -47,7 +47,7 @@ describe('cloud MCP client', () => {
             uri: 'kernelcad://skills/authoring',
             name: 'kernelcad-authoring',
             mimeType: 'text/markdown',
-            description: 'Authoring guide for kernelCAD .kcad.ts',
+            description: 'Authoring guide for CrispCAD .kcad.ts',
           },
         ],
       }),

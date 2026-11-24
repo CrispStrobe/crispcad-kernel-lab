@@ -14,7 +14,7 @@ when_to_use: You need a drawing to send to a shop or publish — a vector PDF on
 
 ```typescript
 // Export:
-//   kernelcad export pdf-drawing bearing-plate.kcad.ts -o bearing-plate.pdf \
+//   crispcad export pdf-drawing bearing-plate.kcad.ts -o bearing-plate.pdf \
 //     --title "Bearing plate" --material "S235JR" --revision A --sheet a3
 //   MCP: export({ target: 'model', file, format: 'pdf-drawing', output_path: 'bearing-plate.pdf',
 //                 options: { format: 'pdf-drawing', title: 'Bearing plate', partName: 'BP-100',

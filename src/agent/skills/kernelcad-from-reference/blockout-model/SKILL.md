@@ -73,7 +73,7 @@ return full;
 ### Step 4 — Render canonical views and check the blockout
 
 ```bash
-kernelcad render build.kcad.ts --width 1920 --height 1080 -o /tmp/blockout.png
+crispcad render build.kcad.ts --width 1920 --height 1080 -o /tmp/blockout.png
 ```
 
 Read the PNG back. Check against the brief's Validation focus:
@@ -90,7 +90,7 @@ add detail yet — fix the envelope first.
 ### Step 5 — Run evaluate
 
 ```bash
-kernelcad evaluate build.kcad.ts
+crispcad evaluate build.kcad.ts
 ```
 
 The blockout must be diagnostic-free before proceeding. Zero features failing,
@@ -102,8 +102,8 @@ The blockout is done when:
 
 1. All primary masses are present as params-driven primitives.
 2. The canonical views show no gross silhouette mismatch vs. the reference.
-3. `kernelcad evaluate` exits clean.
-4. `kernelcad interference` reports zero pairs.
+3. `crispcad evaluate` exits clean.
+4. `crispcad interference` reports zero pairs.
 
 Only then proceed to `use-the-available-kernel/SKILL.md` to plan the detail pass,
 then `image-replicator/SKILL.md` to iterate.

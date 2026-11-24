@@ -84,7 +84,7 @@ const implementation = Object.fromEntries(await Promise.all(
   IMPLEMENTATION_FILES.map(async (file) => [file, sha256(await readFile(file))] as const),
 ));
 const evidence = {
-  scope: 'Local kernelCAD Node API: a NEMA 17 motor mount plate. A first chamfer breaks the entry rims; a second, later chamfer picks the exit rims by created edge label, which the first chamfer now keeps. OCCT volume and validity against a closed form; chamfer cone positions; labels after the first chamfer.',
+  scope: 'Local CrispCAD Node API: a NEMA 17 motor mount plate. A first chamfer breaks the entry rims; a second, later chamfer picks the exit rims by created edge label, which the first chamfer now keeps. OCCT volume and validity against a closed form; chamfer cone positions; labels after the first chamfer.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),

@@ -78,7 +78,7 @@ center, the contour peak), add them with `kind: "point"`:
 ```
 
 **Naming convention.** Use `snake_case` and the form `<part>_<role>` so that
-the same labels can flow into kernelCAD constant names (`const neck_top
+the same labels can flow into CrispCAD constant names (`const neck_top
 = [...];`). The label is echoed verbatim in the response.
 
 **Backend hint.** Leave `backend` unset; let the router pick. The router
@@ -213,7 +213,7 @@ The Y flip is **load-bearing** — image-space `y` grows downward, the model's
 Always render the updated `.kcad.ts` before committing:
 
 ```bash
-kernelcad render build.kcad.ts --width 1920 --height 1080 -o /tmp/trace-check.png
+crispcad render build.kcad.ts --width 1920 --height 1080 -o /tmp/trace-check.png
 ```
 
 Open `/tmp/trace-check.png` and confirm the traced curve matches the

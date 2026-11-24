@@ -8,7 +8,7 @@ mate's torque rating was not checked.
 ## Replay and artifacts
 
 - [MP4 demo](demo.mp4) — 1280×720, 24 fps, 8 seconds.
-- [Fixture](ball-load.kcad.ts) — two-part native kernelCAD assembly.
+- [Fixture](ball-load.kcad.ts) — two-part native CrispCAD assembly.
 - [Capture source](capture-demo.ts) — captures the fixture, invokes
   `checkLoadCapacity(..., { mode: 'stub' })`, checks the actual warning, and
   builds the MP4 from the returned diagnostic.

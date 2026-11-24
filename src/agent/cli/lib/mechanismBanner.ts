@@ -2,8 +2,8 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/lib/mechanismBanner.ts
 //
-// Shared lines of the "MECHANISM BROKEN" banner that `kernelcad validate`
-// and strict `kernelcad render` print. The probe's failure list also carries
+// Shared lines of the "MECHANISM BROKEN" banner that `crispcad validate`
+// and strict `crispcad render` print. The probe's failure list also carries
 // non-fatal entries (an 'info' passive-joint drop note, a 'warn' skipped
 // sweep); only error-severity entries make the verdict 'broken', so only
 // those are counted as failures and labelled ERROR.

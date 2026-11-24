@@ -94,7 +94,7 @@ export function transpileBrowser(source: string): TranspileOutput {
       `This script uses TypeScript syntax (${ts}), which the in-browser script engine cannot compile. ` +
         `The browser runtime runs JavaScript only — bundling the TypeScript compiler would add 3.4 MB ` +
         `(0.97 MB gzipped) to the page. Either remove the type annotations, or run the script through ` +
-        `the kernelCAD CLI or MCP server, which use the full TypeScript compiler.`,
+        `the CrispCAD CLI or MCP server, which use the full TypeScript compiler.`,
     );
   }
   return { code: source };

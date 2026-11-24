@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/nrf52840-dk-board.kcad.ts
 //
-// Nordic nRF52840-DK development board — kernelCAD model composed from REAL
+// Nordic nRF52840-DK development board — CrispCAD model composed from REAL
 // component STEP geometry (KiCad packages3D) on an original modeled PCB, using
 // the same template as scripts/parts/authored/esp32-devkit-board.kcad.ts.
 //

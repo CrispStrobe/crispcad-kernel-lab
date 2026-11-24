@@ -41,7 +41,7 @@ function slide({ eyebrow, title, subtitle, rows, number }) {
     <text x="112" y="228" class="title">${escapeXml(title)}</text>
     <text x="112" y="285" class="subtitle">${escapeXml(subtitle)}</text>
     ${textRows}
-    <text x="112" y="817" class="muted">kernelCAD native catalogue source measurement · ${escapeXml(result.generatedAt.slice(0, 10))}</text>
+    <text x="112" y="817" class="muted">CrispCAD native catalogue source measurement · ${escapeXml(result.generatedAt.slice(0, 10))}</text>
     <text x="1468" y="817" class="muted">${number} / 4</text>
   </svg>`;
 }

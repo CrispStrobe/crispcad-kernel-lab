@@ -134,7 +134,7 @@ describe('SolidWorks STEP import', () => {
       'ISO-10303-21;',
       'HEADER;',
       "FILE_DESCRIPTION((''),'2;1');",
-      "FILE_NAME('none.step','2026-10-17T00:00:00',(''),(''),'kernelCAD','','');",
+      "FILE_NAME('none.step','2026-10-17T00:00:00',(''),(''),'CrispCAD','','');",
       "FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'));",
       'ENDSEC;',
       'DATA;',

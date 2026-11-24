@@ -28,7 +28,7 @@ const REAL: StepPartsRecord = {
   pageUrl: 'https://www.step.parts/parts/din913_set_screw_m3x3',
 };
 
-/** A GLB-only authored dev-board record, verbatim from kernelCAD's own catalog
+/** A GLB-only authored dev-board record, verbatim from CrispCAD's own catalog
  *  (https://kernelcad-parts.pages.dev/v1/parts/nucleo-h563zi-board, July 2026).
  *  buildBoardGlbs.ts deliberately strips `stepUrl` from these and serves
  *  `glbUrl` instead — the mapper must not drop it. */

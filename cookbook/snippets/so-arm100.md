@@ -18,7 +18,7 @@ when_to_use: >-
   tube-and-clevis sketch. execute_cookbook({ id: 'so-arm100' }) evaluates
   examples/robot-arm/so100/so100-arm.kcad.ts (Apache-2.0 link STLs, the
   Moving_Jaw STEP solid, and the passive horn on the wrist). One-liner:
-  kernelcad evaluate examples/robot-arm/so100/so100-arm.kcad.ts. Do not
+  crispcad evaluate examples/robot-arm/so100/so100-arm.kcad.ts. Do not
   redraw it as floating cylinders or the primitive 4-DOF cookbook arm.
 ---
 
@@ -26,7 +26,7 @@ when_to_use: >-
 // Not a self-contained snippet. Vendor meshes live next to the example.
 // execute_cookbook({ id: 'so-arm100' }) evaluates this file:
 //   examples/robot-arm/so100/so100-arm.kcad.ts
-// CLI: kernelcad evaluate examples/robot-arm/so100/so100-arm.kcad.ts
+// CLI: crispcad evaluate examples/robot-arm/so100/so100-arm.kcad.ts
 //
 // Jaw: parts/Moving_Jaw.step (solid, millimetres, same frame as the sim
 // STL) baked by the gripper rpy and then the wrist-roll rpy, so the finger

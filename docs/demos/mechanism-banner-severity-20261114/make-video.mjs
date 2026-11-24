@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
-// Build a text replay of the recorded `kernelcad validate` output in before.txt and after.txt.
+// Build a text replay of the recorded `crispcad validate` output in before.txt and after.txt.
 // Run: node docs/demos/mechanism-banner-severity-20261114/make-video.mjs
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -54,7 +54,7 @@ const background = (title, subtitle, slideNo) => `<svg width="${WIDTH}" height="
 const panel = '<rect x="100" y="200" width="1720" height="700" rx="18" fill="#f5f7f9" stroke="#d6dce1" stroke-width="2"/>';
 const resultSlide = (title, subtitle, slideNo, result, verdict, verdictColor) => `${background(title, subtitle, slideNo)}
     ${panel}
-    ${mono(`$ kernelcad validate ${MODEL} --include-interference`, 160, 262, 22, MUTED)}
+    ${mono(`$ crispcad validate ${MODEL} --include-interference`, 160, 262, 22, MUTED)}
     ${mono(`MECHANISM BROKEN — this assembly will not work as built (${result.failureCount} failures)`, 160, 316, 26, INK, 700)}
     ${result.entries.map((e, i) => mono(`  [${e.label}] ${e.code}`, 160, 362 + i * 40, 25,
       e.code === 'mechanism.drops-on-release' ? verdictColor : INK,

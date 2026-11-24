@@ -4,7 +4,7 @@ import { loadCombinedSkillMd } from './_helpers';
 
 const SKILL_MD = loadCombinedSkillMd();
 
-describe('kernelCAD agent authoring operating rules', () => {
+describe('CrispCAD agent authoring operating rules', () => {
   it('documents source-first CAD, explicit artifacts, validation, and standard parts in bundled skills', () => {
     expect(SKILL_MD).toMatch(/Source-first CAD/);
     expect(SKILL_MD).toMatch(/Words to CAD/);

@@ -68,7 +68,7 @@ export function sandboxFsError(op: string, access: SandboxAccess, detail: string
 export function sandboxNetworkError(what: string, target: string): KernelError {
   const err = new KernelError(
     'cli.sandbox-network-denied',
-    `sandbox: outbound network refused — ${what} to ${target}. Sandbox mode blocks all network egress from the kernelCAD runtime.`,
+    `sandbox: outbound network refused — ${what} to ${target}. Sandbox mode blocks all network egress from the CrispCAD runtime.`,
     undefined,
     HINT_TEMPLATES['cli.sandbox-network-denied'].template,
   );

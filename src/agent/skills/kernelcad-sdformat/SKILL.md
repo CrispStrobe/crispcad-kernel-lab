@@ -3,9 +3,9 @@ name: kernelcad-sdformat
 description: Export multi-part assemblies to SDFormat — closed kinematic loops, native ball joints, solved per-link poses, per-link inertial/visual/collision with mesh files. Use when the downstream simulator ingests SDFormat directly or the assembly needs closed-loop / native-spherical-joint support.
 ---
 
-# kernelCAD — SDFormat export
+# CrispCAD — SDFormat export
 
-SDFormat is an XML model description that, unlike URDF, accepts closed kinematic loops natively and exposes a native ball-joint type. kernelCAD's `export({ target: 'model', format: 'sdf-gazebo' })` writes a `.sdf` (spec version 1.10 — parsed by current simulator LTS releases) plus a sibling `meshes/` directory with one STL per link. Ship the whole directory: the SDF references `meshes/<part>.stl` by relative URI, resolved against the `.sdf` file location, so the export loads in `gz sim` with no resource-path environment setup.
+SDFormat is an XML model description that, unlike URDF, accepts closed kinematic loops natively and exposes a native ball-joint type. CrispCAD's `export({ target: 'model', format: 'sdf-gazebo' })` writes a `.sdf` (spec version 1.10 — parsed by current simulator LTS releases) plus a sibling `meshes/` directory with one STL per link. Ship the whole directory: the SDF references `meshes/<part>.stl` by relative URI, resolved against the `.sdf` file location, so the export loads in `gz sim` with no resource-path environment setup.
 
 ## When to use over URDF
 
@@ -21,7 +21,7 @@ Otherwise prefer URDF — wider tool ecosystem.
 
 - **Per-link `<pose>` from the solved mate graph.** The exporter runs the mate solver at the default pose and stamps each link's world transform, so links spawn assembled instead of stacked at the model origin. If the mate graph cannot be solved, the export still succeeds but emits `export.sdf-gazebo.pose-unsolved` (warn) and identity poses — fix the geometry before shipping to a simulator.
 - **Joint `<pose>` relative to the CHILD link frame** (the SDFormat convention), i.e. the child-side connector origin; `<axis><xyz>` is the child-side connector axis expressed in the joint frame.
-- **Mesh `<scale>0.001 0.001 0.001</scale>`** on every visual/collision: link STLs are kernelCAD-native mm, SDFormat consumes metres, and the scale keeps geometry consistent with the (already-SI) inertials and joint poses.
+- **Mesh `<scale>0.001 0.001 0.001</scale>`** on every visual/collision: link STLs are CrispCAD-native mm, SDFormat consumes metres, and the scale keeps geometry consistent with the (already-SI) inertials and joint poses.
 - **Companion mesh files**: `meshes/<part>.stl` written next to `output_path` by the MCP tool and the CLI; the written paths are reported in `mesh_files`.
 - **World anchor**: `arm.virtualJoint(name, { type: 'fixed', parentFrame: 'world', childLink })` lowers to a native `<joint type="fixed"><parent>world</parent>...` so the model spawns welded instead of free-falling.
 - **Per-link density**: prefer `arm.part(name, shape, { material })` (`steel`/`aluminum`/`pla`/`abs`/`pet`) — one word seeds the `<inertial>` density from the catalog (and a matching render finish). A raw `{ density }` in kg/m³ still works and overrides the material's; every link with neither inherits water (1000) and the export warns.
@@ -62,7 +62,7 @@ Result: `out/model.sdf` with all 4 joints preserved and solved link poses, plus 
 
 ## Mate-to-joint mapping (differences from URDF)
 
-| kernelCAD mate | SDFormat joint | Notes |
+| CrispCAD mate | SDFormat joint | Notes |
 |---|---|---|
 | `fastened` | `fixed` | Direct. |
 | `revolute` | `revolute` | Limits in radians inside `<axis><limit>`. |
@@ -78,7 +78,7 @@ A `coupleMates` coupling is not carried: SDFormat 1.10 has no `<mimic>`, so the 
 
 - Serial chains and ball joints simulate correctly out of the box: links spawn at solved poses, joints articulate under `JointController` / `JointPositionController` plugins, ball mates swing under gravity.
 - **Closed loops parse but do not yet simulate as loops.** `gz sdf --check` accepts the export, but the default physics engine (dartsim wrapper) logs `Asked to create a closed kinematic chain ... not supported` and simulates the spanning tree (loop-closure joint dropped); the bullet-featherstone engine refuses the model outright (`multiple parent joints`). This is a simulator-side limitation, not an export defect — the loop joint is present and spec-valid in the file.
-- kernelCAD parts are typically gram-scale; force-based PID joint controllers with default gains produce NaN explosions (the simulator aborts with a transform assertion). Use velocity-mode position controllers (`<use_velocity_commands>true</use_velocity_commands>`) or match gains to the link inertias.
+- CrispCAD parts are typically gram-scale; force-based PID joint controllers with default gains produce NaN explosions (the simulator aborts with a transform assertion). Use velocity-mode position controllers (`<use_velocity_commands>true</use_velocity_commands>`) or match gains to the link inertias.
 
 ## Minimal-tier scope
 

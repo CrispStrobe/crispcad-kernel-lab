@@ -50,7 +50,7 @@ estimate and the main known dimensional uncertainty.
   (getoutlines.com), CC BY 4.0".
 - How it was used: this build environment's egress policy blocks
   getoutlines.com, wikimedia, sketchfab and the other blueprint and mesh hosts
-  for direct download. The drawing was read only through the hosted kernelCAD
+  for direct download. The drawing was read only through the hosted CrispCAD
   `trace_from_image` tool (via an images.weserv.nl GIF→PNG conversion). It
   returned coarse view bounding boxes and landmark positions (view layout,
   wheel hubs at ≈ 0.19 / 0.79 of the side-view width, roof peak at ≈ 0.48,

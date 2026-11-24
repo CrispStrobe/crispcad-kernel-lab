@@ -1,4 +1,4 @@
-// kernelCAD v0.17 hero — single-spool turbojet display model.
+// CrispCAD v0.17 hero — single-spool turbojet display model.
 //
 // A J85-class single-spool turbojet laid out stage by stage: inlet guide
 // vanes, 8 compressor rotor rows with matching stator rings, can-annular
@@ -592,7 +592,7 @@ void [engineLength, maxDiameter];
 const nozzleLower = nozzleConvergent.subtract(casingCutLower);
 const nozzleUpper = nozzleConvergent.subtract(casingCutUpper);
 
-const engine = assembly('kernelCAD v0.17 turbojet');
+const engine = assembly('CrispCAD v0.17 turbojet');
 
 // G0 migration shim (same pattern as examples/portfolio/pocket-watch-v2,
 // lines 254-279): the v0.5 `fixed(label, parent, child, {origin})` shortcut

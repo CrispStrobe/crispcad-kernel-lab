@@ -6,7 +6,7 @@ SolidCraft (https://github.com/tangency-labs/solidcraft) commit `7a6c884418698e9
 
 Volume and surface area use SolidCraft's default relative tolerance of 1e-3. Bounding box and centre of mass use the looser of 0.05 mm (the reference-parts scorecard floor; an exact OCCT bbox on a cylinder is about 0.024 mm) and 1e-3 of the expected bbox diagonal (SolidCraft's absolute rule).
 
-The table lists every vendored case. PENDING rows have no kernelCAD source and are not failures. NOT RUN rows are implemented outside this PR tier; the nightly job builds them. Measurements below are from the PR tier only, so this file does not lock a pass-count baseline and does not change when the nightly job runs.
+The table lists every vendored case. PENDING rows have no CrispCAD source and are not failures. NOT RUN rows are implemented outside this PR tier; the nightly job builds them. Measurements below are from the PR tier only, so this file does not lock a pass-count baseline and does not change when the nightly job runs.
 
 Regenerate with `npm run solidcraft-ledger:regenerate`. PR CI runs `npm run test:solidcraft-ledger`. The full implemented set runs with `npm run test:solidcraft-ledger:all`. Face counts are kept in the vendored expected.json files and are not gated.
 

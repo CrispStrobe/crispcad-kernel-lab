@@ -3,7 +3,7 @@
 // src/agent/script-runtime/partStats.ts
 //
 // Stats-only view of a solved assembly's parts — shared by the
-// `kernelcad parts` CLI command and the MCP list_part_stats tool. Reuses
+// `crispcad parts` CLI command and the MCP list_part_stats tool. Reuses
 // the same Scene resolution as `runAndExportParts` (resolveWorldFrameScene)
 // so part names and world-frame placement match the per-part STL exporter
 // exactly.

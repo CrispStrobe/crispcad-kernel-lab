@@ -9,7 +9,7 @@ Date: 2026-11-13 UTC
 
 ## Renderer capture limitation
 
-The local `kernelcad render` attempt used the already-running Chrome session via
+The local `crispcad render` attempt used the already-running Chrome session via
 `PW_CDP_URL=http://127.0.0.1:9223` and a local Vite surface. The first loop
 iteration invoked:
 

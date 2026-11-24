@@ -3,7 +3,7 @@ name: kernelcad-nurbs
 description: NURBS surfaces (nurbsSurface, surfaceFromCurves, surfaceFromBoundary, .thicken, .toShape) AND NURBS curves (nurbsCurve, spline3d, hermiteG2, curveBridge, Curve3D.bridge) AND surfaceIntersection AND rail loft (Sketch.loft rails) AND multi-section sweeps (variableSweep) AND G1/G2 fillet continuity AND 2D NURBS path segments (path().spline / .nurbsSegment / .hermiteG2). Use for freeform geometry that primitives + sketches cannot express.
 ---
 
-# kernelCAD — NURBS surfaces & curves
+# CrispCAD — NURBS surfaces & curves
 
 Build free-form panels, lofted shells, organic spines, and tapered swept solids whose result enters the existing Shape pipeline (booleans, fillets, exports).
 
@@ -43,10 +43,10 @@ After authoring a NURBS surface, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 — no `feature.nurbs.degenerate-controls` or `feature.nurbs.degree-mismatch` |
+| G-eval | `crispcad evaluate` exits 0 — no `feature.nurbs.degenerate-controls` or `feature.nurbs.degree-mismatch` |
 | G-controls-finite | Every control point is a finite Vec3 (no `NaN`, no `Infinity`); grid is rectangular (every row same length) |
 | G-degree-leq-controls | `degree.u ≤ controls.length − 1` and `degree.v ≤ controls[0].length − 1` |
-| G-thicken-clearance | `.thicken(t)` extends along the surface NORMAL by `t`; verify the offset solid does not overlap any neighboring part (run `kernelcad interference`) |
+| G-thicken-clearance | `.thicken(t)` extends along the surface NORMAL by `t`; verify the offset solid does not overlap any neighboring part (run `crispcad interference`) |
 | G-opaque-renderer-trap | The studio render path uses `MeshLambertMaterial` (opaque-only). Color values like `#dfeef4` look like glass at API level but render OPAQUE. **Place numerals / hands / decals on top OR outside the dome footprint** if they must remain visible; do not assume the renderer will see through them |
 | G-periodic-v-vs-seam | A square-grid loft from polar samples creates a wedge seam at θ=0; use `periodic: { v: true }` and a polar control grid (radial × angular) to remove the seam |
 
@@ -421,19 +421,19 @@ Derive the curves from a reference photo:
 ## Blockout → export → finish in a DCC tool
 
 For photoreal or heavily-sculpted organic surfacing, the native workflow is to
-build the parametric, watertight **blockout** and printable solids in kernelCAD,
+build the parametric, watertight **blockout** and printable solids in CrispCAD,
 then export for downstream subdivision / organic surfacing in a DCC tool. This
-is the intended interop handoff: kernelCAD owns the parametric, dimensioned,
+is the intended interop handoff: CrispCAD owns the parametric, dimensioned,
 manufacturable body; the DCC tool owns final continuous sculpting.
 
 ```bash
 # BREP handoff — named bodies + per-part colors preserved
-kernelcad export step body.kcad.ts -o body.step
+crispcad export step body.kcad.ts -o body.step
 # Mesh handoff — triangulated, PBR materials + axis convention preserved
-kernelcad export glb body.kcad.ts -o body.glb
+crispcad export glb body.kcad.ts -o body.glb
 ```
 
-Confirmed real export targets (the unified `export` tool / `kernelcad export`
+Confirmed real export targets (the unified `export` tool / `crispcad export`
 CLI, format-enum dispatched): **STEP** (one named body per part, colors
 preserved), **GLB** (`MeshPhysicalMaterial` PBR + `KHR_materials_*` extensions,
 Z-up→Y-up axis option), **STL** (binary, watertight-verified),

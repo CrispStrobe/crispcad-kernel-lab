@@ -40,7 +40,7 @@ export interface LowerablePartShape {
  * captured Shape (pre-assembly-placement), so the file ships the part in
  * local coordinates — what a quote shop quotes. `name` becomes the STEP
  * body name; the neutral gray keeps the body readable without implying a
- * material. The HEADER gets the same kernelCAD originating_system stamp
+ * material. The HEADER gets the same CrispCAD originating_system stamp
  * every other STEP export path writes (ATTRIBUTION.md).
  */
 export async function partStepBytes(shape: LowerablePartShape, name: string): Promise<Uint8Array> {

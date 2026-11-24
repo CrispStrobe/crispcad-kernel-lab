@@ -1,5 +1,5 @@
 {
-  "scope": "Local kernelCAD Node API: faceSketch of the top face of a rounded cover plate, extrude to a gasket, OCCT volume and validity check, and the flat DXF profile of the gasket.",
+  "scope": "Local CrispCAD Node API: faceSketch of the top face of a rounded cover plate, extrude to a gasket, OCCT volume and validity check, and the flat DXF profile of the gasket.",
   "invocation": "node --import tsx docs/demos/face-sketch-clockwise-arcs/capture-demo.mts",
   "source": "docs/demos/face-sketch-clockwise-arcs/cover-gasket.kcad.ts",
   "sourceSha256": "0ddc58f6eaa7912d2a17a75bcd905828f0f6238b8940ef872fade590bf327227",

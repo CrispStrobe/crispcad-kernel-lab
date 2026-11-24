@@ -35,15 +35,15 @@
     "gasket.png": "a77c81790dfbe1753c0e94db661e99c599e24f0827be1eca2b44fbe78ea6ab14"
   },
   "renderInvocations": [
-    "kernelcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --pose 25,20 --width 640 --height 480",
-    "kernelcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --section y=0 --section-flip --pose 0,-18 --width 640 --height 480",
-    "kernelcad render docs/demos/path-ellipse/handhole-gasket.kcad.ts -o gasket.png --pose 20,55 --width 640 --height 480"
+    "crispcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --pose 25,20 --width 640 --height 480",
+    "crispcad render docs/demos/path-ellipse/elliptical-head.kcad.ts -o head.png --section y=0 --section-flip --pose 0,-18 --width 640 --height 480",
+    "crispcad render docs/demos/path-ellipse/handhole-gasket.kcad.ts -o gasket.png --pose 20,55 --width 640 --height 480"
   ],
   "poster": "poster.png",
   "posterSha256": "c6fe9b00faf392d02239e73f72ce74e37e58fb2955715cc5bba757e494532492",
   "videoSha256": "637586b72f71a2c51cfcd7bee04b3d06fecffc3d712c61736131ef6f2b712688",
   "inspection": "Both scenes extracted from the final MP4 and visually reviewed after generation.",
-  "scope": "Local kernelCAD Node API: a 2:1 semi-elliptical vessel head revolved from two ellipseArc segments, and a turned elliptical gasket from two closed ellipses. OCCT volume, bounding box and validity checks against closed-form values.",
+  "scope": "Local CrispCAD Node API: a 2:1 semi-elliptical vessel head revolved from two ellipseArc segments, and a turned elliptical gasket from two closed ellipses. OCCT volume, bounding box and validity checks against closed-form values.",
   "simulationRun": false,
   "deployed": false,
   "hardwareAccepted": false

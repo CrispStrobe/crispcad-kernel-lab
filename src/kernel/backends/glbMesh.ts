@@ -3,7 +3,7 @@
 // src/kernel/backends/glbMesh.ts
 //
 // Composite GLB → display-mesh decoder (lib.meshFromGLB). Traverses the scene
-// graph, flattens transforms, converts glTF Y-up to kernelCAD Z-up millimetres,
+// graph, flattens transforms, converts glTF Y-up to CrispCAD Z-up millimetres,
 // and keeps every primitive as a material group (RuntimeSubMesh), so a PCB
 // assembly renders with solder mask, copper, gold and component bodies. Node-only.
 
@@ -39,7 +39,7 @@ function multiplyMat4(a: Mat4, b: Mat4): number[] {
   return out;
 }
 
-/** glTF Y-up → kernelCAD Z-up: (x, y, z) → (x, -z, y). */
+/** glTF Y-up → CrispCAD Z-up: (x, y, z) → (x, -z, y). */
 function toZUp(x: number, y: number, z: number, upAxis: 'y' | 'z'): [number, number, number] {
   return upAxis === 'y' ? [x, -z, y] : [x, y, z];
 }

@@ -4,7 +4,7 @@ import type { ShapeBackend } from '../../kernel/backends/backend';
 import { resolveRootId } from '../../composition/buildModel';
 // src/render/headlessRender.ts
 //
-// Headless multi-view PNG renderer. Powers `kernelcad render`. Reuses the
+// Headless multi-view PNG renderer. Powers `crispcad render`. Reuses the
 // browser-based demo-player path (puppeteer + Three.js + WebGL) but skips
 // captureDemo's build/rotate animation: just load → snap to view → screenshot.
 //
@@ -130,7 +130,7 @@ export interface HeadlessRenderOpts {
    *  Preset keys map to bundled HDRIs; any other string is treated as a URL
    *  (relative paths are resolved against the dev server's `/hdri/` directory). */
   environment?: 'studio' | 'softbox' | 'neutral' | 'outdoor' | 'warehouse' | 'none' | string;
-  /** Suppress the kernelCAD version watermark in the bottom-right of the
+  /** Suppress the CrispCAD version watermark in the bottom-right of the
    *  captured frame. Used for clean hero artifacts intended for public posts;
    *  default false retains the watermark for traceability. */
   noWatermark?: boolean;
@@ -264,7 +264,7 @@ export async function openDemoPlayerPage(opts: DemoPlayerPageOpts): Promise<Demo
     ({ chromium } = await import('playwright'));
   } catch {
     throw new Error(
-      "kernelcad render and animation capture require 'playwright'. Install with: npm install playwright && npx playwright install chromium",
+      "crispcad render and animation capture require 'playwright'. Install with: npm install playwright && npx playwright install chromium",
     );
   }
   let browser: Browser | undefined;
@@ -478,7 +478,7 @@ export async function applyRenderEnvironmentWithFallback(
   if (outcome.applied) return outcome;
   await resetRenderEnvironmentBestEffort(page);
   console.error(
-    `kernelcad render: WARNING: environment '${environment}' could not be applied ` +
+    `crispcad render: WARNING: environment '${environment}' could not be applied ` +
       `(${outcome.reason ?? 'unknown error'}) — continuing with the default three-light rig.`,
   );
   return outcome;

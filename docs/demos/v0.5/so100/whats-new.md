@@ -20,7 +20,7 @@ This release also upgrades the renderer to **physically-based shading**:
 - Three-point + rim lighting (key + fill + rim + low ambient) replaces the single directional light. Scene-attached so rotation reveals geometry.
 - ACES filmic tone mapping with sRGB output color space.
 
-These three changes affect every demo and every `kernelcad render` output — a renderer-wide upgrade, not just the SO-100 hero.
+These three changes affect every demo and every `crispcad render` output — a renderer-wide upgrade, not just the SO-100 hero.
 
 The previous v0.5 hero (`desktop-3axis.kcad.ts`) is kept in the repo as a primitive-composition tutorial — useful contrast for agents learning when to import vendor CAD vs author custom geometry from primitives.
 

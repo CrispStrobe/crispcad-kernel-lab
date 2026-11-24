@@ -22,4 +22,4 @@ python3 docs/demos/benchmark-pose-drift-1227-20261118/capture_demo.py
 
 `demo.mp4` presents the clean fixture, the one-millimetre mutation, and the regression outcome. The full case file passed 9/9 tests locally, including exact assertions that both `mount` and `camera` moved to x=21 mm and violate the independent x=20 mm datum. The [contact sheet](verification/video-contact-sheet.png) contains the inspected 1 s, 5 s, and 9 s frames.
 
-This records local kernelCAD regression behavior. It does not claim deployed behavior, a physical camera module fit, or hardware acceptance.
+This records local CrispCAD regression behavior. It does not claim deployed behavior, a physical camera module fit, or hardware acceptance.

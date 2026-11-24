@@ -17,7 +17,7 @@ export function TitleCard({ title, tagline }: { title: string; tagline: string }
         gap: 16,
       }}
     >
-      <div style={{ position: 'absolute', top: 24, left: 32, fontSize: 24 }}>kernelCAD</div>
+      <div style={{ position: 'absolute', top: 24, left: 32, fontSize: 24 }}>CrispCAD</div>
       <div style={{ fontSize: 56 }}>{title}</div>
       <div style={{ fontSize: 28, color: '#9aa0a6' }}>{tagline}</div>
     </div>

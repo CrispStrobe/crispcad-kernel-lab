@@ -88,7 +88,7 @@ const implementation = Object.fromEntries(await Promise.all(
   IMPLEMENTATION_FILES.map(async (file) => [file, sha256(await readFile(file))] as const),
 ));
 const evidence = {
-  scope: 'Local kernelCAD Node API: an instrument enclosure lid with an elliptical through-window and a spline-bounded blind thumb recess, both made with Shape.cutout(). OCCT volume, validity, face and created-ref checks against a closed form and against the same lid built from explicit booleans.',
+  scope: 'Local CrispCAD Node API: an instrument enclosure lid with an elliptical through-window and a spline-bounded blind thumb recess, both made with Shape.cutout(). OCCT volume, validity, face and created-ref checks against a closed form and against the same lid built from explicit booleans.',
   invocation: INVOCATION,
   source: SOURCE,
   sourceSha256: sha256(code),

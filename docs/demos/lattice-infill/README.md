@@ -40,7 +40,7 @@ outside and the bores, and the walls thickening next to them; the report.
 
 The cut-aways are rasterised from the exported STL by `cutaway.py` (every
 triangle beyond y = 20 dropped, two-sided shading, orange = the backs of
-walls seen through the cut). `kernelcad render --section` was tried first:
+walls seen through the cut). `crispcad render --section` was tried first:
 the viewer caps the section plane as if the body were solid, which hides
 a lattice and draws a broken cap — a known limitation for mesh solids with
 internal cavities. The canonical inspect view also shows smooth-shading
@@ -51,9 +51,9 @@ the sharp edge of an implicit mesh); the geometry there is the snapped skin.
 
 ```sh
 npx tsx docs/demos/lattice-infill/report.ts            # -> result.json
-kernelcad render inspect examples/lattice/graded-gyroid-bracket.kcad.ts <dir>
+crispcad render inspect examples/lattice/graded-gyroid-bracket.kcad.ts <dir>
 cp <dir>/channels/rgb/iso.png <frames>/iso.png
-kernelcad export stl examples/lattice/graded-gyroid-bracket.kcad.ts -o bracket.stl
+crispcad export stl examples/lattice/graded-gyroid-bracket.kcad.ts -o bracket.stl
 python3 -I docs/demos/lattice-infill/cutaway.py bracket.stl <frames>/cut-a.png y 20 640
 python3 -I docs/demos/lattice-infill/cutaway.py bracket.stl <frames>/cut-b.png y 20 640 0 0
 python3 -I docs/demos/lattice-infill/compose.py <frames> <frames>   # -> <frames>/demo.mp4

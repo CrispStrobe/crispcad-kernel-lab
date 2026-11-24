@@ -28,7 +28,7 @@ const runFeaToolEntry: ToolRegistryEntry = {
       type: 'object',
       properties: {
         file: { type: 'string', description: 'Path to a .kcad.ts script declaring at least one feaStudy.' },
-        code: { type: 'string', description: 'Inline kernelCAD script source (mutually exclusive with file).' },
+        code: { type: 'string', description: 'Inline CrispCAD script source (mutually exclusive with file).' },
         study: { type: 'string', description: 'Name of the declared study to run; defaults to the last declared one.' },
         material: { type: ['string', 'object'], description: "Inline study: material grade name (e.g. 'aluminum-6061') or { E, nu, yield } in MPa." },
         fixed: { type: ['string', 'object'], description: "Inline study: faces held fixed — a FaceQuery like { atX: 0 }, a face label like 'bottom', or an @kc[...] ref." },

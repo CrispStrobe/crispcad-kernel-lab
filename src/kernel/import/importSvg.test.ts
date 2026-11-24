@@ -5,7 +5,7 @@
 // Parser-level tests for `importSvgText`, with inline SVG fixtures.
 //
 // The Y-flip block is the important one. SVG's Y axis points down and
-// kernelCAD's points up, and a symmetric fixture passes whether or not the
+// CrispCAD's points up, and a symmetric fixture passes whether or not the
 // reflection happens — so every flip assertion here uses a deliberately
 // ASYMMETRIC shape and checks WHERE the mass ended up, not just its extent.
 
@@ -93,7 +93,7 @@ describe('importSvgText — the Y axis is flipped', () => {
     const pts = points(r.regions[0].commands);
 
     // The two far-right vertices are the wide bar. In the SVG they sit at
-    // y = 0 and y = 10 — the TOP. kernelCAD's Y points up, so after the flip
+    // y = 0 and y = 10 — the TOP. CrispCAD's Y points up, so after the flip
     // they must sit at the TOP of the imported range: y = 40 and y = 30.
     // Without the flip they would be 0 and 10.
     const rightYs = pts.filter(p => Math.abs(p[0] - 100) < 1e-9).map(p => p[1]).sort((a, b) => a - b);
@@ -126,7 +126,7 @@ describe('importSvgText — the Y axis is flipped', () => {
   it('reverses arc handedness with the reflection, not just endpoints', () => {
     // A half-disc whose flat edge is the chord and whose bulge points at SVG
     // +y (downwards on screen). After the flip the bulge must point at
-    // kernelCAD -Y. If the flip were applied to endpoints only, the arc would
+    // CrispCAD -Y. If the flip were applied to endpoints only, the arc would
     // bow the wrong way and the enclosed area would be the complement.
     const r = importSvgText(svg(
       '<path d="M 10 20 A 10 10 0 0 0 30 20 Z"/>',

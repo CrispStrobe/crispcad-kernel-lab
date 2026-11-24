@@ -5,7 +5,7 @@
 // One source of truth for the "could not read the script file" message.
 //
 // Why this exists: the `file` parameter on the script-taking tools only works
-// when the kernelCAD server runs on the SAME machine as the caller (local
+// when the CrispCAD server runs on the SAME machine as the caller (local
 // stdio MCP / the CLI). Against a hosted server the tool executes in a remote
 // process that cannot see the caller's filesystem, so ANY `file` path fails
 // with a raw ENOENT — a message that reads like a typo and sends agents into
@@ -23,7 +23,7 @@ export const FILE_READ_CODE = 'cli.file-read';
 
 /** Hint attached to every file-read diagnostic. */
 export const FILE_READ_HINT =
-  'Either the path does not exist locally, or this kernelCAD server is hosted/remote and cannot see your filesystem. Pass the script inline via `code` instead of `file` — that works on both.';
+  'Either the path does not exist locally, or this CrispCAD server is hosted/remote and cannot see your filesystem. Pass the script inline via `code` instead of `file` — that works on both.';
 
 /** Full user-facing message for a failed read of `file`. */
 export function fileReadErrorMessage(e: unknown): string {

@@ -6,7 +6,7 @@ A 60 x 100 x 2 mm steel sheet folded into an L-bracket along its midline at 90 d
 
 ## Why memorable
 
-- This is the first kernelCAD release where a single agent call (`sheetMetal(s, opts).bend(...)`) produces a folded sheet-metal solid — no boolean union of pre-shaped boxes, no manual extrude + rotate gymnastics.
+- This is the first CrispCAD release where a single agent call (`sheetMetal(s, opts).bend(...)`) produces a folded sheet-metal solid — no boolean union of pre-shaped boxes, no manual extrude + rotate gymnastics.
 - The K-factor bend-allowance math is exposed verbatim in SKILL.md and `inspect({ of: 'bend-table' })`; agents can reason about flat-blank size before lowering.
 - `.flattenPattern()` recovers the original sketch outline within float tolerance, usable directly for laser/CNC consumption.
 

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/kernel/backends/occt/exportDxf.ts
 //
-// AutoCAD R2013 (AC1027) DXF writer for kernelCAD's sheet-metal and planar
+// AutoCAD R2013 (AC1027) DXF writer for CrispCAD's sheet-metal and planar
 // export path. Polyline-only by design: laser-cutter shops and sheet-metal
 // CAM tools cannot reliably read DXF splines, so every wire ships as an
 // `LWPOLYLINE`. Circular arcs ride on the polyline as exact vertex bulges
@@ -24,7 +24,7 @@
 //   - `BEND`  — bend lines (always declared, even when empty). Downstream
 //     CAM tooling indexes by layer name, so both layers must exist.
 //
-// Header `999` comments carry: (a) `kernelCAD <version> (https://kernelcad.com)
+// Header `999` comments carry: (a) `CrispCAD <version> (https://kernelcad.com)
 // <iso-date>` (shared/links/attribution.ts) matching
 // the STL header convention, and (b) the OCCT tessellation tolerance recorded
 // in mm. `$INSUNITS = 4` (mm) by default; `5` (cm) and `1` (in) when the
@@ -85,7 +85,7 @@ export type DxfInput =
       layers: ReadonlyArray<{ name?: string; loops: ReadonlyArray<ReadonlyArray<ProjectedSegment>> }>;
     };
 
-/** `$INSUNITS` enum (AutoCAD R-spec). Only the three kernelCAD-supported
+/** `$INSUNITS` enum (AutoCAD R-spec). Only the three CrispCAD-supported
  *  units appear; the writer rejects any others at the type system. */
 const INSUNITS: Record<DxfUnit, number> = { mm: 4, cm: 5, in: 1 };
 

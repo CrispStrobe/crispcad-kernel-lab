@@ -3,7 +3,7 @@ name: kernelcad-sheet-metal
 description: Folded sheet-metal parts — sheetMetal(profile, opts), .bend(edge, angle, radius), .flattenPattern(). Use when building L-brackets, U-channels, service panels, or any part fabricated from a flat blank + folds.
 ---
 
-# kernelCAD — sheet metal
+# CrispCAD — sheet metal
 
 Build folded sheet-metal parts (L-brackets, U-channels, service panels) from a closed Sketch + thickness + K-factor. Bend along a linear axis line; recover the flat blank as a `Region` for laser / CNC consumption.
 
@@ -91,7 +91,7 @@ After authoring a sheet-metal part, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 — no `feature.sheetMetal.*` / `feature.bend.*` / `feature.flattenPattern.*` diagnostics |
+| G-eval | `crispcad evaluate` exits 0 — no `feature.sheetMetal.*` / `feature.bend.*` / `feature.flattenPattern.*` diagnostics |
 | G-kfactor-valid | `kFactor` is a finite number in `[0, 1]`; pick 0.33-0.45 for mild steel / aluminum unless you have a measured value |
 | G-radius-vs-thickness | Inner bend radius `>= 0.5 * thickness`; tighter bends fail and emit `feature.kernel-failed` |
 | G-bend-edge-linear | Every `.bend(...)` selector resolves to a straight edge (slice 1: `{ atX }`, `{ atY }`, or `{ face: 'top' }`) |

@@ -1,3 +1,18 @@
+CrispCAD
+Copyright (c) 2026 CrispCAD contributors. Licensed under the MIT License (see LICENSE).
+
+CrispCAD is derived from kernelCAD (https://github.com/w1ne/kernelCAD-web),
+forked at commit 7e06253cbc97b80911b70f8269998ea3eb001fe5:
+
+  kernelCAD
+  Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
+  Licensed under the MIT License (see LICENSE).
+
+CrispCAD is not affiliated with or endorsed by the kernelCAD project. The
+kernelCAD name and logo are not licensed under MIT; see TRADEMARKS.md.
+
+The notices below are retained from kernelCAD.
+
 smlibwasm
 Copyright (c) 2026 AWV Informatik AG. Licensed under the MIT License (see LICENSE).
 

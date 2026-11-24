@@ -97,7 +97,7 @@ export function writeReports(runRoot: string): void {
     categories: a.categories,
   }));
   const { row, forcedZeroCases, infraCases } = aggregateMuseSamples(samples, {
-    model: `${run.model} + kernelCAD`,
+    model: `${run.model} + CrispCAD`,
   });
 
   const leaderboard = {
@@ -155,9 +155,9 @@ export function writeReports(runRoot: string): void {
     '# Sweep protocol and deviations',
     '',
     `- Driver: ${run.model}; protocol version ${run.protocol ?? 'muse-v1'}; temperature ${run.temperature ?? 0.2}; skills: ${(run.skills ?? []).join(', ') || 'n/a'}.`,
-    `- kernelCAD commit: ${run.gitSha ?? 'unknown'}${run.gitDirty ? ' (dirty tree)' : ''}.`,
-    '- Generation: kernelCAD product loop — 1 sample per case, up to 2 diagnostic-driven repairs, candidates=1.',
-    '- Geometry submission: MUSE sandbox runs a CadQuery shim importing a kernelCAD-exported STEP (no CadQuery authored by kernelCAD).',
+    `- CrispCAD commit: ${run.gitSha ?? 'unknown'}${run.gitDirty ? ' (dirty tree)' : ''}.`,
+    '- Generation: CrispCAD product loop — 1 sample per case, up to 2 diagnostic-driven repairs, candidates=1.',
+    '- Geometry submission: MUSE sandbox runs a CadQuery shim importing a CrispCAD-exported STEP (no CadQuery authored by CrispCAD).',
     '- Judge: MUSE `generate_score_sp` + `_run_alignment_judge`, model google/gemini-3.1-pro served via DeepInfra (upstream default serving is OpenRouter preview).',
     '- Candidate image: MUSE VTK render for all 106 cases; upstream uses DrawCAD 4-view PNGs for the 97 non-render-only cases (DrawCAD unpublished).',
     '- Stage 2: MUSE external `validator` module is unpublished; watertight/manifold/self-intersection and the official `geom_valid` column cannot be computed locally. Overlap-free is computed with MUSE code. Forced-zero locally covers sandbox and overlap only.',

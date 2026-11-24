@@ -1,4 +1,4 @@
-# kernelCAD authoring reference — Materials and reference images
+# CrispCAD authoring reference — Materials and reference images
 
 Finishes, raw PBR, per-face materials, and reference-image overlays.
 

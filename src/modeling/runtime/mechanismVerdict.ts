@@ -3,7 +3,7 @@
 // src/modeling/runtime/mechanismVerdict.ts
 //
 // The plain-language mechanism verdict every surface shows: evaluate_script,
-// review_cad, `kernelcad validate`, the open_in_studio revision and the Studio
+// review_cad, `crispcad validate`, the open_in_studio revision and the Studio
 // badge. One builder, so "Motion checked" always says what was checked and
 // "Motion not checked" always says why.
 

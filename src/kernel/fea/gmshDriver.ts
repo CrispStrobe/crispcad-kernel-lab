@@ -12,7 +12,7 @@
 //
 // What the driver hands back is more than a mesh:
 //   - Every SURFACE's centre of mass and area. That is what lets the runner
-//     bind a kernelCAD face query to a gmsh surface without inventing a
+//     bind a CrispCAD face query to a gmsh surface without inventing a
 //     geometry-entity naming convention, and it is what turns a node-level stress
 //     peak into a NAMED region an agent can act on.
 //   - Element quality (`minSICN`). A stress answer off a degenerate mesh is

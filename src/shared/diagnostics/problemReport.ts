@@ -9,7 +9,7 @@
 import { DIAGNOSTIC_CODES } from './registry';
 
 export const PROBLEM_REPORT_REPO = 'w1ne/kernelCAD-web';
-export const PROBLEM_REPORT_NEW_ISSUE_URL = 'https://github.com/w1ne/kernelCAD-web/issues/new';
+export const PROBLEM_REPORT_NEW_ISSUE_URL = 'https://github.com/CrispStrobe/kernelCAD-web/issues/new';
 
 export const MAX_ERROR_CHARS = 2000;
 export const MAX_NOTE_CHARS = 2000;

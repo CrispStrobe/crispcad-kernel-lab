@@ -4,7 +4,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // scripts/parts/authored/arduino-uno-board.kcad.ts
 //
-// Arduino Uno R3 (A000066) — kernelCAD model composed from REAL component STEP
+// Arduino Uno R3 (A000066) — CrispCAD model composed from REAL component STEP
 // geometry (KiCad packages3D) on an original modeled PCB. Follows the ESP32
 // DevKitC template (esp32-devkit-board.kcad.ts): the PCB is our own primitive
 // slab; every populated component is a real vendor STEP loaded with
@@ -37,7 +37,7 @@ const PCB_L = 68.6; // X  (length)
 const PCB_W = 53.4; // Y  (width)
 const PCB_T = 1.6;  // Z  (thickness — the thin axis)
 
-// Explicit part colors — the kernelCAD render and LabWired both key off these,
+// Explicit part colors — the CrispCAD render and LabWired both key off these,
 // so every composed component is tinted (imported STEP would otherwise be gray).
 // NOTE: .color() takes a '#RRGGBB' STRING; a numeric 0xRRGGBB is NOT honored.
 const PCB_TEAL    = '#0f8a8a'; // Arduino teal/cyan solder mask

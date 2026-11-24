@@ -1,4 +1,21 @@
-# kernelCAD Trademark Policy
+# Trademarks
+
+CrispCAD is a renamed fork of kernelCAD. kernelCAD's MIT licence covers its source
+code, not the kernelCAD name or logo. Its trademark policy (at the fork point,
+preserved below) requires forks to be renamed and not to suggest endorsement. CrispCAD
+therefore:
+
+- uses its own name for the package (`crispcad`), CLI, MCP server, documentation and
+  exported-file metadata;
+- names kernelCAD only to state truthfully where the code comes from and that the
+  `.kcad.ts` source format is compatible with kernelCAD models;
+- does not use the kernelCAD logo.
+
+Retained copyright notices in source files are not trademark use.
+
+## kernelCAD trademark policy (as of the fork point)
+
+### kernelCAD Trademark Policy
 
 The MIT license covers the kernelCAD **source code**. It does not grant any
 rights to the **kernelCAD name or logo**, which identify this project and its

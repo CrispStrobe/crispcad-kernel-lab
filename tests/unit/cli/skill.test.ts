@@ -9,7 +9,7 @@ describe('skill commands', () => {
   it('installCommand installs each skill into its own subdirectory', async () => {
     const tmp = mkdtempSync(join(tmpdir(), 'kcad-skill-'));
     await installCommand(tmp);
-    // kernelcad is always the first skill (sorted); it must have a SKILL.md
+    // crispcad is always the first skill (sorted); it must have a SKILL.md
     const target = join(tmp, 'kernelcad', 'SKILL.md');
     expect(existsSync(target)).toBe(true);
     const content = readFileSync(target, 'utf8');
@@ -44,7 +44,7 @@ describe('skill commands', () => {
     }
   });
 
-  it('renderOnefile concatenates all skills starting with the kernelcad entry skill', async () => {
+  it('renderOnefile concatenates all skills starting with the crispcad entry skill', async () => {
     const content = await renderOnefile();
     // First skill (sorted: kernelcad) must be the entry-decision skill.
     expect(content).toMatch(/^---\nname: kernelcad/);

@@ -17,7 +17,7 @@ export function Watermark({ version }: { version: string }): React.JSX.Element {
         zIndex: 10,
       }}
     >
-      kernelCAD {version}
+      CrispCAD {version}
     </div>
   );
 }

@@ -9,7 +9,7 @@ dimension text are read straight out of the PDF.
 
 - `motor-mount-bracket.pdf` — the input: a third-angle A4 sheet with front,
   top and left views, dimensions, two hole callouts and a title block. It was
-  drawn by kernelCAD's own `svg-drawing` exporter from the source model in
+  drawn by CrispCAD's own `svg-drawing` exporter from the source model in
   `tests/helpers/drawingPdf/fixtureModels.ts` (`MOTOR_MOUNT_BRACKET`) and
   converted to PDF (`npx tsx tests/helpers/drawingPdf/generateFixtures.ts`).
 - `run-drawing-to-cad.ts` — calls the `drawing_to_cad` MCP tool with
@@ -79,7 +79,7 @@ What to read in it:
 ## Verify the script builds
 
 ```bash
-npx kernelcad evaluate examples/drawing-to-cad/motor-mount-bracket.kcad.ts
+npx crispcad evaluate examples/drawing-to-cad/motor-mount-bracket.kcad.ts
 ```
 
 Expected:

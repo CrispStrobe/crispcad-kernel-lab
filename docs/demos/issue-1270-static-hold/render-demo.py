@@ -23,7 +23,7 @@ def render_slide(source_name: str, output_name: str, font_size: int) -> None:
     footer_font = ImageFont.truetype(FONT_PATH, 19)
     canvas = Image.new("RGB", (WIDTH, HEIGHT), BACKGROUND)
     draw = ImageDraw.Draw(canvas)
-    draw.text((80, 56), "kernelCAD / static-hold / #1270", font=label_font, fill=SECONDARY)
+    draw.text((80, 56), "CrispCAD / static-hold / #1270", font=label_font, fill=SECONDARY)
     draw.rectangle((72, 132, 80, 630), fill=ACCENT)
 
     source = (BUNDLE_DIR / source_name).read_text(encoding="utf-8").splitlines()

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/animate.ts
 //
-// `kernelcad animate <file.kcad.ts> [out.mp4]` — capture the script's
+// `crispcad animate <file.kcad.ts> [out.mp4]` — capture the script's
 // animationView({...}) timeline through the typed capture engine
 // (src/agent/render/captureAnimation.ts): MP4 via ffmpeg by default, or a
 // PNG frame sequence with `--frames <dir>` (zero external dependencies).
@@ -10,7 +10,7 @@
 // + segment midpoints, BEFORE any browser/ffmpeg cost); `--no-verify` skips
 // it and `--verify-every <n>` additionally samples every n-th frame time.
 //
-// Exit codes (pipe-friendly: `kernelcad animate part.kcad.ts && echo ok`):
+// Exit codes (pipe-friendly: `crispcad animate part.kcad.ts && echo ok`):
 //   0 — animation captured AND pose verification clean (or skipped via
 //       --no-verify),
 //   1 — animation captured BUT pose verification found collisions; the
@@ -85,7 +85,7 @@ export interface AnimateCliInput extends TurntableCliFields {
    *  (`--verify-every <n>`); unioned with the keyframe sample set. */
   verifyEvery?: number;
   /** Show only matching objects by feature/part name (`--focus <names>`).
-   *  Mutually exclusive with `hide` (same semantics as `kernelcad render`). */
+   *  Mutually exclusive with `hide` (same semantics as `crispcad render`). */
   focus?: string[];
   /** Hide matching objects by feature/part name (`--hide <names>`).
    *  Mutually exclusive with `focus`. */
@@ -381,9 +381,9 @@ render against a server you control instead. Honors VITE_PORT (dev-server
 fallback) and PW_CDP_URL (attach to an existing Chrome over CDP).
 
 Turntable examples:
-  kernelcad animate part.kcad.ts part.mp4 --turntable
-  kernelcad animate part.kcad.ts part.gif --turntable --width 640 --height 640 --fps 15
-  kernelcad animate part.kcad.ts --turntable --frames out/ --background transparent`,
+  crispcad animate part.kcad.ts part.mp4 --turntable
+  crispcad animate part.kcad.ts part.gif --turntable --width 640 --height 640 --fps 15
+  crispcad animate part.kcad.ts --turntable --frames out/ --background transparent`,
     )
     .action(async (file: string, out: string | undefined, opts: {
       frames?: string;

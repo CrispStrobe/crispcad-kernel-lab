@@ -99,7 +99,7 @@ export const SDF_EXPORT_PREVIEW_OUTPUT_SCHEMAS: Record<string, JSONSchemaObject>
       images: {
         type: 'array',
         items: { type: 'object', additionalProperties: true },
-        description: 'Rendered tiles { name, path, description } — absolute local PNG paths with per-view camera orientation (kernelCAD is Z-up).',
+        description: 'Rendered tiles { name, path, description } — absolute local PNG paths with per-view camera orientation (CrispCAD is Z-up).',
       },
       out_dir: { type: 'string', description: 'Directory holding the PNGs (session temp dir unless out_dir was given).' },
       bounds: { type: 'object', additionalProperties: true, description: 'Model AABB in mm { min, max } the camera was fit to (success).' },

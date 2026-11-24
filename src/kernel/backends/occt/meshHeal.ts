@@ -407,7 +407,7 @@ export function healExportMesh(mesh: EditableMesh, tol = 0.05): EditableMesh {
  * Defect budget for shipping a not-watertight export mesh with a warning:
  * at most this many bad edges, or this fraction of all edges, whichever is
  * larger. Slicers close a handful of cracks silently; a mesh past this budget
- * has missing surface, not a stitching seam. The kernelCAD server's STL check
+ * has missing surface, not a stitching seam. The CrispCAD server's STL check
  * uses the same budget; this is its source of truth.
  */
 export const MESH_DEFECT_MIN_EDGES = 24;

@@ -145,7 +145,7 @@ export async function bakeAnimationTimeline(model: BuiltModel): Promise<Animatio
           'this animationView timeline drives part GEOMETRY (a dimension / extrude depth / hole radius), ' +
             'not just a mate pose — baked playback only re-applies rigid per-part transforms.',
           'animation.bake.geometry-param',
-          'Studio playback supports POSE-ONLY (mate-driven) timelines. Render geometry-animating timelines with `kernelcad animate`.',
+          'Studio playback supports POSE-ONLY (mate-driven) timelines. Render geometry-animating timelines with `crispcad animate`.',
         );
       }
     }
@@ -174,7 +174,7 @@ export async function bakeAnimationTimeline(model: BuiltModel): Promise<Animatio
     }
   }
 
-  // ADVISORY collision check (same keyframe-sample check `kernelcad animate`
+  // ADVISORY collision check (same keyframe-sample check `crispcad animate`
   // uses). NON-FATAL: never sink a bake whose transforms are already computed.
   let collisions: AnimationCollision[] = [];
   try {

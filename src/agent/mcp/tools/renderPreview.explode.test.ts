@@ -3,7 +3,7 @@
 //
 // Explode-option forwarding for render_preview. Chromium is mocked; this
 // pins that { explode: { factor, mode } } is validated and handed to the
-// same headlessRender pipeline as kernelcad render --explode.
+// same headlessRender pipeline as crispcad render --explode.
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { renderPreviewTool, type RenderPreviewDeps } from './renderPreview';

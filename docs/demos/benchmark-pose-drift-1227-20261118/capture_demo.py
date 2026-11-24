@@ -132,7 +132,7 @@ def render() -> None:
         draw.text((690, 344), "2 displaced poses", font=font(21), fill=INK)
         draw.text((690, 398), "No deployed behavior", font=font(17), fill=MUTED)
         draw.text((690, 428), "or hardware acceptance claimed.", font=font(17), fill=MUTED)
-        draw.text((72, 672), "kernelCAD local regression demo · case 04 · #1227", font=font(15), fill=MUTED)
+        draw.text((72, 672), "CrispCAD local regression demo · case 04 · #1227", font=font(15), fill=MUTED)
         third.save(frame_dir / "slide-03.png")
 
         subprocess.run([

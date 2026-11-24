@@ -21,7 +21,7 @@ entry position the Ø8 head passes the Ø9 hole with 0.500 mm radial clearance.
 ## Replay and verification
 
 - Capture invocation: `node --import tsx docs/demos/sketch-boolean/capture-demo.mts`
-- View image: `kernelcad render docs/demos/sketch-boolean/keyhole-hanger.kcad.ts -o view.png --pose 25,55 --width 1000 --height 640`
+- View image: `crispcad render docs/demos/sketch-boolean/keyhole-hanger.kcad.ts -o view.png --pose 25,55 --width 1000 --height 640`
   (the pose file it writes is stored as [`view.png`](./view.png))
 - Video invocation: `node --import tsx docs/demos/sketch-boolean/make-video.mts`
 - Values and file hashes: [`evidence.json`](./evidence.json)

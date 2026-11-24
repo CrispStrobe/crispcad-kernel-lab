@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/modeling/joints/index.ts
 //
-// Public re-export of the `joint.*` namespace for the kernelCAD modeling SDK.
+// Public re-export of the `joint.*` namespace for the CrispCAD modeling SDK.
 // G1 slice ships `joint.clevis(...)` as the canonical revolute-joint
 // constructive primitive; G2+ will add `joint.prismatic`, `joint.ball`, etc.
 

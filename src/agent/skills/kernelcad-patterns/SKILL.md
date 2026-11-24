@@ -3,7 +3,7 @@ name: kernelcad-patterns
 description: Mechanical patterns — linear, circular, grid. Use when replicating a sub-feature (hole, rib, fin, tab, spoke) along an axis, around an axis, or across a 2D grid as a single editable unit.
 ---
 
-# kernelCAD — mechanical patterns
+# CrispCAD — mechanical patterns
 
 `Shape.patternLinear` / `.patternCircular` / `.patternGrid` produce a single `FeatureRecord` per call — one editable unit, one row in `inspect({ of: 'features' })`, one undo step. The pattern composes the source feature into N instances; instance 0 is the source position.
 
@@ -74,11 +74,11 @@ After authoring a pattern, run before reporting done:
 
 | Gate | Pass criterion |
 |------|----------------|
-| G-eval | `kernelcad evaluate` exits 0 — no `feature.pattern.*` diagnostics |
+| G-eval | `crispcad evaluate` exits 0 — no `feature.pattern.*` diagnostics |
 | G-count-ge-2 | Every pattern's `count` is an integer >= 2 (grid: both `x.count` and `y.count`). Param-bound counts carry `{ min: 2 }` |
 | G-direction-spacing-finite | `direction` is a finite Vec3 (not zero-length); `spacing` is a non-zero finite number |
 | G-source-bound | The variable receiving `.patternLinear` / `.patternCircular` / `.patternGrid` is bound from an earlier feature in the same chain; source is not suppressed |
-| G-no-overlap | `kernelcad interference` reports zero overlaps between patterned instances; if patterning a subtractive feature, every instance still subtracts the expected void |
+| G-no-overlap | `crispcad interference` reports zero overlaps between patterned instances; if patterning a subtractive feature, every instance still subtracts the expected void |
 | G-instance-ref-resolves | If downstream features reference a specific instance (`<sourceId>_pattern_<i>` or `'<name>.<slot>'`), `inspect({ of: 'features' })` shows the resolved ref before exporting |
 
 ## Related skills

@@ -8,8 +8,8 @@
 //
 // RUN IT
 //
-//   kernelcad evaluate examples/lattice/graded-gyroid-bracket.kcad.ts
-//   kernelcad export 3mf examples/lattice/graded-gyroid-bracket.kcad.ts -o bracket.3mf
+//   crispcad evaluate examples/lattice/graded-gyroid-bracket.kcad.ts
+//   crispcad export 3mf examples/lattice/graded-gyroid-bracket.kcad.ts -o bracket.3mf
 //
 // EXPECTED (measured; digits move with the grid)
 //

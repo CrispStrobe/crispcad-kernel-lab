@@ -39,5 +39,5 @@
     "npx tsx src/agent/cli/index.ts render examples/parts/bolted-flange.kcad.ts --preset publish --width 2048 --height 1536 --pose 0,0 -o docs/demos/standard-parts/flange-front.png",
     "convert flange-front.pose-0-0.png -crop 900x430+660+590 +repage flange-detail.png"
   ],
-  "provenance": "Annotated still sequence composed from local kernelcad render --preset publish outputs of the committed example source. Not a screen recording, turntable, deployed platform capture, physical hardware or strength test."
+  "provenance": "Annotated still sequence composed from local crispcad render --preset publish outputs of the committed example source. Not a screen recording, turntable, deployed platform capture, physical hardware or strength test."
 }

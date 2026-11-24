@@ -24,7 +24,7 @@
 // produced, never what a consumer gets. Previously it silently changed both.
 //
 // Pipeline, per `-board` entry:
-//   1. Produce a full-resolution GLB via the bundled kernelCAD CLI. Authored
+//   1. Produce a full-resolution GLB via the bundled CrispCAD CLI. Authored
 //      boards compile their `.kcad.ts`; url-sourced boards get a generated
 //      wrapper script around the STEP the ingest already downloaded.
 //   2. Optimize via scripts/lib/optimizeGlb.ts (shared with the marketing gallery
@@ -77,7 +77,7 @@ export const MAX_SERVED_STEP_BYTES = 20 * 1024 * 1024;
 
 /** Above this source-STEP size, tessellating to a web GLB is unreliable — it can
  *  take many minutes and blow the per-part export timeout. Such heavy parts are
- *  useful only to the kernelCAD CAD path (B-rep STEP), NOT to the web 3D viewer
+ *  useful only to the CrispCAD CAD path (B-rep STEP), NOT to the web 3D viewer
  *  (the web viewer doesn't render them), so adding a GLB and serving a STEP are
  *  DECOUPLED: we skip the web GLB for these, and — because their STEP also
  *  exceeds Cloudflare Pages' 25 MB per-file limit — drop it from the served set
@@ -129,7 +129,7 @@ function isAuthored(p: ManifestPart): boolean {
 /**
  * Every part that carries geometry gets a web-loadable GLB — not just boards.
  *
- * The web 3D viewer (kernelCAD and other web 3D tabs) prefers
+ * The web 3D viewer (CrispCAD and other web 3D tabs) prefers
  * `glbUrl` and only falls back to parsing raw STEP in-browser via a 7.6 MB OCCT
  * wasm. Baking a GLB for EVERY geometry part means the browser never needs OCCT:
  * it loads a small pre-tessellated mesh through three.js. So the target is any
@@ -182,7 +182,7 @@ export async function buildBoardGlbs(
   const repoRoot = resolve(dirname(manifestPath), '..');
   const cliPath = join(repoRoot, 'dist', 'cli', 'index.js');
   if (!existsSync(cliPath)) {
-    throw new Error(`kernelCAD CLI not built at ${cliPath}. Run: npm run build:cli`);
+    throw new Error(`CrispCAD CLI not built at ${cliPath}. Run: npm run build:cli`);
   }
   // The color-preserving STEP→GLB converter, run per-part in a fresh subprocess
   // (see the loop) so occt-import-js's wasm heap can't accumulate across parts.
@@ -197,7 +197,7 @@ export async function buildBoardGlbs(
   const results: BoardGlbResult[] = [];
   const skipped: { id: string; reason: string }[] = [];
   // Parts deliberately skipped because their geometry is too heavy for a web GLB.
-  // A board here is NOT a regression (it's a kernelCAD-only heavy part), so the
+  // A board here is NOT a regression (it's a CrispCAD-only heavy part), so the
   // consistency check must tolerate it rather than crash the catalog.
   const skippedOversize = new Set<string>();
 
@@ -207,7 +207,7 @@ export async function buildBoardGlbs(
     const rawGlb = join(tmp, `${part.id}.raw.glb`);
     const finalGlb = join(glbDir, `${part.id}.glb`);
 
-    // Decouple "add a web GLB" (web viewer) from "serve a STEP" (kernelCAD): a part
+    // Decouple "add a web GLB" (web viewer) from "serve a STEP" (CrispCAD): a part
     // whose STEP is too large to tessellate in bounded time gets NO web GLB, and
     // since that STEP also overflows Cloudflare Pages' 25 MB limit we drop it +
     // its stepUrl so the deploy doesn't choke. The part stays in the catalog as
@@ -220,13 +220,13 @@ export async function buildBoardGlbs(
       skippedOversize.add(part.id);
       skipped.push({
         id: part.id,
-        reason: `STEP ${(stepBytes / 1024 / 1024).toFixed(0)} MB > ${(MAX_GLB_SOURCE_STEP_BYTES / 1024 / 1024).toFixed(0)} MB — too large for a web GLB (kernelCAD-only)`,
+        reason: `STEP ${(stepBytes / 1024 / 1024).toFixed(0)} MB > ${(MAX_GLB_SOURCE_STEP_BYTES / 1024 / 1024).toFixed(0)} MB — too large for a web GLB (CrispCAD-only)`,
       });
       continue;
     }
 
     // A single part failing to tessellate must NOT abort the whole catalog build —
-    // it just keeps its STEP (for kernelCAD) and, for the web viewer, falls back to
+    // it just keeps its STEP (for CrispCAD) and, for the web viewer, falls back to
     // the procedural stand-in. This holds for boards too: the web viewer renders GLBs, so
     // one board that can't produce a GLB is a logged gap, not a build-stopping bug.
     try {
@@ -338,7 +338,7 @@ export function assertBoardConsistency(
   const problems: string[] = [];
   // Boards carry a strong guarantee: every board MUST produce a GLB — UNLESS it was
   // deliberately skipped because its geometry is too heavy for the web (a
-  // kernelCAD-only part). Such a skip is intentional and logged, not the silent
+  // CrispCAD-only part). Such a skip is intentional and logged, not the silent
   // regression this check exists to catch.
   if (manifest) {
     const built = new Set(results.map((r) => r.id));

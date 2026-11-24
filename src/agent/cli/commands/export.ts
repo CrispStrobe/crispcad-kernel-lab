@@ -646,7 +646,7 @@ function emptyPartsSelectionDiagnostic(input: ExportPartsCliInput): CompilerDiag
     message: input.parts !== undefined && input.parts.length === 0
       ? 'No parts selected: the part selection is empty. Pass --part <name> (repeatable) or --parts all.'
       : 'The script resolved to zero assembly parts; nothing to export.',
-    hint: 'Run `kernelcad parts <file>` to list the available part names.',
+    hint: 'Run `crispcad parts <file>` to list the available part names.',
   };
 }
 

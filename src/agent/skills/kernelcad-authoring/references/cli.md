@@ -1,4 +1,4 @@
-# kernelCAD authoring reference — CLI and animation
+# CrispCAD authoring reference — CLI and animation
 
 kernelcad CLI commands and animationView timelines.
 
@@ -6,81 +6,81 @@ kernelcad CLI commands and animationView timelines.
 
 ```bash
 # Run a script and report features + diagnostics
-kernelcad evaluate path/to/script.kcad.ts
+crispcad evaluate path/to/script.kcad.ts
 
 # Same, but JSON output (machine-readable)
-kernelcad evaluate path/to/script.kcad.ts --json
+crispcad evaluate path/to/script.kcad.ts --json
 
 # Export to a file in the chosen format
-kernelcad export stl  path/to/script.kcad.ts -o /tmp/out.stl
-kernelcad export step path/to/script.kcad.ts -o /tmp/out.step   # single shape: one STEP product named after the script file (bracket.kcad.ts gives bracket), with the shape colour when it has one; assembly: named bodies, each with its colour when it has one (a part without a colour is written without one, not as red); a part repeated with identical source content (same shape placed N times, or the same call in a loop) is one STEP product with N placed instances; a translate or rotate on the shape before part() is placement, so a project from import-step keeps its instances and its part names (no STEP root prefix); a hex colour is written as the same sRGB channels in STEP COLOUR_RGB (#3366cc is 0.2, 0.4, 0.8) and import-step reads a STEP colour as the same hex value
-kernelcad export dxf  path/to/script.kcad.ts -o /tmp/out.dxf   # flat part / cut list / sheet metal; laser / waterjet / CNC
-kernelcad export dxf  path/to/script.kcad.ts -o /tmp/plan.dxf --options '{"section":{"axis":"z","at":25}}'  # cross-section of any part at z = 25
-kernelcad export 3mf  path/to/script.kcad.ts -o /tmp/out.3mf   # slicer mesh with per-part colors
-kernelcad export glb  path/to/script.kcad.ts -o /tmp/out.glb   # web / AR viewer; PBR materials
-kernelcad export ply  path/to/script.kcad.ts -o /tmp/out.ply   # MeshLab / Blender / trimesh mesh; normals + part colours, assemblies merged in world space
-kernelcad export ply  path/to/script.kcad.ts -o /tmp/out.ply --options '{"encoding":"ascii","colors":"face"}'
-kernelcad export stl  path/to/script.kcad.ts --part lever -o /tmp/lever.stl  # one solved-assembly part (world-frame); repeat --part with -o <dir> for a subset
-kernelcad export stl  path/to/script.kcad.ts --parts all -o /tmp/parts/      # every assembly part as <dir>/<part>.stl
-kernelcad export stl  path/to/script.kcad.ts -o /tmp/out.stl --no-verify     # skip the default-on watertight verify gate
-kernelcad export step path/to/script.kcad.ts -o /tmp/out.step --quality-gate block  # fail (write nothing) on tiny faces / short edges; default warn, off skips
-kernelcad export stl  path/to/script.kcad.ts -o /tmp/out.stl --tiny-face-area-mm2 0.05 --short-edge-length-mm 0.2  # quality gate thresholds
-kernelcad parts path/to/script.kcad.ts --json                  # list assembly parts with bbox, volume, surface area, triangle count
+crispcad export stl  path/to/script.kcad.ts -o /tmp/out.stl
+crispcad export step path/to/script.kcad.ts -o /tmp/out.step   # single shape: one STEP product named after the script file (bracket.kcad.ts gives bracket), with the shape colour when it has one; assembly: named bodies, each with its colour when it has one (a part without a colour is written without one, not as red); a part repeated with identical source content (same shape placed N times, or the same call in a loop) is one STEP product with N placed instances; a translate or rotate on the shape before part() is placement, so a project from import-step keeps its instances and its part names (no STEP root prefix); a hex colour is written as the same sRGB channels in STEP COLOUR_RGB (#3366cc is 0.2, 0.4, 0.8) and import-step reads a STEP colour as the same hex value
+crispcad export dxf  path/to/script.kcad.ts -o /tmp/out.dxf   # flat part / cut list / sheet metal; laser / waterjet / CNC
+crispcad export dxf  path/to/script.kcad.ts -o /tmp/plan.dxf --options '{"section":{"axis":"z","at":25}}'  # cross-section of any part at z = 25
+crispcad export 3mf  path/to/script.kcad.ts -o /tmp/out.3mf   # slicer mesh with per-part colors
+crispcad export glb  path/to/script.kcad.ts -o /tmp/out.glb   # web / AR viewer; PBR materials
+crispcad export ply  path/to/script.kcad.ts -o /tmp/out.ply   # MeshLab / Blender / trimesh mesh; normals + part colours, assemblies merged in world space
+crispcad export ply  path/to/script.kcad.ts -o /tmp/out.ply --options '{"encoding":"ascii","colors":"face"}'
+crispcad export stl  path/to/script.kcad.ts --part lever -o /tmp/lever.stl  # one solved-assembly part (world-frame); repeat --part with -o <dir> for a subset
+crispcad export stl  path/to/script.kcad.ts --parts all -o /tmp/parts/      # every assembly part as <dir>/<part>.stl
+crispcad export stl  path/to/script.kcad.ts -o /tmp/out.stl --no-verify     # skip the default-on watertight verify gate
+crispcad export step path/to/script.kcad.ts -o /tmp/out.step --quality-gate block  # fail (write nothing) on tiny faces / short edges; default warn, off skips
+crispcad export stl  path/to/script.kcad.ts -o /tmp/out.stl --tiny-face-area-mm2 0.05 --short-edge-length-mm 0.2  # quality gate thresholds
+crispcad parts path/to/script.kcad.ts --json                  # list assembly parts with bbox, volume, surface area, triangle count
 
 # Render a 4-view PNG (front/right/top/iso) for visual review.
 # Tiles are framed to the requested --width/--height: the camera fits the
 # visible geometry to the output aspect and the capture is center-cropped,
 # so the default 1024×1024 square tiles frame correctly.
-kernelcad render path/to/script.kcad.ts -o /tmp/out.png
+crispcad render path/to/script.kcad.ts -o /tmp/out.png
 
 # All seven views (adds back, left, bottom) in one labelled inspection sheet.
-kernelcad render path/to/script.kcad.ts -o /tmp/sheet.png --sheet
+crispcad render path/to/script.kcad.ts -o /tmp/sheet.png --sheet
 
 # Clip the model with a section plane to expose interiors in headless captures.
 # Keeps the negative-axis side by default; --section-flip keeps the positive side.
-kernelcad render path/to/script.kcad.ts -o /tmp/cut.png --section z=10
+crispcad render path/to/script.kcad.ts -o /tmp/cut.png --section z=10
 
 # Share-ready studio hero shot (same preset as render_preview preset: 'publish'):
 # one 3/4 PNG, 1600×1200 by default (--width/--height up to 2048). --background
 # white|light|dark|black|transparent|#rrggbb and --no-shadow apply only with
 # --preset publish; --separate / --pose render those views in the publish look.
-kernelcad render path/to/script.kcad.ts --preset publish -o /tmp/hero.png
-kernelcad render path/to/script.kcad.ts --preset publish --background transparent --no-shadow -o /tmp/hero.png
+crispcad render path/to/script.kcad.ts --preset publish -o /tmp/hero.png
+crispcad render path/to/script.kcad.ts --preset publish --background transparent --no-shadow -o /tmp/hero.png
 
 # Interrogate an external STEP file before placement: solid tree, per-solid
 # exact bbox + volume, cylindrical holes (axis, diameter, depth, blind/through)
-kernelcad inspect step path/to/part.step
+crispcad inspect step path/to/part.step
 
 # Rebuild an editable feature-tree script from an STL / OBJ / 3MF mesh, verified
 # against the mesh (volume IoU + surface deviation; --strict exits 1 unless faithful)
-kernelcad reconstruct path/to/part.stl -o /tmp/part.kcad.ts
+crispcad reconstruct path/to/part.stl -o /tmp/part.kcad.ts
 
 # Detect BREP interferences between Scene parts (industry-standard clash check)
-kernelcad interference path/to/script.kcad.ts
+crispcad interference path/to/script.kcad.ts
 
 # Validate the assembly: floating parts, orphan clusters, interferences (v0.5 MVP)
-kernelcad validate path/to/script.kcad.ts
+crispcad validate path/to/script.kcad.ts
 
 # Run the print-readiness gates declared by the script's dfmSpec()
 # (exit 0 pass / 1 gate failed / 2 no dfmSpec declared; --json for the full report)
-kernelcad dfm path/to/script.kcad.ts
+crispcad dfm path/to/script.kcad.ts
 
 # Capture the script's animationView({...}) timeline to MP4 (ffmpeg), verifying
 # the sampled poses for part interference (exit 0 clean / 1 collisions / 2 could
 # not capture). Requires a running studio dev server (npm run dev).
-kernelcad animate path/to/script.kcad.ts -o /tmp/out.mp4
-kernelcad animate path/to/script.kcad.ts --frames /tmp/frames   # PNG sequence; no ffmpeg
-kernelcad animate path/to/script.kcad.ts --no-verify            # skip the pose-interference gate
-kernelcad animate path/to/script.kcad.ts --hide wall,cap        # hide parts in the frames (cutaway); --focus shows only the named parts (mutually exclusive; verification still runs on the full model)
+crispcad animate path/to/script.kcad.ts -o /tmp/out.mp4
+crispcad animate path/to/script.kcad.ts --frames /tmp/frames   # PNG sequence; no ffmpeg
+crispcad animate path/to/script.kcad.ts --no-verify            # skip the pose-interference gate
+crispcad animate path/to/script.kcad.ts --hide wall,cap        # hide parts in the frames (cutaway); --focus shows only the named parts (mutually exclusive; verification still runs on the full model)
 
 # Seamless 360° turntable of the model (same engine as capture_animation turntable: true);
 # .gif out → GIF, otherwise MP4; --frames keeps a transparent backdrop. Publish look by
 # default; --width/--height (1080), --fps (30), --duration-ms (6000), --elevation (22),
 # --background, --no-shadow, --preset default, --environment are turntable-only flags.
-kernelcad animate path/to/script.kcad.ts /tmp/spin.gif --turntable --width 640 --height 640 --fps 15
+crispcad animate path/to/script.kcad.ts /tmp/spin.gif --turntable --width 640 --height 640 --fps 15
 
 # Run the MCP server (stdio transport)
-kernelcad mcp
+crispcad mcp
 ```
 
 For static renders and turntables, set `PW_CDP_URL` to an already-running
@@ -91,7 +91,7 @@ attachment failure is reported; it does not launch a second browser.
 ## Animation timelines (animationView)
 
 `animationView({...})` declares a kinematic-motion timeline that
-`kernelcad animate` (or the `capture_animation` MCP tool) renders to an MP4 or
+`crispcad animate` (or the `capture_animation` MCP tool) renders to an MP4 or
 a PNG frame sequence. Display only —
 and the captured artifact is evidence of the motion, not a design source.
 
@@ -137,11 +137,11 @@ throw `animation.keys.invalid`. Key values outside the param's declared min/max
 clamp to the boundary with an `animation.value.clamped` warn. Multiple
 `animationView()` calls keep the LAST record and warn `animation.view.shadowed`.
 
-**Capture (`kernelcad animate <file> [out.mp4]`).** MP4 via ffmpeg by default;
+**Capture (`crispcad animate <file> [out.mp4]`).** MP4 via ffmpeg by default;
 `--frames <dir>` writes a PNG sequence and skips ffmpeg entirely (use when
 ffmpeg is unavailable). `--fps <n>` overrides the record's fps. `--focus <names>` /
 `--hide <names>` isolate parts in the rendered frames (comma-separated feature ids
-or assembly part names, mutually exclusive — same semantics as `kernelcad render`;
+or assembly part names, mutually exclusive — same semantics as `crispcad render`;
 use for cutaways like an internal drum behind a frosted wall). Visibility is
 render-only and does NOT affect the pose-interference verification, which always
 runs against the full model. Exit codes:
@@ -149,7 +149,7 @@ runs against the full model. Exit codes:
 gate found collisions (the MP4/frames ARE still written as evidence), `2` =
 could not capture at all (bad args, build error, no `animationView` record, an
 unsolvable pose, ffmpeg missing, browser bootstrap failure). Like
-`kernelcad render`, capture drives a headless browser against a **running
+`crispcad render`, capture drives a headless browser against a **running
 studio dev server** (`npm run dev`; honors `VITE_PORT` / `PW_CDP_URL`).
 
 **Motion verification.** By default, before paying any browser/ffmpeg cost,
@@ -170,5 +170,5 @@ solved server-side into per-part transforms), then interpolated and played
 client-side at full rate, so playback is smooth; on pause the kernel pose is
 synced to the displayed frame so Export/Validate agree with the viewport. Live
 drive needs a server-pool session (the model opened via `?script=`); the
-editor-only mode previews sampled values. Offline `kernelcad animate` remains
+editor-only mode previews sampled values. Offline `crispcad animate` remains
 the full-fidelity, verified MP4 capture.

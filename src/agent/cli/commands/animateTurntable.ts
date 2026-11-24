@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/commands/animateTurntable.ts
 //
-// `kernelcad animate --turntable` — the CLI face of capture_animation
+// `crispcad animate --turntable` — the CLI face of capture_animation
 // ({ turntable: true }). Flags resolve through the MCP tool's own validator
 // (resolveTurntableSettings in captureTurntableInput.ts) and drive the same
 // engine (captureTurntable.ts) through the same option mapping
@@ -145,7 +145,7 @@ export function configureTurntableOptions(cmd: Command): Command {
       "--turntable + publish only: 'white' (default), 'light', 'dark', 'black', a hex colour, or 'transparent' (needs --frames)",
     )
     .option('--no-shadow', '--turntable + publish only: drop the soft contact shadow')
-    .option('--environment <preset|url|none>', '--turntable only: HDRI environment override (same values as `kernelcad render --environment`)');
+    .option('--environment <preset|url|none>', '--turntable only: HDRI environment override (same values as `crispcad render --environment`)');
 }
 
 /** Parsed commander opts → the turntable input fields. */

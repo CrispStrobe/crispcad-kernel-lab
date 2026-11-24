@@ -20,7 +20,7 @@ free-hand shape.
 - Changes: the mesh is not redistributed. Its shape was measured into station
   tables and re-modelled as NURBS lofts (see below); proportions, cross-sections
   and the wheel layout follow the source. Lamps, intake, mirrors, rims and the
-  window/pillar layout are simplified kernelCAD additions.
+  window/pillar layout are simplified CrispCAD additions.
 - The source is a generic, unbranded compact hatchback (no logos or badges);
   this port adds none.
 

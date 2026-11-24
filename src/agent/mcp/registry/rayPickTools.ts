@@ -11,7 +11,7 @@ export const rayPickToolEntries: ToolRegistryEntry[] = [{
       type: 'object',
       properties: {
         file: { type: 'string', description: 'Path to a .kcad.ts script.' },
-        code: { type: 'string', description: 'Inline kernelCAD script source.' },
+        code: { type: 'string', description: 'Inline CrispCAD script source.' },
         feature_id: { type: 'string', description: 'Displayed terminal feature to ray-pick; defaults to the returned feature. Intermediate features are not available as current viewer selections.' },
         studio_url: { type: 'string', description: 'Local Studio HTTP origin, e.g. http://localhost:5173.' },
         session: { type: 'string', minLength: 1, description: 'Studio sessionToken for this script, from GET /__kernelcad/session?script=<path>.' },

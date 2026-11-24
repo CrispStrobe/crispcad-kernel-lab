@@ -36,7 +36,7 @@ const STRIPPED_GLOBALS = new Set([
  *
  * The sandbox starts empty (no `process`, no `require`, no host globals beyond
  * a curated set of safe primitives), then receives the caller's `injected`
- * map verbatim — typically the kernelCAD API. With `wrapReturn`, the script
+ * map verbatim — typically the CrispCAD API. With `wrapReturn`, the script
  * is wrapped in an IIFE so a top-level `return` captures the script's value
  * back to the caller via a sandbox sentinel.
  *
@@ -62,7 +62,7 @@ export function runIsolated(
     sandbox[k] = (globalThis as unknown as Record<string, unknown>)[k];
   }
   for (const [k, v] of Object.entries(injected)) {
-    // `require` is the kernelCAD requirement API (S2), not Node's module
+    // `require` is the CrispCAD requirement API (S2), not Node's module
     // loader: the sandbox starts empty, so the injected function is the only
     // `require` in scope.
     if (STRIPPED_GLOBALS.has(k) && k !== 'require') {
