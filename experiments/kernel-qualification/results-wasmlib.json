@@ -1,0 +1,865 @@
+{
+ "summary": {
+  "kernel": {
+   "name": "WASMLib",
+   "version": "au12/WASMLib (see WASMLIB_COMMIT)",
+   "licence": "Apache-2.0"
+  },
+  "node": "v24.22.2",
+  "loadMs": 500,
+  "pass": 27,
+  "total": 27,
+  "totalBuildMs": 2950,
+  "stress": [
+   {
+    "id": "plate-48-holes",
+    "ms": 962,
+    "volume": 36984.07105251892
+   },
+   {
+    "id": "filleted-shelled-box",
+    "ms": 1161,
+    "volume": 14950.678106930722
+   }
+  ]
+ },
+ "rows": [
+  {
+   "id": "rectangular-block",
+   "expected": {
+    "volume": 24000,
+    "area": 5200
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 28.79,
+   "measured": {
+    "volume": 24000,
+    "area": 5200,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     40,
+     30,
+     20
+    ]
+   },
+   "volumeError": 0,
+   "areaError": 0,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "centered-block",
+   "expected": {
+    "volume": 2592,
+    "area": 1368
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 2.61,
+   "measured": {
+    "volume": 2592,
+    "area": 1368,
+    "min": [
+     -12,
+     -9,
+     -3
+    ],
+    "max": [
+     12,
+     9,
+     3
+    ]
+   },
+   "volumeError": 0,
+   "areaError": 0,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "cylinder",
+   "expected": {
+    "volume": 15707.963267948966,
+    "area": 3769.911184307752
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 56.96,
+   "measured": {
+    "volume": 15707.963267989891,
+    "area": 3769.9111844056474,
+    "min": [
+     -10,
+     -10,
+     0
+    ],
+    "max": [
+     10,
+     10,
+     50
+    ]
+   },
+   "volumeError": 2.6053945945929105e-12,
+   "areaError": 2.596752985115978e-11,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "sphere",
+   "expected": {
+    "volume": 7238.229473870883,
+    "area": 1809.55736846772
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 300.04,
+   "measured": {
+    "volume": 7238.229414310102,
+    "area": 1809.5573684021333,
+    "min": [
+     -12,
+     -12,
+     -12
+    ],
+    "max": [
+     12,
+     12.000000000000002,
+     12
+    ]
+   },
+   "volumeError": 8.228639597559127e-9,
+   "areaError": 3.624456452472874e-11,
+   "bboxError": 1.7763568394002505e-15,
+   "status": "pass"
+  },
+  {
+   "id": "torus-revolve",
+   "expected": {
+    "volume": 9869.604401089358,
+    "area": 3947.841760435743
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 719.1,
+   "measured": {
+    "volume": 9869.604401369625,
+    "area": 3947.8417611169107,
+    "min": [
+     -25.000000000000007,
+     -25.000000000000007,
+     -4.999999999999998
+    ],
+    "max": [
+     25.000000000000004,
+     25.000000000000007,
+     5.000000000000002
+    ]
+   },
+   "volumeError": 2.8396908116054182e-11,
+   "areaError": 1.725418386088135e-10,
+   "bboxError": 7.105427357601002e-15,
+   "status": "pass"
+  },
+  {
+   "id": "cone-frustum-revolve",
+   "expected": {
+    "volume": 4105.014400690663,
+    "area": 1452.475304530714
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 22.18,
+   "measured": {
+    "volume": 4105.0144007030785,
+    "area": 1452.4753045552088,
+    "min": [
+     -10,
+     -10,
+     0
+    ],
+    "max": [
+     10,
+     10,
+     20
+    ]
+   },
+   "volumeError": 3.0244746941236918e-12,
+   "areaError": 1.6864134354241602e-11,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "plate-through-hole",
+   "expected": {
+    "volume": 23214.601836602553,
+    "area": 6957.07963267949
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 41.99,
+   "measured": {
+    "volume": 23214.601836604772,
+    "area": 6957.079632681254,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     60,
+     40,
+     10
+    ]
+   },
+   "volumeError": 9.559358751641286e-14,
+   "areaError": 2.5361499574497786e-13,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "plate-blind-hole",
+   "expected": {
+    "volume": 14148.672587712817,
+    "area": 4205.663706143591
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 21.7,
+   "measured": {
+    "volume": 14148.672587713998,
+    "area": 4205.663706155891,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     40,
+     30,
+     12
+    ]
+   },
+   "volumeError": 8.34370938745496e-14,
+   "areaError": 2.924629073125689e-12,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "plate-counterbore",
+   "expected": {
+    "volume": 11516.194731347172,
+    "area": 3982.212373908208
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 51.97,
+   "measured": {
+    "volume": 11516.194731347749,
+    "area": 3982.2123739050785,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     40,
+     30,
+     10
+    ]
+   },
+   "volumeError": 5.007032742807599e-14,
+   "areaError": 7.858875858319013e-13,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "plate-through-slot",
+   "expected": {
+    "volume": 13400,
+    "area": 4840
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 5.45,
+   "measured": {
+    "volume": 13400,
+    "area": 4840,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     50,
+     30,
+     10
+    ]
+   },
+   "volumeError": 0,
+   "areaError": 0,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "annular-cylinder",
+   "expected": {
+    "volume": 12566.370614359172,
+    "area": 3769.911184307752
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 43.05,
+   "measured": {
+    "volume": 12566.370614384172,
+    "area": 3769.9111846856617,
+    "min": [
+     -15,
+     -15,
+     0
+    ],
+    "max": [
+     15,
+     15,
+     20
+    ]
+   },
+   "volumeError": 1.989451937201929e-12,
+   "areaError": 1.0024363493626269e-10,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "open-top-shell",
+   "expected": {
+    "volume": 19608,
+    "area": 13612
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 33.45,
+   "measured": {
+    "volume": 19608.000000000004,
+    "area": 13612,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     50,
+     40,
+     30
+    ]
+   },
+   "volumeError": 1.8553543487819833e-16,
+   "areaError": 0,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "l-bracket-union",
+   "expected": {
+    "volume": 9600,
+    "area": 3680
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 6.29,
+   "measured": {
+    "volume": 9600,
+    "area": 3680,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     40,
+     20,
+     28
+    ]
+   },
+   "volumeError": 0,
+   "areaError": 0,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "boolean-intersection",
+   "expected": {
+    "volume": 4000,
+    "area": 1600
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 5.22,
+   "measured": {
+    "volume": 4000.000000000001,
+    "area": 1600.0000000000005,
+    "min": [
+     5,
+     0,
+     0
+    ],
+    "max": [
+     15,
+     20,
+     20
+    ]
+   },
+   "volumeError": 2.2737367544323206e-16,
+   "areaError": 2.842170943040401e-16,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "rounded-box",
+   "expected": {
+    "volume": 23340.84937505542,
+    "area": 4726.265361880022
+   },
+   "tolerance": {
+    "volumeRelative": 1e-8,
+    "surfaceAreaRelative": 1e-8,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 835.44,
+   "measured": {
+    "volume": 23340.84937508223,
+    "area": 4726.265361888795,
+    "min": [
+     -4.440892098500626e-16,
+     -5.380843913203298e-15,
+     -1.363051972707996e-15
+    ],
+    "max": [
+     40.00000000000001,
+     30,
+     20
+    ]
+   },
+   "volumeError": 1.1487115733208944e-12,
+   "areaError": 1.8562194928919377e-12,
+   "bboxError": 7.105427357601002e-15,
+   "status": "pass"
+  },
+  {
+   "id": "top-edge-chamfer",
+   "expected": {
+    "volume": 23730.666666666664,
+    "area": 5029.352380466496
+   },
+   "tolerance": {
+    "volumeRelative": 1e-8,
+    "surfaceAreaRelative": 1e-8,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 19.01,
+   "measured": {
+    "volume": 23730.66666666667,
+    "area": 5029.3523804664965,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     40,
+     30,
+     20
+    ]
+   },
+   "volumeError": 3.066056978670396e-16,
+   "areaError": 1.8083733907874803e-16,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "plate-four-holes",
+   "expected": {
+    "volume": 38869.02664470767,
+    "area": 11127.787565803086
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 77.94,
+   "measured": {
+    "volume": 38869.026644698526,
+    "area": 11127.787565905366,
+    "min": [
+     0,
+     0,
+     0
+    ],
+    "max": [
+     80,
+     50,
+     10
+    ]
+   },
+   "volumeError": 2.3529991642519947e-13,
+   "areaError": 9.19140076741737e-12,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "circular-pattern-pins",
+   "expected": {
+    "volume": 1357.1680263507906,
+    "area": 1244.0706908215582
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 198.66,
+   "measured": {
+    "volume": 1357.1680263565656,
+    "area": 1244.070690901855,
+    "min": [
+     -23,
+     -20.32050807568877,
+     0
+    ],
+    "max": [
+     23,
+     20.32050807568878,
+     8
+    ]
+   },
+   "volumeError": 4.255231386574057e-12,
+   "areaError": 6.45435879982637e-11,
+   "bboxError": 1.0658141036401503e-14,
+   "status": "pass"
+  },
+  {
+   "id": "linear-pattern-pins",
+   "expected": {
+    "volume": 904.7786842338604,
+    "area": 829.3804605477054
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 127.23,
+   "measured": {
+    "volume": 904.7786842365963,
+    "area": 829.3804606633947,
+    "min": [
+     2,
+     -3,
+     0
+    ],
+    "max": [
+     38,
+     3,
+     8
+    ]
+   },
+   "volumeError": 3.0238043816066974e-12,
+   "areaError": 1.3948883918105061e-10,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "grid-pattern-pins",
+   "expected": {
+    "volume": 1357.1680263507906,
+    "area": 1244.0706908215582
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 179.36,
+   "measured": {
+    "volume": 1357.1680263556043,
+    "area": 1244.0706908596703,
+    "min": [
+     1,
+     2,
+     0
+    ],
+    "max": [
+     27,
+     18.000000000000004,
+     8
+    ]
+   },
+   "volumeError": 3.5468917549966284e-12,
+   "areaError": 3.0635034154651335e-11,
+   "bboxError": 3.552713678800501e-15,
+   "status": "pass"
+  },
+  {
+   "id": "mirrored-blocks",
+   "expected": {
+    "volume": 2000,
+    "area": 1200
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 6.63,
+   "measured": {
+    "volume": 2000,
+    "area": 1200,
+    "min": [
+     -20,
+     0,
+     0
+    ],
+    "max": [
+     20,
+     10,
+     10
+    ]
+   },
+   "volumeError": 0,
+   "areaError": 0,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "sweep-square-prism",
+   "expected": {
+    "volume": 480,
+    "area": 512
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 3.94,
+   "measured": {
+    "volume": 480.0000000000001,
+    "area": 512,
+    "min": [
+     -2,
+     -2,
+     0
+    ],
+    "max": [
+     2,
+     2,
+     30
+    ]
+   },
+   "volumeError": 2.3684757858670006e-16,
+   "areaError": 0,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "sweep-round-prism",
+   "expected": {
+    "volume": 1570.7963267948965,
+    "area": 785.3981633974483
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 36.08,
+   "measured": {
+    "volume": 1570.7963267989571,
+    "area": 785.398163355407,
+    "min": [
+     -5,
+     -4.999999999999999,
+     0
+    ],
+    "max": [
+     5,
+     5.000000000000001,
+     20
+    ]
+   },
+   "volumeError": 2.585100563626983e-12,
+   "areaError": 5.352876356062815e-11,
+   "bboxError": 8.881784197001252e-16,
+   "status": "pass"
+  },
+  {
+   "id": "loft-circular-frustum",
+   "expected": {
+    "volume": 3665.1914291880917,
+    "area": 1364.1829574548633
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 50.01,
+   "measured": {
+    "volume": 3665.1914292069423,
+    "area": 1364.1829575193503,
+    "min": [
+     -10,
+     -10,
+     0
+    ],
+    "max": [
+     10,
+     10,
+     20
+    ]
+   },
+   "volumeError": 5.143153447914825e-12,
+   "areaError": 4.727154767311834e-11,
+   "bboxError": 0,
+   "status": "pass"
+  },
+  {
+   "id": "loft-square-frustum",
+   "expected": {
+    "volume": 2613.3333333333335,
+    "area": 1233.3010953132166
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 7.24,
+   "measured": {
+    "volume": 2613.333333333334,
+    "area": 1233.3010953132166,
+    "min": [
+     -10.00001,
+     -10.00001,
+     -0.00001
+    ],
+    "max": [
+     10.00001,
+     10.00001,
+     10.00001
+    ]
+   },
+   "volumeError": 1.740104659004327e-16,
+   "areaError": 0,
+   "bboxError": 0.00001,
+   "status": "pass"
+  },
+  {
+   "id": "stepped-shaft-revolve",
+   "expected": {
+    "volume": 2513.2741228718346,
+    "area": 1156.1060965210438
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 67.74,
+   "measured": {
+    "volume": 2513.274122877886,
+    "area": 1156.1060965491156,
+    "min": [
+     -8,
+     -8,
+     0
+    ],
+    "max": [
+     8,
+     8,
+     20.000000000000004
+    ]
+   },
+   "volumeError": 2.4077449185413698e-12,
+   "areaError": 2.428131936019585e-11,
+   "bboxError": 3.552713678800501e-15,
+   "status": "pass"
+  },
+  {
+   "id": "rotated-box",
+   "expected": {
+    "volume": 4000,
+    "area": 2200
+   },
+   "tolerance": {
+    "volumeRelative": 0.000001,
+    "surfaceAreaRelative": 0.000001,
+    "bboxAbsoluteMm": 0.05
+   },
+   "ms": 2.04,
+   "measured": {
+    "volume": 4000.0000000000005,
+    "area": 2200,
+    "min": [
+     -9.999999999999998,
+     0,
+     0
+    ],
+    "max": [
+     34.64101615137755,
+     37.32050807568877,
+     5
+    ]
+   },
+   "volumeError": 1.1368683772161603e-16,
+   "areaError": 0,
+   "bboxError": 1.7763568394002505e-15,
+   "status": "pass"
+  }
+ ]
+}
