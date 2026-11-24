@@ -10,6 +10,8 @@ export interface TelemetryConfig {
   enabled: boolean;
   installId: string;
   notified: boolean;
+  /** Set only by an explicit `telemetry enable`; upstream configs default-on do not count. */
+  optedIn?: boolean;
 }
 
 /** Config home honours XDG; `KERNELCAD_CONFIG_HOME` overrides (test seam). */
@@ -30,7 +32,7 @@ export function loadConfig(): TelemetryConfig | null {
     if (!existsSync(configPath())) return null;
     const raw = JSON.parse(readFileSync(configPath(), 'utf8'));
     if (typeof raw?.installId !== 'string') return null;
-    return { enabled: raw.enabled !== false, installId: raw.installId, notified: raw.notified === true };
+    return { enabled: raw.enabled === true, installId: raw.installId, notified: raw.notified === true, optedIn: raw.optedIn === true };
   } catch {
     return null;
   }
@@ -48,7 +50,7 @@ export function saveConfig(cfg: TelemetryConfig): void {
 export function ensureInstallId(): string {
   const existing = loadConfig();
   if (existing) return existing.installId;
-  const cfg: TelemetryConfig = { enabled: true, installId: randomUUID(), notified: false };
+  const cfg: TelemetryConfig = { enabled: false, installId: randomUUID(), notified: false };
   saveConfig(cfg);
   return cfg.installId;
 }
@@ -57,7 +59,8 @@ function envTrue(v: string | undefined): boolean {
   return v === '1' || v === 'true';
 }
 
-/** Default ON. Any single off-switch forces OFF — opt-in cannot override an opt-out signal. */
+/** CrispCAD: default OFF. Telemetry is opt-in (`crispcad telemetry enable`) and also needs
+ *  CRISPCAD_TELEMETRY_URL; any single off-switch forces OFF. */
 export function isTelemetryEnabled(): boolean {
   // Sandbox mode forces telemetry off regardless of config (docs/sandbox.md).
   if (isSandboxEnabled()) return false;
@@ -66,8 +69,7 @@ export function isTelemetryEnabled(): boolean {
   if (envTrue(process.env.DO_NOT_TRACK)) return false;
   if (envTrue(process.env.CI)) return false;
   const cfg = loadConfig();
-  if (cfg && cfg.enabled === false) return false;
-  return true;
+  return cfg?.enabled === true && cfg.optedIn === true;
 }
 
 export function isDebug(): boolean {

@@ -18,8 +18,10 @@ beforeEach(() => {
 afterEach(() => { rmSync(dir, { recursive: true, force: true }); });
 
 describe('recordToolCall', () => {
-  it('builds a tool_call event with the running tool and outcome', async () => {
+  it('builds a tool_call event with the running tool and outcome once opted in', async () => {
     const sent: unknown[] = [];
+    const config = await import('./config');
+    config.saveConfig({ enabled: true, installId: config.ensureInstallId(), notified: true, optedIn: true });
     const mod = await import('./index');
     mod.__setEmitterForTest({ enqueue: (e: unknown) => sent.push(e), flush: async () => {} });
     mod.recordToolCall({ toolName: 'extrude', mode: 'local', outcome: 'ok', durationMs: 5, sessionId: 's' });
@@ -40,12 +42,9 @@ describe('recordToolCall', () => {
 });
 
 describe('maybeShowFirstRunNotice', () => {
-  it('prints once then sets notified, and is silent thereafter', async () => {
+  it('CrispCAD: shows no first-run notice because telemetry is opt-in', async () => {
     const err = vi.spyOn(process.stderr, 'write').mockReturnValue(true);
     const mod = await import('./index');
-    mod.maybeShowFirstRunNotice();
-    expect(err).toHaveBeenCalledTimes(1);
-    err.mockClear();
     mod.maybeShowFirstRunNotice();
     expect(err).not.toHaveBeenCalled();
   });

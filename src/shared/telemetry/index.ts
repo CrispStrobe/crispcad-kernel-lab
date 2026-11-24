@@ -2,9 +2,8 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 import { createRequire } from 'node:module';
 import { TelemetryEmitter } from './emitter';
-import { isSandboxEnabled } from '../sandbox/config';
 import {
-  ensureInstallId, isTelemetryEnabled, isDebug, loadConfig, saveConfig,
+  ensureInstallId, isTelemetryEnabled, isDebug,
 } from './config';
 import { SCHEMA_VERSION, type Mode, type Outcome, type TelemetryEvent } from './types';
 
@@ -56,24 +55,8 @@ export function flushTelemetry(): Promise<void> {
   return getEmitter().flush();
 }
 
-const FIRST_RUN_NOTICE =
-  '\nkernelCAD collects anonymous usage statistics (tool names, success/failure, ' +
-  'versions — never your prompts, code, or designs) to improve the product.\n' +
-  'Disable any time:  kernelcad telemetry disable   (or KERNELCAD_TELEMETRY=0 / DO_NOT_TRACK=1)\n' +
-  'Details: https://github.com/kernelcad/kernelcad/blob/main/TELEMETRY.md\n\n';
-
+/** CrispCAD: telemetry is opt-in and has no default endpoint, so there is no
+ *  first-run announcement and nothing is written to the user's config here. */
 export function maybeShowFirstRunNotice(): void {
-  // Sandbox mode: telemetry is forced off, so there is nothing to announce
-  // and no install id to write.
-  if (isSandboxEnabled()) return;
-  try {
-    const cfg = loadConfig();
-    if (cfg?.notified) return;
-    process.stderr.write(FIRST_RUN_NOTICE);
-    saveConfig({
-      enabled: cfg?.enabled ?? true,
-      installId: cfg?.installId ?? ensureInstallId(),
-      notified: true,
-    });
-  } catch { /* never throw */ }
+  // Intentionally empty; see TELEMETRY.md.
 }

@@ -6,7 +6,8 @@ import { SCHEMA_VERSION, EVENT_FIELD_ALLOWLIST, INGEST_URL, type TelemetryEvent 
 describe('telemetry types', () => {
   it('exposes a stable schema version and ingest url', () => {
     expect(SCHEMA_VERSION).toBe(1);
-    expect(INGEST_URL).toBe('https://telemetry.kernelcad.com/v1/events');
+    // CrispCAD ships no collector.
+    expect(INGEST_URL).toBe('');
   });
 
   it('allowlist contains exactly the documented fields and nothing else', () => {

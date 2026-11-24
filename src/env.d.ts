@@ -16,13 +16,13 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string;
   readonly VITE_SUPABASE_ANON_KEY: string;
   readonly VITE_API_BASE_URL: string;
-  /** Feedback endpoint override; defaults to https://kernelcad.com/api/feedback. */
+  /** Feedback endpoint override; no default endpoint in CrispCAD. */
   readonly VITE_FEEDBACK_URL?: string;
   /** Cloudflare Turnstile site key; when set, signed-out builds send a token. */
   readonly VITE_TURNSTILE_SITE_KEY?: string;
   /** `1` forces the hosted mesh path on localhost (Playwright against prod APIs). */
   readonly VITE_HOSTED_MESH?: string;
-  /** Override for the publish-time mesh CDN. Defaults to https://mesh.kernelcad.com. */
+  /** Override for the publish-time mesh CDN. No default CDN in CrispCAD. */
   readonly VITE_MESH_CDN_BASE?: string;
 }
 

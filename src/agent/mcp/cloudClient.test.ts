@@ -17,7 +17,8 @@ afterEach(() => {
 
 describe('cloud MCP client', () => {
   it('requires a token for cloud mode', () => {
-    expect(() => resolveCloudMcpOptions()).toThrow(/KERNELCAD_API_TOKEN/);
+    expect(() => resolveCloudMcpOptions({ apiBaseUrl: 'https://gateway.example' })).toThrow(/KERNELCAD_API_TOKEN/);
+    expect(() => resolveCloudMcpOptions({ token: 't' })).toThrow(/No cloud MCP gateway/);
   });
 
   it('lists tools from the hosted MCP gateway', async () => {

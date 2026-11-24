@@ -7,7 +7,7 @@ import type { TelemetryEvent } from './types';
 describe('telemetry never leaks content', () => {
   it('drops prompt/code/token/path-shaped fields regardless of caller mistakes', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });
-    const e = new TelemetryEmitter({ batchSize: 1, fetchImpl: fetchMock });
+    const e = new TelemetryEmitter({ url: 'https://collector.example/v1/events', batchSize: 1, fetchImpl: fetchMock });
     const dirty = {
       event_type: 'tool_call', tool_name: 'extrude', outcome: 'ok',
       diagnostic_code: '', cli_version: '0', kernel_version: '0', os: 'linux',

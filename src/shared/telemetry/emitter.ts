@@ -34,7 +34,7 @@ export class TelemetryEmitter {
     this.batchSize = opts.batchSize ?? 20;
     this.flushIntervalMs = opts.flushIntervalMs ?? 30_000;
     this.timeoutMs = opts.timeoutMs ?? 1_000;
-    this.url = opts.url ?? INGEST_URL;
+    this.url = opts.url ?? process.env.CRISPCAD_TELEMETRY_URL ?? INGEST_URL;
     this.debug = opts.debug ?? false;
     this.fetchImpl = opts.fetchImpl ?? globalThis.fetch;
   }
@@ -59,9 +59,10 @@ export class TelemetryEmitter {
     if (this.queue.length === 0) return;
     const batch = this.queue.splice(0, this.queue.length).map(sanitize);
     if (this.debug) {
-      process.stderr.write(`[kernelcad telemetry] ${JSON.stringify(batch)}\n`);
+      process.stderr.write(`[crispcad telemetry] ${JSON.stringify(batch)}\n`);
       return;
     }
+    if (!this.url) return; // no endpoint configured: drop, never send
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), this.timeoutMs);
     if (typeof (t as NodeJS.Timeout).unref === 'function') (t as NodeJS.Timeout).unref();

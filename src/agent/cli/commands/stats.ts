@@ -6,12 +6,14 @@
 // Requires KERNELCAD_ADMIN_TOKEN (and optionally KERNELCAD_API_BASE).
 import { Command } from 'commander';
 
-const DEFAULT_BASE = 'https://api.kernelcad.com';
+// CrispCAD has no hosted telemetry service; pass --base or KERNELCAD_API_BASE_URL.
+const DEFAULT_BASE = '';
 
 export async function fetchStats(days: number): Promise<Record<string, unknown>> {
   const token = process.env.KERNELCAD_ADMIN_TOKEN;
   if (!token) throw new Error('KERNELCAD_ADMIN_TOKEN is not set');
   const base = process.env.KERNELCAD_API_BASE ?? DEFAULT_BASE;
+  if (!base) throw new Error('No telemetry service configured. Set KERNELCAD_API_BASE.');
   const res = await fetch(`${base}/api/v1/admin/telemetry?days=${days}`, {
     headers: { Authorization: `Bearer ${token}` },
   });

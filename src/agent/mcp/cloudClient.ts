@@ -7,11 +7,13 @@ export interface CloudMcpOptions {
   token?: string;
 }
 
-const DEFAULT_API_BASE_URL = 'https://api.kernelcad.com';
+// CrispCAD has no hosted gateway; a base URL must be configured explicitly.
+const DEFAULT_API_BASE_URL = '';
 
 export function resolveCloudMcpOptions(options: CloudMcpOptions = {}): Required<CloudMcpOptions> {
   const apiBaseUrl = (options.apiBaseUrl ?? process.env.KERNELCAD_API_BASE_URL ?? DEFAULT_API_BASE_URL).replace(/\/+$/, '');
   const token = options.token ?? process.env.KERNELCAD_API_TOKEN ?? '';
+  if (!apiBaseUrl) throw new Error('No cloud MCP gateway configured. Set KERNELCAD_API_BASE_URL.');
   if (!token) throw new Error('Missing MCP token. Set KERNELCAD_API_TOKEN or pass --token.');
   return { apiBaseUrl, token };
 }

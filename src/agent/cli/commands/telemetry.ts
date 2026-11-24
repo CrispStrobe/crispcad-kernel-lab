@@ -12,7 +12,7 @@ import {
 
 function setEnabled(enabled: boolean): void {
   const cfg = loadConfig();
-  saveConfig({ enabled, installId: cfg?.installId ?? ensureInstallId(), notified: true });
+  saveConfig({ enabled, installId: cfg?.installId ?? ensureInstallId(), notified: true, optedIn: enabled });
 }
 
 export function telemetryCommand(): Command {
@@ -27,7 +27,7 @@ export function telemetryCommand(): Command {
 
   cmd.command('enable').description('Enable anonymous telemetry').action(() => {
     setEnabled(true);
-    console.log('Anonymous telemetry enabled. Thank you — this helps improve kernelCAD.');
+    console.log(process.env.CRISPCAD_TELEMETRY_URL ? 'Anonymous telemetry enabled for CRISPCAD_TELEMETRY_URL.' : 'Telemetry opted in, but nothing is sent until CRISPCAD_TELEMETRY_URL names your collector.');
   });
 
   cmd.command('disable').description('Disable anonymous telemetry').action(() => {
@@ -35,8 +35,8 @@ export function telemetryCommand(): Command {
     console.log('Anonymous telemetry disabled. No usage data will be sent.');
   });
 
-  cmd.command('reset').description('Forget the local install id and re-enable').action(() => {
-    saveConfig({ enabled: true, installId: randomUUID(), notified: true });
+  cmd.command('reset').description('Forget the local install id and opt out').action(() => {
+    saveConfig({ enabled: false, installId: randomUUID(), notified: true });
     console.log('Telemetry state reset; a new anonymous install id was generated.');
   });
 

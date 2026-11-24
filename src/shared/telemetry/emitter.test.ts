@@ -20,7 +20,7 @@ afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 describe('TelemetryEmitter', () => {
   it('flushes when batch size is reached', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });
-    const e = new TelemetryEmitter({ batchSize: 2, flushIntervalMs: 30_000, fetchImpl: fetchMock });
+    const e = new TelemetryEmitter({ url: 'https://collector.example/v1/events', batchSize: 2, flushIntervalMs: 30_000, fetchImpl: fetchMock });
     e.enqueue(ev()); expect(fetchMock).not.toHaveBeenCalled();
     e.enqueue(ev()); // hits batchSize
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
@@ -30,7 +30,7 @@ describe('TelemetryEmitter', () => {
 
   it('flushes on the interval timer', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });
-    const e = new TelemetryEmitter({ batchSize: 99, flushIntervalMs: 30_000, fetchImpl: fetchMock });
+    const e = new TelemetryEmitter({ url: 'https://collector.example/v1/events', batchSize: 99, flushIntervalMs: 30_000, fetchImpl: fetchMock });
     e.enqueue(ev());
     await vi.advanceTimersByTimeAsync(30_000);
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -38,14 +38,14 @@ describe('TelemetryEmitter', () => {
 
   it('NEVER throws when fetch rejects', async () => {
     const fetchMock = vi.fn().mockRejectedValue(new Error('offline'));
-    const e = new TelemetryEmitter({ batchSize: 1, flushIntervalMs: 30_000, fetchImpl: fetchMock });
+    const e = new TelemetryEmitter({ url: 'https://collector.example/v1/events', batchSize: 1, flushIntervalMs: 30_000, fetchImpl: fetchMock });
     expect(() => e.enqueue(ev())).not.toThrow();
     await expect(e.flush()).resolves.toBeUndefined();
   });
 
   it('strips any non-allowlisted field before sending', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });
-    const e = new TelemetryEmitter({ batchSize: 1, flushIntervalMs: 30_000, fetchImpl: fetchMock });
+    const e = new TelemetryEmitter({ url: 'https://collector.example/v1/events', batchSize: 1, flushIntervalMs: 30_000, fetchImpl: fetchMock });
     e.enqueue({ ...ev(), prompt: 'SECRET DESIGN', token: 'kc_live_xyz' } as unknown as TelemetryEvent);
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
     const sent = JSON.parse(fetchMock.mock.calls[0][1].body)[0];
@@ -57,7 +57,7 @@ describe('TelemetryEmitter', () => {
   it('debug mode prints to stderr and does NOT fetch', async () => {
     const fetchMock = vi.fn();
     const err = vi.spyOn(process.stderr, 'write').mockReturnValue(true);
-    const e = new TelemetryEmitter({ batchSize: 1, flushIntervalMs: 30_000, fetchImpl: fetchMock, debug: true });
+    const e = new TelemetryEmitter({ url: 'https://collector.example/v1/events', batchSize: 1, flushIntervalMs: 30_000, fetchImpl: fetchMock, debug: true });
     e.enqueue(ev());
     await e.flush();
     expect(fetchMock).not.toHaveBeenCalled();

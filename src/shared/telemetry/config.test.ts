@@ -40,8 +40,8 @@ describe('config path + persistence', () => {
 });
 
 describe('consent resolution — default on, any off-switch wins', () => {
-  it('enabled by default when nothing is set', () => {
-    expect(isTelemetryEnabled()).toBe(true);
+  it('CrispCAD: disabled by default when nothing is set', () => {
+    expect(isTelemetryEnabled()).toBe(false);
   });
   it.each([
     ['KERNELCAD_TELEMETRY', '0'],
