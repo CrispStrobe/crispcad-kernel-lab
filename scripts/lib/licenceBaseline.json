@@ -1,0 +1,20 @@
+{
+  "$comment": "Known non-permissive runtime licences being removed. This list may only shrink; npm run licence:audit fails on anything not listed.",
+  "packages": {
+    "replicad-opencascadejs": "OpenCASCADE kernel (LGPL-2.1 with exception) bundled as WASM; being replaced by an MIT/Apache exact B-rep kernel",
+    "@img/sharp-libvips-darwin-arm64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-darwin-x64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linux-arm": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linux-arm64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linux-ppc64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linux-riscv64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linux-s390x": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linux-x64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linuxmusl-arm64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-libvips-linuxmusl-x64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-wasm32": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-win32-arm64": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-win32-ia32": "libvips native binary used by sharp; sharp is being replaced",
+    "@img/sharp-win32-x64": "libvips native binary used by sharp; sharp is being replaced"
+  }
+}

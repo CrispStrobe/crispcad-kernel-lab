@@ -106,7 +106,8 @@
     "lint-demos": "npx tsx scripts/lint-demos.ts",
     "portfolio:validate": "npm test -- tests/integration/portfolio/portfolioBundle.test.ts tests/unit/portfolio/portfolioMeta.test.ts",
     "portfolio:capture": "npx tsx scripts/capturePortfolioEntry.ts",
-    "qc:full": "npm run qc && npm run build"
+    "qc:full": "npm run qc && npm run build",
+    "licence:audit": "node scripts/licenceAudit.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.92.0",
