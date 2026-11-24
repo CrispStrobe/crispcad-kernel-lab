@@ -11,6 +11,13 @@ export const EXPORT_CODES = {
     group: 'export',
     description: 'The requested scene export needs B-rep geometry for all selected parts.',
   },
+  'export.kernel.unsupported-format': {
+    hintTemplate: "Export STEP or STL on the native SMLib kernel, or rebuild with kernel 'occt' for this format.",
+    nextAction: { kind: 'fix-arg', field: 'format' },
+    defaultSeverity: 'error',
+    group: 'export',
+    description: 'The selected kernel cannot write the requested export format yet.',
+  },
   // Export (19)
   'export.feature-not-found': {
     hintTemplate:

@@ -31,3 +31,12 @@ export const KERNEL_BACKEND_TARGET: Readonly<Record<KernelId, BackendTarget>> = 
 export function isKernelId(value: unknown): value is KernelId {
   return typeof value === 'string' && (KERNEL_IDS as readonly string[]).includes(value);
 }
+
+/** Environment variable that selects the kernel when a caller names none. */
+export const KERNEL_ENV_VAR = 'CRISPCAD_KERNEL';
+
+/** The kernel named by CRISPCAD_KERNEL, or undefined when unset/empty. Not validated. */
+export function kernelFromEnv(): string | undefined {
+  const value = typeof process === 'undefined' ? undefined : process.env?.[KERNEL_ENV_VAR];
+  return value === undefined || value === '' ? undefined : value;
+}

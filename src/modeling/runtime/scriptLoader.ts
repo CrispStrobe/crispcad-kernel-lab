@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
 import { runScript, type RunScriptFacadeOptions } from './runScript';
-import { initOcct } from '../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../kernel/backends/kernelRuntime';
 import type { FeatureRecord } from '../../shared/intent/featureRecord';
 import type { FeatureKind } from '../../shared/intent/types';
 import type { ParamTable } from '../../shared/runtime/paramTable';
@@ -33,7 +33,7 @@ export async function loadScriptFeatures(
   // factories which require initOcct(). runMcpScript already inits OCCT; the
   // direct loadScriptFeatures path (captureDemo, eval runner) must mirror that
   // contract or sdf.materialize throws "OCCT not initialized" at capture time.
-  await initOcct();
+  await initKernelRuntime();
   const source = readFileSync(scriptPath, 'utf8');
   const fileName = basename(scriptPath);
   const scriptDir = dirname(resolve(scriptPath));

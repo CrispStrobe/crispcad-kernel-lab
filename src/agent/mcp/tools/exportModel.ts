@@ -16,7 +16,7 @@ import { safeWriteFile } from '../../script-runtime/safeWriteFile';
 import { summarizeScene, unavailableSceneSummary, type SceneSummary } from '../../script-runtime/sceneSummary';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import {
   runAndExport,
   type DrawingReport,
@@ -217,7 +217,7 @@ export async function exportModelTool(input: ExportModelInput): Promise<ExportMo
   const source = await loadMcpScriptSource(input);
   if (!source.ok) return source;
 
-  await initOcct();
+  await initKernelRuntime();
 
   const effectiveOptions = withInfillOutDir(format, modelExportOptions(input), output_path);
 

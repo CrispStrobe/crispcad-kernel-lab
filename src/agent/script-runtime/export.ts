@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
+import { withNextAction } from '../../shared/diagnostics/diagnostic';
+import { HINT_TEMPLATES } from '../../shared/diagnostics/registry';
 import type { ShapeBackend } from '../../kernel/backends/backend';
 import { resolveRootId } from '../../composition/buildModel';
 import type { DrawingReviewOptions } from '../../shared/intent/drawingReview';
@@ -646,10 +648,32 @@ async function exportLoweredTarget(
     // path below, which will emit format-specific diagnostics for Scenes.
   }
 
+  if (lowered.target === 'export-smlib') {
+    return exportNativeShape(format, lowered, targetId, r.diagnostics, featureCount);
+  }
   const shape = lowered as OcctBackend;
   return exportShapeOrInfill(input, format, shape, targetId, scriptDir, run, r.shapes, r.diagnostics, featureCount);
 }
 
+
+/** STEP and STL straight from the native SMLib B-rep; other formats need OCCT. */
+function exportNativeShape(
+  format: ExportFormat,
+  shape: ShapeBackend,
+  targetId: string,
+  diagnostics: CompilerDiagnostic[],
+  featureCount: number,
+): ExportResult {
+  const refuse = (code: 'export.no-shape' | 'export.kernel.unsupported-format', message: string): ExportResult => ({
+    bytes: new Uint8Array(),
+    featureCount,
+    diagnostics: [...diagnostics, withNextAction({ target: 'export-smlib', code, severity: 'error', featureId: targetId, message, hint: HINT_TEMPLATES[code].template })],
+  });
+  if (shape.isEmpty()) return refuse('export.no-shape', `The returned shape (${targetId}) is empty: there is nothing to export.`);
+  if (format === 'step') return { bytes: shape.exportSTEP(), featureCount, diagnostics };
+  if (format === 'stl') return { bytes: shape.exportSTL(), featureCount, diagnostics };
+  return refuse('export.kernel.unsupported-format', `The native SMLib kernel exports STEP and STL; '${format}' needs kernel 'occt'.`);
+}
 
 export interface PartStlExport {
   name: string;

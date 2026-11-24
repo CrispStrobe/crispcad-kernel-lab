@@ -465,13 +465,14 @@ async function computeInterferencesForGate(
   clearances: readonly PairClearanceResult[];
 }> {
   const { RecomputeEngine } = await import('../compute/recomputeEngine');
-  const { createOcctLowerer } = await import('../backends/occt/occtLowerer');
+  const { createLowerer } = await import('../backends/kernelRegistry');
   const { initOcct } = await import('../../kernel/backends/occt/occtBackend');
   const { isSceneBackend } = await import('../../kernel/backends/sceneBackend');
   const { detectInterferences } = await import('../runtime/detectInterferences');
 
-  await initOcct();
-  const engine = new RecomputeEngine(createOcctLowerer(state.session));
+  const kernel = state.session.kernel ?? 'occt';
+  if (kernel !== 'smlib-native') await initOcct();
+  const engine = new RecomputeEngine(createLowerer(kernel, state.session));
   const records = state.session.getRecords();
   // Reuse an earlier clean full lower from this session (a previous build or
   // the joint-axis binding gate) for the shared record prefix — the lower is

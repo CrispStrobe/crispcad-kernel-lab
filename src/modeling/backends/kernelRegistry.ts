@@ -18,6 +18,7 @@ import {
   KERNEL_BACKEND_TARGET,
   KERNEL_IDS,
   isKernelId,
+  kernelFromEnv,
   type KernelId,
 } from '../../shared/types/backendTarget';
 import { createOcctLowerer } from './occt/occtLowerer';
@@ -76,11 +77,23 @@ export class KernelUnavailableError extends Error {
 }
 
 /**
+ * The kernel used when none is requested: `CRISPCAD_KERNEL` when it names an
+ * available kernel, else DEFAULT_KERNEL. An invalid value throws rather than
+ * silently building on another kernel.
+ */
+export function defaultKernel(): KernelId {
+  const env = kernelFromEnv();
+  if (env === undefined) return DEFAULT_KERNEL;
+  if (!isKernelId(env) || !isKernelAvailable(env)) throw new KernelUnavailableError(env);
+  return env;
+}
+
+/**
  * Validate a requested kernel. `undefined` resolves to DEFAULT_KERNEL;
  * an unknown or unavailable kernel throws KernelUnavailableError.
  */
 export function resolveKernel(requested?: unknown): KernelId {
-  if (requested === undefined) return DEFAULT_KERNEL;
+  if (requested === undefined) return defaultKernel();
   if (!isKernelId(requested) || !isKernelAvailable(requested)) {
     throw new KernelUnavailableError(requested);
   }

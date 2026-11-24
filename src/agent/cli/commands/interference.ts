@@ -14,7 +14,7 @@
 import { Command } from 'commander';
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import { checkInterference, pairKey } from '../../script-runtime/checkInterference';
 import { formatHuman } from '../../../shared/diagnostics/formatter';
 
@@ -30,7 +30,7 @@ export interface InterferenceCliResult {
 }
 
 export async function runInterferenceCli(input: InterferenceCliInput): Promise<InterferenceCliResult> {
-  await initOcct();
+  await initKernelRuntime();
 
   let code: string;
   const absPath = resolve(input.file);

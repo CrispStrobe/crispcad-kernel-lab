@@ -8,7 +8,7 @@
 
 import { Command } from 'commander';
 import { dirname } from 'node:path';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import { listPartStats, type PartStats } from '../../script-runtime/partStats';
 import { formatHuman } from '../../../shared/diagnostics/formatter';
 import type { CompilerDiagnostic } from '../../../shared/diagnostics/diagnostic';
@@ -27,7 +27,7 @@ export interface PartsCliResult {
 }
 
 export async function partsScript(input: PartsCliInput): Promise<PartsCliResult> {
-  await initOcct();
+  await initKernelRuntime();
   const read = await readScriptOrDiagnostic(input.file);
   if (!read.ok) {
     return { exitCode: 2, parts: [], diagnostics: read.diagnostics };

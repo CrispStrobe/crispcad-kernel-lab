@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/program.ts — the crispcad command tree.
+import { DEFAULT_KERNEL, KERNEL_ENV_VAR, KERNEL_IDS, isKernelId } from '../../shared/types/backendTarget';
 import { Command } from 'commander';
 import { createRequire } from 'node:module';
 import { animateCommand } from './commands/animate';
@@ -52,7 +53,14 @@ export function buildProgram(): Command {
     // --focus) routes options written after the subcommand name to the
     // subcommand instead of greedily claiming them for the parent.
     .enablePositionalOptions()
-    .version(pkg.version);
+    .version(pkg.version)
+    .option('--kernel <id>', `solid-modeling kernel for this run: ${KERNEL_IDS.join(' | ')} (env ${KERNEL_ENV_VAR}; default ${DEFAULT_KERNEL})`)
+    .hook('preAction', (root) => {
+      const kernel = root.opts<{ kernel?: string }>().kernel;
+      if (kernel === undefined) return;
+      if (!isKernelId(kernel)) root.error(`error: unknown kernel '${kernel}' (known: ${KERNEL_IDS.join(', ')})`);
+      process.env[KERNEL_ENV_VAR] = kernel;
+    });
 
   program.addCommand(animateCommand());
   program.addCommand(dfmCommand());

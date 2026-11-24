@@ -24,7 +24,7 @@
 import { Command } from 'commander';
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import type { Assembly } from '../../../modeling/capture/assembly';
 import type { CaptureSession } from '../../../modeling/capture/captureSession';
 import { runScript } from '../../../composition/runScript';
@@ -84,7 +84,7 @@ export interface ValidateCliResult {
 }
 
 export async function runValidateCli(input: ValidateCliInput): Promise<ValidateCliResult> {
-  await initOcct();
+  await initKernelRuntime();
 
   const absPath = resolve(input.file);
   const scriptDir = dirname(absPath);

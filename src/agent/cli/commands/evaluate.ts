@@ -8,7 +8,7 @@ import { formatHuman } from '../../../shared/diagnostics/formatter';
 import type { CompilerDiagnostic } from '../../../shared/diagnostics/diagnostic';
 import type { SelectionRecord } from '../../../shared/intent/selectionRecord';
 import { withNextActions } from '../../../shared/diagnostics/diagnostic';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import type { Assembly } from '../../../modeling/capture/assembly';
 import {
   reviewPoseEnvelope,
@@ -95,7 +95,7 @@ export async function dryRunScript(input: EvaluateInput): Promise<DryRunScriptRe
   // topology-bound connector resolution inside `solvedModel`), so the OCCT
   // runtime must be initialized. `initOcct` is memoized — repeat dry runs
   // pay nothing here.
-  await initOcct();
+  await initKernelRuntime();
 
   let run: RunScriptResult;
   let code: string;

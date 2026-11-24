@@ -20,6 +20,7 @@ import type { ApiContext, KernelCadApi } from '../api';
 import type { FeatureRecord } from '../../shared/intent/featureRecord';
 import type { ParamTable } from '../../shared/runtime/paramTable';
 import { KernelError } from '../../shared/intent/kernelError';
+import { KERNEL_IDS, isKernelId, kernelFromEnv } from '../../shared/types/backendTarget';
 import { invalidArgs } from '../../shared/intent/invalidArgs';
 import { Shape } from '../capture/proxy';
 import { getReturnedVariables } from '../../shared/codeGeneration/ast';
@@ -73,6 +74,8 @@ export interface RunScriptCoreInput {
    *  call-site positions. Supplied by the facade that picked the runner;
    *  defaults to identity so a bare core call still runs. */
   wrapOffset?: ScriptWrapOffset;
+  /** Kernel the run builds on (see CaptureSession.kernel). */
+  kernel?: import('../../shared/types/backendTarget').KernelId;
 }
 
 export interface RunScriptResult {
@@ -110,6 +113,11 @@ export async function runScriptCore(input: RunScriptCoreInput): Promise<RunScrip
 
   const session = new CaptureSession();
   session.scriptDir = scriptDir;
+  const kernel = input.kernel ?? kernelFromEnv();
+  if (kernel !== undefined) {
+    if (!isKernelId(kernel)) throw new KernelError('recompute.kernel.unavailable', `Unknown kernel '${kernel}' (known: ${KERNEL_IDS.join(', ')}).`);
+    session.kernel = kernel;
+  }
   const api = apiFactory({ session, scriptDir });
 
   // Agent-authored scripts are idiomatic ES modules: they end with

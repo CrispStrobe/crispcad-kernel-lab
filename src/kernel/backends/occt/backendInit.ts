@@ -2,7 +2,9 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/kernel/backends/occt/backendInit.ts
 import * as replicad from 'replicad';
-import opencascade from 'replicad-opencascadejs';
+// OpenCASCADE (LGPL-2.1 with exception) is loaded only when OCCT is initialised,
+// so the native SMLib kernel never pulls it into the process.
+const loadOpencascade = async (): Promise<unknown> => ((await import('replicad-opencascadejs')) as { default?: unknown }).default ?? (await import('replicad-opencascadejs'));
 import { describeOcctThrow, isOcctWasmPoisoned, WASM_POISON_MARKER } from './occtException';
 import { installOcctFinalizers } from './occtFinalizers';
 import { installReplicadLeakFixes } from './replicadLeakFixes';
@@ -119,6 +121,7 @@ async function loadAndBindOcct(opts?: InitOcctOptions): Promise<void> {
       ...(opts.wasmBinary ? { wasmBinary: opts.wasmBinary } : {}),
     }
     : undefined;
+  const opencascade = await loadOpencascade();
   const listenersBefore = snapshotProcessListeners();
   let factoryResult: Promise<unknown>;
   if (typeof opencascade === 'function') {

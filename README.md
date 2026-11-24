@@ -16,6 +16,8 @@ name for compatibility with kernelCAD models.
   shipped dependency closure. The OpenCASCADE geometry kernel (LGPL-2.1 with an
   exception, bundled in `replicad-opencascadejs`) is being replaced by an exact
   B-rep kernel with an MIT/Apache licence. `npm run licence:audit` lists what remains.
+  The native SMLib kernel already builds most models with no OpenCASCADE loaded;
+  see [docs/kernels.md](docs/kernels.md).
 - **Local first.** No telemetry by default, no hosted gateway, no deployment. See
   [TELEMETRY.md](TELEMETRY.md).
 - **Integration with [Brickwright CAD](https://github.com/CrispStrobe/brickwright-cad)**
@@ -31,6 +33,10 @@ npm run build:cli
 node dist/cli/index.js evaluate examples/bracket-with-hole.kcad.ts
 node dist/cli/index.js mcp          # local MCP server over stdio
 ```
+
+To build without OpenCASCADE, pass `--kernel smlib-native` before the command
+(`crispcad --kernel smlib-native export step part.kcad.ts -o part.step`) or set
+`CRISPCAD_KERNEL=smlib-native`.
 
 `npm link` installs the `crispcad` command. Run checks locally:
 `npm run typecheck`, `npm test`, `npm run lint`.

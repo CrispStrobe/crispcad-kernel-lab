@@ -14,6 +14,11 @@ import type { FeatureRecord } from '../../../shared/intent/featureRecord';
 import type { FeatureKind, Vec3 } from '../../../shared/intent/types';
 import type { BackendTarget } from '../../../shared/types/backendTarget';
 import { loadSmlib } from './runtime';
+import { isSceneBackend, type SceneBackend, type SceneBackendPart } from '../../../kernel/backends/sceneBackend';
+import { lookupSourceColor, lookupSourceMaterial } from '../../../kernel/backends/occt/lookupSourceColor';
+import { resolvedPartAt } from '../../mates/partFrame';
+import { Transform } from '../../../shared/runtime/se3';
+import type { FeatureId, Vec3Param } from '../../../shared/intent/types';
 
 type Smlib = typeof import('@classcad/smlibwasm');
 type Part = InstanceType<Smlib['Part']>;
@@ -55,6 +60,7 @@ export class SmlibSketchBackend implements ShapeBackend {
 export const NATIVE_SMLIB_KINDS: readonly FeatureKind[] = [
   'box', 'cylinder', 'sphere', 'sketch', 'extrude', 'revolve', 'loft', 'sweep',
   'boolean', 'fillet', 'chamfer', 'shell', 'hole', 'holes', 'pattern', 'mirror',
+  'assemblyPart', 'assemblyModel',
 ];
 
 const word = (p: { expression: string } | undefined) => (p?.expression ?? '').replace(/['"]/g, '');
@@ -69,6 +75,7 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     const sm = await loadSmlib();
     try {
       if (!this.supports.has(r.kind)) throw new Unsupported(`Feature '${r.kind}' has no native SMLib implementation yet.`);
+      if (r.kind === 'assemblyModel') return { shape: this.assemblyModel(r, inputs) as unknown as ShapeBackend, diagnostics: [] };
       let shape = this.build(sm, r, inputs);
       if (!(shape instanceof SmlibSketchBackend)) shape = this.applyTransforms(shape, r);
       else if (r.transforms.length) throw new Unsupported('Transforms on a sketch are not supported natively; transform the solid instead.');
@@ -99,7 +106,7 @@ export class NativeSmlibLowerer implements FeatureLowerer {
 
   private sketchOf(inputs: ResolvedInputs, key = 'sketch'): SmlibSketchBackend {
     const shape = inputs.byKey[key];
-    if (!(shape instanceof SmlibSketchBackend)) throw new Unsupported(`Input '${key}' is not a native sketch profile.`);
+    if (!(shape instanceof SmlibSketchBackend)) throw new Unsupported(`Input '${key}' is not a native sketch profile (got ${shape === undefined ? 'nothing' : (shape as object).constructor?.name}).`);
     return shape;
   }
 
@@ -162,6 +169,12 @@ export class NativeSmlibLowerer implements FeatureLowerer {
       }
       case 'hole': case 'holes': return this.holes(sm, r, inputs);
       case 'pattern': return this.pattern(sm, r, inputs);
+      case 'assemblyPart': {
+        const source = this.input(inputs, 'shape');
+        const resolved = inputs.resolveRecord ? inputs.resolveRecord(r) : r;
+        const at = resolvedPartAt((resolved.metadata as { at?: Vec3Param } | undefined)?.at, inputs.resolveRecord ? undefined : inputs.paramTable);
+        return at.some(v => v !== 0) ? source.translate(at[0], at[1], at[2]) : source;
+      }
       case 'mirror': {
         const base = this.input(inputs, 'base');
         const normal = this.planeNormal(r.metadata?.plane);
@@ -169,6 +182,24 @@ export class NativeSmlibLowerer implements FeatureLowerer {
       }
     }
     throw new Unsupported(`Feature '${r.kind}' has no native SMLib implementation yet.`);
+  }
+
+  /** Mate-free `assembly(...).model()`: one scene part per assembly part, at identity. */
+  private assemblyModel(r: FeatureRecord, inputs: ResolvedInputs): SceneBackend {
+    const meta = r.metadata as { assemblyName?: string; partIds?: FeatureId[]; mates?: unknown[]; couplings?: unknown[] } | undefined;
+    if (meta?.mates?.length || meta?.couplings?.length) throw new Unsupported('Assemblies with mates are not supported natively yet.');
+    const entries = Object.entries(inputs.byKey).filter(([key]) => key.startsWith('part_')).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }));
+    const partIds = meta?.partIds ?? [];
+    if (entries.length !== partIds.length) throw new Error(`assemblyModel: ${entries.length} part inputs for ${partIds.length} part ids`);
+    const records = inputs.records ?? [];
+    const parts: SceneBackendPart[] = entries.map(([key, shape], i) => {
+      if (isSceneBackend(shape) || !(shape instanceof SmlibBackend)) throw new Unsupported(`Assembly part '${key}' is not a native SMLib solid.`);
+      const rec = records.find(x => x.id === partIds[i]);
+      const color = rec ? lookupSourceColor(rec, records) : undefined;
+      const material = rec ? lookupSourceMaterial(rec, records) : undefined;
+      return { name: (rec?.metadata as { partName?: string } | undefined)?.partName ?? partIds[i], shape, worldTransform: Transform.identity(), ...(color !== undefined ? { color } : {}), ...(material !== undefined ? { material } : {}) };
+    });
+    return { target: this.target, assemblyName: meta?.assemblyName ?? 'assembly', parts, _kind: 'scene' };
   }
 
   private sketch(sm: Smlib, r: FeatureRecord): SmlibSketchBackend {
@@ -200,6 +231,16 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     if (r.params.twistAngle && p('twistAngle') !== 0) throw new Unsupported('Twisted extrusions are not supported natively.');
     if (r.params.taperDeg && p('taperDeg') !== 0) throw new Unsupported('Tapered extrusions are not supported natively.');
     if (inputs.byKey.sketch) return this.solid(sm, sm.extrude(this.sketchOf(inputs).sketch, p('depth')));
+    if (word(r.params.profileKind) === 'rounded-rect') {
+      // Same as OCCT: radius clamped below half the short side; axis rotations match extrudeRoundedRectShape.
+      const radius = Math.min(Math.max(0, p('radius')), Math.min(p('width'), p('height')) / 2 * 0.9999);
+      const body = sm.extrude(radius > 0 ? sm.RoundedRectangle(p('width'), p('height'), radius) : sm.Rectangle(p('width'), p('height')), p('depth'));
+      const axis = word(r.params.axis) || 'z';
+      if (axis === 'z') return this.solid(sm, body);
+      if (axis === 'x') return this.solid(sm, body.rotate(new sm.Axis([0, 0, 0], [1, 1, 1]), 120));
+      if (axis === 'y') return this.solid(sm, body.rotate(sm.Axis.X, -90));
+      throw new Unsupported(`Extrusion axis '${axis}' is not supported.`);
+    }
     if (Array.isArray(r.metadata?.points)) return this.solid(sm, sm.extrude(sm.Polygon(...(r.metadata.points as unknown[][]).map(pt => [num(pt[0]), num(pt[1])] as [number, number]), { align: null }), p('depth')));
     if (r.params.w && r.params.h) return this.solid(sm, sm.extrude(sm.Rectangle(p('w'), p('h')), p('height')));
     if (r.params.r && r.params.height) return this.solid(sm, sm.extrude(sm.Circle(p('r')), p('height')));

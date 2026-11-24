@@ -20,7 +20,7 @@
 // (`, N unknown`) but never flip the exit code.
 
 import { Command } from 'commander';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import { evaluateAndBuildScript } from './evaluate';
 import type { DfmCheckReport } from '../../../modeling/runtime/dfm/runDfmChecks';
 import type { MouldingPartReport } from '../../../modeling/runtime/dfm/mouldingCheck';
@@ -112,7 +112,7 @@ function directionLabel(label: string | undefined, dir: readonly number[]): stri
 }
 
 export async function dfmScript(input: DfmCliInput): Promise<DfmCliResult> {
-  await initOcct();
+  await initKernelRuntime();
   // evaluateAndBuildScript hosts the DFM hook: it maps unreadable files to
   // exit 2 (cli.file-read), runs the gates after a clean build, and merges
   // the gate diagnostics — this command adds the report/summary surface.

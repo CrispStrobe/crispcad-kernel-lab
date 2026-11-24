@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 import * as replicad from 'replicad';
-import opencascade from 'replicad-opencascadejs';
 import { normalizeUserScript } from '../shared/runtime/normalizeUserScript';
 import { installOcctFinalizers } from '../kernel/backends/occt/occtFinalizers';
 import { installReplicadLeakFixes } from '../kernel/backends/occt/replicadLeakFixes';
@@ -10,6 +9,8 @@ let isInitialized = false;
 
 export async function initHeadless() {
     if (isInitialized) return;
+    const imported = (await import('replicad-opencascadejs')) as { default?: unknown };
+    const opencascade = imported.default ?? imported;
     // In Node.js, this loads the WASM. 
     // In Browser, this might load from URL, but we are designing this for Node agent.
 

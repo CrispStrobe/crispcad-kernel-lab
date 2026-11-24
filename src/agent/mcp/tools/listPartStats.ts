@@ -8,7 +8,7 @@
 // `crispcad parts` CLI command and the per-part STL exporter exactly.
 
 import { dirname, resolve } from 'node:path';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import { listPartStats, type PartStats } from '../../script-runtime/partStats';
 import type { CompilerDiagnostic } from '../../../shared/diagnostics/diagnostic';
 import { withNextActions } from '../../../shared/diagnostics/diagnostic';
@@ -38,7 +38,7 @@ export async function listPartStatsTool(input: ListPartStatsInput): Promise<List
   const source = await loadMcpScriptSource(input);
   if (!source.ok) return source;
 
-  await initOcct();
+  await initKernelRuntime();
 
   let result;
   try {

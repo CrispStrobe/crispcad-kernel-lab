@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 import type { RunScriptResult } from '../../composition/runScript';
 import { RecomputeEngine } from '../../modeling/compute/recomputeEngine';
-import { createOcctLowerer } from '../../modeling/backends/occt/occtLowerer';
+import { createLowerer } from '../../modeling/backends/kernelRegistry';
 import { trackFullLower } from '../../modeling/capture/fullLowerTracker';
 
 /**
@@ -21,7 +21,7 @@ export async function lowerScriptRun(
   run: RunScriptResult,
 ): Promise<Awaited<ReturnType<RecomputeEngine['run']>>> {
   const session = run.session;
-  const engine = new RecomputeEngine(createOcctLowerer(session));
+  const engine = new RecomputeEngine(createLowerer(session.kernel, session));
   const ungated = session.gatedFeatureNames.size === 0 && run.paramTable === session.paramTable;
   const seedShapes = ungated ? session.reusableLoweredPrefix(session.cleanScriptLower) : new Map();
   const track = trackFullLower(session);

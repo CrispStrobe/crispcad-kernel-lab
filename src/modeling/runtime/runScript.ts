@@ -42,6 +42,8 @@ export interface RunScriptInput {
   scriptDir?: string;
   /** Runner backend. Defaults to the node `vm` runner. */
   runner?: ScriptRunner;
+  /** Kernel the script is built on; capture-time lowering uses it too. */
+  kernel?: import('../../shared/types/backendTarget').KernelId;
 }
 
 export interface RunScriptFacadeOptions {
@@ -69,8 +71,9 @@ export async function runScript(
   input: RunScriptInput,
   opts?: RunScriptFacadeOptions,
 ): Promise<RunScriptResult> {
-  const { code, fileName, scriptDir, runner = runIsolated } = input;
+  const { code, fileName, scriptDir, runner = runIsolated, kernel } = input;
   return runScriptCore({
+    kernel,
     code,
     fileName,
     scriptDir,

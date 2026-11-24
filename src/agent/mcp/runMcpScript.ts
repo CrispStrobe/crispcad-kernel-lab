@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { initOcct } from '../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../kernel/backends/kernelRuntime';
 import { kernelErrorToDiagnostic } from '../script-runtime/kernelErrorToDiagnostic';
 import { runScript, type RunScriptResult } from '../../composition/runScript';
 import { FILE_READ_CODE, fileReadErrorMessage } from '../../shared/diagnostics/fileReadError';
@@ -25,7 +25,7 @@ export type RunMcpScriptResult =
     };
 
 export async function runMcpScript(input: McpScriptInput): Promise<RunMcpScriptResult> {
-  await initOcct();
+  await initKernelRuntime();
 
   const source = await loadMcpScriptSource(input);
   if (!source.ok) return source;

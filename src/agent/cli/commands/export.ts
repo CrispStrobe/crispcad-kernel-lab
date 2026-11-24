@@ -16,7 +16,7 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { resolve, dirname, basename, join } from 'node:path';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import {
   runAndExport,
   runAndExportParts,
@@ -556,7 +556,7 @@ export async function exportScript(input: ExportInput): Promise<ExportCliResult>
   const targets = await prepareExportTargets(input);
   if (!targets.ok) return targets.result;
   const { outPath, trustedManifestOutput } = targets;
-  await initOcct();
+  await initKernelRuntime();
   const read = await readScriptOrDiagnostic(input.file);
   if (!read.ok) {
     return { exitCode: 2, bytesWritten: 0, diagnostics: read.diagnostics };
@@ -686,7 +686,7 @@ async function writeSelectedParts(
  * `export.mesh.not-watertight` unless `verify` is false.
  */
 export async function exportPartsScript(input: ExportPartsCliInput): Promise<ExportPartsCliResult> {
-  await initOcct();
+  await initKernelRuntime();
   const read = await readScriptOrDiagnostic(input.file);
   if (!read.ok) {
     return { exitCode: 2, written: [], diagnostics: read.diagnostics };

@@ -11,7 +11,7 @@
 import { summarizeScene, unavailableSceneSummary, type SceneSummary } from '../../script-runtime/sceneSummary';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
-import { initOcct } from '../../../kernel/backends/occt/occtBackend';
+import { initKernelRuntime } from '../../../kernel/backends/kernelRuntime';
 import {
   runAndExportParts,
   stlNotWatertightDiagnostic,
@@ -148,7 +148,7 @@ export async function exportPartTool(input: ExportPartInput): Promise<ExportPart
   const source = await loadMcpScriptSource(input);
   if (!source.ok) return source;
 
-  await initOcct();
+  await initKernelRuntime();
 
   let result;
   let sceneSummary = unavailableSceneSummary();

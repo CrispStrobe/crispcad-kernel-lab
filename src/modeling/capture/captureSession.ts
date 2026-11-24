@@ -5,6 +5,7 @@ import {
   type FeatureIdGenerator, type SurfaceIdGenerator,
 } from '../../shared/intent/featureId';
 import type { FeatureRecord, ShapeTransform } from '../../shared/intent/featureRecord';
+import type { KernelId } from '../../shared/types/backendTarget';
 import type { FeatureId, FeatureKind, FeatureRef, Param, PatternSpec, PlaneSpec, Vec3, Vec3Param } from '../../shared/intent/types';
 import type {
   SurfaceRecord, SurfaceId, NurbsSurfaceData, SurfaceTrimData,
@@ -422,6 +423,9 @@ export class CaptureSession {
    *  the API context — but the lowerer pulls it here instead of via the API
    *  context (which doesn't reach lowering). */
   scriptDir?: string;
+  /** Kernel the script is built on. Capture-time geometry queries lower with the
+   *  same kernel, so a native SMLib build never sees OpenCASCADE shapes. */
+  kernel?: KernelId;
   /** Resolver that maps a V8 call-site frame from the running script back to a
    *  position in the ORIGINAL `.kcad.ts` text. Set by the script runtime for
    *  the duration of a run; left undefined for sessions built programmatically
