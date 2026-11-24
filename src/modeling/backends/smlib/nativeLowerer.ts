@@ -17,6 +17,9 @@ import { loadSmlib } from './runtime';
 import { isSceneBackend, type SceneBackend, type SceneBackendPart } from '../../../kernel/backends/sceneBackend';
 import { lookupSourceColor, lookupSourceMaterial } from '../../../kernel/backends/occt/lookupSourceColor';
 import { resolvedPartAt } from '../../mates/partFrame';
+import type { Connector } from '../../mates/connector';
+// Kernel-agnostic: the mate solver works on connector frames and placements only.
+import { lowerAssemblyModel } from '../occt/lowerers/assembly';
 import { Transform } from '../../../shared/runtime/se3';
 import type { FeatureId, Vec3Param } from '../../../shared/intent/types';
 
@@ -27,6 +30,14 @@ type Edge = InstanceType<Smlib['Edge']>;
 type Face = InstanceType<Smlib['Face']>;
 
 class Unsupported extends Error {}
+
+interface AssemblyModelMeta {
+  assemblyName?: string;
+  partIds?: FeatureId[];
+  mates?: unknown[];
+  couplings?: unknown[];
+  connectorsByPartId?: Record<FeatureId, readonly Connector[]>;
+}
 
 type Param = (name: string) => number;
 type Builder = (sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs, p: Param) => ShapeBackend;
@@ -101,6 +112,23 @@ const SKETCH_STEPS: Record<string, (sm: Smlib, c: SketchCommand, pen: Pen) => vo
   },
 };
 
+/** The `part_*` inputs in numeric key order; each must be a native solid. */
+function nativeAssemblyParts(inputs: ResolvedInputs): SmlibBackend[] {
+  const entries = Object.entries(inputs.byKey).filter(([key]) => key.startsWith('part_')).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }));
+  return entries.map(([key, shape]) => {
+    if (isSceneBackend(shape) || !(shape instanceof SmlibBackend)) throw new Unsupported(`Assembly part '${key}' is not a native SMLib solid.`);
+    return shape;
+  });
+}
+
+/** One mate-free assembly part: its solid at identity, with the source colour and material. */
+function scenePartAtIdentity(shape: SmlibBackend, partId: FeatureId, records: readonly FeatureRecord[]): SceneBackendPart {
+  const rec = records.find(x => x.id === partId);
+  const color = rec ? lookupSourceColor(rec, records) : undefined;
+  const material = rec ? lookupSourceMaterial(rec, records) : undefined;
+  return { name: (rec?.metadata as { partName?: string } | undefined)?.partName ?? partId, shape, worldTransform: Transform.identity(), ...(color !== undefined ? { color } : {}), ...(material !== undefined ? { material } : {}) };
+}
+
 export class NativeSmlibLowerer implements FeatureLowerer {
   readonly target: BackendTarget = 'export-smlib';
   readonly supports: ReadonlySet<FeatureKind> = new Set(NATIVE_SMLIB_KINDS);
@@ -109,7 +137,7 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     const sm = await loadSmlib();
     try {
       if (!this.supports.has(r.kind)) throw new Unsupported(`Feature '${r.kind}' has no native SMLib implementation yet.`);
-      if (r.kind === 'assemblyModel') return { shape: this.assemblyModel(r, inputs) as unknown as ShapeBackend, diagnostics: [] };
+      if (r.kind === 'assemblyModel') return this.assemblyModel(r, inputs);
       let shape = this.build(sm, r, inputs);
       if (!(shape instanceof SmlibSketchBackend)) shape = this.applyTransforms(shape, r);
       else if (r.transforms.length) throw new Unsupported('Transforms on a sketch are not supported natively; transform the solid instead.');
@@ -225,22 +253,29 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     return this.solid(sm, r.kind === 'fillet' ? sm.fillet(edges, p('radius'), { propagate: false }) : sm.chamfer(edges, p('distance')));
   }
 
-  /** Mate-free `assembly(...).model()`: one scene part per assembly part, at identity. */
-  private assemblyModel(r: FeatureRecord, inputs: ResolvedInputs): SceneBackend {
-    const meta = r.metadata as { assemblyName?: string; partIds?: FeatureId[]; mates?: unknown[]; couplings?: unknown[] } | undefined;
-    if (meta?.mates?.length || meta?.couplings?.length) throw new Unsupported('Assemblies with mates are not supported natively yet.');
-    const entries = Object.entries(inputs.byKey).filter(([key]) => key.startsWith('part_')).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }));
+  /** `assembly(...).model()`: mate-free parts stay at identity; mated parts are
+   *  placed by the shared mate solver (`lowerAssemblyModel`), which needs only
+   *  connector frames and part placements, so the result matches OCCT exactly. */
+  private assemblyModel(r: FeatureRecord, inputs: ResolvedInputs): LowerResult {
+    const meta = r.metadata as AssemblyModelMeta | undefined;
+    const entries = nativeAssemblyParts(inputs);
+    if (meta && (meta.mates?.length || meta.couplings?.length)) return this.matedAssemblyModel(r, inputs, meta);
     const partIds = meta?.partIds ?? [];
     if (entries.length !== partIds.length) throw new Error(`assemblyModel: ${entries.length} part inputs for ${partIds.length} part ids`);
     const records = inputs.records ?? [];
-    const parts: SceneBackendPart[] = entries.map(([key, shape], i) => {
-      if (isSceneBackend(shape) || !(shape instanceof SmlibBackend)) throw new Unsupported(`Assembly part '${key}' is not a native SMLib solid.`);
-      const rec = records.find(x => x.id === partIds[i]);
-      const color = rec ? lookupSourceColor(rec, records) : undefined;
-      const material = rec ? lookupSourceMaterial(rec, records) : undefined;
-      return { name: (rec?.metadata as { partName?: string } | undefined)?.partName ?? partIds[i], shape, worldTransform: Transform.identity(), ...(color !== undefined ? { color } : {}), ...(material !== undefined ? { material } : {}) };
-    });
-    return { target: this.target, assemblyName: meta?.assemblyName ?? 'assembly', parts, _kind: 'scene' };
+    const parts = entries.map((shape, i) => scenePartAtIdentity(shape, partIds[i], records));
+    const scene: SceneBackend = { target: this.target, assemblyName: meta?.assemblyName ?? 'assembly', parts, _kind: 'scene' };
+    return { shape: scene as unknown as ShapeBackend, diagnostics: [] };
+  }
+
+  /** Mated parts are placed by the shared mate solver; it reads connector frames
+   *  only, so topology-placed connectors (which need face queries) are refused. */
+  private matedAssemblyModel(r: FeatureRecord, inputs: ResolvedInputs, meta: AssemblyModelMeta): LowerResult {
+    const topology = Object.values(meta.connectorsByPartId ?? {}).flat().find(c => c.origin.kind !== 'vec3');
+    if (topology) throw new Unsupported(`Connector '${topology.name}' is placed by a topology query; native assemblies need numeric connector origins.`);
+    const diagnostics: CompilerDiagnostic[] = [];
+    const ctx = { target: this.target, inputs, allRecords: inputs.records, diagnostics, importedGeometry: new Map(), surfaceCache: new Map() };
+    return { shape: lowerAssemblyModel(ctx, r).shape, diagnostics };
   }
 
   private sketch(sm: Smlib, r: FeatureRecord): SmlibSketchBackend {

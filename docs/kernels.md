@@ -52,17 +52,34 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
 - Kernel selection for the 27 parts, with timings, against WASMLib:
   `experiments/kernel-qualification/`.
 
+## Mated assemblies
+
+The mate solver is kernel-agnostic: `mateFk` works on connector frames, mate types,
+poses and the parts' `at` placements, never on B-rep geometry. `smlib-native`
+therefore lowers a mated `assembly(...).model()` through the same
+`lowerAssemblyModel` the OCCT lowerer uses, with the parts as SMLib solids. The only
+geometric step in that path, resolving a topology-query connector on the part's
+faces, is OCCT-only and is refused natively with
+`recompute.kernel.unsupported-feature`. All 35 mated catalog models use numeric
+connector origins and now build natively; across their 594 parts the world
+transforms are identical to the OCCT build and part volumes agree to 8.7e-6
+relative (`src/modeling/backends/smlib/nativeMates.test.ts` checks a revolute +
+fastened chain against OCCT).
+
 ## What still needs `occt`
 
 `smlib-native` covers primitives, booleans, transforms, sketches with extrude /
 revolve / loft / sweep, fillet and chamfer on all edges, shell, holes on the
 canonical top and bottom faces, linear / circular / grid patterns, mirror, and
-assemblies without mates. It exports STEP and STL. It does not yet cover:
+`assembly(...).model()` with or without mates. It exports STEP and STL. It does not
+yet cover:
 
 - topology selectors (named faces and edges beyond the canonical ones), draft,
   text, threads and other OCCT-specific features;
-- mates and the assembly solver, kinematics, drawings, exploded views, sheet-metal
-  flat patterns and STEP import;
+- connectors placed by a topology query (`'@kc[part/face/top#normal]'`), which need
+  face and edge queries on the solid (numeric connector origins work);
+  `solvedModel(poses)` / joint-tree assemblies, kinematics, drawings, exploded views,
+  sheet-metal flat patterns and STEP import;
 - export formats other than STEP and STL (3MF, GLB, OBJ, PLY, USD, DXF, drawings).
 
 About 45 call sites in tools still construct the OCCT lowerer directly; they move to

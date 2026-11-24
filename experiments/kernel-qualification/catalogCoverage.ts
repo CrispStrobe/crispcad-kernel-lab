@@ -2,7 +2,9 @@
 // OpenCASCADE blocked from loading, and classify the ones that fail.
 //
 //   node --import tsx experiments/kernel-qualification/catalogCoverage.ts \
-//     [--jobs 4] [--json out.json] [--filter substring]
+//     [--jobs 4] [--json out.json] [--filter substring] [--rerun previous.json]
+//
+// --rerun builds only the models listed as failures in an earlier --json output.
 //
 // The parent shards the model list over child processes (each child loads the
 // OCCT block hook); a child that crashes is restarted after the model it was on,
@@ -110,7 +112,9 @@ async function parent(): Promise<void> {
   const args = process.argv.slice(2);
   const opt = (k: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };
   const jobs = Number(opt('--jobs') ?? 4);
-  const files = catalogModels(opt('--filter'));
+  const rerun = opt('--rerun');
+  const previous = rerun ? new Set((JSON.parse(readFileSync(rerun, 'utf8')) as { failures: Result[] }).failures.map(f => f.file)) : undefined;
+  const files = catalogModels(opt('--filter')).filter(f => !previous || previous.has(f));
   const results = new Map<string, Result>();
   const t0 = Date.now();
   const shards = Array.from({ length: jobs }, (_, j) => files.filter((_, i) => i % jobs === j));
