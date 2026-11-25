@@ -19,6 +19,8 @@ import {
   type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type MassProperties, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
 import { call, createContext, partOf, sketchOf, solidOf, vec, type Ctx, type Part } from './smlib-context.ts';
+import { exactBoundingBox } from './bbox.ts';
+import { planarFaces } from './polytope.ts';
 import { createProfileOps } from './smlib-profile.ts';
 import { finite, invalid, positive, symmetricEigen, unitVector, vertexNormals } from './validate.ts';
 
@@ -74,7 +76,8 @@ function primitives({ sm, solid }: Ctx): Pick<ExactKernel, 'box' | 'cylinder' | 
       for (const p of points) finite('Polyhedron points', p[0], p[1], p[2]);
       for (const f of faces) if (!Array.isArray(f) || f.length < 3 || f.some(i => !Number.isInteger(i) || i < 0 || i >= points.length)) invalid('Polyhedron faces must index at least three existing points.');
       return call('stitch (polyhedron)', () => sm.scope(() => {
-        const faceSketches = faces.map(f => {
+        // A face SMLib cannot make planar is split into triangles first (same surface, same edges).
+        const faceSketches = planarFaces(points, faces).map(f => {
           const loop = f.map((i: number) => vec(points[i]));
           return sm.makeFace(sm.Polyline(...loop, loop[0]));
         });
@@ -174,10 +177,8 @@ function measures({ sm }: Ctx): Pick<ExactKernel, 'volume' | 'area' | 'bbox' | '
   return {
     volume: s => call('volume', () => partOf(s).volume),
     area: s => call('area', () => partOf(s).area),
-    bbox: (s): BoundingBox => call('bbox', () => {
-      const b = partOf(s).bbox();
-      return { min: [b.min.x, b.min.y, b.min.z], max: [b.max.x, b.max.y, b.max.z] };
-    }),
+    // Not SMLib's bbox(): it misses interior extremes of some rotated spheres (see bbox.ts).
+    bbox: (s): BoundingBox => call('bbox', () => exactBoundingBox(partOf(s))),
     massProperties: (s): MassProperties => call('massProperties', () => {
       const p = partOf(s).massProperties(1);
       const I = p.inertia, sym = (i: number, j: number) => (I[i][j] + I[j][i]) / 2;
