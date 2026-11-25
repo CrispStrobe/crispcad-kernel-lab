@@ -39,7 +39,9 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   polygon outlines that touch themselves (SMLib's `SM_ERR` / `SM_ERR_NULL_POINTER`).
   No model crashed the process and none reached for OpenCASCADE. Build time: median
   0.49 s per model, 3.2 h of build time over 4 workers on an M1 shared with other
-  sessions (load average 40–230). Per-model volume, area and box (sum and union over
+  sessions (load average 40–230). The slowest, `fire-rescue/quint-fire-apparatus`
+  (210 parts), took 61 min in the run; alone it builds in 24 min, and 30 min on the code
+  before this change, so it is slow on SMLib, not slower now. Per-model volume, area and box (sum and union over
   the parts at their world placements, exact `boundingBox()`) are in
   `results-catalog-native-volumes.json`, in the input format of CrispCAD's catalog
   cross-check (`--native`; `labCommit` is the commit the run was taken at).
