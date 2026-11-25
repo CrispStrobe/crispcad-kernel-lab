@@ -10,6 +10,7 @@ import type { BackendTarget } from '../../../shared/types/backendTarget';
 import type { Vec3 } from '../../../shared/intent/types';
 import type { RuntimeMesh } from '../runtimeMesh';
 import type { GyrationAxis, MassProperties } from '../../properties/massProperties';
+import { exactBoundingBox } from './exactBbox';
 
 type Smlib = typeof import('@classcad/smlibwasm');
 type Part = InstanceType<Smlib['Part']>;
@@ -89,10 +90,8 @@ export class SmlibBackend implements ShapeBackend {
     return [this.wrap(this.part.intersect(halfSpace(1))), this.wrap(this.part.intersect(halfSpace(-1)))];
   }
 
-  boundingBox(): { min: Vec3; max: Vec3 } {
-    const b = this.part.bbox();
-    return { min: [b.min.x, b.min.y, b.min.z], max: [b.max.x, b.max.y, b.max.z] };
-  }
+  /** Exact box (not SMLib's bbox(), which misses extremes of rotated spheres; see exactBbox.ts). */
+  boundingBox(): { min: Vec3; max: Vec3 } { return exactBoundingBox(this.part); }
 
   volume(): number { return this.part.volume; }
   surfaceArea(): number { return this.part.area; }

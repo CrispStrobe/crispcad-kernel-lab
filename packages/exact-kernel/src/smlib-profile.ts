@@ -37,8 +37,9 @@ export function createProfileOps(sm: Smlib): ExactProfileOps {
         for (const p of c) finite('Polygon points', p[0], p[1]);
       }
       return call('Polygon', () => {
-        // Even-odd fill: the symmetric difference of the contour regions.
-        const regions = contours.map(c => sm.Polygon(c.map((p: Vec2) => [p[0], p[1]] as [number, number])));
+        // Even-odd fill: the symmetric difference of the contour regions, largest first (SMLib's
+        // xor of a hole with its outer region, in that order, inverts the solid's faces).
+        const regions = contours.map(c => sm.Polygon(c.map((p: Vec2) => [p[0], p[1]] as [number, number]))).sort((a, b) => b.area - a.area);
         return profileOf(regions.length === 1 ? regions[0] : sm.xor(regions[0], ...regions.slice(1)));
       });
     },

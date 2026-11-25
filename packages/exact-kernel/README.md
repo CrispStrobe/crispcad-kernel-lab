@@ -37,17 +37,33 @@ about world Z.
 
 | Group | Operations |
 | --- | --- |
-| Primitives | `box`, `cylinder`, `cone` (frustum, one radius may be 0), `sphere`, `torus`, `polyhedron` (planar faces) |
+| Primitives | `box`, `cylinder`, `cone` (frustum, one radius may be 0), `sphere`, `torus`, `polyhedron` (a face that is not planar within 1e-9 is split into triangles) |
 | Profiles (`k.profile`) | `polygon` (even-odd, holes), `circle`, `rectangle`, `roundedRectangle`, `path` (lines, three-point / radius / sagitta arcs, splines), `text` (always `unsupported`: no font), 2D `union`/`subtract`/`intersect`/`hull`/`offset`, `translate`/`rotate`/`scale`, `bounds`, `area` |
 | Solids from profiles | `extrude`, `revolve`, `loft` (smooth or ruled, XY sections), `sweep` (polyline rail) |
 | Booleans, transforms | `union`, `subtract`, `intersect`, `splitByPlane`, `translate`, `rotate` (axis, pivot), `mirror` (normal, origin), `scale` (per axis, signed) |
 | Features | `fillet`, `chamfer` (all edges or one planar face's edges), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
-| Measures | `volume`, `area`, `bbox`, `massProperties` (centroid, inertia, principal moments/axes), `isValid`, `solidCount`, `components` |
+| Measures | `volume`, `area`, `bbox` (exact, see below), `massProperties` (centroid, inertia, principal moments/axes), `isValid`, `solidCount`, `components` |
 | Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep`, `importStep` (exact) |
 | Runtime | `memory`, `scope`, `name`, `version`, `licence` (`MIT AND Apache-2.0`) |
 
-Also exported: `convexHull` / `isConvexPolyhedron` (exact hull as planar faces) and
-`symmetricEigen`.
+Also exported: `convexHull` (exact hull as planar faces, up to `MAX_HULL_POINTS` = 1024 distinct
+points), `isConvexPolyhedron`, `planarFaces` (the triangulation `polyhedron` applies) and
+`symmetricEigen`. `polyhedron` itself has no face budget (2,044 faces stitch in about 3 s on a
+loaded M1).
+
+**`bbox`** is not SMLib's `bbox()`, which misses interior extremes of some rotated spheres
+(`sphere(62)` turned 11° about X: min z −60.861 instead of −62). It is built from points on the
+body: vertices, line ends, analytic circle extremes, a sphere's centre ± r·eᵢ and a torus'
+centre ± R·w ± r·eᵢ where those lie on the face, and sampled-and-refined extremes of other curves
+and faces (skipped where the NURBS control net lies inside the box so far). It is never larger
+than the body; for analytic faces it matches the closed form to 1e-9 of the size.
+
+**`convexHull`** (0.1.1) builds the hull incrementally and merges triangles into one face only
+when all their points lie within 1e-9 of one plane. 0.1.0 took every point within a size-relative
+tolerance of a plane as one face: for six-decimal coordinates over a metre, that merged slightly
+twisted quads into non-planar faces SMLib could not stitch ("The polyhedron faces do not close",
+437 long multi-section lofts in CrispCAD's catalog cross-check), and kept near-identical planes
+as overlapping faces (a hexagonal frustum's area 81,727 mm² instead of 47,342).
 
 Errors are `ExactKernelError` with `code`:
 
@@ -65,11 +81,22 @@ Nothing falls back to a mesh.
 | --- | --- |
 | `tests/reference-parts.test.ts` | The lab's 27 reference parts (`assets/reference-parts/scorecard.json`) at 1e-6 relative volume and area (1e-8 where the scorecard asks), bbox within 1e-6 mm, valid, expected component count; every part round-trips STEP exactly (1e-9); no kernel handles leak. |
 | `tests/kernel.test.ts` | Fillet, chamfer, shell, cylinder-rim fillet against closed forms (1e-8); mass properties, path profiles, loft, sweep, split, components, mirror, STL; malformed input and kernel failures; recovery afterwards. |
+| `tests/bbox.test.ts` | `bbox` of spheres, tori, cylinders, cones and ellipsoids turned about six axes against closed forms (1e-9 of the size; ellipsoids 1e-7), and of a turned hemisphere. |
+| `tests/polyhedra.test.ts` | Loft polyhedra as CrispCAD lowers them (six-decimal points, hull for convex ones): the chandelier canopy frustum and 4-section 10/12/16-gon rollers 30 mm to 10 m long against closed-form volume and area (1e-6); non-planar polyhedron faces; hull closure, planarity, Euler characteristic and budget. |
 | `tests/no-font.test.ts` | The bundle's font module is empty; `text` is `unsupported`; fillet + shell + STEP round trip still work. |
 | `tests/licence.test.ts` | `npm pack`s the package, unpacks the tarball and fails on any file without a known MIT or Apache-2.0 licence, on copyleft or font licence texts, on any of the upstream font's data, on runtime dependencies, and on any reference to OpenCASCADE or its JavaScript bindings outside smlibwasm's `.brep` file-format strings. |
 
 Results with `@classcad/smlibwasm` 0.6.2 (Apple M1, Node 26.4): 27/27 parts, worst relative
 volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
+
+## Changes
+
+- **0.1.1**: exact `bbox` (rotated spheres); incremental `convexHull` with exact-planarity
+  merging (long multi-section lofts build, frustum areas right), hull budget 64 → 1024 points;
+  `polyhedron` splits non-planar faces into triangles; even-odd polygon profiles pass the largest
+  region to SMLib's `xor` first (hole-first gave inverted faces). Upstream report draft:
+  [`docs/smlibwasm-upstream-report.md`](../../docs/smlibwasm-upstream-report.md).
+- **0.1.0**: first release.
 
 ## Contents of the tarball
 

@@ -33,19 +33,37 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   (`src/modeling/backends/smlib/nativeLowerer.test.ts`).
 - All 2402 catalog models, built on `smlib-native` with OpenCASCADE blocked from
   loading (2026-11-25, `experiments/kernel-qualification/catalogCoverage.ts`,
-  results in `results-catalog-native.json`): **2391 (99.5%)** built without an
-  error. The 11 that did not: 3 sweep along curved rails; 2 drill holes on side
-  faces; 1 has a multi-loop sketch; 1 lofts sections on non-XY planes; 4 hit an
-  SMLib extrude error (`SM_ERR` x3, `SM_ERR_NULL_POINTER` x1). No model crashed the
-  process and none reached for OpenCASCADE. Before mated assemblies were native
-  (previous run, same harness) the count was 2356; the difference is exactly the
-  35 mated models. This counts successful builds; the geometry was compared with
-  OCCT on the samples below.
+  results in `results-catalog-native.json`): **2402 (100%)** built without an error,
+  70,745 parts. The 11 that failed in the previous run (2391) build now: 3 helical
+  sweeps, 2 holes on side faces, 1 multi-loop sketch, 1 loft on YZ planes, and 4
+  polygon outlines that touch themselves (SMLib's `SM_ERR` / `SM_ERR_NULL_POINTER`).
+  No model crashed the process and none reached for OpenCASCADE. Build time: median
+  0.49 s per model, 3.2 h of build time over 4 workers on an M1 shared with other
+  sessions (load average 40–230). The slowest, `fire-rescue/quint-fire-apparatus`
+  (210 parts), took 61 min in the run; alone it builds in 24 min, and 30 min on the code
+  before this change, so it is slow on SMLib, not slower now. Per-model volume, area and box (sum and union over
+  the parts at their world placements, exact `boundingBox()`) are in
+  `results-catalog-native-volumes.json`, in the input format of CrispCAD's catalog
+  cross-check (`--native`; `labCommit` is the commit the run was taken at).
 
   ```sh
   node --import tsx experiments/kernel-qualification/catalogCoverage.ts --jobs 4 \
-    --json experiments/kernel-qualification/results-catalog-native.json
+    --json experiments/kernel-qualification/results-catalog-native.json \
+    --volumes experiments/kernel-qualification/results-catalog-native-volumes.json \
+    --log /tmp/coverage.jsonl   # resumable: rerun with the same --log after an interruption
   ```
+
+  Of the 11, the seven without helical sweeps or the YZ loft agree with their OCCT
+  builds to 1e-6 in volume, part by part, and the three helical-sweep models to 7.2e-6
+  in total (`standard-components/beam-coupling`; the axial helix is a 48-section-per-turn
+  loft here and a fitted spine there). The two self-touching outlines with a zero-width slit or a
+  back-running edge lose those zero-area slivers, so their area is lower by the
+  sliver walls (OCCT keeps them as zero-thickness fins). `nature/rock-arch` differs by up to 6.8e-4 per part, in its XY legs
+  as much as in its YZ span: ruled lofts between rotated 7-gons are built differently
+  by the two kernels (the same holds on XY before this change). One model,
+  `hydroponics/hydroponic-grow-rack`, had lettuce heads lofted to a `startPoint` /
+  `endPoint`, which the native loft ignored without an error (25 % short); it is now
+  built as OCCT builds it.
 
   Each worker loads `blockOcct.mjs`, a Node resolve hook that throws on any import
   of `replicad-opencascadejs`.
@@ -71,14 +89,19 @@ fastened chain against OCCT).
 
 ## What still needs `occt`
 
-`smlib-native` covers primitives, booleans, transforms, sketches with extrude /
-revolve / loft / sweep, fillet and chamfer on all edges, shell, holes on the
-canonical top and bottom faces, linear / circular / grid patterns, mirror, and
-`assembly(...).model()` with or without mates. It exports STEP and STL. It does not
-yet cover:
+`smlib-native` covers primitives, booleans, transforms, sketches (several loops fill
+even-odd; self-touching polygon outlines are split into simple loops) with extrude /
+revolve / loft (sections on XY, YZ or XZ; ruled lofts to a `startPoint` / `endPoint`) /
+sweep (polyline rails, and `spine: 'helix'` axial or transverse about X, Y or Z), fillet and
+chamfer on all edges, shell, holes on any canonical face (top, bottom, left, right, front,
+back, in OCCT's (u, v) frame), linear / circular / grid patterns, mirror, and
+`assembly(...).model()` with or without mates. Its bounding box is exact (SMLib's own box
+misses extremes of rotated spheres). It exports STEP and STL. It does not yet cover:
 
 - topology selectors (named faces and edges beyond the canonical ones), draft,
   text, threads and other OCCT-specific features;
+- `spine: 'smooth'` sweeps, smooth lofts to an apex point, rotated loft sections, twisted
+  or tapered extrusions, countersinks (each refused with `recompute.kernel.unsupported-feature`);
 - connectors placed by a topology query (`'@kc[part/face/top#normal]'`), which need
   face and edge queries on the solid (numeric connector origins work);
   `solvedModel(poses)` / joint-tree assemblies, kinematics, drawings, exploded views,
@@ -97,7 +120,11 @@ entry in `scripts/lib/licenceBaseline.json`.
 OpenCASCADE-free kernel that CrispCAD consumes: a narrow `ExactKernel` interface
 (primitives, path profiles, extrude, revolve, loft, sweep, Booleans, transforms,
 fillet, chamfer, shell, measures and mass properties, tessellation, STL and exact STEP
-in and out) on SMLib. It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
+in and out) on SMLib. 0.1.1 makes `bbox` exact, `convexHull` robust for long multi-section
+lofts (exact-planarity face merging, 1024-point budget) and splits non-planar polyhedron
+faces; see its README. A draft upstream report for the two smlibwasm problems found on the
+way (rotated-sphere `bbox`, hole-first `xor`) is in
+[smlibwasm-upstream-report.md](smlibwasm-upstream-report.md); it has not been sent. It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
 replaced by an empty one, so the release tarball contains only MIT and Apache-2.0
 files; its licence test checks the packed tarball. Its tests build the 27 reference
 parts above through the interface at 1e-6 (worst relative volume error 2.5e-15,
