@@ -120,7 +120,7 @@ entry in `scripts/lib/licenceBaseline.json`.
 OpenCASCADE-free kernel that CrispCAD consumes: a narrow `ExactKernel` interface
 (primitives, path profiles, extrude, revolve, loft, sweep, Booleans, transforms,
 fillet, chamfer, shell, measures and mass properties, tessellation, STL and exact STEP
-in and out) on SMLib. 0.1.1 makes `bbox` exact, `convexHull` robust for long multi-section
+in and out) on SMLib. 0.1.1 makes `bbox` exact (0.1.2 makes it fast again on trimmed curved bodies), `convexHull` robust for long multi-section
 lofts (exact-planarity face merging, 1024-point budget) and splits non-planar polyhedron
 faces; see its README. A draft upstream report for the two smlibwasm problems found on the
 way (rotated-sphere `bbox`, hole-first `xor`) is in

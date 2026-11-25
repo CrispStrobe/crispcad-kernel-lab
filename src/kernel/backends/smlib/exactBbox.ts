@@ -7,7 +7,7 @@
 // packages/exact-kernel/src/bbox.ts (see its header for the method); exactBbox.test.ts keeps
 // the part below the marker line identical to the package's.
 // ---- shared with src/kernel/backends/smlib/exactBbox.ts below this line ----
-import type { Edge, Face, Part, Vector } from '@classcad/smlibwasm';
+import type { Edge, Face, Nurbs, Part, Vector } from '@classcad/smlibwasm';
 
 type P3 = [number, number, number];
 const AXES: readonly P3[] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
@@ -49,8 +49,13 @@ function edgeExtremes(edge: Edge, box: Box): void {
   if (kind === 'line') return;
   if (kind === 'circle' && circleExtremes(edge, box)) return;
   // Ellipses, B-splines and other curves: skip unless the control net leaves the box.
-  try { if (!netGrows(box, edge.nurbs().points)) return; } catch { /* no NURBS form: sample */ }
-  curveExtremes(edge, box);
+  let nurbs: Nurbs | null = null;
+  try { nurbs = edge.nurbs(); if (!netGrows(box, nurbs.points)) return; } catch { /* no NURBS form: sample */ }
+  // A B-spline edge's NURBS is the edge itself, evaluated here; `pointAt` (a fraction of the
+  // length) integrates the length on every call, which took up to half a second per point on
+  // long intersection curves. Ellipses and other curves have only an approximate NURBS.
+  if (kind === 'bspline' && nurbs) curveExtremes(nurbsCurve(nurbs), box);
+  else curveExtremes({ t0: 0, t1: 1, spans: 1, at: t => p3(edge.pointAt(t)) }, box);
 }
 
 /** A circle's or arc's extremes along each axis, where they lie on the arc. */
@@ -68,26 +73,54 @@ function circleExtremes(edge: Edge, box: Box): boolean {
   return true;
 }
 
-/** Sample a curve, then refine each coordinate's extremes by golden-section search. */
-function curveExtremes(edge: Edge, box: Box): void {
-  const N = 64, pts: P3[] = [];
-  for (let i = 0; i <= N; i++) { const p = p3(edge.pointAt(i / N)); pts.push(p); add(box, p); }
+interface Curve { t0: number; t1: number; spans: number; at: (t: number) => P3 }
+
+/** Sample a curve (at least 8 points per knot span), then refine each coordinate's extremes by
+ * golden-section search. */
+function curveExtremes(curve: Curve, box: Box): void {
+  const N = Math.min(1024, Math.max(64, 8 * curve.spans)), h = (curve.t1 - curve.t0) / N, pts: P3[] = [];
+  const t = (i: number) => (i === N ? curve.t1 : curve.t0 + i * h);
+  for (let i = 0; i <= N; i++) { const p = curve.at(t(i)); pts.push(p); add(box, p); }
   for (let axis = 0; axis < 3; axis++) for (const sign of [1, -1]) {
     let best = 0;
     for (let i = 1; i <= N; i++) if (sign * pts[i][axis] > sign * pts[best][axis]) best = i;
-    const f = (t: number) => { const p = p3(edge.pointAt(t)); add(box, p); return sign * p[axis]; };
-    golden(f, Math.max(0, (best - 1) / N), Math.min(1, (best + 1) / N));
+    const f = (s: number) => { const p = curve.at(s); add(box, p); return sign * p[axis]; };
+    golden(f, t(Math.max(0, best - 1)), t(Math.min(N, best + 1)));
   }
 }
 
 /** Maximise f on [a, b] by golden-section search (f is evaluated, and recorded, at each probe). */
 function golden(f: (t: number) => number, a: number, b: number): void {
-  const g = (Math.sqrt(5) - 1) / 2;
+  const g = (Math.sqrt(5) - 1) / 2, eps = 1e-12 * Math.max(1, Math.abs(a), Math.abs(b));
   let x1 = b - g * (b - a), x2 = a + g * (b - a), f1 = f(x1), f2 = f(x2);
-  for (let i = 0; i < 60 && b - a > 1e-12; i++) {
+  for (let i = 0; i < 60 && b - a > eps; i++) {
     if (f1 < f2) { a = x1; x1 = x2; f1 = f2; x2 = a + g * (b - a); f2 = f(x2); }
     else { b = x2; x2 = x1; f2 = f1; x1 = b - g * (b - a); f1 = f(x1); }
   }
+}
+
+/** A NURBS curve over its whole knot range, evaluated by de Boor's algorithm (in homogeneous
+ * coordinates when rational). */
+function nurbsCurve(n: Nurbs): Curve {
+  const p = n.degree, U = n.knots, m = n.points.length - 1, w = n.weights;
+  const cw = n.points.map((q, i) => { const wi = w ? w[i] : 1; return [q.x * wi, q.y * wi, q.z * wi, wi]; });
+  const t0 = U[p], t1 = U[m + 1];
+  let spans = 0;
+  for (let k = p; k <= m; k++) if (U[k + 1] > U[k]) spans++;
+  const d = Array.from({ length: p + 1 }, () => [0, 0, 0, 0]);
+  const at = (t: number): P3 => {
+    t = Math.min(t1, Math.max(t0, t));
+    let k = p;
+    while (k < m && U[k + 1] <= t) k++; // the span [U[k], U[k + 1]) holding t (the last one at t1)
+    for (let j = 0; j <= p; j++) for (let c = 0; c < 4; c++) d[j][c] = cw[j + k - p][c];
+    for (let r = 1; r <= p; r++) for (let j = p; j >= r; j--) {
+      const lo = U[j + k - p], den = U[j + 1 + k - r] - lo, a = den > 0 ? (t - lo) / den : 0;
+      for (let c = 0; c < 4; c++) d[j][c] = (1 - a) * d[j - 1][c] + a * d[j][c];
+    }
+    const q = d[p];
+    return [q[0] / q[3], q[1] / q[3], q[2] / q[3]];
+  };
+  return { t0, t1, spans: Math.max(1, spans), at };
 }
 
 type OnFace = (p: P3) => boolean;
