@@ -71,14 +71,19 @@ fastened chain against OCCT).
 
 ## What still needs `occt`
 
-`smlib-native` covers primitives, booleans, transforms, sketches with extrude /
-revolve / loft / sweep, fillet and chamfer on all edges, shell, holes on the
-canonical top and bottom faces, linear / circular / grid patterns, mirror, and
-`assembly(...).model()` with or without mates. It exports STEP and STL. It does not
-yet cover:
+`smlib-native` covers primitives, booleans, transforms, sketches (several loops fill
+even-odd; self-touching polygon outlines are split into simple loops) with extrude /
+revolve / loft (sections on XY, YZ or XZ; ruled lofts to a `startPoint` / `endPoint`) /
+sweep (polyline rails, and `spine: 'helix'` axial or transverse about X, Y or Z), fillet and
+chamfer on all edges, shell, holes on any canonical face (top, bottom, left, right, front,
+back, in OCCT's (u, v) frame), linear / circular / grid patterns, mirror, and
+`assembly(...).model()` with or without mates. Its bounding box is exact (SMLib's own box
+misses extremes of rotated spheres). It exports STEP and STL. It does not yet cover:
 
 - topology selectors (named faces and edges beyond the canonical ones), draft,
   text, threads and other OCCT-specific features;
+- `spine: 'smooth'` sweeps, smooth lofts to an apex point, rotated loft sections, twisted
+  or tapered extrusions, countersinks (each refused with `recompute.kernel.unsupported-feature`);
 - connectors placed by a topology query (`'@kc[part/face/top#normal]'`), which need
   face and edge queries on the solid (numeric connector origins work);
   `solvedModel(poses)` / joint-tree assemblies, kinematics, drawings, exploded views,
@@ -97,7 +102,11 @@ entry in `scripts/lib/licenceBaseline.json`.
 OpenCASCADE-free kernel that CrispCAD consumes: a narrow `ExactKernel` interface
 (primitives, path profiles, extrude, revolve, loft, sweep, Booleans, transforms,
 fillet, chamfer, shell, measures and mass properties, tessellation, STL and exact STEP
-in and out) on SMLib. It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
+in and out) on SMLib. 0.1.1 makes `bbox` exact, `convexHull` robust for long multi-section
+lofts (exact-planarity face merging, 1024-point budget) and splits non-planar polyhedron
+faces; see its README. A draft upstream report for the two smlibwasm problems found on the
+way (rotated-sphere `bbox`, hole-first `xor`) is in
+[smlibwasm-upstream-report.md](smlibwasm-upstream-report.md); it has not been sent. It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
 replaced by an empty one, so the release tarball contains only MIT and Apache-2.0
 files; its licence test checks the packed tarball. Its tests build the 27 reference
 parts above through the interface at 1e-6 (worst relative volume error 2.5e-15,

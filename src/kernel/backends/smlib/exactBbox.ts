@@ -44,27 +44,32 @@ const grows = (box: Box, p: P3) => p.some((v, i) => v < box.min[i] - box.tol || 
 const netGrows = (box: Box, points: readonly Vector[]) => points.some(q => grows(box, [q.x, q.y, q.z]));
 
 function edgeExtremes(edge: Edge, box: Box): void {
-  const kind = edge.geomType;
   add(box, p3(edge.start)); add(box, p3(edge.end));
+  const kind = edge.geomType;
   if (kind === 'line') return;
-  if (kind === 'circle') {
-    const c = p3(edge.arcCenter), n = unit(p3(edge.normal)), r = edge.radius;
-    if (n) {
-      const closed = edge.isClosed;
-      for (const e of AXES) {
-        const w = unit(at(e, [-dot3(e, n), n]));
-        if (!w) continue;
-        for (const s of [1, -1]) {
-          const p = at(c, [s * r, w]);
-          if (grows(box, p) && (closed || edge.distanceTo(p) <= box.tol)) add(box, p);
-        }
-      }
-      return;
+  if (kind === 'circle' && circleExtremes(edge, box)) return;
+  // Ellipses, B-splines and other curves: skip unless the control net leaves the box.
+  try { if (!netGrows(box, edge.nurbs().points)) return; } catch { /* no NURBS form: sample */ }
+  curveExtremes(edge, box);
+}
+
+/** A circle's or arc's extremes along each axis, where they lie on the arc. */
+function circleExtremes(edge: Edge, box: Box): boolean {
+  const c = p3(edge.arcCenter), n = unit(p3(edge.normal)), r = edge.radius;
+  if (!n) return false;
+  for (const e of AXES) {
+    const w = unit(at(e, [-dot3(e, n), n]));
+    if (!w) continue;
+    for (const s of [1, -1]) {
+      const p = at(c, [s * r, w]);
+      if (grows(box, p) && (edge.isClosed || edge.distanceTo(p) <= box.tol)) add(box, p);
     }
   }
-  // Ellipses, B-splines and other curves: skip unless the control net leaves the box, then
-  // sample and refine each coordinate's extremes.
-  try { if (!netGrows(box, edge.nurbs().points)) return; } catch { /* no NURBS form: sample */ }
+  return true;
+}
+
+/** Sample a curve, then refine each coordinate's extremes by golden-section search. */
+function curveExtremes(edge: Edge, box: Box): void {
   const N = 64, pts: P3[] = [];
   for (let i = 0; i <= N; i++) { const p = p3(edge.pointAt(i / N)); pts.push(p); add(box, p); }
   for (let axis = 0; axis < 3; axis++) for (const sign of [1, -1]) {
@@ -85,39 +90,14 @@ function golden(f: (t: number) => number, a: number, b: number): void {
   }
 }
 
+type OnFace = (p: P3) => boolean;
+
 function faceExtremes(face: Face, box: Box): void {
   const kind = face.geomType;
   if (kind === 'plane' || kind === 'cylinder' || kind === 'cone' || kind === 'extrusion') return; // ruled: extremes on edges
-  const onFace = (p: P3) => grows(box, p) && face.distanceTo(p) <= box.tol;
-  if (kind === 'sphere') {
-    const c = p3(face.axis.origin), r = face.radius;
-    for (const e of AXES) for (const s of [1, -1]) { const p = at(c, [s * r, e]); if (onFace(p)) add(box, p); }
-    return;
-  }
-  if (kind === 'torus') {
-    const axis = face.axis, c = p3(axis.origin), a = unit(p3(axis.direction)), R = face.majorRadius, r = face.radius;
-    if (a) {
-      for (const e of AXES) {
-        const w = unit(at(e, [-dot3(e, a), a]));
-        if (w && Math.abs(dot3(e, a)) < 1 - 1e-12) {
-          for (const s of [1, -1]) for (const t of [1, -1]) { const p = at(c, [s * R, w], [t * r, e]); if (onFace(p)) add(box, p); }
-        } else {
-          // e along the axis: the extremes are the circles at height +-r; any point of them on the face will do.
-          const u0 = unit(Math.abs(a[0]) < 0.9 ? at([1, 0, 0], [-a[0], a]) : at([0, 1, 0], [-a[1], a]))!;
-          const v0: P3 = [a[1] * u0[2] - a[2] * u0[1], a[2] * u0[0] - a[0] * u0[2], a[0] * u0[1] - a[1] * u0[0]];
-          for (const t of [1, -1]) {
-            if (!grows(box, at(c, [t * r, a]))) continue;
-            for (let k = 0; k < 72; k++) {
-              const phi = (2 * Math.PI * k) / 72;
-              const p = at(c, [R * Math.cos(phi), u0], [R * Math.sin(phi), v0], [t * r, a]);
-              if (onFace(p)) { add(box, p); break; }
-            }
-          }
-        }
-      }
-      return;
-    }
-  }
+  const onFace: OnFace = p => grows(box, p) && face.distanceTo(p) <= box.tol;
+  if (kind === 'sphere') return sphereExtremes(face, box, onFace);
+  if (kind === 'torus' && torusExtremes(face, box, onFace)) return;
   if (face.isPlanar) return;
   // Surfaces of revolution, B-splines, offsets and others. A surface of degree 1 in one parameter
   // is ruled (extremes on its edges); one whose control net stays inside the box cannot grow it.
@@ -126,8 +106,43 @@ function faceExtremes(face: Face, box: Box): void {
     if (net.degrees[0] === 1 || net.degrees[1] === 1) return;
     if (!netGrows(box, net.points.flat())) return;
   } catch { /* no NURBS form: sample */ }
-  // Sample the parameter box, then refine each coordinate's extreme by pattern search; only
-  // points that would grow the box are checked to lie on the (possibly trimmed) face.
+  surfaceExtremes(face, box);
+}
+
+function sphereExtremes(face: Face, box: Box, onFace: OnFace): void {
+  const c = p3(face.axis.origin), r = face.radius;
+  for (const e of AXES) for (const s of [1, -1]) { const p = at(c, [s * r, e]); if (onFace(p)) add(box, p); }
+}
+
+function torusExtremes(face: Face, box: Box, onFace: OnFace): boolean {
+  const axis = face.axis, c = p3(axis.origin), a = unit(p3(axis.direction)), R = face.majorRadius, r = face.radius;
+  if (!a) return false;
+  for (const e of AXES) {
+    const w = unit(at(e, [-dot3(e, a), a]));
+    if (w && Math.abs(dot3(e, a)) < 1 - 1e-12) {
+      for (const s of [1, -1]) for (const t of [1, -1]) { const p = at(c, [s * R, w], [t * r, e]); if (onFace(p)) add(box, p); }
+    } else torusCapCircles(c, a, R, r, box, onFace);
+  }
+  return true;
+}
+
+/** e along the torus axis: the extremes are the circles at height +-r; any point of them on the face will do. */
+function torusCapCircles(c: P3, a: P3, R: number, r: number, box: Box, onFace: OnFace): void {
+  const u0 = unit(Math.abs(a[0]) < 0.9 ? at([1, 0, 0], [-a[0], a]) : at([0, 1, 0], [-a[1], a]))!;
+  const v0: P3 = [a[1] * u0[2] - a[2] * u0[1], a[2] * u0[0] - a[0] * u0[2], a[0] * u0[1] - a[1] * u0[0]];
+  for (const t of [1, -1]) {
+    if (!grows(box, at(c, [t * r, a]))) continue;
+    for (let k = 0; k < 72; k++) {
+      const phi = (2 * Math.PI * k) / 72;
+      const p = at(c, [R * Math.cos(phi), u0], [R * Math.sin(phi), v0], [t * r, a]);
+      if (onFace(p)) { add(box, p); break; }
+    }
+  }
+}
+
+/** Sample the parameter box, then refine each coordinate's extreme by pattern search; only
+ * points that would grow the box are checked to lie on the (possibly trimmed) face. */
+function surfaceExtremes(face: Face, box: Box): void {
   const N = 24, samples: { u: number; v: number; p: P3 }[] = [];
   for (let i = 0; i <= N; i++) for (let j = 0; j <= N; j++) samples.push({ u: i / N, v: j / N, p: p3(face.positionAt(i / N, j / N)) });
   for (let axis = 0; axis < 3; axis++) for (const sign of [1, -1]) {
@@ -135,17 +150,22 @@ function faceExtremes(face: Face, box: Box): void {
     const start = ranked.find(s => face.distanceTo(s.p) <= box.tol);
     if (!start) continue;
     add(box, start.p);
-    let { u, v } = start, value = sign * start.p[axis], bestP = start.p;
-    for (let step = 1 / N; step > 1e-9; step /= 2) {
-      for (let moved = true, guard = 0; moved && guard < 64; guard++) {
-        moved = false;
-        for (const [du, dv] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-          const nu = Math.min(1, Math.max(0, u + du * step)), nv = Math.min(1, Math.max(0, v + dv * step));
-          const p = p3(face.positionAt(nu, nv));
-          if (sign * p[axis] > value) { u = nu; v = nv; value = sign * p[axis]; bestP = p; moved = true; }
-        }
+    const peak = patternSearch(face, start, axis, sign, 1 / N);
+    if (face.distanceTo(peak) <= box.tol) add(box, peak); // else the peak is off the trimmed face: its edges hold it
+  }
+}
+
+function patternSearch(face: Face, start: { u: number; v: number; p: P3 }, axis: number, sign: number, step0: number): P3 {
+  let { u, v } = start, value = sign * start.p[axis], best = start.p;
+  for (let step = step0; step > 1e-9; step /= 2) {
+    for (let moved = true, guard = 0; moved && guard < 64; guard++) {
+      moved = false;
+      for (const [du, dv] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nu = Math.min(1, Math.max(0, u + du * step)), nv = Math.min(1, Math.max(0, v + dv * step));
+        const p = p3(face.positionAt(nu, nv));
+        if (sign * p[axis] > value) { u = nu; v = nv; value = sign * p[axis]; best = p; moved = true; }
       }
     }
-    if (face.distanceTo(bestP) <= box.tol) add(box, bestP); // else the peak is off the trimmed face: its edges hold it
   }
+  return best;
 }

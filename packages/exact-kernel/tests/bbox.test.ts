@@ -11,16 +11,18 @@ let k: ExactKernel;
 beforeAll(async () => { k = await createSmlibKernel(); });
 
 type M = [Vec3, Vec3, Vec3];
+/** A Vec3 from its three coordinates. */
+const v3 = (f: (i: number) => number): [number, number, number] => [f(0), f(1), f(2)];
 /** Rotation matrix (rows) for `degrees` about the unit `axis` (right-handed, as k.rotate). */
 function rotation(axis: Vec3, degrees: number): M {
   const l = Math.hypot(...axis), [x, y, z] = axis.map(v => v / l), t = (degrees * Math.PI) / 180, c = Math.cos(t), s = Math.sin(t), C = 1 - c;
   return [[c + x * x * C, x * y * C - z * s, x * z * C + y * s], [y * x * C + z * s, c + y * y * C, y * z * C - x * s], [z * x * C - y * s, z * y * C + x * s, c + z * z * C]];
 }
-const apply = (m: M, v: Vec3): Vec3 => [0, 1, 2].map(i => m[i][0] * v[0] + m[i][1] * v[1] + m[i][2] * v[2]) as Vec3;
-const box = (centre: Vec3, half: Vec3): BoundingBox => ({ min: centre.map((c, i) => c - half[i]) as Vec3, max: centre.map((c, i) => c + half[i]) as Vec3 });
-const unionBox = (a: BoundingBox, b: BoundingBox): BoundingBox => ({ min: a.min.map((v, i) => Math.min(v, b.min[i])) as Vec3, max: a.max.map((v, i) => Math.max(v, b.max[i])) as Vec3 });
+const apply = (m: M, v: Vec3): Vec3 => v3(i => m[i][0] * v[0] + m[i][1] * v[1] + m[i][2] * v[2]);
+const box = (centre: Vec3, half: Vec3): BoundingBox => ({ min: v3(i => centre[i] - half[i]), max: v3(i => centre[i] + half[i]) });
+const unionBox = (a: BoundingBox, b: BoundingBox): BoundingBox => ({ min: v3(i => Math.min(a.min[i], b.min[i])), max: v3(i => Math.max(a.max[i], b.max[i])) });
 /** Box of a circle: centre c, unit normal n, radius r. */
-const circleBox = (c: Vec3, n: Vec3, r: number) => box(c, n.map(ni => r * Math.sqrt(Math.max(0, 1 - ni * ni))) as Vec3);
+const circleBox = (c: Vec3, n: Vec3, r: number) => box(c, v3(i => r * Math.sqrt(Math.max(0, 1 - n[i] * n[i]))));
 
 function expectBox(s: ExactSolid, want: BoundingBox, tol = 1e-9) {
   try {
@@ -45,7 +47,7 @@ describe('bbox of rotated primitives (closed forms)', () => {
     });
     it(`torus (R 40, r 10) turned ${deg} deg about [${axis}]`, () => {
       const m = rotation(axis, deg), a = apply(m, [0, 0, 1]), c = apply(m, [5, 6, -7]);
-      expectBox(k.scope(() => k.rotate(k.translate(k.torus(40, 10), [5, 6, -7]), axis, deg)), box(c, a.map(ai => 40 * Math.sqrt(1 - ai * ai) + 10) as Vec3));
+      expectBox(k.scope(() => k.rotate(k.translate(k.torus(40, 10), [5, 6, -7]), axis, deg)), box(c, v3(i => 40 * Math.sqrt(1 - a[i] * a[i]) + 10)));
     });
     it(`cylinder (r 10, h 50) turned ${deg} deg about [${axis}]`, () => {
       const m = rotation(axis, deg), a = apply(m, [0, 0, 1]);
@@ -57,7 +59,7 @@ describe('bbox of rotated primitives (closed forms)', () => {
     });
     it(`ellipsoid (sphere scaled 1, 1, 0.5) turned ${deg} deg about [${axis}]`, () => {
       const m = rotation(axis, deg), semi = [62, 62, 31];
-      const half = [0, 1, 2].map(i => Math.sqrt(m[i].reduce((s, q, j) => s + q * q * semi[j] * semi[j], 0))) as Vec3;
+      const half = v3(i => Math.sqrt(m[i].reduce((s, q, j) => s + q * q * semi[j] * semi[j], 0)));
       expectBox(k.scope(() => k.rotate(k.scale(k.sphere(62), [1, 1, 0.5]), axis, deg)), box([0, 0, 0], half), 1e-7);
     });
   }
