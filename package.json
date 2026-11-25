@@ -204,7 +204,7 @@
   "optionalDependencies": {
     "playwright": "^1.58.0"
   },
-  "description": "CrispCAD kernel lab: agent-first parametric CAD and the exact-kernel lab of CrispCAD, derived from kernelCAD (MIT). Not affiliated with or endorsed by the kernelCAD project.",
+  "description": "CrispCAD kernel lab: builds and tests the exact, OpenCASCADE-free kernel (@crispcad/exact-kernel) used by CrispCAD.",
   "contributors": [
     "Andrii Shylenko and kernelCAD contributors (upstream kernelCAD, MIT)"
   ]

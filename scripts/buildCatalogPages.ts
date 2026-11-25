@@ -20,8 +20,8 @@ import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'no
 import { join, resolve } from 'node:path';
 
 // CrispCAD: the catalog site has no hosted origin by default; set CRISPCAD_CATALOG_ORIGIN when publishing.
-export const ORIGIN = process.env.CRISPCAD_CATALOG_ORIGIN ?? 'https://crispstrobe.github.io/kernelCAD-web/';
-export const REPOSITORY = 'https://github.com/CrispStrobe/kernelCAD-web';
+export const ORIGIN = process.env.CRISPCAD_CATALOG_ORIGIN ?? 'https://crispstrobe.github.io/crispcad-kernel-lab/';
+export const REPOSITORY = 'https://github.com/CrispStrobe/crispcad-kernel-lab';
 export const MODEL_VIEWER_CDN = 'https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js';
 const DESCRIPTION_MAX = 160;
 

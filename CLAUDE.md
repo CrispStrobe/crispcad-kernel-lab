@@ -1,10 +1,11 @@
-# Repo conventions for agents working in CrispCAD
+# Repo conventions for agents working in the CrispCAD kernel lab
 
-CrispCAD is a renamed fork of kernelCAD (MIT). Read [AGENTS.md](AGENTS.md).
+The CrispCAD kernel lab (`crispcad-kernel-lab`) is a renamed fork of kernelCAD (MIT). It builds
+the exact kernel consumed by [CrispCAD](https://github.com/CrispStrobe/CrispCAD). Read [AGENTS.md](AGENTS.md).
 
 ## No deployment
 
-CrispCAD has no hosted app, website, MCP gateway or npm release pipeline. Never
+The lab has no hosted app, website, MCP gateway or npm release pipeline. Never
 deploy or publish. Upstream workflows are archived inactive in
 `ci/upstream-workflows/`; run checks locally (`npm run typecheck`, `npm test`,
 `npm run lint`, `npm run licence:audit`).
@@ -17,7 +18,9 @@ do not add new ones. `npm run licence:audit` must not report new findings.
 
 ## Naming
 
-Use "CrispCAD" for the product, `crispcad` for the CLI and package. Name kernelCAD
+Use "CrispCAD kernel lab" for this project and `crispcad-lab` for the CLI (`crispcad` is a
+deprecated alias; the npm package name stays `crispcad`). "CrispCAD" alone means the
+downstream workbench repository. Name kernelCAD
 only to state provenance or `.kcad.ts` format compatibility. Keep upstream copyright
 lines, attribution records and catalog provenance verbatim.
 
@@ -40,7 +43,7 @@ Adopt this loop:
 5. Validate with deterministic commands before relying on screenshots.
 6. If a rendered artifact is produced, inspect it visually and report concrete
    visible evidence. Do not mark visually broken CAD done because tests passed.
-7. When visual evidence matters, run `kernelcad render inspect <file> <outDir>`
+7. When visual evidence matters, run `crispcad-lab render inspect <file> <outDir>`
    to produce a deterministic inspection bundle with a manifest and canonical
    RGB views. Add `--channels rgb,mask,depth,normals` when machine-readable
    object masks, depth, or view-space normals are needed. Use `--focus <names>`

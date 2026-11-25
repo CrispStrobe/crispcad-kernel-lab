@@ -36,7 +36,7 @@ function projectionSymbol(cx: number, cy: number, projection: ProjectionAngle = 
   return `<g class="${projection}-angle-symbol" fill="none" stroke="#000" stroke-width="0.25">${trap}${circles}</g>`;
 }
 
-/** "Made with CrispCAD · kernelcad.com", right-aligned at (x, y), linked
+/** "Made with CrispCAD kernel lab · github.com", right-aligned at (x, y), linked
  *  to the homepage (a clickable link in the PDF sheet). */
 function madeWithLine(x: number, y: number): string {
   const host = new URL(KERNELCAD_HOMEPAGE).host;

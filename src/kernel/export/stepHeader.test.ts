@@ -25,9 +25,9 @@ const dec = (b: Uint8Array) => new TextDecoder().decode(b);
 
 describe('stampStepOriginatingSystem', () => {
   it('replaces only FILE_NAME originating_system and keeps OCCT as the preprocessor', () => {
-    const out = dec(stampStepOriginatingSystem(enc(OCCT_STEP), 'CrispCAD 1.2.3 (https://github.com/CrispStrobe/kernelCAD-web)'));
-    expect(readStepOriginatingSystem(enc(out))).toBe('CrispCAD 1.2.3 (https://github.com/CrispStrobe/kernelCAD-web)');
-    expect(out).toContain("'Open CASCADE STEP processor 7.6','CrispCAD 1.2.3 (https://github.com/CrispStrobe/kernelCAD-web)'");
+    const out = dec(stampStepOriginatingSystem(enc(OCCT_STEP), 'CrispCAD kernel lab 1.2.3 (https://github.com/CrispStrobe/crispcad-kernel-lab)'));
+    expect(readStepOriginatingSystem(enc(out))).toBe('CrispCAD kernel lab 1.2.3 (https://github.com/CrispStrobe/crispcad-kernel-lab)');
+    expect(out).toContain("'Open CASCADE STEP processor 7.6','CrispCAD kernel lab 1.2.3 (https://github.com/CrispStrobe/crispcad-kernel-lab)'");
     expect(out).toContain(",'Unknown');");
     // DATA is byte-identical, including the same text as the old value.
     expect(out.slice(out.indexOf('ENDSEC;'))).toBe(OCCT_STEP.slice(OCCT_STEP.indexOf('ENDSEC;')));

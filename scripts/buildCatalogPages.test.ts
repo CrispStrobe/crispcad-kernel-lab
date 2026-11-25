@@ -53,7 +53,7 @@ describe('catalog SEO page export', () => {
             expect(first(html, /<meta property="og:image" content="([^"]+)"/)).toBe(`${assetUrl(a)}preview.png`);
             expect(first(html, /<meta name="twitter:card" content="([^"]+)"/)).toBe('summary_large_image');
             expect(html).toContain(`<h1>${escapeHtml(a.title)}</h1>`);
-            expect(html).toContain(`https://github.com/CrispStrobe/kernelCAD-web/blob/develop/catalog/kits/${a.kit}/${a.id}.kcad.ts`);
+            expect(html).toContain(`https://github.com/CrispStrobe/crispcad-kernel-lab/blob/develop/catalog/kits/${a.kit}/${a.id}.kcad.ts`);
             for (const p of a.params) expect(html, `${a.kit}/${a.id} knob ${p.name}`).toContain(`<td><code>${escapeHtml(p.name)}</code></td>`);
 
             const product = jsonLd(html).find((d) => d['@type'] === 'Product');
@@ -125,7 +125,7 @@ describe('catalog SEO page export', () => {
             expect(html, `${asset.kit}/${asset.id} viewer`).toContain('<model-viewer id="asset-viewer"');
             expect(html, `${asset.kit}/${asset.id} default GLB`).toContain(`href="${asset.id}.glb" download="${asset.id}.glb"`);
             expect(html, `${asset.kit}/${asset.id} default STEP`).toContain(`href="${asset.id}.step" download="${asset.id}.step"`);
-            expect(html, `${asset.kit}/${asset.id} source link`).toContain(`https://github.com/CrispStrobe/kernelCAD-web/blob/develop/catalog/kits/${asset.kit}/${asset.id}.kcad.ts`);
+            expect(html, `${asset.kit}/${asset.id} source link`).toContain(`https://github.com/CrispStrobe/crispcad-kernel-lab/blob/develop/catalog/kits/${asset.kit}/${asset.id}.kcad.ts`);
             expect(html, `${asset.kit}/${asset.id} local MCP handoff`).toContain('crispcad mcp');
             expect(html, `${asset.kit}/${asset.id} copied prompt`).toContain('data-copy-prompt');
             expect(html, `${asset.kit}/${asset.id} default download path`).toContain(assetGlbPath(asset).split('/').at(-1)!);

@@ -42,14 +42,17 @@ export interface MeshData {
  *
  * @param mesh    Vertex/index mesh data
  * @param header  Up to 80 ASCII characters written to the header field.
- *                Defaults to "CrispCAD <version> (https://kernelcad.com)
- *                <YYYY-MM-DD>" (shared/links/attribution.ts). The header
+ *                Defaults to "CrispCAD kernel lab <version> (<homepage>)
+ *                <YYYY-MM-DD>", or without the homepage when that exceeds 80 bytes (shared/links/attribution.ts). The header
  *                MUST NOT start with "solid" — some lenient parsers use the
  *                prefix to detect ASCII vs binary format.
  */
 function buildDefaultHeader(): string {
   const isoDate = new Date().toISOString().slice(0, 10);
-  return `${attributionGenerator()} ${isoDate}`;
+  const full = `${attributionGenerator()} ${isoDate}`;
+  // The 80-byte field cannot always hold name, version, homepage and date;
+  // drop the homepage rather than truncating mid-URL.
+  return full.length <= HEADER_SIZE ? full : `${attributionGenerator().split(' (')[0]!} ${isoDate}`;
 }
 
 export function encodeBinaryStl(

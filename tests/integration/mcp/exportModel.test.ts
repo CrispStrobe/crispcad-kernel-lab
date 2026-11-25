@@ -309,6 +309,6 @@ describe('export_model MCP tool', () => {
     expect(buf.subarray(0, 5).toString('ascii')).not.toBe('solid');
     // CrispCAD forensic stamp in the 80-byte header.
     expect(buf.subarray(0, 9).toString('ascii')).toBe('CrispCAD ');
-    expect(buf.subarray(0, 80).toString('ascii')).toContain('(https://github.com/CrispStrobe/kernelCAD-web)');
+    expect(buf.subarray(0, 80).toString('ascii')).toMatch(/^CrispCAD kernel lab /);
   }, 60000);
 });

@@ -15,7 +15,7 @@ import type { Assembly } from '../../../../src/modeling/capture/assembly';
 import { partStepBytes, partStlBytes, partDxfBytes } from '../../../../src/kernel/backends/occt/partFileExport';
 
 // Same reader-side assertion attribution.test.ts uses for every stamped export.
-const GENERATOR = /^CrispCAD \S+ \(https:\/\/github\.com\/CrispStrobe\/kernelCAD-web\)$/;
+const GENERATOR = /^CrispCAD kernel lab \S+ \(https:\/\/github\.com\/CrispStrobe\/crispcad-kernel-lab\)$/;
 
 beforeAll(async () => {
   const { initOcct } = await import('../../../../src/kernel/backends/occt/occtBackend');

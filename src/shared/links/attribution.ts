@@ -13,10 +13,10 @@
 import { kernelcadVersion } from '../runtime/kernelcadVersion';
 
 /** Product name as it appears in file metadata and the viewer badge. */
-export const KERNELCAD_NAME = 'CrispCAD';
+export const KERNELCAD_NAME = 'CrispCAD kernel lab';
 
 /** Project homepage. Attribution links and file metadata point here. */
-export const KERNELCAD_HOMEPAGE = 'https://github.com/CrispStrobe/kernelCAD-web';
+export const KERNELCAD_HOMEPAGE = 'https://github.com/CrispStrobe/crispcad-kernel-lab';
 
 /** CrispCAD has no hosted app; app links resolve to the project page. */
 export const KERNELCAD_APP_URL = KERNELCAD_HOMEPAGE;
@@ -37,7 +37,7 @@ export type LinkSurface =
 
 /**
  * The generator string stamped into exported-file metadata:
- * `CrispCAD <version> (https://github.com/CrispStrobe/kernelCAD-web)`.
+ * `CrispCAD kernel lab <version> (https://github.com/CrispStrobe/crispcad-kernel-lab)`.
  *
  * `version` defaults to the runtime registry (`'unknown'` in a browser that
  * never installs it). Writers that already resolve the package version pass

@@ -57,7 +57,7 @@ describe('wrapTexture → GLB export', () => {
       // it. glTF-Transform's reader drops asset.generator, so read it raw.
       const view = new DataView(result.bytes.buffer, result.bytes.byteOffset, result.bytes.byteLength);
       const rawJson = JSON.parse(new TextDecoder().decode(result.bytes.subarray(20, 20 + view.getUint32(12, true))));
-      expect(rawJson.asset.generator).toMatch(/^CrispCAD \S+ \(https:\/\/github\.com\/CrispStrobe\/kernelCAD-web\)$/);
+      expect(rawJson.asset.generator).toMatch(/^CrispCAD kernel lab \S+ \(https:\/\/github\.com\/CrispStrobe\/crispcad-kernel-lab\)$/);
       expect(root.getAsset().extras?.kernelcad).toBeDefined();
 
       const meshes = root.listMeshes();
