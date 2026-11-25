@@ -75,7 +75,8 @@ describe('ci.yml develop push gate', () => {
 // to a short, explicit retention.
 describe('workflow artifact retention', () => {
   it('bounds retention-days on every actions/upload-artifact step', () => {
-    const dir = '.github/workflows';
+    // CrispCAD keeps upstream's workflows archived inactive here.
+    const dir = 'ci/upstream-workflows';
     const uploads: { where: string; retention: unknown }[] = [];
     for (const file of readdirSync(dir).filter(f => /\.ya?ml$/.test(f))) {
       const wf = parse(readFileSync(`${dir}/${file}`, 'utf8')) as { jobs?: Record<string, { steps?: { uses?: string; with?: Record<string, unknown> }[] }> };

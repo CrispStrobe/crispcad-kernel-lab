@@ -11,8 +11,9 @@ describe('public kernel distribution boundary', () => {
       'playwright.config.ts', 'playwright.mesh.config.ts', 'tsconfig.site.json', 'tsr.config.json']) {
       expect(existsSync(path), path).toBe(false);
     }
-    for (const name of readdirSync('.github/workflows')) {
-      const source = readFileSync(`.github/workflows/${name}`, 'utf8');
+    // CrispCAD has no active workflows; upstream's are archived inactive.
+    for (const name of readdirSync('ci/upstream-workflows').filter(f => /\.ya?ml$/.test(f))) {
+      const source = readFileSync(`ci/upstream-workflows/${name}`, 'utf8');
       expect(name).not.toMatch(/^deploy/);
       expect(source, name).not.toMatch(/cloudflare\/wrangler-action|actions\/deploy-pages|npm run test:e2e/);
     }
