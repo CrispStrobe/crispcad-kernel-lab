@@ -7,17 +7,18 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CrispStrobe/kernelCAD-web.git"
+    "url": "git+https://github.com/CrispStrobe/crispcad-kernel-lab.git"
   },
-  "homepage": "https://github.com/CrispStrobe/kernelCAD-web#readme",
+  "homepage": "https://github.com/CrispStrobe/crispcad-kernel-lab#readme",
   "bugs": {
-    "url": "https://github.com/CrispStrobe/kernelCAD-web/issues"
+    "url": "https://github.com/CrispStrobe/crispcad-kernel-lab/issues"
   },
   "engines": {
     "node": ">=24.0.0",
     "npm": ">=10.0.0"
   },
   "bin": {
+    "crispcad-lab": "dist/cli/index.js",
     "crispcad": "dist/cli/index.js"
   },
   "exports": {
@@ -107,7 +108,10 @@
     "portfolio:validate": "npm test -- tests/integration/portfolio/portfolioBundle.test.ts tests/unit/portfolio/portfolioMeta.test.ts",
     "portfolio:capture": "npx tsx scripts/capturePortfolioEntry.ts",
     "qc:full": "npm run qc && npm run build",
-    "licence:audit": "node scripts/licenceAudit.mjs"
+    "licence:audit": "node scripts/licenceAudit.mjs",
+    "build:exact-kernel": "npm --prefix packages/exact-kernel run build",
+    "test:exact-kernel": "npm --prefix packages/exact-kernel test",
+    "typecheck:exact-kernel": "npm --prefix packages/exact-kernel run typecheck"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.92.0",
@@ -200,7 +204,7 @@
   "optionalDependencies": {
     "playwright": "^1.58.0"
   },
-  "description": "CrispCAD: agent-first parametric CAD, derived from kernelCAD (MIT). Not affiliated with or endorsed by the kernelCAD project.",
+  "description": "CrispCAD kernel lab: agent-first parametric CAD and the exact-kernel lab of CrispCAD, derived from kernelCAD (MIT). Not affiliated with or endorsed by the kernelCAD project.",
   "contributors": [
     "Andrii Shylenko and kernelCAD contributors (upstream kernelCAD, MIT)"
   ]

@@ -7,10 +7,13 @@ import { kernelNeedsOcct } from '../../../src/kernel/backends/kernelRuntime';
 import { defaultKernel, KernelUnavailableError } from '../../../src/modeling/backends/kernelRegistry';
 
 const code = "return box(60, 40, 10).hole('top', { u: 0, v: 0, diameter: 10, depth: 'through' });";
-const previous = process.env.CRISPCAD_KERNEL;
+const previous = process.env.CRISPCAD_KERNEL, previousLab = process.env.CRISPCAD_LAB_KERNEL;
+delete process.env.CRISPCAD_LAB_KERNEL;
 afterEach(() => {
   if (previous === undefined) delete process.env.CRISPCAD_KERNEL;
   else process.env.CRISPCAD_KERNEL = previous;
+  if (previousLab === undefined) delete process.env.CRISPCAD_LAB_KERNEL;
+  else process.env.CRISPCAD_LAB_KERNEL = previousLab;
 });
 
 describe('kernel selection from CRISPCAD_KERNEL', () => {
@@ -21,6 +24,14 @@ describe('kernel selection from CRISPCAD_KERNEL', () => {
     process.env.CRISPCAD_KERNEL = 'smlib-native';
     expect(defaultKernel()).toBe('smlib-native');
     expect(kernelNeedsOcct()).toBe(false);
+  });
+
+  it('prefers CRISPCAD_LAB_KERNEL over CRISPCAD_KERNEL', () => {
+    process.env.CRISPCAD_KERNEL = 'occt';
+    process.env.CRISPCAD_LAB_KERNEL = 'smlib-native';
+    expect(defaultKernel()).toBe('smlib-native');
+    process.env.CRISPCAD_LAB_KERNEL = '';
+    expect(defaultKernel()).toBe('occt');
   });
 
   it('rejects an unknown id instead of falling back', () => {

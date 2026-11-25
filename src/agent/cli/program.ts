@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Andrii Shylenko and kernelCAD contributors
 // src/agent/cli/program.ts — the crispcad command tree.
-import { DEFAULT_KERNEL, KERNEL_ENV_VAR, KERNEL_IDS, isKernelId } from '../../shared/types/backendTarget';
+import { DEFAULT_KERNEL, KERNEL_ENV_VAR, KERNEL_IDS, LAB_KERNEL_ENV_VAR, isKernelId } from '../../shared/types/backendTarget';
 import { Command } from 'commander';
 import { createRequire } from 'node:module';
 import { animateCommand } from './commands/animate';
@@ -46,19 +46,20 @@ const pkg = loadPkg();
 export function buildProgram(): Command {
   const program = new Command();
   program
-    .name('crispcad')
-    .description('CrispCAD — agent-first parametric CAD CLI')
+    .name('crispcad-lab')
+    .description('CrispCAD kernel lab — agent-first parametric CAD CLI (deprecated alias: crispcad)')
     // Positional options: required so `render` (which has both its own
     // options and an `inspect` subcommand sharing flag names like --width /
     // --focus) routes options written after the subcommand name to the
     // subcommand instead of greedily claiming them for the parent.
     .enablePositionalOptions()
     .version(pkg.version)
-    .option('--kernel <id>', `solid-modeling kernel for this run: ${KERNEL_IDS.join(' | ')} (env ${KERNEL_ENV_VAR}; default ${DEFAULT_KERNEL})`)
+    .option('--kernel <id>', `solid-modeling kernel for this run: ${KERNEL_IDS.join(' | ')} (env ${LAB_KERNEL_ENV_VAR} or ${KERNEL_ENV_VAR}; default ${DEFAULT_KERNEL})`)
     .hook('preAction', (root) => {
       const kernel = root.opts<{ kernel?: string }>().kernel;
       if (kernel === undefined) return;
       if (!isKernelId(kernel)) root.error(`error: unknown kernel '${kernel}' (known: ${KERNEL_IDS.join(', ')})`);
+      process.env[LAB_KERNEL_ENV_VAR] = kernel;
       process.env[KERNEL_ENV_VAR] = kernel;
     });
 
