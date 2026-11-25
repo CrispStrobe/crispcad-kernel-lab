@@ -1,6 +1,6 @@
 {
   "name": "@crispcad/exact-kernel",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Exact B-rep kernel with an MIT + Apache-2.0 closure: a narrow ExactKernel interface on SMLib (@classcad/smlibwasm 0.6.2, prebundled without its font). From the CrispCAD kernel lab.",
   "license": "MIT AND Apache-2.0",
   "author": "CrispCAD contributors",

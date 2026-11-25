@@ -73,4 +73,13 @@ describe('bbox of rotated primitives (closed forms)', () => {
       return k.rotate(below, [1, 0, 0], 11);
     }), { min: [-62, -62 * c, -62], max: [62, 62, 62 * s] });
   });
+  it('mining/apron-feeder ore-heap (an ellipsoid cut by a box) in well under a second', () => {
+    // sphere(1000) scaled [2.3, 1.55, 0.95] at (8600, 0, 4150), everything below z = 3600 cut away:
+    // the cut is a long B-spline intersection edge. 0.1.1 sampled it with SMLib's arc-length
+    // pointAt, about 0.2 s a point: 134 s for this box (203 s in CrispCAD's catalog cross-check).
+    const t0 = performance.now();
+    expectBox(k.scope(() => k.subtract(k.translate(k.scale(k.sphere(1000), [2.3, 1.55, 0.95]), [8600, 0, 4150]), k.translate(k.box([5000, 3300, 700]), [8500, 0, 3250]))),
+      { min: [6300, -1550, 3600], max: [10900, 1550, 5100] }, 1e-7);
+    expect(performance.now() - t0).toBeLessThan(10_000);
+  });
 });

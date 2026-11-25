@@ -91,6 +91,11 @@ volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
 
+- **0.1.2**: `bbox` is fast again on trimmed curved bodies. 0.1.1 sampled B-spline edges with
+  SMLib's `Edge.pointAt`, which takes a fraction of the arc length and integrates the length on
+  every call (up to 0.4 s a point on the long intersection curve of an ellipsoid cut by a box), so
+  such parts took 1 to 9 minutes; the edges are now evaluated from their own NURBS. The catalog's
+  ore heap (`mining/apron-feeder` `ore-heap`) takes 24 ms instead of 134 s, with the same box.
 - **0.1.1**: exact `bbox` (rotated spheres); incremental `convexHull` with exact-planarity
   merging (long multi-section lofts build, frustum areas right), hull budget 64 → 1024 points;
   `polyhedron` splits non-planar faces into triangles; even-odd polygon profiles pass the largest
