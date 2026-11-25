@@ -14,6 +14,7 @@ import type { FeatureRecord } from '../../../shared/intent/featureRecord';
 import type { FeatureKind, Vec3 } from '../../../shared/intent/types';
 import type { BackendTarget } from '../../../shared/types/backendTarget';
 import { loadSmlib } from './runtime';
+import { polygonLoops } from './polygonLoops';
 import { isSceneBackend, type SceneBackend, type SceneBackendPart } from '../../../kernel/backends/sceneBackend';
 import { lookupSourceColor, lookupSourceMaterial } from '../../../kernel/backends/occt/lookupSourceColor';
 import { resolvedPartAt } from '../../mates/partFrame';
@@ -21,6 +22,7 @@ import type { Connector } from '../../mates/connector';
 // Kernel-agnostic: the mate solver works on connector frames and placements only.
 import { lowerAssemblyModel } from '../occt/lowerers/assembly';
 import { Transform } from '../../../shared/runtime/se3';
+import { helixOptionsFromSpec, type HelixRailSpec } from '../../helix';
 import type { FeatureId, Vec3Param } from '../../../shared/intent/types';
 
 type Smlib = typeof import('@classcad/smlibwasm');
@@ -30,6 +32,9 @@ type Edge = InstanceType<Smlib['Edge']>;
 type Face = InstanceType<Smlib['Face']>;
 
 class Unsupported extends Error {}
+
+/** Sections per turn of the loft that stands in for an axial helical sweep. */
+const HELIX_SECTIONS_PER_TURN = 48;
 
 interface AssemblyModelMeta {
   assemblyName?: string;
@@ -82,7 +87,7 @@ const num = (v: unknown): number => (typeof v === 'number' ? v : (v as { evaluat
 const CANONICAL_NORMALS: Record<string, Vec3> = { top: [0, 0, 1], bottom: [0, 0, -1], right: [1, 0, 0], left: [-1, 0, 0], back: [0, 1, 0], front: [0, -1, 0] };
 
 type SketchCommand = { kind: string; [k: string]: unknown };
-interface Pen { at: Vec3; start: Vec3; closed: boolean; edges: Edge[] }
+interface Pen { at: Vec3; start: Vec3; closed: boolean; edges: Edge[]; loops: Edge[][] }
 const xy = (c: Record<string, unknown>, x: string, y: string): Vec3 => [num(c[x]), num(c[y]), 0];
 /** Append one edge ending at the command's (x, y). */
 const edgeTo = (make: (sm: Smlib, from: Vec3, to: Vec3, c: SketchCommand) => Edge) => (sm: Smlib, c: SketchCommand, pen: Pen) => {
@@ -91,8 +96,14 @@ const edgeTo = (make: (sm: Smlib, from: Vec3, to: Vec3, c: SketchCommand) => Edg
   pen.at = next;
 };
 const SKETCH_STEPS: Record<string, (sm: Smlib, c: SketchCommand, pen: Pen) => void> = {
-  moveTo: (_sm, c, pen) => {
-    if (pen.edges.length) throw new Unsupported('Sketches with several loops are not supported natively yet.');
+  // A moveTo after drawn edges closes that loop and starts another (as OCCT's profile
+  // lowerer does); the loops fill even-odd, so inner loops are holes.
+  moveTo: (sm, c, pen) => {
+    if (pen.edges.length) {
+      if (Math.hypot(pen.at[0] - pen.start[0], pen.at[1] - pen.start[1]) > 1e-9) pen.edges.push(sm.Line(pen.at, pen.start));
+      pen.loops.push(pen.edges);
+      pen.edges = [];
+    }
     pen.at = pen.start = xy(c, 'x', 'y');
   },
   lineTo: edgeTo((sm, from, to) => sm.Line(from, to)),
@@ -220,23 +231,74 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     if (r.params.twistDeg && p('twistDeg') !== 0) throw new Unsupported('Twisted lofts are not supported natively.');
     if (Array.isArray(r.metadata?.rails) && r.metadata.rails.length) throw new Unsupported('Lofts with rails are not supported natively.');
     const keys = Object.keys(inputs.byKey).filter(k => /^sketch_\d+$/.test(k)).sort((a, b) => Number(a.slice(7)) - Number(b.slice(7)));
-    const planes = r.metadata?.planes as { plane?: string; origin?: unknown[] }[] | undefined;
-    if (planes?.some(pl => pl.plane && pl.plane !== 'XY')) throw new Unsupported('Loft sections on planes other than XY are not supported natively.');
-    const originOf = (i: number): unknown[] => {
-      if (planes?.length === keys.length) return planes[i].origin ?? [0, 0, 0];
-      if (planes?.length === keys.length - 1) return i === 0 ? [0, 0, 0] : planes[i - 1].origin ?? [0, 0, 0];
-      return [0, 0, i * p('spacing')];
+    const planes = r.metadata?.planes as { plane?: string; origin?: unknown[]; rotationDeg?: unknown }[] | undefined;
+    if (planes?.some(pl => pl.plane && !['XY', 'YZ', 'XZ'].includes(pl.plane))) throw new Unsupported('Loft sections on planes other than XY, YZ and XZ are not supported natively.');
+    if (planes?.some(pl => pl.rotationDeg !== undefined && num(pl.rotationDeg) !== 0)) throw new Unsupported('Rotated loft sections are not supported natively.');
+    const planeOf = (i: number) => (planes?.length === keys.length ? planes[i] : planes?.length === keys.length - 1 ? (i === 0 ? undefined : planes[i - 1]) : undefined);
+    const originOf = (i: number): unknown[] => (planes?.length === keys.length || planes?.length === keys.length - 1 ? planeOf(i)?.origin ?? [0, 0, 0] : [0, 0, i * p('spacing')]);
+    // Sketch (x, y) onto replicad's planes: YZ is (y, z) = (x, y), XZ is (x, z) = (x, y).
+    const onPlane = (sk: Sketch, plane: string | undefined): Sketch => {
+      if (plane === 'YZ') return sk.rotate(sm.Axis.X, 90).rotate(sm.Axis.Z, 90);
+      if (plane === 'XZ') return sk.rotate(sm.Axis.X, 90);
+      return sk;
     };
-    const sections = keys.map((k, i) => this.sketchOf(inputs, k).sketch.translate(originOf(i).map(num) as Vec3));
-    return this.solid(sm, sm.loft(sections, { ruled: p('ruled') > 0.5 }));
+    const sections = keys.map((k, i) => onPlane(this.sketchOf(inputs, k).sketch, planeOf(i)?.plane).translate(originOf(i).map(num) as Vec3));
+    const ruled = p('ruled') > 0.5;
+    let part = sm.loft(sections, { ruled });
+    // startPoint / endPoint: the loft runs on from the first / last section to an apex.
+    const apex = (key: 'startPoint' | 'endPoint') => r.metadata?.[key] as unknown[] | undefined;
+    for (const [key, section] of [['startPoint', sections[0]], ['endPoint', sections.at(-1)!]] as const) {
+      const point = apex(key);
+      if (!point) continue;
+      if (!ruled) throw new Unsupported('Smooth lofts to a start or end point are not supported natively (ruled ones are).');
+      part = part.fuse(pyramid(sm, section, point.map(num) as Vec3));
+    }
+    return this.solid(sm, part);
   }
 
   private sweep(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
+    if (r.metadata?.spine === 'helix') return this.helicalSweep(sm, r, inputs);
     const rail = r.metadata?.rail as unknown[][] | undefined;
-    if (!Array.isArray(rail) || rail.length < 2 || r.metadata?.spine !== 'polyline') throw new Unsupported('Only straight-segment (polyline) sweep rails are supported natively.');
+    if (!Array.isArray(rail) || rail.length < 2 || r.metadata?.spine !== 'polyline') throw new Unsupported("Only polyline and helix sweep rails are supported natively ('smooth' spines are not yet).");
     const points = rail.map(pt => pt.map(num) as Vec3);
     const path = points.length === 2 ? sm.Line(points[0], points[1]) : sm.Polyline(points);
     return this.solid(sm, sm.sweep(this.sketchOf(inputs).sketch, path));
+  }
+
+  /** `spine: 'helix'`, as OCCT's sweepProfileAlongHelix (kernel/backends/occt/helicalSweep.ts):
+   *  the exact helix x = R cos(t + a), y = R sin(t + a), z = pitch t / 2 pi about Z (axis X and
+   *  Y permute those coordinates as helix() does). 'axial': sketch x is the radial offset from
+   *  the start point, y the axial offset, moved by screw motion. 'transverse': the sketch is the
+   *  cross-section on the axis (x towards the start angle), a twisted extrusion of one turn per
+   *  pitch (SMLib's twist deformation). Built about Z with a = 0, then turned by a and mapped
+   *  onto the helix axis. */
+  private helicalSweep(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
+    const spec = r.metadata?.helix as HelixRailSpec | undefined;
+    if (!spec) throw new Unsupported("A 'helix' sweep needs the helix() rail's dimensions.");
+    const { radius, pitch, turns, startAngle = 0, axis = 'Z' } = helixOptionsFromSpec(spec);
+    if (!(radius > 0 && pitch > 0 && turns > 0)) throw new Error(`helical sweep: radius, pitch and turns must be positive (got ${radius}, ${pitch}, ${turns}).`);
+    const sketch = this.sketchOf(inputs).sketch, height = pitch * turns;
+    let part: Part;
+    if ((r.metadata as { section?: unknown }).section === 'transverse') {
+      // OCCT's frame for axis Y is (x, y) -> x X - y Z; the y <-> z mirror below gives x X + y Z,
+      // so the section is flipped first.
+      const section = axis === 'Y' ? sketch.mirror(new sm.Plane([0, 0, 0], undefined, [0, 1, 0])) : sketch;
+      part = sm.twist(sm.extrude(section, height), 360 * turns);
+    } else {
+      const b = sketch.bbox();
+      if (radius + b.min.x <= 0) throw new Error('helical sweep: the profile crosses the helix axis (keep radius + min(x) > 0).');
+      if (b.max.y - b.min.y >= pitch - 1e-6) throw new Error(`helical sweep: the profile spans ${(b.max.y - b.min.y).toFixed(4)} mm along the axis, not below the pitch ${pitch} mm.`);
+      // SMLib's sweep turns a profile that is not square to the path, so the screw motion is a
+      // smooth loft through screw-moved copies of the axial section, HELIX_SECTIONS_PER_TURN per
+      // turn (volume within about 1e-6 of the closed form; OCCT's helix spine is also fitted).
+      const placed = sketch.rotate(sm.Axis.X, 90).translate([radius, 0, 0]); // (x, y) -> (R + x, 0, y)
+      const n = Math.max(2, Math.ceil(turns * HELIX_SECTIONS_PER_TURN));
+      part = sm.loft(Array.from({ length: n + 1 }, (_, i) => placed.rotate(sm.Axis.Z, (360 * turns * i) / n).translate([0, 0, (height * i) / n])), { ruled: false });
+    }
+    if (startAngle) part = part.rotate(sm.Axis.Z, (startAngle * 180) / Math.PI);
+    if (axis === 'X') part = part.rotate(new sm.Axis([0, 0, 0], [1, 1, 1]), 120); // x, y, z -> y, z, x
+    else if (axis === 'Y') part = part.mirror(new sm.Plane([0, 0, 0], undefined, [0, 1, -1])); // y <-> z
+    return this.solid(sm, part);
   }
 
   private boolean(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
@@ -282,14 +344,16 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     if (typeof r.metadata?.textContent === 'string') throw new Unsupported('Text sketches are not supported natively yet.');
     const commands = r.metadata?.commands as SketchCommand[] | undefined;
     if (!Array.isArray(commands) || !commands.length) throw new Unsupported('Sketch has no path commands.');
-    const pen: Pen = { at: [0, 0, 0], start: [0, 0, 0], closed: false, edges: [] };
+    const pen: Pen = { at: [0, 0, 0], start: [0, 0, 0], closed: false, edges: [], loops: [] };
     for (const c of commands) {
       const step = SKETCH_STEPS[c.kind];
       if (!step) throw new Unsupported(`Sketch command '${c.kind}' is not supported natively yet.`);
       step(sm, c, pen);
     }
     if (!pen.closed) throw new Unsupported('Open sketch paths are not supported natively yet.');
-    return new SmlibSketchBackend(sm.makeFace(new sm.Wire(pen.edges)), true);
+    // Largest region first: SMLib's xor of a hole with its outer region inverts the faces.
+    const faces = [...pen.loops, pen.edges].filter(l => l.length).map(l => sm.makeFace(new sm.Wire(l))).sort((a, b) => b.area - a.area);
+    return new SmlibSketchBackend(faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), true);
   }
 
   private extrude(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
@@ -303,7 +367,13 @@ export class NativeSmlibLowerer implements FeatureLowerer {
 
   /** Profile and depth of an extrusion given by points, w/h or r. */
   private inlineProfile(sm: Smlib, r: FeatureRecord, p: Param): [Sketch, number] {
-    if (Array.isArray(r.metadata?.points)) return [sm.Polygon(...(r.metadata.points as unknown[][]).map(pt => [num(pt[0]), num(pt[1])] as [number, number]), { align: null }), p('depth')];
+    if (Array.isArray(r.metadata?.points)) {
+      // A self-touching outline is split into simple loops, filled even-odd (polygonLoops.ts).
+      const loops = polygonLoops((r.metadata.points as unknown[][]).map(pt => [num(pt[0]), num(pt[1])] as [number, number]));
+      if (!loops.length) throw new Error('The polygon profile encloses no area.');
+      const faces = loops.map(l => sm.Polygon(...(l as [number, number][]), { align: null }));
+      return [faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), p('depth')];
+    }
     if (r.params.w && r.params.h) return [sm.Rectangle(p('w'), p('h')), p('height')];
     if (r.params.r && r.params.height) return [sm.Circle(p('r')), p('height')];
     throw new Unsupported('This extrusion profile is not supported natively.');
@@ -344,21 +414,35 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     throw new Unsupported(`Edge selector ${JSON.stringify(edgeRef)} is not supported natively; select all edges or a canonical face's edges.`);
   }
 
+  /** Holes on a canonical planar face. The (u, v) frame is OCCT's (holeLowerer buildUvBasis):
+   *  top/bottom u = X, v = Y (v mirrored on the bottom, as before); left/right u = Y, v = Z;
+   *  front/back u = X, v = Z; origin at the face's area centroid. */
   private holes(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
     const p = (name: string) => num(r.params[name]);
     const target = this.input(inputs, 'target').part;
-    const face = this.face(target, r, 'face'), c = face.center(), nrm = face.normalAt();
-    if (Math.abs(nrm.z) < 1 - 1e-9) throw new Unsupported('Native holes are drilled from top or bottom faces only.');
+    const face = this.face(target, r, 'face'), c = face.center(), nr = face.normalAt();
+    const n: Vec3 = [nr.x, nr.y, nr.z];
+    const axis = n.findIndex(v => Math.abs(v) > 1 - 1e-9);
+    if (axis < 0) throw new Unsupported('Native holes are drilled from axis-aligned planar faces only.');
+    const sign = Math.sign(n[axis]);
+    const [uAxis, vAxis] = axis === 2 ? [0, 1] : axis === 0 ? [1, 2] : [0, 2];
+    const vSign = axis === 2 && sign < 0 ? -1 : 1;
     const box = target.bbox(), through = r.params.depthMode !== undefined && p('depthMode') === 0;
-    const span = box.max.z - box.min.z + 2;
+    const lo = [box.min.x, box.min.y, box.min.z], hi = [box.max.x, box.max.y, box.max.z];
+    const span = hi[axis] - lo[axis] + 2;
     const positions = r.kind === 'holes' ? (r.metadata?.positions as { u: unknown; v: unknown }[]).map(q => [num(q.u), num(q.v)]) : [[p('u'), p('v')]];
-    const down = nrm.z > 0 ? -1 : 1;
+    // A Z cylinder turned onto the drill axis (the turn is symmetric for a centred cylinder).
+    const orient = (part: Part) => (axis === 2 ? part : part.rotate(axis === 0 ? sm.Axis.Y : sm.Axis.X, 90));
     let acc = target;
     for (const [u, v] of positions) {
-      const x = c.x + u, y = c.y + v * (nrm.z > 0 ? 1 : -1);
-      const depth = through ? span : p('depth');
-      const drill = (radius: number, length: number) => sm.Cylinder(radius, length + 1).translate([x, y, c.z + down * (length - 1) / 2]);
-      acc = acc.cut(drill(p('diameter') / 2, depth));
+      const entry: Vec3 = [c.x, c.y, c.z];
+      entry[uAxis] += u; entry[vAxis] += v * vSign;
+      const drill = (radius: number, length: number) => {
+        const centre = [...entry] as Vec3;
+        centre[axis] -= sign * (length - 1) / 2; // from 1 above the face to `length` into the body
+        return orient(sm.Cylinder(radius, length + 1)).translate(centre);
+      };
+      acc = acc.cut(drill(p('diameter') / 2, through ? span : p('depth')));
       if (r.params.counterboreDiameter) acc = acc.cut(drill(p('counterboreDiameter') / 2, p('counterboreDepth')));
       if (r.params.countersinkDiameter) throw new Unsupported('Countersinks are not supported natively yet.');
     }
@@ -394,6 +478,18 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     }
     return out;
   }
+}
+
+/** The solid from a planar polygon section (straight edges, holes allowed) to an apex point. */
+function pyramid(sm: Smlib, section: Sketch, apex: Vec3): Part {
+  const sides = [...section.edges()].map(e => {
+    if (e.geomType !== 'line') throw new Unsupported('A loft to a start or end point needs straight-edged sections natively.');
+    const a = e.start, b = e.end;
+    return sm.makeFace(sm.Polyline([a.x, a.y, a.z], [b.x, b.y, b.z], apex, [a.x, a.y, a.z]));
+  });
+  const body = sm.stitch(section, ...sides);
+  if (!(body instanceof sm.Part) || !body.isValid()) throw new Error('loft apex: the pyramid to the start or end point does not close.');
+  return body;
 }
 
 function circularCopies(sm: Smlib, base: Part, spec: Record<string, unknown>): Part[] {
