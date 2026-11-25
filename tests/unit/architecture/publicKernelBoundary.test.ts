@@ -20,7 +20,8 @@ describe('public kernel distribution boundary', () => {
   });
 
   it('packages the generic CLI and player without publishing the product UI', () => {
-    expect(pkg.bin.crispcad).toBe('dist/cli/index.js');
+    expect(pkg.bin['crispcad-lab']).toBe('dist/cli/index.js');
+    expect(pkg.bin.crispcad).toBe('dist/cli/index.js'); // deprecated alias, prints a notice
     expect(pkg.files).toContain('dist/cli');
     expect(pkg.files).toContain('dist/headless-player');
     expect(Object.keys(pkg.exports)).not.toContain('./studio');

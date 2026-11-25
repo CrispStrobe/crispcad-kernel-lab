@@ -1,6 +1,6 @@
 # Geometry kernels
 
-CrispCAD records every model as a feature graph (`FeatureRecord[]`) and lowers it
+The CrispCAD kernel lab records every model as a feature graph (`FeatureRecord[]`) and lowers it
 through a kernel chosen per run. Three kernel ids exist:
 
 | id | geometry | licence of the kernel binary | status |
@@ -11,8 +11,9 @@ through a kernel chosen per run. Three kernel ids exist:
 
 ## Selecting a kernel
 
-- CLI: `crispcad --kernel smlib-native <command> ...` (the option goes before the command).
-- Environment: `CRISPCAD_KERNEL=smlib-native` (CLI, MCP server, library calls).
+- CLI: `crispcad-lab --kernel smlib-native <command> ...` (the option goes before the command).
+- Environment: `CRISPCAD_LAB_KERNEL=smlib-native` (CLI, MCP server, library calls);
+  the older `CRISPCAD_KERNEL` is still read, and `CRISPCAD_LAB_KERNEL` wins when both are set.
 - Library: `buildModel({ code, fileName, kernel: 'smlib-native' })`.
 
 An unknown or unavailable id is an error (`recompute.kernel.unavailable`); nothing
@@ -89,3 +90,21 @@ About 45 call sites in tools still construct the OCCT lowerer directly; they mov
 `occt` until the native kernel covers the catalog and these tools, after which
 `replicad-opencascadejs` can become optional and then be removed, clearing the last
 entry in `scripts/lib/licenceBaseline.json`.
+
+## The exact-kernel package
+
+[`packages/exact-kernel`](../packages/exact-kernel) (`@crispcad/exact-kernel`) is the
+OpenCASCADE-free kernel that CrispCAD consumes: a narrow `ExactKernel` interface
+(primitives, path profiles, extrude, revolve, loft, sweep, Booleans, transforms,
+fillet, chamfer, shell, measures and mass properties, tessellation, STL and exact STEP
+in and out) on SMLib. It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
+replaced by an empty one, so the release tarball contains only MIT and Apache-2.0
+files; its licence test checks the packed tarball. Its tests build the 27 reference
+parts above through the interface at 1e-6 (worst relative volume error 2.5e-15,
+area 1.2e-11). Build and test it with `npm run test:exact-kernel`; releases are
+GitHub release tarballs on `exact-kernel-v*` tags, never npm.
+
+The lab's own `smlib-native` backend (`src/modeling/backends/smlib/`) does not use
+the package yet. Its feature lowering could move onto `ExactKernel` later; the
+package already carries the operations that lowering needs except holes, patterns
+and assemblies, which compose from them.

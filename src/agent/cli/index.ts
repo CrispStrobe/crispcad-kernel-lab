@@ -13,7 +13,8 @@ import './lib/sandboxBoot';
 import '../../modeling/runtime/hostFsNode';
 import '../../shared/runtime/kernelcadVersionNode';
 
-import { maybeReexecWithLargerHeap } from './lib/heapReexec';
+import { HEAP_REEXEC_MARKER_ENV, maybeReexecWithLargerHeap } from './lib/heapReexec';
+import { isDeprecatedBinName } from './lib/binName';
 import { buildProgram } from './program';
 
 // Mesh-heavy commands (parts/export/render/…) OOM at the default ~2 GB heap
@@ -21,6 +22,11 @@ import { buildProgram } from './program';
 // `npm run build:cli` bundles this entry point so `dist/cli/index.js` carries
 // the guard. Fast commands are untouched.
 maybeReexecWithLargerHeap();
+
+// `crispcad` is the old name of this binary; CrispCAD itself now ships a `crispcad` CLI.
+if (isDeprecatedBinName(process.argv[1]) && !process.env[HEAP_REEXEC_MARKER_ENV]) {
+  console.error("crispcad: deprecated name of the CrispCAD kernel lab CLI; use 'crispcad-lab'.");
+}
 
 buildProgram().parseAsync(process.argv).catch(err => {
   console.error(err);

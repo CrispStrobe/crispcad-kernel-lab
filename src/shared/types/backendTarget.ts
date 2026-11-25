@@ -32,11 +32,17 @@ export function isKernelId(value: unknown): value is KernelId {
   return typeof value === 'string' && (KERNEL_IDS as readonly string[]).includes(value);
 }
 
-/** Environment variable that selects the kernel when a caller names none. */
+/** Environment variable that selects the kernel when a caller names none (still honoured). */
 export const KERNEL_ENV_VAR = 'CRISPCAD_KERNEL';
+/** Preferred name of KERNEL_ENV_VAR in the kernel lab; wins when both are set. */
+export const LAB_KERNEL_ENV_VAR = 'CRISPCAD_LAB_KERNEL';
 
-/** The kernel named by CRISPCAD_KERNEL, or undefined when unset/empty. Not validated. */
+/** The kernel named by CRISPCAD_LAB_KERNEL or CRISPCAD_KERNEL, or undefined when unset/empty. Not validated. */
 export function kernelFromEnv(): string | undefined {
-  const value = typeof process === 'undefined' ? undefined : process.env?.[KERNEL_ENV_VAR];
-  return value === undefined || value === '' ? undefined : value;
+  if (typeof process === 'undefined') return undefined;
+  for (const name of [LAB_KERNEL_ENV_VAR, KERNEL_ENV_VAR]) {
+    const value = process.env?.[name];
+    if (value !== undefined && value !== '') return value;
+  }
+  return undefined;
 }
