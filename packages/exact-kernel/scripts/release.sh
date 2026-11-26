@@ -56,8 +56,9 @@ echo "== 3. build, test and pack @crispcad/exact-kernel on the source build"
 mkdir -p "$(dirname "$INSTALLED")"
 cp -R "$BUILD" "$INSTALLED"
 (cd "$PKG" && npm test >"$TMP/test.log" 2>&1) || { tail -60 "$TMP/test.log" >&2; fail "tests failed (log above)"; }
-grep -E "Tests +[0-9]+ passed" "$TMP/test.log" | tail -1
-tarball=$(cd "$PKG" && npm pack --silent --pack-destination "$DEST")
+perl -pe 's/\e\[[0-9;]*m//g' "$TMP/test.log" | grep -E "Tests +[0-9]+ passed" | tail -1
+# (prepack prints the build summary before the file name)
+tarball=$(cd "$PKG" && npm pack --silent --pack-destination "$DEST" | tail -1)
 mkdir "$TMP/packed" && tar -xzf "$DEST/$tarball" -C "$TMP/packed"
 [ "$(shasum -a 256 "$TMP/packed/package/dist/smlibwasm.wasm" | awk '{print $1}')" = "$WASM_SHA" ] || fail "the tarball's dist/smlibwasm.wasm is not the pinned module"
 node -e "const b = require('$TMP/packed/package/dist/bundle-inputs.json'); if (b.build.from !== 'source') { console.error('bundle-inputs.json: build.from is ' + b.build.from); process.exit(1); }" || fail "the tarball was not built from the source build"
