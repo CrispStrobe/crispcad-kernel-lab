@@ -171,7 +171,12 @@ package inserts vertices the same way for `profile.path` sections of lines and o
 `profile.polygon` sections with different counts (`compatible-sections.ts`, a copy), but since
 0.1.6 re-starts equal sections only with `loft(…, { pairing: 'closest' })`: its default,
 `'authored'`, joins vertex i to vertex i as drawn, which is what CrispCAD's CAD Script lofts are
-defined by (0.1.5 re-started them always and broke them). Per part against OCCT
+defined by (0.1.5 re-started them always and broke them). Since 0.1.7 `'closest'` also re-starts
+single-outline sections with curved edges and equal edge counts by the same rule (vertices
+compared, centred on the outline's curve centroid; lines and circular arcs re-made in the direction
+they run), leaves sections without a corner as drawn, and refuses curved sections with different
+edge counts (`unsupported`): ThruSections would split curved edges by its polar rule, which the
+package does only for straight ones. Per part against OCCT
 (`experiments/kernel-qualification/partVolumes.ts`, which builds a model on both kernels and
 prints the volumes part by part):
 

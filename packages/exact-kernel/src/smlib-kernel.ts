@@ -16,10 +16,10 @@
 // lazily in createSmlibKernel and never at module load.
 import {
   ExactKernelError,
-  type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type MassProperties, type TriangleMesh, type Vec3,
+  type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
-import { call, createContext, outlineOf, partOf, polygonOf, sketchOf, solidOf, vec, type Ctx, type Part } from './smlib-context.ts';
-import { compatibleSections } from './compatible-sections.ts';
+import { call, createContext, outlineOf, partOf, polygonOf, sketchOf, solidOf, vec, type Ctx, type Part, type Smlib } from './smlib-context.ts';
+import { compatibleSections, originOrders, type LoftPairing, type P3 } from './compatible-sections.ts';
 import { exactBoundingBox } from './bbox.ts';
 import { planarFaces } from './polytope.ts';
 import { createProfileOps } from './smlib-profile.ts';
@@ -100,30 +100,46 @@ async function wasmSource(options: SmlibLoadOptions): Promise<WebAssembly.Module
 }
 
 /**
+ * Where the pinned loader hands the module its heap-resize function (Emscripten's
+ * `_emscripten_resize_heap`): the import `a`.`D`. Emscripten minifies import names when it links,
+ * so the module and its loader agree on these keys, and both are pinned by sha256
+ * (BUILD-PROVENANCE.json: `wasm/smlibwasm.wasm`, `wasm/smlibwasm.mjs`); scripts/build.mjs checks
+ * the loader's import table for this pair before it bundles it. The import is found by these keys,
+ * never by the function's `name`: a minifier that bundles this package renames functions, but it
+ * keeps property keys (the WebAssembly module looks its imports up by them).
+ */
+const RESIZE_HEAP_IMPORT = { module: 'a', name: 'D' } as const;
+
+/**
  * smlibwasm's `instantiateWasm` hook, with the instance's memory held to `maxBytes`. Emscripten
- * grows the heap through its `_emscripten_resize_heap` import, which calls `memory.grow`: the
- * import records the size asked for, and the instance's `grow` refuses a size past the ceiling (a
- * RangeError, which Emscripten takes as a failed allocation) and otherwise grows at most to the
- * ceiling (Emscripten asks for 5 to 20 % more than it needs).
+ * grows the heap only through its heap-resize import (RESIZE_HEAP_IMPORT), which calls
+ * `memory.grow` (up to four times, asking for 20, 10, 6.7 and 5 % over the old size, never less
+ * than the size needed): the import records the size asked for while it runs, and the instance's
+ * `grow` refuses a size past the ceiling (a RangeError, which Emscripten takes as a failed
+ * allocation) and otherwise grows at most to the ceiling. A `grow` outside that import is refused,
+ * so a loader whose import table were not the pinned one fails as out of memory, never past the
+ * ceiling.
  */
 function cappedInstantiation(options: SmlibLoadOptions, maxBytes: number, fail: (e: Error) => void) {
   const capPages = Math.floor(maxBytes / WASM_PAGE);
   return (imports: WebAssembly.Imports, receive: (instance: WebAssembly.Instance) => void) => {
-    let requested = 0, hooked = false;
-    for (const mod of Object.values(imports) as Record<string, unknown>[]) {
-      for (const [key, fn] of Object.entries(mod)) {
-        if (typeof fn === 'function' && fn.name === '_emscripten_resize_heap') {
-          mod[key] = (size: number) => { requested = size >>> 0; return (fn as (size: number) => number)(size); };
-          hooked = true;
-        }
-      }
+    let requested: number | undefined;
+    const mod = imports[RESIZE_HEAP_IMPORT.module] as Record<string, unknown> | undefined;
+    const resize = mod?.[RESIZE_HEAP_IMPORT.name];
+    if (mod && typeof resize === 'function') {
+      mod[RESIZE_HEAP_IMPORT.name] = (size: number) => {
+        requested = size >>> 0;
+        try { return (resize as (size: number) => number)(size); } finally { requested = undefined; }
+      };
     }
     (async () => {
-      if (!hooked) throw new Error('the loader has no _emscripten_resize_heap import to hold the memory ceiling with');
+      if (!mod || typeof resize !== 'function') throw new Error(`the loader has no heap-resize import ${RESIZE_HEAP_IMPORT.module}.${RESIZE_HEAP_IMPORT.name} to hold the memory ceiling with`);
       const source = await wasmSource(options);
-      const instance = source instanceof WebAssembly.Module
-        ? await WebAssembly.instantiate(source, imports)
-        : (await WebAssembly.instantiate(source as BufferSource, imports)).instance;
+      const module = source instanceof WebAssembly.Module ? source : await WebAssembly.compile(source as BufferSource);
+      if (!WebAssembly.Module.imports(module).some(i => i.module === RESIZE_HEAP_IMPORT.module && i.name === RESIZE_HEAP_IMPORT.name && i.kind === 'function')) {
+        throw new Error(`the module imports no function ${RESIZE_HEAP_IMPORT.module}.${RESIZE_HEAP_IMPORT.name}: it is not the pinned smlibwasm build`);
+      }
+      const instance = await WebAssembly.instantiate(module, imports);
       const memory = Object.values(instance.exports).find((e): e is WebAssembly.Memory => e instanceof WebAssembly.Memory);
       if (!memory) throw new Error('the module exports no memory');
       if (memory.buffer.byteLength > capPages * WASM_PAGE) throw new Error(`the memory ceiling ${maxBytes} bytes is below the module's initial ${memory.buffer.byteLength} bytes`);
@@ -132,7 +148,7 @@ function cappedInstantiation(options: SmlibLoadOptions, maxBytes: number, fail: 
         configurable: true,
         value: (pages: number) => {
           const current = memory.buffer.byteLength / WASM_PAGE;
-          if (Math.ceil(requested / WASM_PAGE) > capPages || current >= capPages) throw new RangeError(`WebAssembly memory ceiling of ${capPages * WASM_PAGE} bytes reached`);
+          if (requested === undefined || Math.ceil(requested / WASM_PAGE) > capPages || current >= capPages) throw new RangeError(`WebAssembly memory ceiling of ${capPages * WASM_PAGE} bytes reached`);
           return grow(Math.min(pages, capPages - current));
         },
       });
@@ -214,6 +230,103 @@ function primitives({ sm, solid }: Ctx): Pick<ExactKernel, 'box' | 'cylinder' | 
   };
 }
 
+/** Sections of straight edges, matched by compatibleSections, as wires of lines. */
+function lineWiresOf(sm: Smlib, sections: readonly (readonly P3[])[], pairing: LoftPairing) {
+  const matched = compatibleSections(sections, pairing) ?? invalid('The loft sections cannot be matched vertex to vertex.');
+  return matched.map(pts => new sm.Wire(pts.map((p, k) => sm.Line(vec(p), vec(pts[(k + 1) % pts.length]!)))));
+}
+
+/** Angle (radians) below which two edges meeting at a vertex count as tangent: the vertex is no corner. */
+const SMOOTH_ANGLE = 1e-6;
+
+type Edge = InstanceType<Smlib['Edge']>;
+const xyz = (v: { x: number; y: number; z: number }): P3 => [v.x, v.y, v.z];
+
+/**
+ * pairing 'closest' for sections that are not all straight-edged polygon or path profiles: each
+ * section must be a single outline (a path profile's outline as drawn, or the boundary of a
+ * profile that is one region without holes: circle, rectangle, rounded rectangle, ...). Then:
+ *
+ * - all edges straight: as polygons (compatibleSections; different counts by the polar rule);
+ * - some edge curved, every section without a corner (a vertex where the edges meet at an angle,
+ *   more than SMOOTH_ANGLE): undefined, the loft takes the sections as drawn (OCCT re-starts
+ *   only sections with a corner; a circle has no vertex to re-start at);
+ * - some edge curved, equal edge counts: each section re-started as straight-edged sections are
+ *   (computeOrigin: the vertex and direction where its vertices lie closest to those of the section
+ *   before, centred on the centroid of its outline as a curve), keeping every edge's curve (an
+ *   edge run backward is the same curve reversed);
+ * - some edge curved, different edge counts: refused ('unsupported'). OCCT would split curved
+ *   edges by its polar rule; this kernel does that only for straight edges.
+ */
+function closestCurvedSectionsOf(sm: Smlib, sections: readonly LoftSection[]) {
+  const loops = sections.map((s, i) => edgeLoop(s, i));
+  if (loops.every(l => l.every(e => e.geomType === 'line'))) {
+    return lineWiresOf(sm, loops.map(l => l.map(e => xyz(e.start))), 'closest');
+  }
+  if (loops.some(l => l.length !== loops[0]!.length)) {
+    throw new ExactKernelError('unsupported', `Loft pairing 'closest' matches sections with different edge counts (${loops.map(l => l.length).join(', ')}) only when every edge is straight; these have curved edges. Use pairing 'authored', or give the sections equal edge counts.`);
+  }
+  const corner = (l: readonly Edge[]) => l.some((e, k) => {
+    const before = l[(k + l.length - 1) % l.length]!.tangentAt(1), after = e.tangentAt(0);
+    return Math.acos(Math.max(-1, Math.min(1, before.x * after.x + before.y * after.y + before.z * after.z))) > SMOOTH_ANGLE;
+  });
+  if (!loops.some(corner)) return undefined;
+  const frames = loops.map(l => ({ pos: curveCentroid(l), axis: [0, 0, 1] as P3 }));
+  const orders = originOrders(loops.map(l => l.map(e => xyz(e.start))), frames);
+  const native = sections.map(s => !!outlineOf(s.profile)); // edges as the path drew them
+  return loops.map((l, i) => {
+    const { start, forward } = orders[i]!, m = l.length;
+    // Forward from vertex j: edges j, j + 1, ...; backward: edges j - 1, j - 2, ..., each run the
+    // other way. SMLib's loft follows each edge's curve parameter, not its orientation in the wire
+    // (an `Edge.reversed()` arc lofts as the arc forward), so lines and circular arcs are made anew
+    // from their ends and midpoint in the direction they are run in.
+    const edges = Array.from({ length: m }, (_, k) => forward ? l[(start + k) % m]! : l[(((start - 1 - k) % m) + m) % m]!);
+    return new sm.Wire(edges.map(e => {
+      const [a, b] = forward ? [e.start, e.end] : [e.end, e.start];
+      if (e.geomType === 'line') return sm.Line(xyz(a), xyz(b));
+      if (e.geomType === 'circle') return sm.ThreePointArc(xyz(a), xyz(e.pointAt(0.5)), xyz(b));
+      if (forward && native[i]) return e;
+      throw new ExactKernelError('unsupported', `Loft pairing 'closest' would run section ${i + 1} ${forward ? 'from another vertex' : 'the other way round'}, and it has a ${e.geomType} edge, which this kernel re-starts only as drawn in a path profile; it re-starts lines and circular arcs. Use pairing 'authored', or draw the section from the vertex and in the direction it pairs with.`);
+    }));
+  });
+}
+
+/** A section's outline as a closed chain of edges (edge k ends where edge k + 1 starts), placed at `at`. */
+function edgeLoop(section: LoftSection, index: number): Edge[] {
+  const unsupported = (why: string): never => { throw new ExactKernelError('unsupported', `Loft pairing 'closest' needs single-outline sections; section ${index + 1} ${why}. Use pairing 'authored' for it.`); };
+  let wire = outlineOf(section.profile);
+  if (!wire) {
+    const faces = [...sketchOf(section.profile).faces()];
+    if (faces.length !== 1) unsupported(`has ${faces.length} regions`);
+    if ([...faces[0]!.innerWires()].length) unsupported('has holes');
+    wire = faces[0]!.outerWire();
+  }
+  const edges = [...wire.translate(vec(section.at)).edges()];
+  const near = (a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) <= 1e-7;
+  for (let k = 0; k < edges.length; k++) {
+    const e = edges[k]!, next = edges[(k + 1) % edges.length]!;
+    if (!near(e.end, next.start)) unsupported('is not one closed chain of edges');
+    if (e.isClosed && edges.length > 1) unsupported('has a closed edge among others');
+  }
+  return edges;
+}
+
+/** Centroid of a closed chain of edges as a curve (Simpson's rule along each edge's length). */
+function curveCentroid(edges: readonly Edge[]): P3 {
+  const N = 64; // intervals per edge (even)
+  let len = 0;
+  const c: [number, number, number] = [0, 0, 0];
+  for (const e of edges) {
+    const l = e.length;
+    for (let k = 0; k <= N; k++) {
+      const w = (k === 0 || k === N ? 1 : k % 2 ? 4 : 2) * l / (3 * N), p = e.pointAt(k / N);
+      c[0] += w * p.x; c[1] += w * p.y; c[2] += w * p.z;
+    }
+    len += l;
+  }
+  return [c[0] / len, c[1] / len, c[2] / len];
+}
+
 function sweeps({ sm, solid }: Ctx): Pick<ExactKernel, 'extrude' | 'revolve' | 'loft' | 'sweep'> {
   return {
     extrude(p, height) { positive('Extrusion height', height); return call('extrude', () => solid('extrude', sm.extrude(sketchOf(p), height))); },
@@ -230,25 +343,27 @@ function sweeps({ sm, solid }: Ctx): Pick<ExactKernel, 'extrude' | 'revolve' | '
     loft(sections, options = {}) {
       if (!Array.isArray(sections) || sections.length < 2) invalid('A loft needs at least two sections.');
       for (const s of sections) finite('Loft section position', ...s.at);
+      const pairing = options.pairing ?? 'authored';
+      if (pairing !== 'authored' && pairing !== 'closest') invalid(`Unknown loft pairing '${String(pairing)}' (authored or closest).`);
       return call('loft', () => sm.scope(() => {
+        const ruled = !!options.ruled;
         // Straight-edged single outlines with different vertex counts get vertices inserted as
         // OCCT's ThruSections inserts them; with equal counts they are re-started as OCCT does only
         // for pairing 'closest' (compatible-sections.ts). 'authored' equal counts take the path below,
         // as in 0.1.4: vertex i joins vertex i as drawn.
-        const pairing = options.pairing ?? 'authored';
-        if (pairing !== 'authored' && pairing !== 'closest') invalid(`Unknown loft pairing '${String(pairing)}' (authored or closest).`);
         const counts = sections.map(s => polygonOf(s.profile)?.length);
         const unequal = counts.some(c => c !== counts[0]);
         if (counts.every(c => c !== undefined) && (unequal || pairing === 'closest')) {
-          const matched = compatibleSections(sections.map(s => polygonOf(s.profile)!.map(p => [p[0] + s.at[0], p[1] + s.at[1], p[2] + s.at[2]] as const)), pairing)
-            ?? invalid('The loft sections cannot be matched vertex to vertex.');
-          const wires = matched.map(pts => new sm.Wire(pts.map((p, k) => sm.Line(vec(p), vec(pts[(k + 1) % pts.length]!)))));
-          return solid('loft', sm.loft(wires, { ruled: !!options.ruled }));
+          return solid('loft', sm.loft(lineWiresOf(sm, sections.map(s => polygonOf(s.profile)!.map(p => [p[0] + s.at[0], p[1] + s.at[1], p[2] + s.at[2]] as const)), pairing), { ruled }));
+        }
+        if (pairing === 'closest') {
+          const closest = closestCurvedSectionsOf(sm, sections);
+          if (closest) return solid('loft', sm.loft(closest, { ruled }));
         }
         // Path profiles loft through their outlines as drawn, so vertex i joins vertex i (ProfileHandle).
         const outlines = sections.every(s => outlineOf(s.profile)) ? sections.map(s => outlineOf(s.profile)!.translate(vec(s.at))) : undefined;
         const profiles = outlines ?? sections.map(s => sketchOf(s.profile).translate(vec(s.at)));
-        return solid('loft', sm.loft(profiles, { ruled: !!options.ruled }));
+        return solid('loft', sm.loft(profiles, { ruled }));
       }));
     },
     sweep(p, rail) {

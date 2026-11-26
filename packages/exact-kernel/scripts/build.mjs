@@ -42,6 +42,16 @@ const smlib = JSON.parse(readFileSync(join(smlibDir, 'package.json'), 'utf8'));
 if (smlib.version !== provenance.version) throw new Error(`smlibwasm ${smlib.version} is at ${smlibDir}; this package pins ${provenance.version}.`);
 // Everything the bundle reads: the JavaScript (not the font), the loader and the module.
 assertPinned(smlibDir, smlibDir, f => f.startsWith('wasm/') || (f.startsWith('dist/') && f.endsWith('.js') && f !== 'dist/_fonts.js'));
+// The memory ceiling (src/smlib-kernel.ts, RESIZE_HEAP_IMPORT) wraps the loader's heap-resize
+// import by its keys in the module's import table, not by the function's name, which minifiers
+// rename. Those keys are fixed by the pinned build; refuse a loader that hands it over elsewhere.
+{
+  const loader = readFileSync(join(smlibDir, 'wasm/smlibwasm.mjs'), 'utf8');
+  const table = /var wasmImports=\{([^}]*)\}/.exec(loader)?.[1] ?? '';
+  if (!/\{a:wasmImports\}/.test(loader) || !/(^|,)D:_emscripten_resize_heap(,|$)/.test(table)) {
+    throw new Error('smlibwasm\'s loader does not pass _emscripten_resize_heap as import a.D: update RESIZE_HEAP_IMPORT in src/smlib-kernel.ts.');
+  }
+}
 const sourceBuild = existsSync(join(smlibDir, '.source-build.json')) ? JSON.parse(readFileSync(join(smlibDir, '.source-build.json'), 'utf8')) : undefined;
 
 rmSync(dist, { recursive: true, force: true });

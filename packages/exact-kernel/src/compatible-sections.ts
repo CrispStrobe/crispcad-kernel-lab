@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 CrispCAD contributors
 //
-// A copy of src/modeling/backends/smlib/compatibleSections.ts in the CrispCAD kernel lab.
+// A copy of src/modeling/backends/smlib/compatibleSections.ts in the CrispCAD kernel lab, with
+// computeOrigin split into originOrders and reorder (0.1.7: the kernel re-starts sections with
+// curved edges by the same rule).
 //
 // Equalise the vertex counts of closed polygonal loft sections the way OpenCASCADE's
 // ThruSections does before it lofts them, so that a ruled loft joins the same points.
@@ -266,14 +268,34 @@ export function compatibleSections(sections: readonly (readonly P3[])[], pairing
   return out;
 }
 
+/** Where and in which direction a section is re-started: vertex `start` first, then on forward
+ *  (`start + 1`, ...) or backward (`start - 1`, ...). */
+export interface SectionOrder { start: number; forward: boolean }
+/** A section's centre and unit normal (see planeOf). */
+export interface SectionFrame { pos: P3; axis: P3 }
+
 /** Equal vertex counts: re-start each section where it lies closest to the one before. */
 export function computeOrigin(sections: readonly (readonly P3[])[]): P3[][] {
-  const first = planeOf(sections[0]!);
-  const out: P3[][] = [[...sections[0]!]];
+  return originOrders(sections).map((o, i) => reorder(sections[i]!, o));
+}
+
+/** `points` re-started as `order` says. */
+export const reorder = <T>(points: readonly T[], { start, forward }: SectionOrder): T[] =>
+  Array.from({ length: points.length }, (_, k) => points[forward ? (start + k) % points.length : (((start - k) % points.length) + points.length) % points.length]!);
+
+/**
+ * computeOrigin's choice for each section (the first keeps vertex 0, forward), from the sections'
+ * vertices and their frames: by default the polygon's (planeOf); sections with curved edges pass
+ * the centroid of their outline as a curve.
+ */
+export function originOrders(sections: readonly (readonly P3[])[], frames: readonly SectionFrame[] = sections.map(planeOf)): SectionOrder[] {
+  const first = frames[0]!;
+  const orders: SectionOrder[] = [{ start: 0, forward: true }];
+  let prev: readonly P3[] = sections[0]!;
   let prevBary = first.pos;
   for (let i = 1; i < sections.length; i++) {
-    const cur = sections[i]!, len = cur.length, prev = out[i - 1]!;
-    let bary = planeOf(cur).pos;
+    const cur = sections[i]!, len = cur.length;
+    let bary = frames[i]!.pos;
     const v = sub(bary, prevBary);
     bary = sub(bary, mul(first.axis, dot(v, first.axis)));
     const offset = sub(prevBary, bary);
@@ -289,8 +311,10 @@ export function computeOrigin(sections: readonly (readonly P3[])[]): P3[][] {
       const b = sum(k => (((j - k) % len) + len) % len);
       if (b < best) { best = b; jmin = j; forward = false; }
     }
-    out.push(Array.from({ length: len }, (_, k) => cur[forward ? (jmin + k) % len : (((jmin - k) % len) + len) % len]!));
+    const order = { start: jmin, forward };
+    orders.push(order);
+    prev = reorder(cur, order);
     prevBary = bary;
   }
-  return out;
+  return orders;
 }

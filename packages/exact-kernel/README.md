@@ -29,7 +29,7 @@ next to the bundle. In a worker, compile the module once and pass it:
 `createSmlibKernel({ wasmModule })` (also `wasmBinary`, `locateFile`). Options count only on
 the first call in a process or worker.
 
-Limits (0.1.6):
+Limits (since 0.1.6):
 
 ```ts
 const k = await createSmlibKernel({ maxMemoryBytes: 512 * 2 ** 20, guardSeconds: 10 });
@@ -42,7 +42,10 @@ k.setGuardSeconds(30);     // returns the old value (10); k.guardSeconds() reads
   memory", SMLib's `SM_ERR_OUT_OF_MEMORY`; the message still names the module's own 4096 MB
   maximum) instead of growing; replace the kernel (its worker) after that. It is held at
   instantiation, on the instance: smlibwasm's `instantiateWasm` hook wraps the loader's
-  heap-resize import and the instance memory's `grow`. **The module's bytes are not changed**
+  heap-resize import and the instance memory's `grow`. Since 0.1.7 that import is found by its
+  keys in the module's import table (`a`.`D`, fixed by the pinned build and checked by
+  `scripts/build.mjs`), not by the function's name, so the ceiling also works when an app's
+  bundler minifies this package (`tests/limits-minified.test.ts`); no `keepNames` is needed. **The module's bytes are not changed**
   (`dist/smlibwasm.wasm` is the pinned build, `BUILD-PROVENANCE.json`), so a host need not
   rewrite the memory section any more. It works with `wasmModule`, `wasmBinary`, `locateFile` or
   the default file; it covers this kernel, not smlibwasm's probe worker (below). One ceiling per
@@ -133,6 +136,9 @@ Nothing falls back to a mesh.
 | `tests/bbox.test.ts` | `bbox` of spheres, tori, cylinders, cones and ellipsoids turned about six axes against closed forms (1e-9 of the size; ellipsoids 1e-7), and of a turned hemisphere. |
 | `tests/polyhedra.test.ts` | Loft polyhedra as CrispCAD lowers them (six-decimal points, hull for convex ones): the chandelier canopy frustum and 4-section 10/12/16-gon rollers 30 mm to 10 m long against closed-form volume and area (1e-6); non-planar polyhedron faces; hull closure, planarity, Euler characteristic and budget. |
 | `tests/no-font.test.ts` | The bundle's font module is empty; `text` is `unsupported`; fillet + shell + STEP round trip still work. |
+| `tests/limits.test.ts` | `maxMemoryBytes` (80 MiB) ends a 261,124-triangle tessellation with an out-of-memory error without growing past it, and the kernel builds afterwards; `guardSeconds`; one ceiling per process; the shipped module is the pinned build. |
+| `tests/limits-minified.test.ts` | The same ceiling on every `dist/*.js` minified by esbuild (the loader's function names gone), as an app's production build bundles it. |
+| `tests/loft-pairing.test.ts` | `'authored'` keeps vertex i → i (the beacon lamp's ruled volume, the 0.1.4 smooth surfaces); `'closest'` re-starts straight and curved sections (an arch with an arc, drawn from another vertex or clockwise, equals the arch drawn from the closest vertex; circles and rounded rectangles stay as drawn; a rectangle pairs as a polygon) and refuses curved sections with different edge counts, holes and splines run backward. |
 | `tests/licence.test.ts` | `npm pack`s the package, unpacks the tarball and fails on any file without a known MIT or Apache-2.0 licence, on copyleft or font licence texts, on any of the upstream font's data, on runtime dependencies, and on any reference to OpenCASCADE or its JavaScript bindings outside smlibwasm's `.brep` file-format strings. |
 
 Results with `@classcad/smlibwasm` 0.6.2 (Apple M1, Node 26.4): 27/27 parts, worst relative
@@ -140,6 +146,26 @@ volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
 
+- **0.1.7**: the memory ceiling works in minified bundles. 0.1.6 found the loader's
+  `_emscripten_resize_heap` import by the function's name, which a minifier renames: in
+  CrispCAD's production build the kernel refused to load with a ceiling until the app kept the
+  package's names. The import is now taken by its keys in the module's import table (`a`.`D`,
+  which the pinned loader and module agree on; the build refuses a loader that differs), the
+  module's imports are checked for it, and memory growth outside that import is refused (an
+  allocation failure, never growth past the ceiling). `tests/limits-minified.test.ts` minifies
+  every `dist/*.js` with esbuild, checks the name is gone and runs the ceiling on it.
+  `loft(…, { pairing: 'closest' })` now handles curved section edges, which 0.1.6 left as drawn
+  without saying so: sections must each be a single outline (a path profile, a one-contour
+  polygon, or a profile that is one region without holes: rectangle, circle, rounded rectangle,
+  …). All-straight sections are paired as polygons (now also rectangles and other straight-edged
+  profiles that are not polygons); sections with a curved edge and equal edge counts are
+  re-started at the vertex and in the direction where their vertices lie closest to the section
+  before (centred on the outline's curve centroid), lines and circular arcs re-made in the
+  direction they are run in; sections without a corner (circles, rounded rectangles) stay as drawn.
+  Refused with `unsupported`: curved sections with different edge counts (OpenCASCADE splits
+  curved edges by its polar rule; this kernel does so only for straight ones), a section with
+  holes or several regions, and a spline or ellipse edge that would have to run from another
+  vertex than a path drew it from, or backward. The default `'authored'` is unchanged.
 - **0.1.6**: `loft` takes `pairing: 'authored' | 'closest'`, default `'authored'`, which restores
   0.1.4's vertex i → i for sections with equal vertex counts. 0.1.5 re-started such sections as
   OpenCASCADE does whenever they were straight-edged, and built polygon sections as wires of lines
