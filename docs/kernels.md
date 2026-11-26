@@ -73,6 +73,21 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
 - Kernel selection for the 27 parts, with timings, against WASMLib:
   `experiments/kernel-qualification/`.
 
+## Outlines that cross themselves
+
+A profile outline that crosses itself (a bow tie, a pentagram) bounds no region. OpenCASCADE
+builds a face from it anyway: the extruded solid fails BRepCheck, and its volume is the
+winding-weighted area, which is neither a nonzero nor an even-odd fill (the bow tie's two lobes
+of opposite orientation subtract, a pentagram's centre counts twice). SMLib did the same, with
+the sign of the volume following the orientation. For `alpine-expedition/alpine-helmet`'s chin
+straps, a bow tie with lobes of 493 and 89 mm² extruded 14 mm, OCCT gives +5656 mm³ for both and
+the native build gave -5656 and +5656 (summing to 0), both with area 4,376.8 mm²; a fill of
+both lobes would be 8,148 mm³. Since there is no valid result to match, `smlib-native` and
+`@crispcad/exact-kernel` 0.1.3 refuse such outlines (`recompute.lowering.exception`, with the
+crossing point; `invalid-input` in the package). Outlines that only touch themselves (a shared
+vertex, a vertex on another edge, an edge running back along another) still build. The check
+is `src/modeling/backends/smlib/profileCrossing.ts`, a copy of the package's `outline.ts`.
+
 ## Mated assemblies
 
 The mate solver is kernel-agnostic: `mateFk` works on connector frames, mate types,
@@ -90,7 +105,8 @@ fastened chain against OCCT).
 ## What still needs `occt`
 
 `smlib-native` covers primitives, booleans, transforms, sketches (several loops fill
-even-odd; self-touching polygon outlines are split into simple loops) with extrude /
+even-odd; self-touching polygon outlines are split into simple loops; outlines that cross
+themselves are refused, see below) with extrude /
 revolve / loft (sections on XY, YZ or XZ; ruled lofts to a `startPoint` / `endPoint`) /
 sweep (polyline rails, and `spine: 'helix'` axial or transverse about X, Y or Z), fillet and
 chamfer on all edges, shell, holes on any canonical face (top, bottom, left, right, front,
@@ -120,7 +136,8 @@ entry in `scripts/lib/licenceBaseline.json`.
 OpenCASCADE-free kernel that CrispCAD consumes: a narrow `ExactKernel` interface
 (primitives, path profiles, extrude, revolve, loft, sweep, Booleans, transforms,
 fillet, chamfer, shell, measures and mass properties, tessellation, STL and exact STEP
-in and out) on SMLib. 0.1.1 makes `bbox` exact (0.1.2 makes it fast again on trimmed curved bodies), `convexHull` robust for long multi-section
+in and out) on SMLib. 0.1.1 makes `bbox` exact (0.1.2 makes it fast again on trimmed curved bodies; 0.1.3 refuses
+profile outlines that cross themselves), `convexHull` robust for long multi-section
 lofts (exact-planarity face merging, 1024-point budget) and splits non-planar polyhedron
 faces; see its README. A draft upstream report for the two smlibwasm problems found on the
 way (rotated-sphere `bbox`, hole-first `xor`) is in
