@@ -38,7 +38,7 @@ about world Z.
 | Group | Operations |
 | --- | --- |
 | Primitives | `box`, `cylinder`, `cone` (frustum, one radius may be 0), `sphere`, `torus`, `polyhedron` (a face that is not planar within 1e-9 is split into triangles) |
-| Profiles (`k.profile`) | `polygon` (even-odd, holes), `circle`, `rectangle`, `roundedRectangle`, `path` (lines, three-point / radius / sagitta arcs, splines), `text` (always `unsupported`: no font), 2D `union`/`subtract`/`intersect`/`hull`/`offset`, `translate`/`rotate`/`scale`, `bounds`, `area` |
+| Profiles (`k.profile`) | `polygon` (even-odd, holes; a contour that crosses itself is refused), `circle`, `rectangle`, `roundedRectangle`, `path` (lines, three-point / radius / sagitta arcs, splines; refused if it crosses itself), `text` (always `unsupported`: no font), 2D `union`/`subtract`/`intersect`/`hull`/`offset`, `translate`/`rotate`/`scale`, `bounds`, `area` |
 | Solids from profiles | `extrude`, `revolve`, `loft` (smooth or ruled, XY sections), `sweep` (polyline rail) |
 | Booleans, transforms | `union`, `subtract`, `intersect`, `splitByPlane`, `translate`, `rotate` (axis, pivot), `mirror` (normal, origin), `scale` (per axis, signed) |
 | Features | `fillet`, `chamfer` (all edges or one planar face's edges), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
@@ -91,6 +91,13 @@ volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
 
+- **0.1.3**: `profile.polygon` and `profile.path` refuse an outline that crosses itself with
+  `invalid-input` and the crossing point. Such an outline (a bow tie, a pentagram) bounds no
+  region, but SMLib built a face from it whose extrusion measured the winding-weighted area: the
+  catalog's `alpine-expedition/alpine-helmet` chin strap, a bow tie with lobes of 493 and
+  89 mm², extruded 14 mm, came out at volume -5656 mm³ (5656 mirrored) and area 4,376.8 mm²,
+  and `isValid` was false. Outlines that only touch themselves (a vertex on another edge,
+  contours that overlap each other) are still built.
 - **0.1.2**: `bbox` is fast again on trimmed curved bodies. 0.1.1 sampled B-spline edges with
   SMLib's `Edge.pointAt`, which takes a fraction of the arc length and integrates the length on
   every call (up to 0.4 s a point on the long intersection curve of an ellipsoid cut by a box), so

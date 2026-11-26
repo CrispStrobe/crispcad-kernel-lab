@@ -5,6 +5,7 @@
 // sketch lowering (src/modeling/backends/smlib/nativeLowerer.ts, SKETCH_STEPS).
 import { ExactKernelError, type ExactProfileOps, type PathSegment, type Vec2 } from './exact-kernel.ts';
 import { call, profileOf, sketchOf, type Smlib } from './smlib-context.ts';
+import { outlineCrossing, type OutlinePoint } from './outline.ts';
 import { finite, invalid, positive } from './validate.ts';
 
 type Edge = InstanceType<Smlib['Edge']>;
@@ -28,6 +29,26 @@ function pathEdges(sm: Smlib, start: Vec2, segments: readonly PathSegment[]): Ed
   return edges;
 }
 
+/** Refuse an outline that crosses itself: it bounds no region (outline.ts). */
+function refuseCrossing(what: string, outline: readonly OutlinePoint[]): void {
+  const crossing = outlineCrossing(outline);
+  if (!crossing) return;
+  const [x, y] = crossing.at.map(v => +v.toPrecision(6));
+  invalid(`The ${what} crosses itself at (${x}, ${y}), so it bounds no region. Reorder its points so no edges cross, or give each region its own contour.`);
+}
+
+/** Points along a closed loop of edges: each line's start, 32 points along each curved edge. */
+function loopOutline(edges: readonly Edge[]): OutlinePoint[] {
+  const out: OutlinePoint[] = [];
+  for (const edge of edges) {
+    const a = edge.pointAt(0), b = edge.pointAt(1);
+    const straight = Math.abs(edge.length - Math.hypot(b.x - a.x, b.y - a.y)) <= 1e-9 * Math.max(1, edge.length);
+    const n = straight ? 1 : 32;
+    for (let k = 0; k < n; k++) { const p = k ? edge.pointAt(k / n) : a; out.push([p.x, p.y]); }
+  }
+  return out;
+}
+
 export function createProfileOps(sm: Smlib): ExactProfileOps {
   return {
     polygon(contours) {
@@ -35,6 +56,7 @@ export function createProfileOps(sm: Smlib): ExactProfileOps {
       for (const c of contours) {
         if (!Array.isArray(c) || c.length < 3) invalid('Each polygon contour needs at least three points.');
         for (const p of c) finite('Polygon points', p[0], p[1]);
+        refuseCrossing('polygon contour', c);
       }
       return call('Polygon', () => {
         // Even-odd fill: the symmetric difference of the contour regions, largest first (SMLib's
@@ -56,7 +78,11 @@ export function createProfileOps(sm: Smlib): ExactProfileOps {
     path(start, segments) {
       if (!Array.isArray(segments) || !segments.length) invalid('A path profile needs at least one segment.');
       finite('Path start', ...(Array.isArray(start) ? start : [NaN]));
-      return call('path', () => profileOf(sm.makeFace(new sm.Wire(pathEdges(sm, start, segments)))));
+      return call('path', () => {
+        const edges = pathEdges(sm, start, segments);
+        refuseCrossing('path outline', loopOutline(edges));
+        return profileOf(sm.makeFace(new sm.Wire(edges)));
+      });
     },
     text(content, size) {
       if (typeof content !== 'string' || !content.length) invalid('Text must be a non-empty string.');

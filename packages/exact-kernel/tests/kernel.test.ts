@@ -138,6 +138,22 @@ describe('malformed input is rejected cleanly and the kernel stays usable', () =
     rejects(() => k.scope(() => k.splitByPlane(k.box([1, 1, 1]), [0, 0, 0], 0)), 'invalid-input');
     rejects(() => k.tessellate(k.box([1, 1, 1]), { tolerance: -1 }), 'invalid-input');
   });
+  it('refuses outlines that cross themselves instead of building a solid of signed area', () => {
+    // CrispCAD catalog alpine-helmet chin strap: a bow tie with lobes of 493 and 89 mm^2. SMLib
+    // built it as a face of area 404 and an extrusion of volume -5656 (or 5656 mirrored).
+    const bowTie: [number, number][] = [[112, 66], [96, 62], [18, 0], [4, 6]];
+    rejects(() => k.profile.polygon([bowTie]), 'invalid-input', /crosses itself at \(75\.5714, 45\.7619\)/);
+    rejects(() => k.profile.polygon([bowTie.map(([x, y]) => [-x, y] as [number, number])]), 'invalid-input', /crosses itself/);
+    rejects(() => k.profile.path(bowTie[0], bowTie.slice(1).map(to => ({ kind: 'line' as const, to }))), 'invalid-input', /path outline crosses itself/);
+    rejects(() => k.profile.polygon([[[0, 100], [59, -81], [-95, 31], [95, 31], [-59, -81]]]), 'invalid-input', /crosses itself/);
+    // An arc that bulges across the closing line.
+    rejects(() => k.profile.path([0, 0], [{ kind: 'line', to: [10, 0] }, { kind: 'sagittaArc', to: [10, 10], sagitta: 12 }]), 'invalid-input', /crosses itself/);
+    // Touching is not crossing: a vertex on another edge, and contours that overlap each other.
+    const touch = k.profile.polygon([[[0, 0], [10, 0], [10, 10], [5, 0], [0, 10]]]);
+    const overlap = k.profile.polygon([[[0, 0], [10, 0], [10, 10], [0, 10]], [[5, 5], [15, 5], [15, 15], [5, 15]]]);
+    expect(k.profile.area(overlap)).toBeCloseTo(150, 9);
+    [touch, overlap].forEach(p => p.dispose());
+  });
   it('turns kernel failures into errors', () => {
     rejects(() => k.scope(() => k.fillet(k.box([10, 10, 10]), 6)), 'kernel-failure');
     rejects(() => k.scope(() => k.shell(k.box([10, 10, 10]), 6, [0, 0, 1])), 'kernel-failure');

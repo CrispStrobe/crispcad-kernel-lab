@@ -15,6 +15,7 @@ import type { FeatureKind, Vec3 } from '../../../shared/intent/types';
 import type { BackendTarget } from '../../../shared/types/backendTarget';
 import { loadSmlib } from './runtime';
 import { polygonLoops } from './polygonLoops';
+import { outlineCrossing, type OutlinePoint } from './profileCrossing';
 import { isSceneBackend, type SceneBackend, type SceneBackendPart } from '../../../kernel/backends/sceneBackend';
 import { lookupSourceColor, lookupSourceMaterial } from '../../../kernel/backends/occt/lookupSourceColor';
 import { resolvedPartAt } from '../../mates/partFrame';
@@ -32,6 +33,28 @@ type Edge = InstanceType<Smlib['Edge']>;
 type Face = InstanceType<Smlib['Face']>;
 
 class Unsupported extends Error {}
+/** An outline that crosses itself: it bounds no region, so no kernel can build it (profileCrossing.ts). */
+class CrossingOutline extends Error {}
+
+/** Refuse a closed outline that crosses itself. */
+function refuseCrossing(what: string, outline: readonly OutlinePoint[]): void {
+  const crossing = outlineCrossing(outline);
+  if (!crossing) return;
+  const [x, y] = crossing.at.map(v => +v.toPrecision(6));
+  throw new CrossingOutline(`The ${what} crosses itself at (${x}, ${y}), so it bounds no region and cannot be built as a solid.`);
+}
+
+/** Points along a closed loop of SMLib edges: each line's start, 32 points along each curved edge. */
+function loopOutline(edges: readonly { length: number; pointAt(t: number): { x: number; y: number } }[]): OutlinePoint[] {
+  const out: OutlinePoint[] = [];
+  for (const edge of edges) {
+    const a = edge.pointAt(0), b = edge.pointAt(1);
+    const straight = Math.abs(edge.length - Math.hypot(b.x - a.x, b.y - a.y)) <= 1e-9 * Math.max(1, edge.length);
+    const n = straight ? 1 : 32;
+    for (let k = 0; k < n; k++) { const p = k ? edge.pointAt(k / n) : a; out.push([p.x, p.y]); }
+  }
+  return out;
+}
 
 /** Sections per turn of the loft that stands in for an axial helical sweep. */
 const HELIX_SECTIONS_PER_TURN = 48;
@@ -154,16 +177,18 @@ export class NativeSmlibLowerer implements FeatureLowerer {
       else if (r.transforms.length) throw new Unsupported('Transforms on a sketch are not supported natively; transform the solid instead.');
       return { shape, diagnostics: [] };
     } catch (e) {
-      const unsupported = e instanceof Unsupported;
+      const unsupported = e instanceof Unsupported, crossing = e instanceof CrossingOutline;
       const diagnostic: CompilerDiagnostic = withNextAction({
         target: this.target,
         featureId: r.id,
         severity: 'error',
         code: unsupported ? 'recompute.kernel.unsupported-feature' : 'recompute.lowering.exception',
-        message: unsupported ? (e as Error).message : `SMLib could not build ${r.kind}: ${e instanceof Error ? e.message : String(e)}`,
+        message: unsupported || crossing ? (e as Error).message : `SMLib could not build ${r.kind}: ${e instanceof Error ? e.message : String(e)}`,
         hint: unsupported
           ? "Change the model, or select kernel: 'occt' explicitly (OpenCASCADE is LGPL-2.1)."
-          : 'Read the kernel message; check dimensions and inputs.',
+          : crossing
+            ? 'Reorder the outline\'s points so that no two edges cross, or draw each region as its own closed loop. (OpenCASCADE builds such an outline as an invalid solid whose volume is the signed area.)'
+            : 'Read the kernel message; check dimensions and inputs.',
       });
       return { shape: undefined as unknown as ShapeBackend, diagnostics: [diagnostic] };
     }
@@ -352,7 +377,9 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     }
     if (!pen.closed) throw new Unsupported('Open sketch paths are not supported natively yet.');
     // Largest region first: SMLib's xor of a hole with its outer region inverts the faces.
-    const faces = [...pen.loops, pen.edges].filter(l => l.length).map(l => sm.makeFace(new sm.Wire(l))).sort((a, b) => b.area - a.area);
+    const loops = [...pen.loops, pen.edges].filter(l => l.length);
+    for (const loop of loops) refuseCrossing('sketch outline', loopOutline(loop));
+    const faces = loops.map(l => sm.makeFace(new sm.Wire(l))).sort((a, b) => b.area - a.area);
     return new SmlibSketchBackend(faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), true);
   }
 
@@ -368,9 +395,11 @@ export class NativeSmlibLowerer implements FeatureLowerer {
   /** Profile and depth of an extrusion given by points, w/h or r. */
   private inlineProfile(sm: Smlib, r: FeatureRecord, p: Param): [Sketch, number] {
     if (Array.isArray(r.metadata?.points)) {
-      // A self-touching outline is split into simple loops, filled even-odd (polygonLoops.ts).
+      // A self-touching outline is split into simple loops, filled even-odd (polygonLoops.ts);
+      // one that crosses itself is refused (profileCrossing.ts).
       const loops = polygonLoops((r.metadata.points as unknown[][]).map(pt => [num(pt[0]), num(pt[1])] as [number, number]));
       if (!loops.length) throw new Error('The polygon profile encloses no area.');
+      for (const loop of loops) refuseCrossing('polygon outline', loop);
       const faces = loops.map(l => sm.Polygon(...(l as [number, number][]), { align: null }));
       return [faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), p('depth')];
     }

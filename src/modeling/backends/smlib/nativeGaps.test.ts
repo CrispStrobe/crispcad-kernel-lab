@@ -2,10 +2,14 @@
 // Copyright (c) 2026 CrispCAD contributors
 // Features the native SMLib kernel gained for the last catalog failures (docs/kernels.md),
 // against closed forms: holes on side faces, multi-loop sketches, lofts on YZ/XZ planes and
-// to apex points, helical sweeps, and self-touching polygon outlines.
+// to apex points, helical sweeps, and self-touching polygon outlines; self-crossing outlines are
+// refused.
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { buildModel } from '../../buildModel';
 import { polygonLoops } from './polygonLoops';
+import { outlineCrossing } from './profileCrossing';
 import type { ShapeBackend } from '../../../kernel/backends/backend';
 
 async function native(code: string): Promise<ShapeBackend> {
@@ -93,6 +97,41 @@ describe('native SMLib: former catalog gaps', () => {
     // A closing edge that runs back along the first one (impulse-merchandiser upright).
     const spike = await native('return extrudePolygon([[-180,110],[180,110],[180,1500],[60,1500],[-140,1240],[-140,110]], 16)');
     expect(rel(spike.volume(), 6700800)).toBeLessThan(1e-12);
+  });
+
+  it('refuses outlines that cross themselves (alpine-helmet chin strap) with a clear error', async () => {
+    // A bow tie with lobes of 493 and 89 mm^2. SMLib built it as a solid of volume -5656 (5656
+    // mirrored) and area 4376.8; OpenCASCADE builds the same signed volume, invalid by BRepCheck.
+    const refused = async (code: string) => {
+      const model = await buildModel({ code, fileName: 'gap.kcad.ts', kernel: 'smlib-native' });
+      const errors = model.diagnostics.filter(d => d.severity === 'error');
+      expect(errors[0]?.code).toBe('recompute.lowering.exception');
+      return errors[0].message;
+    };
+    expect(await refused('return path().moveTo(112,66).lineTo(96,62).lineTo(18,0).lineTo(4,6).close().extrude(14)'))
+      .toBe('The sketch outline crosses itself at (75.5714, 45.7619), so it bounds no region and cannot be built as a solid.');
+    expect(await refused('return extrudePolygon([[-112,66],[-96,62],[-18,0],[-4,6]], 14)')).toMatch(/^The polygon outline crosses itself at \(-75\.5714, 45\.7619\)/);
+    expect(await refused('return path().moveTo(0,100).lineTo(59,-81).lineTo(-95,31).lineTo(95,31).lineTo(-59,-81).close().revolve()')).toMatch(/crosses itself/);
+    expect(await refused('return path().moveTo(0,0).lineTo(10,0).sagittaArc(10,10,12).close().extrude(1)')).toMatch(/crosses itself/);
+    const file = fileURLToPath(new URL('../../../../catalog/kits/alpine-expedition/alpine-helmet.kcad.ts', import.meta.url));
+    const helmet = await buildModel({ code: readFileSync(file, 'utf8'), fileName: file, kernel: 'smlib-native' });
+    expect(helmet.diagnostics.filter(d => d.severity === 'error').map(d => d.message)).toEqual(expect.arrayContaining([expect.stringMatching(/crosses itself/)]));
+  });
+
+  it('tells crossing from touching', () => {
+    expect(outlineCrossing([[0, 0], [10, 0], [10, 10], [5, 0], [0, 10]])).toBeNull(); // vertex on an edge
+    expect(outlineCrossing([[0, 0], [10, 0], [10, 10], [5, -1e-12], [0, 10]])).toBeNull();
+    expect(outlineCrossing([[0, 0], [10, 0], [10, 10], [5, 0], [5, -5], [-5, -5], [-5, 10]])).toEqual({ edges: [0, 2], at: [5, 0] }); // through a vertex
+    expect(outlineCrossing([[-180, 110], [180, 110], [180, 1500], [60, 1500], [-140, 1240], [-140, 110]])).toBeNull(); // back-running edge
+    expect(outlineCrossing([[0, 0], [1, 0], [1, 1], [0, 1]])).toBeNull();
+  });
+
+  it('checks outlines with the same code as @crispcad/exact-kernel outline.ts', () => {
+    const MARKER = '// ---- shared with src/modeling/backends/smlib/profileCrossing.ts below this line ----';
+    const shared = (path: string) => { const text = readFileSync(fileURLToPath(new URL(`../../../../${path}`, import.meta.url)), 'utf8'); return text.slice(text.indexOf(MARKER)); };
+    const lab = shared('src/modeling/backends/smlib/profileCrossing.ts');
+    expect(lab.startsWith(MARKER)).toBe(true);
+    expect(lab).toBe(shared('packages/exact-kernel/src/outline.ts'));
   });
 
   it('splits outlines into simple loops, largest first', () => {
