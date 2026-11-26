@@ -37,7 +37,7 @@
       {
         "date": "2026-11-26",
         "host": "macOS arm64 (Apple M1)",
-        "result": "every file in `files` byte-identical"
+        "result": "every file in `files` byte-identical (the wasm and loader first, then the whole tree for the 0.1.5 release, built with ccache as the compiler launcher)"
       }
     ]
   },

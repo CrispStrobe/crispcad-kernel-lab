@@ -5,8 +5,9 @@ interface, on SMLib through [`@classcad/smlibwasm`](https://github.com/awv-infor
 0.6.2. Part of the [CrispCAD kernel lab](https://github.com/CrispStrobe/crispcad-kernel-lab);
 consumed by [CrispCAD](https://github.com/CrispStrobe/CrispCAD).
 
-- **Licence closure: MIT and Apache-2.0 only.** smlibwasm is prebundled into `dist/`, so the
-  package has no runtime dependencies. Its default text font module is replaced by an empty
+- **Licence closure: MIT and Apache-2.0 only.** smlibwasm is built from source (byte-identical to
+  the npm package; `BUILD-PROVENANCE.json`) and prebundled into `dist/`, so the package has no
+  dependencies. Its default text font module is replaced by an empty
   one at build time (the font is not MIT or Apache-2.0); modeling and STEP do not use it.
 - **No OpenCASCADE.** Nothing here loads OpenCASCADE or its JavaScript bindings.
 - Distributed as a tarball attached to a GitHub release (`exact-kernel-v*` tags), not on npm.
@@ -91,6 +92,17 @@ volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
 
+- **0.1.5**: the release is built on smlibwasm compiled from source (smlibpy v0.6.2, USD BRep
+  `c9c5979f`, Emscripten 6.0.12, TypeScript 5.9.3), checked file by file against the pins in the
+  shipped `BUILD-PROVENANCE.json` and against the npm package, which it equals byte for byte;
+  `@classcad/smlibwasm` is no longer a dependency. `loft` pairs sections of straight-edged
+  outlines (`profile.path` of lines, one-contour `profile.polygon`) as OpenCASCADE's
+  `BRepOffsetAPI_ThruSections` does: where the vertex counts differ, vertices are inserted by
+  OCCT's polar rule (each vertex carried to the other sections along a ray from their centres,
+  snapping to an edge end within 10 % of the edge), and sections with equal counts start at the
+  vertex where they lie closest to the section before. An octagon ruled to a 16-point star, a
+  hexagon to a diamond and a pentagon drawn from another vertex now give OCCT's volumes to
+  1e-12; catalog models with such lofts were off by 2e-3 to 3.6e-1 (`docs/kernels.md`, "Ruled lofts").
 - **0.1.4**: a `loft` of `profile.path` sections joins vertex i of each section to vertex i of
   the next as drawn. A path profile's face came from SMLib's `makeFace`, which may start its
   boundary at another vertex (a square drawn as 8 points, corners and edge midpoints): ruled to
@@ -122,9 +134,10 @@ volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 | --- | --- |
 | `dist/index.js`, `dist/chunk-*.js` | This package (MIT) and smlibwasm's JavaScript (MIT, AWV Informatik AG), including the Emscripten loader (MIT) and the Brotli dictionary (MIT) |
 | `dist/_defeature_supervisor.js`, `dist/_defeature_worker.js` | smlibwasm's probe workers (MIT), which it starts from files next to its module |
-| `dist/smlibwasm.wasm` | SMLib / USD BRep (NVIDIA, Apache-2.0) with AWV's bindings (MIT), unmodified |
+| `dist/smlibwasm.wasm` | SMLib / USD BRep (NVIDIA, Apache-2.0) with AWV's bindings (MIT), built from source |
 | `dist/*.d.ts` | This package's types (MIT) |
-| `dist/bundle-inputs.json` | Every source file in the bundle with its licence |
+| `dist/bundle-inputs.json` | Every source file in the bundle with its licence, and where the smlibwasm build came from |
+| `BUILD-PROVENANCE.json` | The smlibwasm build: sources, Emscripten SDK, build steps and the sha256 of each file (MIT) |
 | `LICENSE`, `NOTICE`, `licenses/` | MIT (this package, smlibwasm, Emscripten) and Apache-2.0 (USD BRep) texts |
 
 The WebAssembly contains "Open CASCADE Topology" banners: they belong to smlibwasm's `.brep`
@@ -134,18 +147,21 @@ file-format reader and writer, not to OpenCASCADE code.
 
 ```sh
 cd packages/exact-kernel
-npm run build        # dist/ (esbuild; tooling and smlibwasm come from the lab's root install)
+npm run build        # dist/ (esbuild; tooling and smlibwasm, checked against its pins, come from the lab's root install)
 npm test             # builds, then the four test files above
 npm run typecheck
 npm pack             # crispcad-exact-kernel-<version>.tgz (prepack rebuilds)
+npm run release      # the release tarball, on smlibwasm built from source (below)
 ```
 
-Release: tag `exact-kernel-v<version>` and attach the tarball to a GitHub release with its
-SHA-256. Do not publish to npm.
-
-`dist/smlibwasm.wasm` is reproducible from source: `sh scripts/build-smlibwasm.sh` rebuilds it
-with pinned sources and Emscripten and checks it is byte-identical to the npm binary
-([BUILD-WASM.md](BUILD-WASM.md)).
+Release: `npm run release` (`scripts/release.sh`) builds smlibwasm from source
+(`scripts/build-smlibwasm.sh`, or an earlier build's tree in `SMLIBWASM_BUILD`), checks every
+file of it against the sha256 pinned in `BUILD-PROVENANCE.json` and against the npm package
+`@classcad/smlibwasm@0.6.2` (integrity and files), builds, tests and packs this package on it,
+and prints the tarball's SHA-256 and integrity; it stops on any difference. Tag
+`exact-kernel-v<version>` and attach the tarball to a GitHub release with those. Do not publish
+to npm. The package depends on nothing: `BUILD-PROVENANCE.json` (shipped) records the sources,
+the Emscripten SDK and the hashes of the smlibwasm build it bundles ([BUILD-WASM.md](BUILD-WASM.md)).
 
 ## Provenance
 

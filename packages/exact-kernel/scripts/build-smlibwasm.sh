@@ -46,6 +46,9 @@ if [ -z "${WORK:-}" ]; then
   WORK=$(mktemp -d "${TMPDIR:-/tmp}/smlibwasm-build.XXXXXX")
   [ "$KEEP" = 1 ] || trap 'rm -rf "$WORK"' EXIT
 fi
+# The compiler sees normalised paths: a TMPDIR ending in / (macOS) gives WORK a //, and the
+# -ffile-prefix-map below would then match nothing and leave the checkout's path in the module.
+WORK=$(cd "$WORK" && pwd)
 OUT=${OUT:-$WORK/out}
 SRC=$WORK/smlibpy
 for tool in git cmake ninja python3 shasum node npm; do
