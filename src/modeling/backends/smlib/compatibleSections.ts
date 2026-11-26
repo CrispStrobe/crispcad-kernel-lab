@@ -41,6 +41,14 @@
 
 export type P3 = readonly [number, number, number];
 
+/**
+ * How sections with equal vertex counts are paired. 'authored': vertex i of each section joins
+ * vertex i of the next, as drawn. 'closest': each section is re-started where it lies closest to
+ * the one before (ComputeOrigin), as OCCT's ThruSections does. Sections with different counts are
+ * matched by the polar rule either way (there is no vertex i to keep).
+ */
+export type LoftPairing = 'authored' | 'closest';
+
 const CONFUSION = 1e-7;
 const PERCENT = 0.1;
 
@@ -173,14 +181,15 @@ function carry(loop: Loop, origin: P3, target: P3, isImage: (v: Vertex) => boole
 }
 
 /**
- * Closed polygonal sections with equal vertex counts, paired index by index as OCCT's
- * ThruSections pairs them. Sections that already have equal counts come back unchanged;
- * undefined when the rule fails (OCCT then fails too).
+ * Closed polygonal sections with equal vertex counts, to be paired index by index. Different
+ * counts: matched as OCCT's ThruSections matches them (polar rule). Equal counts: as drawn
+ * ('authored'), or re-started as OCCT does ('closest', computeOrigin). Undefined when the polar rule
+ * fails (OCCT then fails too).
  */
-export function compatibleSections(sections: readonly (readonly P3[])[]): P3[][] | undefined {
+export function compatibleSections(sections: readonly (readonly P3[])[], pairing: LoftPairing = 'authored'): P3[][] | undefined {
   const n = sections.length;
   if (n < 2) return sections.map(s => [...s]);
-  if (sections.every(s => s.length === sections[0]!.length)) return computeOrigin(sections);
+  if (sections.every(s => s.length === sections[0]!.length)) return pairing === 'closest' ? computeOrigin(sections) : sections.map(s => [...s]);
   let id = 0;
   const nextId = () => id++;
   const loops: Loop[] = sections.map(s => s.map(p => ({ id: nextId(), p })));

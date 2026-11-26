@@ -57,6 +57,9 @@ export type PathSegment =
   /** Interpolating spline through `through` (the last point is the end). */
   | { kind: 'spline'; through: readonly Vec2[] };
 
+/** How `loft` pairs the vertices of neighbouring sections (see ExactKernel.loft). */
+export type LoftPairing = 'authored' | 'closest';
+export interface LoftOptions { ruled?: boolean; pairing?: LoftPairing }
 export interface LoftSection { profile: ExactProfile; /** Where the XY profile is placed. */ at: Vec3 }
 
 export type ExactKernelErrorCode =
@@ -125,8 +128,18 @@ export interface ExactKernel {
   extrude(profile: ExactProfile, height: number): ExactSolid;
   /** Revolve the XY profile (X radius, Y height) about world Z by `degrees` (0 < |degrees| <= 360). */
   revolve(profile: ExactProfile, degrees: number): ExactSolid;
-  /** Solid through two or more parallel XY sections; smooth unless `ruled`. */
-  loft(sections: readonly LoftSection[], options?: { ruled?: boolean }): ExactSolid;
+  /**
+   * Solid through two or more parallel XY sections; smooth unless `ruled`.
+   *
+   * `pairing` says which vertices of neighbouring sections are joined, for sections with equal
+   * vertex counts: `'authored'` (the default, as before 0.1.5) joins vertex i of each section to
+   * vertex i of the next, as drawn; `'closest'` re-starts each straight-edged section at the
+   * vertex, and in the direction, where it lies closest to the section before, as
+   * `BRepOffsetAPI_ThruSections` does (for models written against that loft). Straight-edged sections
+   * with different vertex counts have no vertex i to keep: either way they get vertices inserted
+   * by ThruSections' polar rule (the first section keeps its start and direction).
+   */
+  loft(sections: readonly LoftSection[], options?: LoftOptions): ExactSolid;
   /** Sweep the XY profile along a polyline rail starting at the profile's plane. */
   sweep(profile: ExactProfile, rail: readonly Vec3[]): ExactSolid;
 

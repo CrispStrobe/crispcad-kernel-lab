@@ -29,6 +29,34 @@ next to the bundle. In a worker, compile the module once and pass it:
 `createSmlibKernel({ wasmModule })` (also `wasmBinary`, `locateFile`). Options count only on
 the first call in a process or worker.
 
+Limits (0.1.6):
+
+```ts
+const k = await createSmlibKernel({ maxMemoryBytes: 512 * 2 ** 20, guardSeconds: 10 });
+k.maxMemoryBytes;          // 536870912 (whole 64 KiB pages)
+k.setGuardSeconds(30);     // returns the old value (10); k.guardSeconds() reads it
+```
+
+- `maxMemoryBytes`: a ceiling for the kernel's WebAssembly memory (64 MiB initially, 4 GiB
+  allowed by the module). An operation that needs more fails with `kernel-failure` ("…ran out of
+  memory", SMLib's `SM_ERR_OUT_OF_MEMORY`; the message still names the module's own 4096 MB
+  maximum) instead of growing; replace the kernel (its worker) after that. It is held at
+  instantiation, on the instance: smlibwasm's `instantiateWasm` hook wraps the loader's
+  heap-resize import and the instance memory's `grow`. **The module's bytes are not changed**
+  (`dist/smlibwasm.wasm` is the pinned build, `BUILD-PROVENANCE.json`), so a host need not
+  rewrite the memory section any more. It works with `wasmModule`, `wasmBinary`, `locateFile` or
+  the default file; it covers this kernel, not smlibwasm's probe worker (below). One ceiling per
+  process or worker: the same value again is the same kernel, another one is an error.
+- `guardSeconds` / `setGuardSeconds(s)` / `guardSeconds()`: smlibwasm's `GUARD_SECONDS` (20 s by
+  default, 0 = none), for the process or worker. It holds the steps that can crash or loop:
+  `shell` and SMLib's offset, thicken, face and fillet removal, and fillets and chamfers of
+  imported parts (not `fillet`/`chamfer` of solids built here). Where a probe worker can run (Node,
+  Web Workers of a cross-origin-isolated page) such a step runs there and is ended after that
+  many seconds of wall-clock time. Elsewhere (a page's main thread, an ordinary Web Worker) it
+  runs in this kernel under SMLib's deadline, which only the long loops of its surface and
+  topology intersections check: a step that spends its time elsewhere is not stopped. A host
+  that must bound every job still needs its own budget (e.g. terminating the worker).
+
 ## API
 
 `ExactKernel` (see [`src/exact-kernel.ts`](src/exact-kernel.ts)); solids and profiles are opaque
@@ -40,17 +68,37 @@ about world Z.
 | --- | --- |
 | Primitives | `box`, `cylinder`, `cone` (frustum, one radius may be 0), `sphere`, `torus`, `polyhedron` (a face that is not planar within 1e-9 is split into triangles) |
 | Profiles (`k.profile`) | `polygon` (even-odd, holes; a contour that crosses itself is refused), `circle`, `rectangle`, `roundedRectangle`, `path` (lines, three-point / radius / sagitta arcs, splines; refused if it crosses itself), `text` (always `unsupported`: no font), 2D `union`/`subtract`/`intersect`/`hull`/`offset`, `translate`/`rotate`/`scale`, `bounds`, `area` |
-| Solids from profiles | `extrude`, `revolve`, `loft` (smooth or ruled, XY sections), `sweep` (polyline rail) |
+| Solids from profiles | `extrude`, `revolve`, `loft` (smooth or ruled, XY sections; `pairing`, below), `sweep` (polyline rail) |
 | Booleans, transforms | `union`, `subtract`, `intersect`, `splitByPlane`, `translate`, `rotate` (axis, pivot), `mirror` (normal, origin), `scale` (per axis, signed) |
 | Features | `fillet`, `chamfer` (all edges or one planar face's edges), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
 | Measures | `volume`, `area`, `bbox` (exact, see below), `massProperties` (centroid, inertia, principal moments/axes), `isValid`, `solidCount`, `components` |
 | Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep`, `importStep` (exact) |
-| Runtime | `memory`, `scope`, `name`, `version`, `licence` (`MIT AND Apache-2.0`) |
+| Runtime | `memory`, `scope`, `name`, `version`, `licence` (`MIT AND Apache-2.0`); on the SMLib kernel (`SmlibKernel`) also `setGuardSeconds`, `guardSeconds`, `maxMemoryBytes` |
 
 Also exported: `convexHull` (exact hull as planar faces, up to `MAX_HULL_POINTS` = 1024 distinct
 points), `isConvexPolyhedron`, `planarFaces` (the triangulation `polyhedron` applies) and
 `symmetricEigen`. `polyhedron` itself has no face budget (2,044 faces stitch in about 3 s on a
 loaded M1).
+
+**`loft`** pairs the vertices of neighbouring sections by `options.pairing`:
+
+- `'authored'` (the default): sections with equal vertex counts join vertex i to vertex i, as
+  drawn, as up to 0.1.4 (path profiles through their outline wires, other profiles through their
+  faces). Use it wherever the model defines the sides by its own correspondence (CrispCAD's CAD
+  Script).
+- `'closest'`: straight-edged single-outline sections (`profile.path` of lines, one-contour
+  `profile.polygon`) with equal counts are re-started as OpenCASCADE's
+  `BRepOffsetAPI_ThruSections` does: each section starts at the vertex, and runs in the
+  direction, where it lies closest to the section before. For models written against OCCT.
+- Straight-edged sections with **different** vertex counts have no vertex i to keep: with either
+  pairing they get vertices inserted by OCCT's polar rule (each vertex carried to the other
+  sections along a ray from their outline centres; an edge is split at the hit, or the hit snaps to
+  an edge end within 10 % of the edge unless that end is taken), and the first section keeps its
+  start and direction. Other sections with different counts are left to SMLib.
+
+Smooth lofts through outline wires and through faces are different surfaces in SMLib (the same
+vertices, another section parametrisation): CrispCAD's 8-gon vase is 72,931.33 mm³ through
+polygon faces and 72,922.22 mm³ through path outlines, in 0.1.4 and now.
 
 **`bbox`** is not SMLib's `bbox()`, which misses interior extremes of some rotated spheres
 (`sphere(62)` turned 11° about X: min z −60.861 instead of −62). It is built from points on the
@@ -92,12 +140,23 @@ volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
 
+- **0.1.6**: `loft` takes `pairing: 'authored' | 'closest'`, default `'authored'`, which restores
+  0.1.4's vertex i → i for sections with equal vertex counts. 0.1.5 re-started such sections as
+  OpenCASCADE does whenever they were straight-edged, and built polygon sections as wires of lines
+  instead of faces, which broke CrispCAD's CAD Script lofts: a twisted ruled loft no longer had its
+  faceted volume, and smooth lofts were another surface (72,922.22 mm³ instead of 72,931.33 for
+  CrispCAD's vase). OpenCASCADE's re-start is now `pairing: 'closest'` (the option's name describes
+  the rule, so the shipped code and types name no OpenCASCADE, as the licence test requires); different vertex counts keep
+  0.1.5's OCCT insertion either way. `createSmlibKernel` takes `maxMemoryBytes` (a memory ceiling
+  held at instantiation, the module's bytes unchanged) and `guardSeconds`, and the kernel
+  (`SmlibKernel`) has `setGuardSeconds`, `guardSeconds()` and `maxMemoryBytes`.
 - **0.1.5**: the release is built on smlibwasm compiled from source (smlibpy v0.6.2, USD BRep
   `c9c5979f`, Emscripten 6.0.12, TypeScript 5.9.3), checked file by file against the pins in the
   shipped `BUILD-PROVENANCE.json` and against the npm package, which it equals byte for byte;
   `@classcad/smlibwasm` is no longer a dependency. `loft` pairs sections of straight-edged
   outlines (`profile.path` of lines, one-contour `profile.polygon`) as OpenCASCADE's
-  `BRepOffsetAPI_ThruSections` does: where the vertex counts differ, vertices are inserted by
+  `BRepOffsetAPI_ThruSections` does (since 0.1.6 for equal counts only with
+  `pairing: 'closest'`): where the vertex counts differ, vertices are inserted by
   OCCT's polar rule (each vertex carried to the other sections along a ray from their centres,
   snapping to an edge end within 10 % of the edge), and sections with equal counts start at the
   vertex where they lie closest to the section before. An octagon ruled to a 16-point star, a
