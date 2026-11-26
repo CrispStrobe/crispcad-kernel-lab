@@ -9,15 +9,22 @@ export type Smlib = typeof import('@classcad/smlibwasm');
 export type Part = InstanceType<Smlib['Part']>;
 export type Sketch = InstanceType<Smlib['Sketch']>;
 export type Face = InstanceType<Smlib['Face']>;
+export type Wire = InstanceType<Smlib['Wire']>;
 
 // Plain objects (not class instances) so smlibwasm's `scope` sees the kernel object inside a
 // returned handle and keeps it.
 interface SolidHandle { part: Part; dispose(): void }
-interface ProfileHandle { sketch: Sketch; dispose(): void }
+// `outline`: a path profile's boundary as drawn (from its start point, in its direction). makeFace may
+// start the face's boundary at another vertex (an 8-point square, whose edges run on collinearly),
+// and a ruled loft joins vertex i of one section to vertex i of the next, so lofts take the outline.
+interface ProfileHandle { sketch: Sketch; outline?: Wire; dispose(): void }
 export const solidOf = (part: Part): ExactSolid => ({ part, dispose: () => part.dispose() }) as SolidHandle as unknown as ExactSolid;
-export const profileOf = (sketch: Sketch): ExactProfile => ({ sketch, dispose: () => sketch.dispose() }) as ProfileHandle as unknown as ExactProfile;
+export const profileOf = (sketch: Sketch, outline?: Wire): ExactProfile =>
+  ({ sketch, outline, dispose: () => { sketch.dispose(); outline?.dispose(); } }) as ProfileHandle as unknown as ExactProfile;
 export const partOf = (s: ExactSolid): Part => (s as unknown as Partial<SolidHandle> | undefined)?.part ?? invalid('Not a solid of this kernel.');
 export const sketchOf = (p: ExactProfile): Sketch => (p as unknown as Partial<ProfileHandle> | undefined)?.sketch ?? invalid('Not a profile of this kernel.');
+/** A path profile's outline as drawn, or undefined for other profiles. */
+export const outlineOf = (p: ExactProfile): Wire | undefined => (p as unknown as Partial<ProfileHandle> | undefined)?.outline;
 export const vec = (v: Vec3): [number, number, number] => [v[0], v[1], v[2]];
 
 /** Run a kernel operation; kernel exceptions become ExactKernelError('kernel-failure'). */

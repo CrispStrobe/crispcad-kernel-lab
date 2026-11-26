@@ -81,7 +81,7 @@ export function createProfileOps(sm: Smlib): ExactProfileOps {
       return call('path', () => {
         const edges = pathEdges(sm, start, segments);
         refuseCrossing('path outline', loopOutline(edges));
-        return profileOf(sm.makeFace(new sm.Wire(edges)));
+        return profileOf(sm.makeFace(new sm.Wire(edges)), new sm.Wire(edges));
       });
     },
     text(content, size) {

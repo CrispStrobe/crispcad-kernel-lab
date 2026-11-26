@@ -119,6 +119,20 @@ describe('native SMLib: former catalog gaps', () => {
     expect(helmet.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
   });
 
+  it('lofts ruled sections vertex to vertex as drawn (an 8-point square to an octagon: ground-tile, hill-tile)', async () => {
+    // The square's corners and edge midpoints make neighbouring edges run on collinearly, and
+    // makeFace starts its face boundary at another vertex; lofting the faces twisted the solid
+    // (113.4e6 mm^3). The sections now loft through their outlines as drawn, as OCCT's do.
+    const square = [[1000, 0], [1000, 1000], [0, 1000], [-1000, 1000], [-1000, 0], [-1000, -1000], [0, -1000], [1000, -1000]];
+    const octagon = square.map((_, i) => [550 * Math.cos(0.1 + (i * Math.PI) / 4), 550 * Math.sin(0.1 + (i * Math.PI) / 4)]);
+    const area = (p: number[][]) => p.reduce((sum, a, i) => sum + (a[0] * p[(i + 1) % p.length][1] - p[(i + 1) % p.length][0] * a[1]) / 2, 0);
+    const at = (s: number) => square.map((a, i) => [(1 - s) * a[0] + s * octagon[i][0], (1 - s) * a[1] + s * octagon[i][1]]);
+    const exact = (100 * (area(at(0)) + 4 * area(at(0.5)) + area(at(1)))) / 6;
+    const path = (p: number[][]) => `path().moveTo(${p[0]})${p.slice(1).map(q => `.lineTo(${q})`).join('')}.close()`;
+    const lofted = await native(`return ${path(square)}.loft([${path(octagon)}], { planes: [{ plane: 'XY', origin: [0, 0, 0] }, { plane: 'XY', origin: [0, 0, 100] }], ruled: true })`);
+    expect(rel(lofted.volume(), exact)).toBeLessThan(1e-12);
+  });
+
   it('tells crossing from touching', () => {
     expect(outlineCrossing([[0, 0], [10, 0], [10, 10], [5, 0], [0, 10]])).toBeNull(); // vertex on an edge
     expect(outlineCrossing([[0, 0], [10, 0], [10, 10], [5, -1e-12], [0, 10]])).toBeNull();

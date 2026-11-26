@@ -31,6 +31,7 @@ type Part = InstanceType<Smlib['Part']>;
 type Sketch = ReturnType<Smlib['makeFace']>;
 type Edge = InstanceType<Smlib['Edge']>;
 type Face = InstanceType<Smlib['Face']>;
+type Wire = InstanceType<Smlib['Wire']>;
 
 class Unsupported extends Error {}
 /** An outline that crosses itself: it bounds no region, so no kernel can build it (profileCrossing.ts). */
@@ -75,9 +76,15 @@ export class SmlibSketchBackend implements ShapeBackend {
   readonly target: BackendTarget = 'export-smlib';
   readonly sketch: Sketch;
   readonly closed: boolean;
-  constructor(sketch: Sketch, closed: boolean) {
+  /** A single-loop sketch's outline as drawn: its edges from the authored first point, in the
+   *  authored direction. makeFace may start the face's boundary elsewhere (an 8-point square, whose
+   *  edges run on collinearly, starts at another vertex), and a ruled loft joins vertex i of one
+   *  section to vertex i of the next, so lofts take this wire. */
+  readonly outline?: Wire;
+  constructor(sketch: Sketch, closed: boolean, outline?: Wire) {
     this.sketch = sketch;
     this.closed = closed;
+    this.outline = outline;
   }
   private flat(): never { throw new Unsupported('A sketch is a profile, not a solid; extrude, revolve, loft or sweep it first.'); }
   translate(): ShapeBackend { return this.flat(); }
@@ -267,9 +274,15 @@ export class NativeSmlibLowerer implements FeatureLowerer {
       if (plane === 'XZ') return sk.rotate(sm.Axis.X, 90);
       return sk;
     };
-    const sections = keys.map((k, i) => onPlane(this.sketchOf(inputs, k).sketch, planeOf(i)?.plane).translate(originOf(i).map(num) as Vec3));
+    const sketches = keys.map(k => this.sketchOf(inputs, k));
+    const sections = sketches.map((s, i) => onPlane(s.sketch, planeOf(i)?.plane).translate(originOf(i).map(num) as Vec3));
     const ruled = p('ruled') > 0.5;
-    let part = sm.loft(sections, { ruled });
+    // Single-loop sections loft through their outlines as drawn (see SmlibSketchBackend.outline):
+    // vertex i of one section joins vertex i of the next, as in OCCT's ThruSections.
+    const outlines = sketches.every(s => s.outline)
+      ? sketches.map((s, i) => onPlane(s.outline as never, planeOf(i)?.plane).translate(originOf(i).map(num) as Vec3) as unknown as Wire)
+      : undefined;
+    let part = sm.loft(outlines ?? sections, { ruled }) as Part;
     // startPoint / endPoint: the loft runs on from the first / last section to an apex.
     const apex = (key: 'startPoint' | 'endPoint') => r.metadata?.[key] as unknown[] | undefined;
     for (const [key, section] of [['startPoint', sections[0]], ['endPoint', sections.at(-1)!]] as const) {
@@ -380,7 +393,7 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     const loops = [...pen.loops, pen.edges].filter(l => l.length);
     for (const loop of loops) refuseCrossing('sketch outline', loopOutline(loop));
     const faces = loops.map(l => sm.makeFace(new sm.Wire(l))).sort((a, b) => b.area - a.area);
-    return new SmlibSketchBackend(faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), true);
+    return new SmlibSketchBackend(faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), true, loops.length === 1 ? new sm.Wire(loops[0]) : undefined);
   }
 
   private extrude(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
