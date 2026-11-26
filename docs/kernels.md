@@ -256,30 +256,33 @@ OpenCASCADE-free kernel that CrispCAD consumes: a narrow `ExactKernel` interface
 (primitives, path profiles, extrude, revolve, loft, sweep, Booleans, transforms,
 fillet, chamfer, shell, measures and mass properties, tessellation, STL and exact STEP
 in and out) on SMLib. 0.1.1 makes `bbox` exact (0.1.2 makes it fast again on trimmed curved bodies; 0.1.3 refuses
-profile outlines that cross themselves; 0.1.4 lofts path profiles vertex to vertex as drawn), `convexHull` robust for long multi-section
+profile outlines that cross themselves; 0.1.4 lofts path profiles vertex to vertex as drawn; 0.1.5 pairs loft sections as OCCT does and is built on smlibwasm compiled from source), `convexHull` robust for long multi-section
 lofts (exact-planarity face merging, 1024-point budget) and splits non-planar polyhedron
 faces; see its README. An upstream report for the two smlibwasm problems found on the
 way (rotated-sphere `bbox`, hole-first `xor`) is in
 [smlibwasm-upstream-report.md](smlibwasm-upstream-report.md); both are filed
 (<https://github.com/NVIDIA-Omniverse/usd-brep/issues/75> for the box, which is SMLib's tight box,
-and <https://github.com/awv-informatik/smlibpy/issues/45> for `xor`). It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
+and <https://github.com/awv-informatik/smlibpy/issues/45> for `xor`). It prebundles smlibwasm 0.6.2 (built from source, below) with its font module
 replaced by an empty one, so the release tarball contains only MIT and Apache-2.0
 files; its licence test checks the packed tarball. Its tests build the 27 reference
 parts above through the interface at 1e-6 (worst relative volume error 2.5e-15,
 area 1.2e-11). Build and test it with `npm run test:exact-kernel`; releases are
 GitHub release tarballs on `exact-kernel-v*` tags, never npm.
 
-The bundled WebAssembly can be rebuilt from source:
+Since 0.1.5 the release is built from source:
 [`packages/exact-kernel/scripts/build-smlibwasm.sh`](../packages/exact-kernel/scripts/build-smlibwasm.sh)
-builds smlibwasm 0.6.2's module from smlibpy `v0.6.2` (`a6320aa2`, MIT: the embind bindings
+builds smlibwasm 0.6.2 (the module, its loader and the JavaScript, with TypeScript 5.9.3) from smlibpy `v0.6.2` (`a6320aa2`, MIT: the embind bindings
 in `js/cpp`, the build files and a few patched kernel files) and usd-brep `c9c5979f`
 (Apache-2.0: SMLib, SM_API, SmPyLib) with emsdk 6.0.12, the version smlibpy's release job uses,
 and compares the result with the npm binary. On 2026-11-26 both `smlibwasm.wasm` and its loader
 `smlibwasm.mjs` came out byte-identical to `@classcad/smlibwasm@0.6.2` (macOS arm64 host; the
 published build ran on Ubuntu x86_64), so the binary the package bundles is reproducible from
 permissively licensed source. The npm tarball's integrity also matches the digest in its signed
-SLSA provenance, which names smlibpy's release workflow at tag v0.6.2. The release keeps
-bundling the npm module; [BUILD-WASM.md](../packages/exact-kernel/BUILD-WASM.md) has the pins,
+SLSA provenance, which names smlibpy's release workflow at tag v0.6.2. The whole package tree
+(all 119 files but the font's licence) is byte-identical to the npm package, and
+`BUILD-PROVENANCE.json` (shipped) pins each file's sha256; `scripts/release.sh` builds the release
+on the source build and stops if it, the pins and the npm tarball ever differ. The package no
+longer depends on `@classcad/smlibwasm`. [BUILD-WASM.md](../packages/exact-kernel/BUILD-WASM.md) has the pins,
 the licences of everything compiled, and the disk the SDK needs.
 
 The lab's own `smlib-native` backend (`src/modeling/backends/smlib/`) does not use
