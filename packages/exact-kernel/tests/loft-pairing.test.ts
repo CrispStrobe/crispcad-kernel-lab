@@ -6,7 +6,7 @@
 // lowers CAD Script lofts, whose sides are defined by the authored correspondence, and refuses a
 // solid whose volume is not that of its own surface; 0.1.5 re-started equal sections always.
 import { beforeAll, describe, expect, it } from 'vitest';
-import { createSmlibKernel, type ExactKernel, type LoftPairing } from '../dist/index.js';
+import { createSmlibKernel, ExactKernelError, type ExactKernel, type LoftPairing, type PathSegment } from '../dist/index.js';
 
 let k: ExactKernel;
 beforeAll(async () => { k = await createSmlibKernel(); });
@@ -82,5 +82,74 @@ describe("loft pairing: 'authored' keeps vertex i -> i, 'closest' re-starts", ()
 
   it('refuses an unknown pairing', () => {
     expect(() => loft(beacon, 'polygon', true, 'drawn' as LoftPairing)).toThrow(/pairing/);
+  });
+});
+
+// 0.1.7: 'closest' with curved section edges. A 20 x 20 square whose right side is an arc bulging
+// to x = 16 (four vertices, four corners), drawn counter-clockwise from vertex `start` (or clockwise).
+type V2 = [number, number];
+const archVertices = (scale: number, turn: number, z: number): P3[] => ([[-10, -10], [10, -10], [10, 10], [-10, 10]] as V2[])
+  .map(([x, y]) => [scale * (x * Math.cos(turn) - y * Math.sin(turn)), scale * (x * Math.sin(turn) + y * Math.cos(turn)), z]);
+const archVia = (scale: number, turn: number): V2 => [scale * 16 * Math.cos(turn), scale * 16 * Math.sin(turn)];
+/** The arch's path from vertex `start`, counter-clockwise or clockwise; edge 1 -> 2 is the arc. */
+const archPath = (v: readonly P3[], via: V2, start: number, ccw = true) => {
+  const order = Array.from({ length: 4 }, (_, k) => (ccw ? start + k : start - k + 4) % 4);
+  const segments: PathSegment[] = order.map((from, k) => {
+    const to = order[(k + 1) % 4]!, end: V2 = [v[to]![0], v[to]![1]];
+    return (from === 1 && to === 2) || (from === 2 && to === 1) ? { kind: 'arc', via, to: end } : { kind: 'line', to: end };
+  });
+  return { start: [v[order[0]!]![0], v[order[0]!]![1]] as V2, segments };
+};
+const loftPaths = (paths: { start: V2; segments: PathSegment[]; z: number }[], ruled: boolean, pairing?: LoftPairing) => k.scope(() =>
+  k.volume(k.loft(paths.map(p => ({ profile: k.profile.path(p.start, p.segments), at: [0, 0, p.z] as P3 })), { ruled, ...(pairing ? { pairing } : {}) })));
+
+describe("loft pairing 'closest' with curved section edges (0.1.7)", () => {
+  // The top is the arch scaled by 0.7 and turned by 80 degrees, so its vertex 3 lies nearest the
+  // bottom's vertex 0: 'closest' re-starts it there, keeping the arc an arc.
+  const bottom = archVertices(1, 0, 0), top = archVertices(0.7, (80 * Math.PI) / 180, 30), via0 = archVia(1, 0), via1 = archVia(0.7, (80 * Math.PI) / 180);
+  const b = { ...archPath(bottom, via0, 0), z: 0 };
+  for (const ruled of [true, false]) {
+    it(`${ruled ? 'ruled' : 'smooth'}: re-starts a section with an arc at its closest vertex, forward and backward`, () => {
+      const drawn = loftPaths([b, { ...archPath(top, via1, 0), z: 30 }], ruled);
+      const restarted = loftPaths([b, { ...archPath(top, via1, 3), z: 30 }], ruled);
+      expect(rel(drawn, restarted)).toBeGreaterThan(0.01);
+      expect(rel(loftPaths([b, { ...archPath(top, via1, 0), z: 30 }], ruled, 'closest'), restarted)).toBeLessThan(1e-9);
+      // Drawn clockwise: 'closest' runs it backward (the arc reversed), as the counter-clockwise top from vertex 3.
+      expect(rel(loftPaths([b, { ...archPath(top, via1, 0, false), z: 30 }], ruled, 'closest'), restarted)).toBeLessThan(1e-9);
+      // Already closest: unchanged.
+      expect(rel(loftPaths([b, { ...archPath(top, via1, 3), z: 30 }], ruled, 'closest'), restarted)).toBeLessThan(1e-9);
+    });
+  }
+
+  it('leaves sections without a corner as drawn', () => {
+    const circles = (pairing?: LoftPairing) => k.scope(() => k.volume(k.loft([{ profile: k.profile.circle(10), at: [0, 0, 0] }, { profile: k.profile.circle(6), at: [2, 1, 20] }], { ruled: true, ...(pairing ? { pairing } : {}) })));
+    expect(rel(circles('closest'), circles())).toBeLessThan(1e-12);
+    const rounded = (pairing?: LoftPairing) => k.scope(() => k.volume(k.loft([{ profile: k.profile.roundedRectangle(20, 12, 3), at: [0, 0, 0] }, { profile: k.profile.rotate(k.profile.roundedRectangle(16, 10, 2), 30), at: [0, 0, 20] }], { ...(pairing ? { pairing } : {}) })));
+    expect(rel(rounded('closest'), rounded())).toBeLessThan(1e-12);
+  });
+
+  it('takes straight-edged profiles that are not polygons (a rectangle) as polygons', () => {
+    const square = ngon(10 * Math.SQRT2, 4, 0, Math.PI / 4), twisted = ngon(10 * Math.SQRT2, 4, 20, Math.PI / 4 + (0.8 * Math.PI) / 2);
+    const expected = loft([square, twisted], 'polygon', true, 'closest');
+    expect(rel(expected, loft([square, twisted], 'polygon', true))).toBeGreaterThan(0.01);
+    const viaRectangle = k.scope(() => k.volume(k.loft([{ profile: k.profile.rectangle(20, 20, true), at: [0, 0, 0] }, { profile: k.profile.polygon([twisted.map(p => [p[0], p[1]] as V2)]), at: [0, 0, 20] }], { ruled: true, pairing: 'closest' })));
+    expect(rel(viaRectangle, expected)).toBeLessThan(1e-9);
+  });
+
+  it('refuses what it cannot pair as OCCT does: curved sections with different edge counts, holes', () => {
+    const hexagon = ngon(8, 6, 30);
+    const sections = (pairing: LoftPairing) => k.scope(() => k.volume(k.loft([{ profile: k.profile.path(b.start, b.segments), at: [0, 0, 0] }, { profile: k.profile.polygon([hexagon.map(p => [p[0], p[1]] as V2)]), at: [0, 0, 30] }], { ruled: true, pairing })));
+    expect(sections('authored')).toBeGreaterThan(0);
+    let failure: unknown;
+    try { sections('closest'); } catch (e) { failure = e; }
+    expect(failure).toBeInstanceOf(ExactKernelError);
+    expect((failure as ExactKernelError).code).toBe('unsupported');
+    expect((failure as Error).message).toMatch(/different edge counts \(4, 6\).*curved/);
+    const ring = k.profile.polygon([[[-10, -10], [10, -10], [10, 10], [-10, 10]], [[-4, -4], [4, -4], [4, 4], [-4, 4]]]);
+    expect(() => k.scope(() => k.loft([{ profile: ring, at: [0, 0, 0] }, { profile: k.profile.circle(8), at: [0, 0, 10] }], { pairing: 'closest' }))).toThrow(/single-outline sections; section 1 has holes/);
+    // A spline edge is re-started forward as the path drew it, but not run the other way.
+    const splined = (ccw: boolean) => { const p = archPath(top, via1, 0, ccw); return { ...p, segments: p.segments.map(g => g.kind === 'arc' ? { kind: 'spline' as const, through: [g.via, g.to] } : g), z: 30 }; };
+    expect(loftPaths([b, splined(true)], true, 'closest')).toBeGreaterThan(0);
+    expect(() => loftPaths([b, splined(false)], true, 'closest')).toThrow(/section 2 the other way round, and it has a bspline edge/);
   });
 });

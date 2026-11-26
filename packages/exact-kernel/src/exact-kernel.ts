@@ -137,7 +137,11 @@ export interface ExactKernel {
    * vertex, and in the direction, where it lies closest to the section before, as
    * `BRepOffsetAPI_ThruSections` does (for models written against that loft). Straight-edged sections
    * with different vertex counts have no vertex i to keep: either way they get vertices inserted
-   * by ThruSections' polar rule (the first section keeps its start and direction).
+   * by ThruSections' polar rule (the first section keeps its start and direction). Since 0.1.7
+   * `'closest'` also takes sections with curved edges, each a single outline: equal edge counts are
+   * re-started at the vertex and direction closest to the section before (lines and circular arcs
+   * either way, other curves only forward from a path's own edges); sections without a corner stay
+   * as drawn; different edge counts with a curved edge, and sections with holes, are `unsupported`.
    */
   loft(sections: readonly LoftSection[], options?: LoftOptions): ExactSolid;
   /** Sweep the XY profile along a polyline rail starting at the profile's plane. */
