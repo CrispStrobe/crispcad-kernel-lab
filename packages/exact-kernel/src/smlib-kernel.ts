@@ -18,7 +18,7 @@ import {
   ExactKernelError,
   type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type MassProperties, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
-import { call, createContext, partOf, sketchOf, solidOf, vec, type Ctx, type Part } from './smlib-context.ts';
+import { call, createContext, outlineOf, partOf, sketchOf, solidOf, vec, type Ctx, type Part } from './smlib-context.ts';
 import { exactBoundingBox } from './bbox.ts';
 import { planarFaces } from './polytope.ts';
 import { createProfileOps } from './smlib-profile.ts';
@@ -105,7 +105,12 @@ function sweeps({ sm, solid }: Ctx): Pick<ExactKernel, 'extrude' | 'revolve' | '
     loft(sections, options = {}) {
       if (!Array.isArray(sections) || sections.length < 2) invalid('A loft needs at least two sections.');
       for (const s of sections) finite('Loft section position', ...s.at);
-      return call('loft', () => sm.scope(() => solid('loft', sm.loft(sections.map(s => sketchOf(s.profile).translate(vec(s.at))), { ruled: !!options.ruled }))));
+      return call('loft', () => sm.scope(() => {
+        // Path profiles loft through their outlines as drawn, so vertex i joins vertex i (ProfileHandle).
+        const outlines = sections.every(s => outlineOf(s.profile)) ? sections.map(s => outlineOf(s.profile)!.translate(vec(s.at))) : undefined;
+        const profiles = outlines ?? sections.map(s => sketchOf(s.profile).translate(vec(s.at)));
+        return solid('loft', sm.loft(profiles, { ruled: !!options.ruled }));
+      }));
     },
     sweep(p, rail) {
       if (!Array.isArray(rail) || rail.length < 2) invalid('A sweep rail needs at least two points.');

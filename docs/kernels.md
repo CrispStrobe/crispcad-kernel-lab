@@ -32,23 +32,22 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   on `smlib-native` within the scorecard tolerances
   (`src/modeling/backends/smlib/nativeLowerer.test.ts`).
 - All 2402 catalog models, built on `smlib-native` with OpenCASCADE blocked from
-  loading (2026-11-26, commit `ef07c30bf`, `experiments/kernel-qualification/catalogCoverage.ts`,
+  loading (2026-11-26, commit `6005ce246`, `experiments/kernel-qualification/catalogCoverage.ts`,
   results in `results-catalog-native.json`): **2402 (100%)** built without an error,
-  70,745 parts. Eight of them had a profile outline that crossed itself and were refused by
-  `e203019d8` (see "Outlines that cross themselves" below); `ef07c30bf` corrected those outlines
-  in the models to the simple ones they meant (`alpine-expedition/alpine-helmet`,
-  `amusement-park/miniature-park-tram-coach` and `-engine`, `industrial-plant/industrial-boiler`,
-  `mining/magnetic-separator-drum`, `recycling-facility/cover-soil-spreader`, `tipping-floor-bin`
-  and `weighbridge-approach-ramp`; the commit message lists each edit). Every part of the eight
-  is now valid by BRepCheck in OpenCASCADE, and the native and OCCT volumes agree part by part
-  to 2.4e-11. The other 2394 have the same volume and area (to 1e-15) and box (to 1e-6 mm) as
-  in the run before. No model crashed the process and none reached for OpenCASCADE. Build
-  time: median 0.14 s per model, 36 min of build time over 4 workers (14.3 min wall) on an M1
-  shared with other sessions (load average 35–80). The slowest,
-  `fire-rescue/quint-fire-apparatus` (210 parts), took 6.8 min. Per-model volume, area and box (sum and union over
-  the parts at their world placements, exact `boundingBox()`) are in
-  `results-catalog-native-volumes.json`, in the input format of CrispCAD's catalog
-  cross-check (`--native`; `labCommit` is the commit the run was taken at).
+  70,745 parts. No model crashed the process and none reached for OpenCASCADE. Build time:
+  median 0.09 s per model, 19 min of build time over 4 workers (9.3 min wall) on an M1 shared
+  with other sessions. The slowest, `fire-rescue/quint-fire-apparatus` (210 parts), took
+  3.6 min. Per-model volume, area and box (sum and union over the parts at their world
+  placements, exact `boundingBox()`) are in `results-catalog-native-volumes.json`, in the
+  input format of CrispCAD's catalog cross-check (`--native`; `labCommit` is the commit the
+  run was taken at).
+
+  Two changes since the 2394/2402 run at `e203019d8`. `ef07c30bf` corrected the eight models
+  whose outlines crossed themselves (see "Outlines that cross themselves" below; the commit
+  message lists each edit): every part of them is valid by BRepCheck in OpenCASCADE, and the
+  native and OCCT volumes agree part by part to 2.4e-11. `6005ce246` lofts single-loop
+  sections through their outlines as drawn (see "Ruled lofts" below), which changed 17 models;
+  the other 2385 have the same volume and area (to 2.5e-15) as before.
 
   ```sh
   node --import tsx experiments/kernel-qualification/catalogCoverage.ts --jobs 4 \
@@ -95,6 +94,29 @@ The eight catalog models that had such outlines were corrected (`ef07c30bf`): th
 vertices are now in band order, (112,66), (96,62), (4,6), (18,0), a 1008 mm² strap of
 14,112 mm³; the other seven had arcs that overshot a straight edge, a swapped pair of points, or
 a toe point below its base line.
+
+## Ruled lofts
+
+A ruled loft joins vertex i of one section to vertex i of the next. The native lowering used to
+loft the sections' faces, and SMLib's `makeFace` may start a face's boundary at another vertex
+than the first one drawn: a square drawn as 8 points (corners and edge midpoints, so
+neighbouring edges run on collinearly) starts elsewhere. `nature/ground-tile` and
+`nature/hill-tile` loft such a square "so it lofts to an octagon", ruled, and twisted through
+their middle (grass 307.6e6 and 1059.6e6 mm³). Since `6005ce246` a single-loop sketch keeps its
+outline as drawn and lofts go through those outlines, as OCCT's ThruSections does:
+ground-tile's grass is 368,631,795 mm³, OCCT's to 3e-16; hill-tile's grass (1,569,800,667) and
+outcrop are the exact ruled volumes (each section between two drawn ones has vertices
+(1 − s) a_i + s b_i, so its area is quadratic in s) to 3e-16, where OCCT measures the twisted
+ruled faces 5.0e-4 and 2.2e-3 high. `@crispcad/exact-kernel` 0.1.4 does the same for
+`profile.path` sections. The change moved 15 more models by 2e-5 to 1.1e-2 in volume, all with lofts
+whose start vertex now follows the drawing: mostly ruled lofts between sections with different
+vertex counts (hexagon to diamond boulders, an 8-gon to a 16-point petal star, 6- or 7-gon to
+pentagon rocks), some smooth (airfoil blades). Neither kernel pairs unequal sections the same
+way (OCCT inserts vertices to equalise the counts; an insertion by arc length did not reproduce
+its volumes), so these still differ from OCCT, before and after: some parts came closer
+(boulders, foam and an island from 12–13 % to about 3 % low, the lily-pad petals from 8.2e-2 to
+1.3e-2, the corn-header snouts from 1.0e-2 to 4.3e-3), some moved away (two cliff boulders from
+4.6e-2 and 3.0e-1 to 8.6e-2 and 3.6e-1 low, small rocks by up to 2 %).
 
 ## Mated assemblies
 
@@ -145,7 +167,7 @@ OpenCASCADE-free kernel that CrispCAD consumes: a narrow `ExactKernel` interface
 (primitives, path profiles, extrude, revolve, loft, sweep, Booleans, transforms,
 fillet, chamfer, shell, measures and mass properties, tessellation, STL and exact STEP
 in and out) on SMLib. 0.1.1 makes `bbox` exact (0.1.2 makes it fast again on trimmed curved bodies; 0.1.3 refuses
-profile outlines that cross themselves), `convexHull` robust for long multi-section
+profile outlines that cross themselves; 0.1.4 lofts path profiles vertex to vertex as drawn), `convexHull` robust for long multi-section
 lofts (exact-planarity face merging, 1024-point budget) and splits non-planar polyhedron
 faces; see its README. An upstream report for the two smlibwasm problems found on the
 way (rotated-sphere `bbox`, hole-first `xor`) is in

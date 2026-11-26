@@ -83,6 +83,23 @@ describe('operations from the lab native backend', () => {
     expect(swept.valid).toBe(true);
     expect(swept.volume).toBeGreaterThan(Math.PI * 15);
   });
+  it('lofts ruled path sections vertex to vertex as drawn (an 8-point square to an octagon)', () => {
+    // CrispCAD catalog ground-tile / hill-tile: a square drawn as 8 points (corners and edge
+    // midpoints, so neighbouring edges run on collinearly) ruled to an octagon. makeFace starts the
+    // square's face boundary at another vertex; lofting that twisted the solid (113.4e6 mm^3).
+    const square = [[1000, 0], [1000, 1000], [0, 1000], [-1000, 1000], [-1000, 0], [-1000, -1000], [0, -1000], [1000, -1000]] as [number, number][];
+    const octagon = square.map((_, i) => [550 * Math.cos(0.1 + (i * Math.PI) / 4), 550 * Math.sin(0.1 + (i * Math.PI) / 4)] as [number, number]);
+    // Exact: the section at height fraction s has vertices (1 - s) a_i + s b_i; its area is quadratic in s.
+    const area = (p: [number, number][]) => p.reduce((sum, a, i) => sum + (a[0] * p[(i + 1) % p.length][1] - p[(i + 1) % p.length][0] * a[1]) / 2, 0);
+    const at = (s: number) => square.map((a, i) => [(1 - s) * a[0] + s * octagon[i][0], (1 - s) * a[1] + s * octagon[i][1]] as [number, number]);
+    const exact = (100 * (area(at(0)) + 4 * area(at(0.5)) + area(at(1)))) / 6;
+    const path = (p: [number, number][]) => k.profile.path(p[0], [...p.slice(1), p[0]].map(to => ({ kind: 'line' as const, to })));
+    const lofted = measured(k.scope(() => k.loft([{ profile: path(square), at: [0, 0, 0] }, { profile: path(octagon), at: [0, 0, 100] }], { ruled: true })));
+    expect(lofted.valid).toBe(true);
+    expect(rel(lofted.volume, exact)).toBeLessThan(1e-12);
+    const polygons = measured(k.scope(() => k.loft([{ profile: k.profile.polygon([square]), at: [0, 0, 0] }, { profile: k.profile.polygon([octagon]), at: [0, 0, 100] }], { ruled: true })));
+    expect(rel(polygons.volume, exact)).toBeLessThan(1e-12);
+  });
   it('splits by a plane and lists components', () => {
     k.scope(() => {
       const [above, below] = k.splitByPlane(k.box([10, 10, 10]), [0, 0, 1], 2);
