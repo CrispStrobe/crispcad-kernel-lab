@@ -58,10 +58,10 @@ for (const y of [-300, 300]) add(`fork-pocket-${y > 0 ? 'b' : 'f'}`, blk(0, y, 9
 const rocker: [number, number][] = [];
 const RC = 1000;
 for (let k = 0; k <= 8; k++) {
-  const a = (-35 + (70 * k) / 8) * Math.PI / 180;
+  const a = (-30 + (60 * k) / 8) * Math.PI / 180;
   rocker.push([RC * Math.sin(a), 190 + RC * (1 - Math.cos(a))]);
 }
-rocker.push([RC * Math.sin(35 * Math.PI / 180), ZB + 10], [-RC * Math.sin(35 * Math.PI / 180), ZB + 10]);
+rocker.push([RC * Math.sin(30 * Math.PI / 180), ZB + 10], [-RC * Math.sin(30 * Math.PI / 180), ZB + 10]);
 for (const x of [-560, 560]) {
   add(`rocker-${x}`, profileYZ(rocker, 40).translate(x, 0, 0).color(base));
   add(`rocker-track-${x}`, blk(x, 0, 170, 90, 1200, 20).color(base));

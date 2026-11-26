@@ -134,11 +134,11 @@ for (let k = 0; k <= 8; k++) {
 }
 for (let k = 8; k >= 0; k--) {
   const a = Math.PI - (k * Math.PI) / 8;
-  roof.push([(RW - 30) * Math.cos(a), ROOF + 25 + 100 * Math.sin(a)]);
+  roof.push([(RW - 30) * Math.cos(a), ROOF + 100 * Math.sin(a)]);
 }
 add("canopy-roof", profileYZ(roof, L + 200, -L / 2 - 100).color(canopy));
 add("roof-ridge", cylinder(L + 220, 24, 10).rotateY(90).translate(-L / 2 - 110, 0, ROOF + 120).color(enamel));
-const scallops = [[-L / 2 - 100, ROOF + 10], [L / 2 + 100, ROOF + 10]];
+const scallops = [[-L / 2 - 100, ROOF + 30], [L / 2 + 100, ROOF + 30]];
 const n = 10;
 const sw = (L + 200) / n;
 for (let i = n - 1; i >= 0; i--) {

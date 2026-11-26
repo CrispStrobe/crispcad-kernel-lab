@@ -99,7 +99,7 @@ describe('native SMLib: former catalog gaps', () => {
     expect(rel(spike.volume(), 6700800)).toBeLessThan(1e-12);
   });
 
-  it('refuses outlines that cross themselves (alpine-helmet chin strap) with a clear error', async () => {
+  it('refuses outlines that cross themselves (alpine-helmet chin strap as first written) with a clear error', async () => {
     // A bow tie with lobes of 493 and 89 mm^2. SMLib built it as a solid of volume -5656 (5656
     // mirrored) and area 4376.8; OpenCASCADE builds the same signed volume, invalid by BRepCheck.
     const refused = async (code: string) => {
@@ -114,8 +114,9 @@ describe('native SMLib: former catalog gaps', () => {
     expect(await refused('return path().moveTo(0,100).lineTo(59,-81).lineTo(-95,31).lineTo(95,31).lineTo(-59,-81).close().revolve()')).toMatch(/crosses itself/);
     expect(await refused('return path().moveTo(0,0).lineTo(10,0).sagittaArc(10,10,12).close().extrude(1)')).toMatch(/crosses itself/);
     const file = fileURLToPath(new URL('../../../../catalog/kits/alpine-expedition/alpine-helmet.kcad.ts', import.meta.url));
+    // The catalog helmet's strap vertices were reordered into the simple outline they meant: it builds.
     const helmet = await buildModel({ code: readFileSync(file, 'utf8'), fileName: file, kernel: 'smlib-native' });
-    expect(helmet.diagnostics.filter(d => d.severity === 'error').map(d => d.message)).toEqual(expect.arrayContaining([expect.stringMatching(/crosses itself/)]));
+    expect(helmet.diagnostics.filter(d => d.severity === 'error')).toEqual([]);
   });
 
   it('tells crossing from touching', () => {

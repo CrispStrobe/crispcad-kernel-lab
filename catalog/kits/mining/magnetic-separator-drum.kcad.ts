@@ -73,7 +73,7 @@ const unit = (k, dx) => {
   for (const [j, y] of [-L - 80, L].entries()) {
     add(n(`tank-end-${j}`), profileXZ([[dx - 780, ZC + 250], ...arc(dx, ZC, 780, 180, 360, 8), [dx + 780, ZC + 250]], y, y + 80).color(tankPaint));
   }
-  add(n('slurry'), profileXZ([[dx - 700, ZC - 40], ...arc(dx, ZC, 700, 183, 357, 6), [dx + 700, ZC - 40]], -L, L).color(slurry));
+  add(n('slurry'), profileXZ([[dx - 700, ZC - 40], ...arc(dx, ZC, 700, 184, 356, 6), [dx + 700, ZC - 40]], -L, L).color(slurry));
   add(n('drum'), cylY(R, -L + 40, L - 40, dx, ZC, 20).color(drumStainless));
   for (const [j, s] of [-1, 1].entries()) {
     add(n(`drum-flange-${j}`), cylY(R + 30, s > 0 ? L - 40 : -L + 10, s > 0 ? L - 10 : -L + 40, dx, ZC, 20).color(frameSteel));

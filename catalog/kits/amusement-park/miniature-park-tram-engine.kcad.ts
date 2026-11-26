@@ -71,7 +71,7 @@ for (const [s, x] of [["front", -1000], ["rear", 1000]] as const) {
 for (let k = 0; k < 4; k++) {
   const z = 60 + k * 60;
   const reach = 170 - k * 25;
-  add(`catcher-slat-${k}`, extrudePolygon([[-1040, -HALF_W + 20], [-1040 - reach, 0], [-1040, HALF_W - 20], [-1060, HALF_W - 20], [-1060 - reach + 20, 0], [-1060, -HALF_W + 20]], 34).translate(0, 0, z).color(ironwork));
+  add(`catcher-slat-${k}`, extrudePolygon([[-1040, -HALF_W + 20], [-1040 - reach, 0], [-1040, HALF_W - 20], [-1060, HALF_W - 20], [-1060 - reach, 0], [-1060, -HALF_W + 20]], 34).translate(0, 0, z).color(ironwork));
 }
 add("catcher-spine", box(40, 40, 260, true).translate(-1190, 0, 190).color(wheelPaint));
 
@@ -154,7 +154,7 @@ for (let k = 0; k <= 8; k++) {
 }
 for (let k = 8; k >= 0; k--) {
   const a = Math.PI - (k * Math.PI) / 8;
-  roof.push([(HALF_W + 60) * Math.cos(a), CZ1 + 25 + 90 * Math.sin(a)]);
+  roof.push([(HALF_W + 60) * Math.cos(a), CZ1 + 90 * Math.sin(a)]);
 }
 add("cab-roof", profileYZ(roof, CX1 - CX0 + 160, CX0 - 80).color(ironwork));
 add("coal-bunker", box(200, 2 * HALF_W - 60, 260, true).translate(CX1 - 150, 0, DECK + 170).color(ironwork));

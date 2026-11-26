@@ -74,7 +74,7 @@ for (const ax of [600, 1800]) {
   }
   add(`spring-hanger-${ax}`, blk(ax, 0, TR + 60, 260, 1100, RZ - TR - 60).color(chassis));
 }
-for (const s of [-1, 1]) add(`mudguard-${s < 0 ? 'f' : 'b'}`, profileXZ([[0, 1180], [-60, 1300], [2400, 1300], [2460, 1180], [2420, 1160], [2380, 1260], [20, 1260], [-20, 1160]], TW + 80).translate(0, s * (760 + TW / 2), 0).color(body));
+for (const s of [-1, 1]) add(`mudguard-${s < 0 ? 'f' : 'b'}`, profileXZ([[-60, 1180], [0, 1300], [2400, 1300], [2460, 1180], [2420, 1160], [2380, 1260], [20, 1260], [-20, 1160]], TW + 80).translate(0, s * (760 + TW / 2), 0).color(body));
 
 // Hopper: a flared box on the chassis, open at the top and heaped with soil.
 const HZ = RZ + 220, HL = 3800, HC = 800, HB = 1300, HT = 2500, HH = 1250;
@@ -99,7 +99,7 @@ for (const s of [-1, 1]) {
   for (let k = 0; k < 4; k++) add(`spinner-fin-${s < 0 ? 'f' : 'b'}-${k}`, blk(150, 0, 0, 300, 25, 70).rotateZ(k * 90 + (s < 0 ? 20 : 65)).translate(BX + 420, sy, RZ - 290).color(steel));
   add(`soil-throw-${s < 0 ? 'f' : 'b'}`, box(160, 120, 90, true).rotateZ(30 * s).translate(BX + 700, sy + s * 260, RZ - 250).color(soil));
 }
-add("deflector", profileXZ([[BX + 60, RZ - 40], [BX + 820, RZ - 40], [BX + 820, RZ - 120], [BX + 60, RZ + 300]], 1500).color(body));
+add("deflector", profileXZ([[BX + 60, RZ - 40], [BX + 820, RZ - 120], [BX + 820, RZ - 40], [BX + 60, RZ + 300]], 1500).color(body));
 add("light-bar", blk(BX + 860, 0, RZ - 60, 60, 2200, 140).color(chassis));
 for (const s of [-1, 1]) add(`tail-lamp-${s < 0 ? 'f' : 'b'}`, blk(BX + 895, s * 980, RZ - 40, 20, 180, 100).color('#c8302a'));
 add("beacon", cylinder(180, 80, 12).translate(BX - 150, -900, HZ + HH).color(amber));

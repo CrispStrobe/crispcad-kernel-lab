@@ -61,12 +61,11 @@ for (const y of [-750, 750]) {
 for (const x of [x0 - 250, -700, 700, x1 + 850]) add(`skid-cross-${x}`, blk(x - 50, -700, 25, x + 50, 700, 275).color(trim));
 
 // ---- Saddles cradle the shell ----
-const cradle = [[-850, 300], [850, 300], [850, cz - 520]];
+const cradle = [[-850, 300], [850, 300]];
 for (let i = 0; i <= 10; i++) {
   const a = (-30 - (120 * i) / 10) * Math.PI / 180;
   cradle.push([Math.cos(a) * (R + 10), cz + Math.sin(a) * (R + 10)]);
 }
-cradle.push([-850, cz - 520]);
 for (const x of [-1300, 1300]) add(`saddle-${x}`, prismX(cradle, x - 60, x + 60).color(trim));
 
 // ---- Pressure shell with jacket bands, crown nozzles and nameplate ----

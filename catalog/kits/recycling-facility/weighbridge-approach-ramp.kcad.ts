@@ -57,7 +57,7 @@ add("apron-edge", blk(XT - 700, 0, 30, 100, W + 500, 10).color('#7c7d77'));
 // Tread plate: a sloped slab of constant thickness.
 add("tread-plate", prismY([[XT, ZT - 20], [XH, ZH - 20], [XH, ZH], [XT, ZT]], -W / 2, W / 2).color(rampSteel));
 // Side cheeks and internal ribs: triangles under the plate.
-const cheek = [[XT + 40, 30], [XH, 30], [XH, ZH - 20], [XT + 40, zs(XT + 40) - 20]];
+const cheek = [[XT + 60, 30], [XH, 30], [XH, ZH - 20], [XT + 60, zs(XT + 60) - 20]];
 add("cheek-l", prismY(cheek, -W / 2, -W / 2 + 16).color(rampSteel));
 add("cheek-r", prismY(cheek, W / 2 - 16, W / 2).color(rampSteel));
 for (const [i, y] of [[0, -500], [1, 500]] as const) add(`rib-${i}`, prismY(cheek, y - 8, y + 8).color(rampSteel));

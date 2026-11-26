@@ -42,7 +42,7 @@ const helmetShell = () => path()
 const helmetLiner = () => cylinder(18, 132, 12)
   .subtract(cylinder(20, 116, 12).translate(0, 0, -1)).translate(0, 0, 40).scale(scale);
 const helmetStrap = (side: number) => {
-  const points: [number, number][] = [[side * 112, 66], [side * 96, 62], [side * 18, 0], [side * 4, 6]];
+  const points: [number, number][] = [[side * 112, 66], [side * 96, 62], [side * 4, 6], [side * 18, 0]];
   let outline = path().moveTo(points[0][0], points[0][1]);
   for (const [x, z] of points.slice(1)) outline = outline.lineTo(x, z);
   return outline.close().extrude(14).rotateX(90).translate(0, -133, 0).scale(scale);

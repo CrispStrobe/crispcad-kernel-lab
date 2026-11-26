@@ -8257,7 +8257,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/alpine-expedition/alpine-helmet.kcad.ts",
       "preview": "/assets/alpine-expedition-alpine-helmet.png",
-      "sourceSha256": "b673c8129be0d0c8b8e4b48953d0205ea938f63fff72469046f5f239476e65ff",
+      "sourceSha256": "e645bfc17bd835d2effa8f97f230db61f64018f2fd036cc4fa9f3425e45314c9",
       "triangleBudget": 2400,
       "params": [
         {
@@ -8299,7 +8299,7 @@
         }
       },
       "stats": {
-        "triangles": 326,
+        "triangles": 334,
         "sizeM": [
           0.348,
           0.23,
@@ -19716,7 +19716,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/amusement-park/miniature-park-tram-coach.kcad.ts",
       "preview": "/assets/amusement-park-miniature-park-tram-coach.png",
-      "sourceSha256": "448444fb19a598d10d5e95ef871678df22dfb586189b1d62cefebf3ad4bf4ac3",
+      "sourceSha256": "e6f9a323d5c5d2105af7c10ac69882950a016ed322366edfe7c183c31f841651",
       "triangleBudget": 7000,
       "params": [
         {
@@ -19774,7 +19774,7 @@
         }
       },
       "stats": {
-        "triangles": 5722,
+        "triangles": 5808,
         "sizeM": [
           2.296,
           1.864,
@@ -19958,7 +19958,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/amusement-park/miniature-park-tram-engine.kcad.ts",
       "preview": "/assets/amusement-park-miniature-park-tram-engine.png",
-      "sourceSha256": "3f1a8d2250aa8e8e25d8b18c251467b2f5377352bbcee5f23abc89a0f6c6558a",
+      "sourceSha256": "ecf514c7e33be79dc5fbb8434ce6f25ac3d0e59ce476a835efd5fe38a09bf2c3",
       "triangleBudget": 7000,
       "params": [
         {
@@ -20016,10 +20016,10 @@
         }
       },
       "stats": {
-        "triangles": 5744,
+        "triangles": 5774,
         "sizeM": [
-          2.38,
-          1.595,
+          2.4,
+          1.59,
           0.94
         ],
         "minUpM": 0,
@@ -144650,7 +144650,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/industrial-plant/industrial-boiler.kcad.ts",
       "preview": "/assets/industrial-plant-industrial-boiler.png",
-      "sourceSha256": "67d21d8075844cdea2d1804622d2562045bd4aee47c14a5ca55f2dbaac907a49",
+      "sourceSha256": "5b7b9f4cf7cd454024d0c815d7c6b2d4fe87a9887d7959afa0cf7a41ccf91cfa",
       "triangleBudget": 8000,
       "params": [
         {
@@ -144703,7 +144703,7 @@
         }
       },
       "stats": {
-        "triangles": 3880,
+        "triangles": 3916,
         "sizeM": [
           5.67,
           5.26,
@@ -182937,7 +182937,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/mining/magnetic-separator-drum.kcad.ts",
       "preview": "/assets/mining-magnetic-separator-drum.png",
-      "sourceSha256": "a109d9f828cc2464ac4ff46f019d789b8a420165d01a0963c654209a6e2f1942",
+      "sourceSha256": "60f419bd482486bc4754aa977a49ba21fd57e16584a0bab5181afba0dc2c66e8",
       "triangleBudget": 2800,
       "params": [
         {
@@ -183005,7 +183005,7 @@
         }
       },
       "stats": {
-        "triangles": 1324,
+        "triangles": 1336,
         "sizeM": [
           3.79,
           3.123637,
@@ -242084,7 +242084,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/recycling-facility/cover-soil-spreader.kcad.ts",
       "preview": "/assets/recycling-facility-cover-soil-spreader.png",
-      "sourceSha256": "9cae59fa0e3a19c64250785a1179ac585dc74562c1d79fd3a111f9dbb9455e6a",
+      "sourceSha256": "1d416a11eda8ce91ed07c5a89076fd7a8c678a8a25014192062e28b9b6a2de77",
       "triangleBudget": 2700,
       "params": [
         {
@@ -242148,7 +242148,7 @@
         }
       },
       "stats": {
-        "triangles": 2260,
+        "triangles": 2280,
         "sizeM": [
           7.585,
           2.82,
@@ -268388,7 +268388,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/recycling-facility/tipping-floor-bin.kcad.ts",
       "preview": "/assets/recycling-facility-tipping-floor-bin.png",
-      "sourceSha256": "9697a2d3be4916a38092e26fe3594824cfedfb5e468239e4a74053f15c2c0bde",
+      "sourceSha256": "302914591c1b985dc1f50055207a0261aea2c8db3da70241f2c621918e02c7f6",
       "triangleBudget": 2600,
       "params": [
         {
@@ -268462,7 +268462,7 @@
         }
       },
       "stats": {
-        "triangles": 942,
+        "triangles": 954,
         "sizeM": [
           1.66,
           1.7,
@@ -272334,7 +272334,7 @@
       "license": "CC0-1.0",
       "source": "catalog/kits/recycling-facility/weighbridge-approach-ramp.kcad.ts",
       "preview": "/assets/recycling-facility-weighbridge-approach-ramp.png",
-      "sourceSha256": "4293725d02fcc1c12b403e60cb9936e9b7f35cdc9adc2dd880eaae593044f0b9",
+      "sourceSha256": "e54edebc2f9cbf6e56c8bd253dea6e27e1c01f49140b2e5dc4439b359da48f0d",
       "triangleBudget": 2600,
       "params": [
         {
@@ -272398,7 +272398,7 @@
         }
       },
       "stats": {
-        "triangles": 1404,
+        "triangles": 1420,
         "sizeM": [
           3.95,
           0.782,
