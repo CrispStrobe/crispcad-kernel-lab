@@ -32,23 +32,23 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   on `smlib-native` within the scorecard tolerances
   (`src/modeling/backends/smlib/nativeLowerer.test.ts`).
 - All 2402 catalog models, built on `smlib-native` with OpenCASCADE blocked from
-  loading (2026-11-26, develop `e203019d8`, `experiments/kernel-qualification/catalogCoverage.ts`,
-  results in `results-catalog-native.json`): **2394 (99.7%)** built without an error,
-  70,186 parts. The other 8 have a profile outline that crosses itself and are refused with
-  its crossing point (see "Outlines that cross themselves" below): `alpine-expedition/alpine-helmet`,
+  loading (2026-11-26, commit `ef07c30bf`, `experiments/kernel-qualification/catalogCoverage.ts`,
+  results in `results-catalog-native.json`): **2402 (100%)** built without an error,
+  70,745 parts. Eight of them had a profile outline that crossed itself and were refused by
+  `e203019d8` (see "Outlines that cross themselves" below); `ef07c30bf` corrected those outlines
+  in the models to the simple ones they meant (`alpine-expedition/alpine-helmet`,
   `amusement-park/miniature-park-tram-coach` and `-engine`, `industrial-plant/industrial-boiler`,
   `mining/magnetic-separator-drum`, `recycling-facility/cover-soil-spreader`, `tipping-floor-bin`
-  and `weighbridge-approach-ramp`. The previous run (2026-11-25) built them as solids whose
-  volume is the signed area of that outline; OpenCASCADE's builds of them fail BRepCheck. The
-  2394 others have the same volume, area (to 1e-9) and box (to 1e-6 mm) as in that run. No model
-  crashed the process and none reached for OpenCASCADE. Build time: median 0.18 s per model,
-  38 min of build time over 4 workers (18.6 min wall) on an M1 shared with other sessions (load
-  average 17–55), down from 3.2 h with 0.1.1's slow exact box. The slowest,
-  `fire-rescue/quint-fire-apparatus` (210 parts), took 8.4 min. Per-model volume, area and box (sum and union over
+  and `weighbridge-approach-ramp`; the commit message lists each edit). Every part of the eight
+  is now valid by BRepCheck in OpenCASCADE, and the native and OCCT volumes agree part by part
+  to 2.4e-11. The other 2394 have the same volume and area (to 1e-15) and box (to 1e-6 mm) as
+  in the run before. No model crashed the process and none reached for OpenCASCADE. Build
+  time: median 0.14 s per model, 36 min of build time over 4 workers (14.3 min wall) on an M1
+  shared with other sessions (load average 35–80). The slowest,
+  `fire-rescue/quint-fire-apparatus` (210 parts), took 6.8 min. Per-model volume, area and box (sum and union over
   the parts at their world placements, exact `boundingBox()`) are in
   `results-catalog-native-volumes.json`, in the input format of CrispCAD's catalog
-  cross-check (`--native`; `labCommit` is the commit the run was taken at; the 8 refused models
-  are `status: "error"`).
+  cross-check (`--native`; `labCommit` is the commit the run was taken at).
 
   ```sh
   node --import tsx experiments/kernel-qualification/catalogCoverage.ts --jobs 4 \
@@ -91,6 +91,10 @@ both lobes would be 8,148 mm³. Since there is no valid result to match, `smlib-
 crossing point; `invalid-input` in the package). Outlines that only touch themselves (a shared
 vertex, a vertex on another edge, an edge running back along another) still build. The check
 is `src/modeling/backends/smlib/profileCrossing.ts`, a copy of the package's `outline.ts`.
+The eight catalog models that had such outlines were corrected (`ef07c30bf`): the helmet's strap
+vertices are now in band order, (112,66), (96,62), (4,6), (18,0), a 1008 mm² strap of
+14,112 mm³; the other seven had arcs that overshot a straight edge, a swapped pair of points, or
+a toe point below its base line.
 
 ## Mated assemblies
 
