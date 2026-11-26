@@ -11,8 +11,13 @@ relicensed MIT here.
 Bundled third-party code
 ------------------------
 
-dist/ contains a prebundled copy of @classcad/smlibwasm 0.6.2
-(https://github.com/awv-informatik/smlibpy, directory js):
+dist/ contains a prebundled copy of smlibwasm 0.6.2 (@classcad/smlibwasm,
+https://github.com/awv-informatik/smlibpy, directory js), built from source:
+smlibpy v0.6.2 (commit a6320aa21df7c7fa4980e10ed5a94f5bcd94ce65) with USD BRep at commit
+c9c5979f04cea8c38213004d4f04df0dcfb40d05, compiled with Emscripten 6.0.12 (emsdk
+35ff8a6d150541276abbc6bae512ca90bcfbe220) and TypeScript 5.9.3. BUILD-PROVENANCE.json
+records these sources, the build and the sha256 of every file of the build; each is
+identical to the file published on npm as @classcad/smlibwasm@0.6.2.
 
   smlibwasm
   Copyright (c) 2026 AWV Informatik AG. Licensed under the MIT License
@@ -30,7 +35,7 @@ dist/ contains a prebundled copy of @classcad/smlibwasm 0.6.2
   A few USD BRep source files are compiled from copies modified by AWV Informatik AG to
   fix defects; the copies, each with a notice of what was changed, are in
   third_party/patches of the smlibpy repository, whose third_party/patches/README.md
-  lists the changes. dist/smlibwasm.wasm is the unmodified file from the npm package.
+  lists the changes. dist/smlibwasm.wasm is the module so built, unmodified.
 
   The Emscripten runtime in the loader is used under the MIT License
   (licenses/emscripten-LICENSE).

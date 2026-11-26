@@ -1,7 +1,7 @@
 {
   "name": "@crispcad/exact-kernel",
   "version": "0.1.4",
-  "description": "Exact B-rep kernel with an MIT + Apache-2.0 closure: a narrow ExactKernel interface on SMLib (@classcad/smlibwasm 0.6.2, prebundled without its font). From the CrispCAD kernel lab.",
+  "description": "Exact B-rep kernel with an MIT + Apache-2.0 closure: a narrow ExactKernel interface on SMLib (smlibwasm 0.6.2, built from source and prebundled without its font). From the CrispCAD kernel lab.",
   "license": "MIT AND Apache-2.0",
   "author": "CrispCAD contributors",
   "type": "module",
@@ -28,6 +28,7 @@
     "dist",
     "LICENSE",
     "NOTICE",
+    "BUILD-PROVENANCE.json",
     "licenses",
     "README.md"
   ],
@@ -36,10 +37,11 @@
     "pretest": "node scripts/build.mjs",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json",
-    "prepack": "node scripts/build.mjs"
+    "prepack": "node scripts/build.mjs",
+    "build:smlibwasm": "sh scripts/build-smlibwasm.sh",
+    "release": "sh scripts/release.sh"
   },
   "devDependencies": {
-    "@classcad/smlibwasm": "0.6.2",
     "esbuild": "^0.27.2",
     "typescript": "~5.9.3",
     "vitest": "^4.0.18"
