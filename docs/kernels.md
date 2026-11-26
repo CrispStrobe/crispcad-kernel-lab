@@ -158,6 +158,19 @@ parts above through the interface at 1e-6 (worst relative volume error 2.5e-15,
 area 1.2e-11). Build and test it with `npm run test:exact-kernel`; releases are
 GitHub release tarballs on `exact-kernel-v*` tags, never npm.
 
+The bundled WebAssembly can be rebuilt from source:
+[`packages/exact-kernel/scripts/build-smlibwasm.sh`](../packages/exact-kernel/scripts/build-smlibwasm.sh)
+builds smlibwasm 0.6.2's module from smlibpy `v0.6.2` (`a6320aa2`, MIT: the embind bindings
+in `js/cpp`, the build files and a few patched kernel files) and usd-brep `c9c5979f`
+(Apache-2.0: SMLib, SM_API, SmPyLib) with emsdk 6.0.12, the version smlibpy's release job uses,
+and compares the result with the npm binary. On 2026-11-26 both `smlibwasm.wasm` and its loader
+`smlibwasm.mjs` came out byte-identical to `@classcad/smlibwasm@0.6.2` (macOS arm64 host; the
+published build ran on Ubuntu x86_64), so the binary the package bundles is reproducible from
+permissively licensed source. The npm tarball's integrity also matches the digest in its signed
+SLSA provenance, which names smlibpy's release workflow at tag v0.6.2. The release keeps
+bundling the npm module; [BUILD-WASM.md](../packages/exact-kernel/BUILD-WASM.md) has the pins,
+the licences of everything compiled, and the disk the SDK needs.
+
 The lab's own `smlib-native` backend (`src/modeling/backends/smlib/`) does not use
 the package yet. Its feature lowering could move onto `ExactKernel` later; the
 package already carries the operations that lowering needs except holes, patterns

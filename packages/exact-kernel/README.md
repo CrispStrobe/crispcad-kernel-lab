@@ -137,6 +137,10 @@ npm pack             # crispcad-exact-kernel-<version>.tgz (prepack rebuilds)
 Release: tag `exact-kernel-v<version>` and attach the tarball to a GitHub release with its
 SHA-256. Do not publish to npm.
 
+`dist/smlibwasm.wasm` is reproducible from source: `sh scripts/build-smlibwasm.sh` rebuilds it
+with pinned sources and Emscripten and checks it is byte-identical to the npm binary
+([BUILD-WASM.md](BUILD-WASM.md)).
+
 ## Provenance
 
 The interface and SMLib adapter come from CrispCAD's `experiments/exact-kernel` (same author,
