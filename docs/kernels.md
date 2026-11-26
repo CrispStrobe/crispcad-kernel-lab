@@ -165,9 +165,13 @@ catalog's ruled lofts.
 ### Native lowering and `@crispcad/exact-kernel`
 
 `smlib-native` applies both rules to every loft (ruled or smooth) whose sections are all
-single straight-edged loops, and builds the sections as wires of lines in the matched order. The
-package does the same for `profile.path` sections of lines and one-contour `profile.polygon`
-sections (0.1.5, `compatible-sections.ts`, a copy). Per part against OCCT
+single straight-edged loops, and builds the sections as wires of lines in the matched order
+(`compatibleSections(sections, 'closest')`: `.kcad.ts` lofts mean what ThruSections builds). The
+package inserts vertices the same way for `profile.path` sections of lines and one-contour
+`profile.polygon` sections with different counts (`compatible-sections.ts`, a copy), but since
+0.1.6 re-starts equal sections only with `loft(…, { pairing: 'closest' })`: its default,
+`'authored'`, joins vertex i to vertex i as drawn, which is what CrispCAD's CAD Script lofts are
+defined by (0.1.5 re-started them always and broke them). Per part against OCCT
 (`experiments/kernel-qualification/partVolumes.ts`, which builds a model on both kernels and
 prints the volumes part by part):
 

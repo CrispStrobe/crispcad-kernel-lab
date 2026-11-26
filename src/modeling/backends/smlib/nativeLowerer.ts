@@ -312,7 +312,8 @@ export class NativeSmlibLowerer implements FeatureLowerer {
       const pl = plane(i), o = origin(i);
       return s.polygon!.map(([x, y]): P3 => (pl === 'YZ' ? [o[0], o[1] + x, o[2] + y] : pl === 'XZ' ? [o[0] + x, o[1], o[2] + y] : [o[0] + x, o[1] + y, o[2]]));
     });
-    const equal = compatibleSections(placed);
+    // `.kcad.ts` lofts mean what OCCT's ThruSections builds from them: pair the sections as it does.
+    const equal = compatibleSections(placed, 'closest');
     if (!equal) throw new Error('The loft sections cannot be matched vertex to vertex (OpenCASCADE fails on them too).');
     return equal.map(pts => new sm.Wire(pts.map((p, k) => sm.Line([...p] as Vec3, [...pts[(k + 1) % pts.length]!] as Vec3))));
   }

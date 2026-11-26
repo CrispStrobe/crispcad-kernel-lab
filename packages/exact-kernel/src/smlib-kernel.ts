@@ -31,21 +31,145 @@ export const SMLIB_MESH_ANGLE = 10;
 /** SPDX licence of everything this package runs: the bundle has no font file. */
 export const EXACT_KERNEL_LICENCE = 'MIT AND Apache-2.0';
 
-/** How the SMLib WebAssembly is loaded (see `@classcad/smlibwasm/init`). Options only count
- * on the first call in a process or worker; a later call with other options is an error. */
+/** How the SMLib WebAssembly is loaded (see `@classcad/smlibwasm/init`), and its limits. Load
+ * options only count on the first call in a process or worker; a later call with other options is
+ * an error. */
 export interface SmlibLoadOptions {
   /** A compiled module, e.g. compiled once and passed to a restarted worker. */
   wasmModule?: WebAssembly.Module;
   wasmBinary?: ArrayBuffer | Uint8Array;
   /** Where to fetch `smlibwasm.wasm` from (default: next to the bundle). */
   locateFile?: (path: string, scriptDirectory: string) => string;
+  /**
+   * Ceiling for the kernel's WebAssembly memory, in bytes (rounded down to 64 KiB pages; at least
+   * the initial 64 MiB). The module itself may grow to 4 GiB; with a ceiling, growth past it fails
+   * as an allocation failure does (SMLib reports it as an error, e.g. "ran out of memory", and the
+   * kernel should then be discarded). It is enforced at instantiation, on the loaded instance's
+   * memory and the loader's heap-resize import: the module's bytes are not changed, so
+   * `dist/smlibwasm.wasm` stays the pinned build. Only on the first call; it does not cover the
+   * probe worker that runs shell and defeaturing steps in Node and cross-origin-isolated workers
+   * (a kernel of its own).
+   */
+  maxMemoryBytes?: number;
+  /** Seconds a guarded step may take (smlibwasm's GUARD_SECONDS, default 20); see
+   * `SmlibKernel.setGuardSeconds`. */
+  guardSeconds?: number;
+}
+
+/** The SMLib kernel: the ExactKernel interface plus SMLib's own limits. */
+export interface SmlibKernel extends ExactKernel {
+  /**
+   * Sets smlibwasm's guard (GUARD_SECONDS, 20 s by default; 0: no limit) and returns the old
+   * value. It holds for the process or worker, not this kernel object. Guarded are the steps that
+   * can crash or loop: shell, offset, thicken, removeFaces / removeFillets and fillets and
+   * chamfers of imported parts (not fillet or chamfer of parts built here). Where a probe worker
+   * can run (Node, Web Workers of a cross-origin-isolated page) the step runs there and is ended
+   * after this many seconds of wall-clock time. Elsewhere (a browser's main thread, an ordinary
+   * Web Worker) it runs in this kernel under SMLib's deadline, which only the long loops of its
+   * surface and topology intersections check: a step that spends its time elsewhere is not
+   * stopped, so a host needs its own budget too.
+   */
+  setGuardSeconds(seconds: number): number;
+  /** The current guard (seconds; 0: none). */
+  guardSeconds(): number;
+  /** The memory ceiling the kernel was loaded with (bytes), if any. */
+  readonly maxMemoryBytes?: number;
+}
+
+const WASM_PAGE = 65536;
+let loadedCap: number | undefined;
+let capping: { bytes: number; loaded: Promise<typeof import('@classcad/smlibwasm')> } | undefined;
+
+/** Where the default `smlibwasm.wasm` is: next to this bundle (dist/). */
+const defaultWasmUrl = () => new URL('./smlibwasm.wasm', import.meta.url);
+
+async function wasmSource(options: SmlibLoadOptions): Promise<WebAssembly.Module | Uint8Array | ArrayBuffer> {
+  if (options.wasmModule) return options.wasmModule;
+  if (options.wasmBinary) return options.wasmBinary;
+  const base = defaultWasmUrl();
+  const url = options.locateFile ? options.locateFile('smlibwasm.wasm', new URL('.', base).href) : base.href;
+  const node = !!(globalThis as { process?: { versions?: { node?: string } } }).process?.versions?.node;
+  if (url.startsWith('file:') || (node && !/^[a-z]+:/i.test(url))) {
+    const { readFile } = await import('node:fs/promises');
+    const { fileURLToPath } = await import('node:url');
+    return readFile(url.startsWith('file:') ? fileURLToPath(url) : url);
+  }
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`fetching ${url}: ${response.status} ${response.statusText}`);
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+/**
+ * smlibwasm's `instantiateWasm` hook, with the instance's memory held to `maxBytes`. Emscripten
+ * grows the heap through its `_emscripten_resize_heap` import, which calls `memory.grow`: the
+ * import records the size asked for, and the instance's `grow` refuses a size past the ceiling (a
+ * RangeError, which Emscripten takes as a failed allocation) and otherwise grows at most to the
+ * ceiling (Emscripten asks for 5 to 20 % more than it needs).
+ */
+function cappedInstantiation(options: SmlibLoadOptions, maxBytes: number, fail: (e: Error) => void) {
+  const capPages = Math.floor(maxBytes / WASM_PAGE);
+  return (imports: WebAssembly.Imports, receive: (instance: WebAssembly.Instance) => void) => {
+    let requested = 0, hooked = false;
+    for (const mod of Object.values(imports) as Record<string, unknown>[]) {
+      for (const [key, fn] of Object.entries(mod)) {
+        if (typeof fn === 'function' && fn.name === '_emscripten_resize_heap') {
+          mod[key] = (size: number) => { requested = size >>> 0; return (fn as (size: number) => number)(size); };
+          hooked = true;
+        }
+      }
+    }
+    (async () => {
+      if (!hooked) throw new Error('the loader has no _emscripten_resize_heap import to hold the memory ceiling with');
+      const source = await wasmSource(options);
+      const instance = source instanceof WebAssembly.Module
+        ? await WebAssembly.instantiate(source, imports)
+        : (await WebAssembly.instantiate(source as BufferSource, imports)).instance;
+      const memory = Object.values(instance.exports).find((e): e is WebAssembly.Memory => e instanceof WebAssembly.Memory);
+      if (!memory) throw new Error('the module exports no memory');
+      if (memory.buffer.byteLength > capPages * WASM_PAGE) throw new Error(`the memory ceiling ${maxBytes} bytes is below the module's initial ${memory.buffer.byteLength} bytes`);
+      const grow = memory.grow.bind(memory);
+      Object.defineProperty(memory, 'grow', {
+        configurable: true,
+        value: (pages: number) => {
+          const current = memory.buffer.byteLength / WASM_PAGE;
+          if (Math.ceil(requested / WASM_PAGE) > capPages || current >= capPages) throw new RangeError(`WebAssembly memory ceiling of ${capPages * WASM_PAGE} bytes reached`);
+          return grow(Math.min(pages, capPages - current));
+        },
+      });
+      receive(instance);
+    })().catch(e => fail(e instanceof Error ? e : new Error(String(e))));
+    return {};
+  };
 }
 
 async function loadSmlib(options: SmlibLoadOptions) {
   const { init } = await import('@classcad/smlibwasm/init');
+  const { maxMemoryBytes, ...rest } = options;
+  const load: SmlibLoadOptions = { ...rest };
+  delete load.guardSeconds; // (set after loading, in createSmlibKernel)
   try {
-    return await init(options);
+    if (maxMemoryBytes === undefined) return await init(load);
+    if (!(maxMemoryBytes > 0) || !Number.isFinite(maxMemoryBytes)) invalid('maxMemoryBytes must be a positive number of bytes.');
+    const pages = Math.floor(maxMemoryBytes / WASM_PAGE) * WASM_PAGE;
+    if (capping) {
+      // Loaded (or loading) with a ceiling already: the same one is the same kernel.
+      if (pages !== capping.bytes) invalid(`The kernel was loaded with a memory ceiling of ${capping.bytes} bytes; it loads once per process or worker.`);
+      return await capping.loaded;
+    }
+    let fail: (e: Error) => void = () => {};
+    const failed = new Promise<never>((_, reject) => { fail = reject; });
+    const loaded = Promise.race([init({ instantiateWasm: cappedInstantiation(load, maxMemoryBytes, fail) } as never), failed]);
+    capping = { bytes: pages, loaded };
+    try {
+      const sm = await loaded;
+      loadedCap = pages;
+      return sm;
+    } catch (e) {
+      capping = undefined;
+      throw e;
+    }
   } catch (error) {
+    if (error instanceof ExactKernelError) throw error;
     throw new ExactKernelError('invalid-input', `Could not load SMLib: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
   }
 }
@@ -107,11 +231,16 @@ function sweeps({ sm, solid }: Ctx): Pick<ExactKernel, 'extrude' | 'revolve' | '
       if (!Array.isArray(sections) || sections.length < 2) invalid('A loft needs at least two sections.');
       for (const s of sections) finite('Loft section position', ...s.at);
       return call('loft', () => sm.scope(() => {
-        // Straight-edged single outlines are paired as OCCT's ThruSections pairs them: vertices
-        // inserted where the counts differ, each section re-started where it lies closest
-        // otherwise (compatible-sections.ts).
-        if (sections.every(s => polygonOf(s.profile))) {
-          const matched = compatibleSections(sections.map(s => polygonOf(s.profile)!.map(p => [p[0] + s.at[0], p[1] + s.at[1], p[2] + s.at[2]] as const)))
+        // Straight-edged single outlines with different vertex counts get vertices inserted as
+        // OCCT's ThruSections inserts them; with equal counts they are re-started as OCCT does only
+        // for pairing 'closest' (compatible-sections.ts). 'authored' equal counts take the path below,
+        // as in 0.1.4: vertex i joins vertex i as drawn.
+        const pairing = options.pairing ?? 'authored';
+        if (pairing !== 'authored' && pairing !== 'closest') invalid(`Unknown loft pairing '${String(pairing)}' (authored or closest).`);
+        const counts = sections.map(s => polygonOf(s.profile)?.length);
+        const unequal = counts.some(c => c !== counts[0]);
+        if (counts.every(c => c !== undefined) && (unequal || pairing === 'closest')) {
+          const matched = compatibleSections(sections.map(s => polygonOf(s.profile)!.map(p => [p[0] + s.at[0], p[1] + s.at[1], p[2] + s.at[2]] as const)), pairing)
             ?? invalid('The loft sections cannot be matched vertex to vertex.');
           const wires = matched.map(pts => new sm.Wire(pts.map((p, k) => sm.Line(vec(p), vec(pts[(k + 1) % pts.length]!)))));
           return solid('loft', sm.loft(wires, { ruled: !!options.ruled }));
@@ -238,8 +367,12 @@ function exchange({ sm, solid }: Ctx): Pick<ExactKernel, 'tessellate' | 'exportS
 }
 
 /** Load SMLib (once per process or worker) and return an ExactKernel on it. */
-export async function createSmlibKernel(options: SmlibLoadOptions = {}): Promise<ExactKernel> {
+export async function createSmlibKernel(options: SmlibLoadOptions = {}): Promise<SmlibKernel> {
   const sm = await loadSmlib(options);
+  if (options.guardSeconds !== undefined) {
+    if (!(options.guardSeconds >= 0)) invalid('guardSeconds must be 0 or more.');
+    sm.setGuardSeconds(options.guardSeconds);
+  }
   sm.setWarningHandler(() => { /* warnings are not failures; results are checked by measure */ });
   const ctx = createContext(sm);
   return {
@@ -255,5 +388,11 @@ export async function createSmlibKernel(options: SmlibLoadOptions = {}): Promise
     ...exchange(ctx),
     memory: (): KernelMemory => { const m = sm.memoryUsage(); return { used: m.used, heap: m.heap, handles: m.handles }; },
     scope: fn => sm.scope(fn),
+    setGuardSeconds: (seconds: number) => {
+      if (!(Number(seconds) >= 0)) invalid('The guard must be 0 or more seconds.');
+      return sm.setGuardSeconds(seconds);
+    },
+    guardSeconds: () => sm.GUARD_SECONDS,
+    ...(loadedCap !== undefined ? { maxMemoryBytes: loadedCap } : {}),
   };
 }

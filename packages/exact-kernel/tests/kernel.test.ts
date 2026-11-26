@@ -100,7 +100,7 @@ describe('operations from the lab native backend', () => {
     const polygons = measured(k.scope(() => k.loft([{ profile: k.profile.polygon([square]), at: [0, 0, 0] }, { profile: k.profile.polygon([octagon]), at: [0, 0, 100] }], { ruled: true })));
     expect(rel(polygons.volume, exact)).toBeLessThan(1e-12);
   });
-  it('lofts sections with different vertex counts as OCCT pairs them, and re-starts equal ones', () => {
+  it("lofts sections with different vertex counts as OCCT pairs them, and with pairing 'closest' re-starts equal ones", () => {
     // Reference volumes from OpenCASCADE 8.0.1's BRepOffsetAPI_ThruSections (ruled) on the same
     // sections, built in the CrispCAD kernel lab (src/modeling/backends/smlib/compatibleSections.test.ts).
     const poly = (r: (i: number) => number, n: number, rot = 0) => Array.from({ length: n }, (_, i) => [r(i) * Math.cos(rot + (2 * Math.PI * i) / n), r(i) * Math.sin(rot + (2 * Math.PI * i) / n)] as [number, number]);
@@ -111,10 +111,10 @@ describe('operations from the lab native backend', () => {
       [poly(() => 50, 5), poly(() => 30, 5, 2.6), 40, 155160.51167163521], // equal counts, drawn from another vertex
     ];
     for (const [a, b, h, occt] of cases) {
-      const paths = measured(k.scope(() => k.loft([{ profile: path(a), at: [0, 0, 0] }, { profile: path(b), at: [0, 0, h] }], { ruled: true })));
+      const paths = measured(k.scope(() => k.loft([{ profile: path(a), at: [0, 0, 0] }, { profile: path(b), at: [0, 0, h] }], { ruled: true, pairing: 'closest' })));
       expect(paths.valid).toBe(true);
       expect(rel(paths.volume, occt)).toBeLessThan(1e-12);
-      const polygons = measured(k.scope(() => k.loft([{ profile: k.profile.polygon([a]), at: [0, 0, 0] }, { profile: k.profile.polygon([b]), at: [0, 0, h] }], { ruled: true })));
+      const polygons = measured(k.scope(() => k.loft([{ profile: k.profile.polygon([a]), at: [0, 0, 0] }, { profile: k.profile.polygon([b]), at: [0, 0, h] }], { ruled: true, pairing: 'closest' })));
       expect(rel(polygons.volume, occt)).toBeLessThan(1e-12);
     }
   });
