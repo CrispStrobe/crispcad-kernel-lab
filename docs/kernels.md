@@ -32,19 +32,23 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   on `smlib-native` within the scorecard tolerances
   (`src/modeling/backends/smlib/nativeLowerer.test.ts`).
 - All 2402 catalog models, built on `smlib-native` with OpenCASCADE blocked from
-  loading (2026-11-25, `experiments/kernel-qualification/catalogCoverage.ts`,
-  results in `results-catalog-native.json`): **2402 (100%)** built without an error,
-  70,745 parts. The 11 that failed in the previous run (2391) build now: 3 helical
-  sweeps, 2 holes on side faces, 1 multi-loop sketch, 1 loft on YZ planes, and 4
-  polygon outlines that touch themselves (SMLib's `SM_ERR` / `SM_ERR_NULL_POINTER`).
-  No model crashed the process and none reached for OpenCASCADE. Build time: median
-  0.49 s per model, 3.2 h of build time over 4 workers on an M1 shared with other
-  sessions (load average 40–230). The slowest, `fire-rescue/quint-fire-apparatus`
-  (210 parts), took 61 min in the run; alone it builds in 24 min, and 30 min on the code
-  before this change, so it is slow on SMLib, not slower now. Per-model volume, area and box (sum and union over
+  loading (2026-11-26, develop `e203019d8`, `experiments/kernel-qualification/catalogCoverage.ts`,
+  results in `results-catalog-native.json`): **2394 (99.7%)** built without an error,
+  70,186 parts. The other 8 have a profile outline that crosses itself and are refused with
+  its crossing point (see "Outlines that cross themselves" below): `alpine-expedition/alpine-helmet`,
+  `amusement-park/miniature-park-tram-coach` and `-engine`, `industrial-plant/industrial-boiler`,
+  `mining/magnetic-separator-drum`, `recycling-facility/cover-soil-spreader`, `tipping-floor-bin`
+  and `weighbridge-approach-ramp`. The previous run (2026-11-25) built them as solids whose
+  volume is the signed area of that outline; OpenCASCADE's builds of them fail BRepCheck. The
+  2394 others have the same volume, area (to 1e-9) and box (to 1e-6 mm) as in that run. No model
+  crashed the process and none reached for OpenCASCADE. Build time: median 0.18 s per model,
+  38 min of build time over 4 workers (18.6 min wall) on an M1 shared with other sessions (load
+  average 17–55), down from 3.2 h with 0.1.1's slow exact box. The slowest,
+  `fire-rescue/quint-fire-apparatus` (210 parts), took 8.4 min. Per-model volume, area and box (sum and union over
   the parts at their world placements, exact `boundingBox()`) are in
   `results-catalog-native-volumes.json`, in the input format of CrispCAD's catalog
-  cross-check (`--native`; `labCommit` is the commit the run was taken at).
+  cross-check (`--native`; `labCommit` is the commit the run was taken at; the 8 refused models
+  are `status: "error"`).
 
   ```sh
   node --import tsx experiments/kernel-qualification/catalogCoverage.ts --jobs 4 \
@@ -53,7 +57,7 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
     --log /tmp/coverage.jsonl   # resumable: rerun with the same --log after an interruption
   ```
 
-  Of the 11, the seven without helical sweeps or the YZ loft agree with their OCCT
+  In the 2026-11-25 run (2402 built), 11 models built for the first time. Of those 11, the seven without helical sweeps or the YZ loft agree with their OCCT
   builds to 1e-6 in volume, part by part, and the three helical-sweep models to 7.2e-6
   in total (`standard-components/beam-coupling`; the axial helix is a 48-section-per-turn
   loft here and a fitted spine there). The two self-touching outlines with a zero-width slit or a
@@ -139,9 +143,11 @@ fillet, chamfer, shell, measures and mass properties, tessellation, STL and exac
 in and out) on SMLib. 0.1.1 makes `bbox` exact (0.1.2 makes it fast again on trimmed curved bodies; 0.1.3 refuses
 profile outlines that cross themselves), `convexHull` robust for long multi-section
 lofts (exact-planarity face merging, 1024-point budget) and splits non-planar polyhedron
-faces; see its README. A draft upstream report for the two smlibwasm problems found on the
+faces; see its README. An upstream report for the two smlibwasm problems found on the
 way (rotated-sphere `bbox`, hole-first `xor`) is in
-[smlibwasm-upstream-report.md](smlibwasm-upstream-report.md); it has not been sent. It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
+[smlibwasm-upstream-report.md](smlibwasm-upstream-report.md); both are filed
+(<https://github.com/NVIDIA-Omniverse/usd-brep/issues/75> for the box, which is SMLib's tight box,
+and <https://github.com/awv-informatik/smlibpy/issues/45> for `xor`). It prebundles `@classcad/smlibwasm` 0.6.2 with its font module
 replaced by an empty one, so the release tarball contains only MIT and Apache-2.0
 files; its licence test checks the packed tarball. Its tests build the 27 reference
 parts above through the interface at 1e-6 (worst relative volume error 2.5e-15,

@@ -1,9 +1,19 @@
-# Draft upstream report for @classcad/smlibwasm
+# Upstream report for @classcad/smlibwasm
 
-Status: **draft, not sent.** Written for the owner to decide whether to file it at
-<https://github.com/awv-informatik/smlibpy/issues>. Both problems are worked around in
-`@crispcad/exact-kernel` 0.1.1 and the lab's `smlib-native` backend; the repros use smlibwasm
-alone.
+Status: **filed 2026-11-26**, after both problems were re-checked on `@classcad/smlibwasm` 0.6.2
+(the latest on npm) with standalone scripts against the npm package:
+
+- `bbox()` of a rotated sphere: <https://github.com/NVIDIA-Omniverse/usd-brep/issues/75>.
+  smlibwasm's `Part.bbox()` calls `SmApiBrepBoundingBox(bTight = TRUE)`, i.e. SMLib's
+  `SmFace::CalculateTightBoundingBox`, which smlibwasm does not patch; the kernel (usd-brep) owns it.
+- `xor(hole, outer)`: <https://github.com/awv-informatik/smlibpy/issues/45>. smlibwasm's
+  `Sketch.xor` runs its own planar-Boolean route (rebuilt operands, fallbacks) on the kernel's
+  `Boolean2D`, so it is filed with smlibwasm (its npm `bugs` URL is the smlibpy tracker).
+
+Both problems are worked around in `@crispcad/exact-kernel` 0.1.1 and the lab's `smlib-native`
+backend; the repros use smlibwasm alone. The texts below are the drafts; the filed issues use the
+same repros (the xor one with a smaller square-in-square case, which does show the problem when
+the clockwise square comes first).
 
 ---
 
@@ -59,7 +69,7 @@ const b = extrude(xor(hole(), outer()), 30);
 b.volume, b.area, b.isValid(); // 5904000, -186581.203, true   expected area 600618.797
 ```
 
-Expected: `xor` is symmetric, and a solid with a negative area is not valid. A simple square in
-a square does not show it.
+Expected: `xor` is symmetric, and a solid with a negative area is not valid. A clockwise square
+inside a 10 × 10 square, first, shows it too: extruded by 1, area -64 instead of 192.
 
 **Workaround used:** regions are passed to `xor` largest first.

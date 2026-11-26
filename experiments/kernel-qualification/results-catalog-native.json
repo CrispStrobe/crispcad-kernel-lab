@@ -1,10 +1,95 @@
 {
   "summary": {
     "total": 2402,
-    "ok": 2402,
-    "failed": 0,
-    "wallSeconds": 7041,
-    "categories": {}
+    "ok": 2394,
+    "failed": 8,
+    "wallSeconds": 1118,
+    "categories": {
+      "recompute.lowering.exception,recompute.input.missing: The polygon outline crosses itself at (-N, N), so it bounds no region and cannot be built ": 6,
+      "recompute.lowering.exception,recompute.input.missing: The sketch outline crosses itself at (-N, N), so it bounds no region and cannot be built a": 1,
+      "recompute.lowering.exception,recompute.input.missing: The polygon outline crosses itself at (N, N), so it bounds no region and cannot be built a": 1
+    }
   },
-  "failures": []
+  "failures": [
+    {
+      "file": "catalog/kits/alpine-expedition/alpine-helmet.kcad.ts",
+      "ok": false,
+      "ms": 344.08416599999964,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The sketch outline crosses itself at (-75.5714, 45.7619), so it bounds no region and cannot be built as a solid."
+    },
+    {
+      "file": "catalog/kits/amusement-park/miniature-park-tram-coach.kcad.ts",
+      "ok": false,
+      "ms": 2119.8511670000007,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The polygon outline crosses itself at (-483.623, 1771), so it bounds no region and cannot be built as a solid."
+    },
+    {
+      "file": "catalog/kits/amusement-park/miniature-park-tram-engine.kcad.ts",
+      "ok": false,
+      "ms": 3310.0664160000015,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The polygon outline crosses itself at (-417.772, 1527.86), so it bounds no region and cannot be built as a solid."
+    },
+    {
+      "file": "catalog/kits/industrial-plant/industrial-boiler.kcad.ts",
+      "ok": false,
+      "ms": 1905.4916659999872,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The polygon outline crosses itself at (850, 861.023), so it bounds no region and cannot be built as a solid."
+    },
+    {
+      "file": "catalog/kits/mining/magnetic-separator-drum.kcad.ts",
+      "ok": false,
+      "ms": 741.1142089999921,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The polygon outline crosses itself at (-697.98, 1660), so it bounds no region and cannot be built as a solid."
+    },
+    {
+      "file": "catalog/kits/recycling-facility/cover-soil-spreader.kcad.ts",
+      "ok": false,
+      "ms": 718.9673329999787,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The polygon outline crosses itself at (-6.66667, 1193.33), so it bounds no region and cannot be built as a solid."
+    },
+    {
+      "file": "catalog/kits/recycling-facility/tipping-floor-bin.kcad.ts",
+      "ok": false,
+      "ms": 231.79712499998277,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The polygon outline crosses itself at (-521.467, 340), so it bounds no region and cannot be built as a solid."
+    },
+    {
+      "file": "catalog/kits/recycling-facility/weighbridge-approach-ramp.kcad.ts",
+      "ok": false,
+      "ms": 473.39549999998417,
+      "codes": [
+        "recompute.lowering.exception",
+        "recompute.input.missing"
+      ],
+      "message": "The polygon outline crosses itself at (-1448.28, 30), so it bounds no region and cannot be built as a solid."
+    }
+  ]
 }
