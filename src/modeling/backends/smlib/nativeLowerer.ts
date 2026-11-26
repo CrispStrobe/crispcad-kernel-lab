@@ -16,6 +16,7 @@ import type { BackendTarget } from '../../../shared/types/backendTarget';
 import { loadSmlib } from './runtime';
 import { polygonLoops } from './polygonLoops';
 import { outlineCrossing, type OutlinePoint } from './profileCrossing';
+import { compatibleSections, type P3 } from './compatibleSections';
 import { isSceneBackend, type SceneBackend, type SceneBackendPart } from '../../../kernel/backends/sceneBackend';
 import { lookupSourceColor, lookupSourceMaterial } from '../../../kernel/backends/occt/lookupSourceColor';
 import { resolvedPartAt } from '../../mates/partFrame';
@@ -81,10 +82,15 @@ export class SmlibSketchBackend implements ShapeBackend {
    *  edges run on collinearly, starts at another vertex), and a ruled loft joins vertex i of one
    *  section to vertex i of the next, so lofts take this wire. */
   readonly outline?: Wire;
-  constructor(sketch: Sketch, closed: boolean, outline?: Wire) {
+  /** The outline's vertices as drawn when all its edges are straight (sketch x, y). Lofts
+   *  between such sections with different vertex counts equalise them as OCCT does
+   *  (compatibleSections.ts). */
+  readonly polygon?: readonly Vec3[];
+  constructor(sketch: Sketch, closed: boolean, outline?: Wire, polygon?: readonly Vec3[]) {
     this.sketch = sketch;
     this.closed = closed;
     this.outline = outline;
+    this.polygon = polygon;
   }
   private flat(): never { throw new Unsupported('A sketch is a profile, not a solid; extrude, revolve, loft or sweep it first.'); }
   translate(): ShapeBackend { return this.flat(); }
@@ -282,7 +288,9 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     const outlines = sketches.every(s => s.outline)
       ? sketches.map((s, i) => onPlane(s.outline as never, planeOf(i)?.plane).translate(originOf(i).map(num) as Vec3) as unknown as Wire)
       : undefined;
-    let part = sm.loft(outlines ?? sections, { ruled }) as Part;
+    // Polygons with different vertex counts: insert vertices and pair them as OCCT does.
+    const equalised = this.equalisedPolygons(sm, sketches, i => planeOf(i)?.plane, i => originOf(i).map(num) as Vec3);
+    let part = sm.loft(equalised ?? outlines ?? sections, { ruled }) as Part;
     // startPoint / endPoint: the loft runs on from the first / last section to an apex.
     const apex = (key: 'startPoint' | 'endPoint') => r.metadata?.[key] as unknown[] | undefined;
     for (const [key, section] of [['startPoint', sections[0]], ['endPoint', sections.at(-1)!]] as const) {
@@ -292,6 +300,21 @@ export class NativeSmlibLowerer implements FeatureLowerer {
       part = part.fuse(pyramid(sm, section, point.map(num) as Vec3));
     }
     return this.solid(sm, part);
+  }
+
+  /** Loft sections that are all straight-edged single loops with different vertex counts, as
+   *  wires with equal counts paired the way OCCT's ThruSections pairs them (compatibleSections.ts);
+   *  undefined otherwise. */
+  private equalisedPolygons(sm: Smlib, sketches: readonly SmlibSketchBackend[], plane: (i: number) => string | undefined, origin: (i: number) => Vec3): Wire[] | undefined {
+    if (!sketches.every(s => s.polygon)) return undefined;
+    // Sketch (x, y) onto replicad's planes, as onPlane does: YZ is (0, x, y), XZ is (x, 0, y).
+    const placed = sketches.map((s, i) => {
+      const pl = plane(i), o = origin(i);
+      return s.polygon!.map(([x, y]): P3 => (pl === 'YZ' ? [o[0], o[1] + x, o[2] + y] : pl === 'XZ' ? [o[0] + x, o[1], o[2] + y] : [o[0] + x, o[1] + y, o[2]]));
+    });
+    const equal = compatibleSections(placed);
+    if (!equal) throw new Error('The loft sections cannot be matched vertex to vertex (OpenCASCADE fails on them too).');
+    return equal.map(pts => new sm.Wire(pts.map((p, k) => sm.Line([...p] as Vec3, [...pts[(k + 1) % pts.length]!] as Vec3))));
   }
 
   private sweep(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {
@@ -393,7 +416,10 @@ export class NativeSmlibLowerer implements FeatureLowerer {
     const loops = [...pen.loops, pen.edges].filter(l => l.length);
     for (const loop of loops) refuseCrossing('sketch outline', loopOutline(loop));
     const faces = loops.map(l => sm.makeFace(new sm.Wire(l))).sort((a, b) => b.area - a.area);
-    return new SmlibSketchBackend(faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), true, loops.length === 1 ? new sm.Wire(loops[0]) : undefined);
+    const single = loops.length === 1 ? loops[0] : undefined;
+    const outline = single ? loopOutline(single) : undefined;
+    const polygon = single && outline!.length === single.length ? outline!.map(([x, y]) => [x, y, 0] as Vec3) : undefined;
+    return new SmlibSketchBackend(faces.length === 1 ? faces[0] : sm.xor(faces[0], ...faces.slice(1)), true, single ? new sm.Wire(single) : undefined, polygon);
   }
 
   private extrude(sm: Smlib, r: FeatureRecord, inputs: ResolvedInputs): SmlibBackend {

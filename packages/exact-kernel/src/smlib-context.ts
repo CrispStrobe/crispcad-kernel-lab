@@ -17,14 +17,19 @@ interface SolidHandle { part: Part; dispose(): void }
 // `outline`: a path profile's boundary as drawn (from its start point, in its direction). makeFace may
 // start the face's boundary at another vertex (an 8-point square, whose edges run on collinearly),
 // and a ruled loft joins vertex i of one section to vertex i of the next, so lofts take the outline.
-interface ProfileHandle { sketch: Sketch; outline?: Wire; dispose(): void }
+// `polygon`: the vertices of a single straight-edged outline as drawn (path or one-contour polygon
+// profiles); lofts between such sections with different vertex counts pair them as OCCT's
+// ThruSections does (compatible-sections.ts).
+interface ProfileHandle { sketch: Sketch; outline?: Wire; polygon?: readonly Vec3[]; dispose(): void }
 export const solidOf = (part: Part): ExactSolid => ({ part, dispose: () => part.dispose() }) as SolidHandle as unknown as ExactSolid;
-export const profileOf = (sketch: Sketch, outline?: Wire): ExactProfile =>
-  ({ sketch, outline, dispose: () => { sketch.dispose(); outline?.dispose(); } }) as ProfileHandle as unknown as ExactProfile;
+export const profileOf = (sketch: Sketch, outline?: Wire, polygon?: readonly Vec3[]): ExactProfile =>
+  ({ sketch, outline, polygon, dispose: () => { sketch.dispose(); outline?.dispose(); } }) as ProfileHandle as unknown as ExactProfile;
 export const partOf = (s: ExactSolid): Part => (s as unknown as Partial<SolidHandle> | undefined)?.part ?? invalid('Not a solid of this kernel.');
 export const sketchOf = (p: ExactProfile): Sketch => (p as unknown as Partial<ProfileHandle> | undefined)?.sketch ?? invalid('Not a profile of this kernel.');
 /** A path profile's outline as drawn, or undefined for other profiles. */
 export const outlineOf = (p: ExactProfile): Wire | undefined => (p as unknown as Partial<ProfileHandle> | undefined)?.outline;
+/** A straight-edged single-outline profile's vertices as drawn (z = 0), or undefined. */
+export const polygonOf = (p: ExactProfile): readonly Vec3[] | undefined => (p as unknown as Partial<ProfileHandle> | undefined)?.polygon;
 export const vec = (v: Vec3): [number, number, number] => [v[0], v[1], v[2]];
 
 /** Run a kernel operation; kernel exceptions become ExactKernelError('kernel-failure'). */
