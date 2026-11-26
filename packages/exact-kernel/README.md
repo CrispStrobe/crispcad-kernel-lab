@@ -91,6 +91,12 @@ volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
 
+- **0.1.4**: a `loft` of `profile.path` sections joins vertex i of each section to vertex i of
+  the next as drawn. A path profile's face came from SMLib's `makeFace`, which may start its
+  boundary at another vertex (a square drawn as 8 points, corners and edge midpoints): ruled to
+  an octagon 100 mm higher it came out at 113.4e6 mm³ instead of 224.1e6 (the catalog's
+  `nature/ground-tile` and `nature/hill-tile`). Path profiles now keep their outline and lofts
+  use it. `profile.polygon` sections were not affected.
 - **0.1.3**: `profile.polygon` and `profile.path` refuse an outline that crosses itself with
   `invalid-input` and the crossing point. Such an outline (a bow tie, a pentagram) bounds no
   region, but SMLib built a face from it whose extrusion measured the winding-weighted area: the
