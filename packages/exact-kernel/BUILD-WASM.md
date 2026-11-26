@@ -1,25 +1,46 @@
-# Building smlibwasm's WebAssembly from source
+# Building smlibwasm from source
 
-`@crispcad/exact-kernel` bundles `dist/smlibwasm.wasm`, the WebAssembly module of
-[`@classcad/smlibwasm`](https://www.npmjs.com/package/@classcad/smlibwasm) 0.6.2 from npm.
-[`scripts/build-smlibwasm.sh`](scripts/build-smlibwasm.sh) rebuilds that module from source
-with pinned sources and a pinned Emscripten and compares it with the published one. On
-2026-11-26 the rebuild was **byte-identical** to the npm binary: `smlibwasm.wasm` and its
-loader `smlibwasm.mjs` both matched (sha256 below). The release still bundles the npm module;
-the script shows that it can be reproduced from source.
+`@crispcad/exact-kernel` bundles smlibwasm 0.6.2 (the
+[`@classcad/smlibwasm`](https://www.npmjs.com/package/@classcad/smlibwasm) package): its
+WebAssembly module as `dist/smlibwasm.wasm`, and its JavaScript and the module's loader inside the
+bundle. Since 0.1.5 the release is built from source:
+[`scripts/build-smlibwasm.sh`](scripts/build-smlibwasm.sh) builds the whole package tree (the
+module and loader with a pinned Emscripten, the JavaScript and type declarations with the pinned
+TypeScript) from pinned sources, and [`scripts/release.sh`](scripts/release.sh) bundles that tree.
+Every file of it has a sha256 pinned in [`BUILD-PROVENANCE.json`](BUILD-PROVENANCE.json), which
+also records the sources and the build and is shipped in the tarball. On 2026-11-26 all 119 files
+came out byte-identical to the npm package's (which also holds `fonts/OFL.txt`, the licence of a
+font this package leaves out), so the source build and the npm binary are the same bytes, and the
+release checks that every time:
+
+- `build-smlibwasm.sh` exits 3 if any built file differs from its pin;
+- `release.sh` checks the source build against the pins, downloads the npm tarball and checks its
+  integrity (sha512) and every pinned file in it, builds, tests and packs the package on the source
+  build, and checks the packed `dist/smlibwasm.wasm` and `dist/bundle-inputs.json`
+  (`"build": { "from": "source" }`); any difference stops it;
+- `scripts/build.mjs` refuses to bundle a smlibwasm file whose sha256 is not the pinned one, so a
+  development build from the lab's npm install (`"from": "npm"`) bundles the same bytes.
+
+The package has no dependency on `@classcad/smlibwasm` any more; the lab itself still installs it
+for its `smlib-native` backend, and development builds and tests take it from there.
 
 ```sh
 sh packages/exact-kernel/scripts/build-smlibwasm.sh   # exit 0: identical; 3: built but differs
+OUT=/tmp/smlibwasm sh packages/exact-kernel/scripts/build-smlibwasm.sh   # keep the tree
+SMLIBWASM_BUILD=/tmp/smlibwasm sh packages/exact-kernel/scripts/release.sh   # release from it
+sh packages/exact-kernel/scripts/release.sh            # or build from source and release
+node packages/exact-kernel/scripts/smlibwasm-provenance.mjs <tree>   # check any tree against the pins
 ```
 
-Needs `git`, `cmake` (3.20 or later; 4.1.1 was used), `ninja`, `python3` and `shasum` on the
-PATH, and about 2.3 GB of disk: 1.8 GB for the Emscripten SDK, which is kept in
-`~/.cache/crispcad-lab/emsdk-6.0.12` (`EMSDK_DIR`) for the next run, and under 0.5 GB of sources and
-build tree in a temporary directory (`WORK`) that is removed afterwards. Remove the SDK with
-`rm -rf ~/.cache/crispcad-lab/emsdk-6.0.12`. The module and loader are written to `OUT`
-(default inside `WORK`; set `OUT` or `KEEP=1` to keep them). The build compiles about 365 files
-and took 5.5 min on an M1 shared with other jobs (6 min on smlibpy's GitHub runner), with the SDK
-already installed.
+`build-smlibwasm.sh` needs `git`, `cmake` (3.20 or later; 4.1.1 was used), `ninja`, `python3`,
+`shasum`, `node` and `npm` on the PATH, and about 2.4 GB of disk: 1.8 GB for the Emscripten SDK,
+which is kept in `~/.cache/crispcad-lab/emsdk-6.0.12` (`EMSDK_DIR`) for the next run, and under
+0.5 GB of sources and build tree in a temporary directory (`WORK`) that is removed afterwards.
+Remove the SDK with `rm -rf ~/.cache/crispcad-lab/emsdk-6.0.12`. The tree (`wasm/`, `dist/`,
+`package.json`, `NOTICE`, `LICENSE`, `LICENSE.usd-brep`, `README.md` and `.source-build.json`)
+is written to `OUT` (default inside `WORK`; set `OUT` or `KEEP=1` to keep it). The build compiles
+about 365 files and took 5.5 min on an M1 shared with other jobs (6 min on smlibpy's GitHub
+runner), with the SDK already installed; the JavaScript takes seconds.
 
 ## What is pinned
 
@@ -29,6 +50,9 @@ already installed.
 | usd-brep (SMLib, SM_API, SmPyLib) | `c9c5979f04cea8c38213004d4f04df0dcfb40d05` | smlibpy v0.6.2's `third_party/usd-brep` submodule (checked by the script) |
 | Emscripten SDK | emsdk `6.0.12` (commit `35ff8a6d150541276abbc6bae512ca90bcfbe220`), release `6e9f6885cb17a3d6c8fd488a5cff730f50aba61d`, emcc 6.0.12 (`5488e0871d46d19a3209988190fa6a653126256f`) | `EMSDK_VERSION` in smlibpy's `.github/workflows/release.yml`, job `npm`; the release hash from that job's log |
 | Build | smlibpy's `js/scripts/build-wasm.sh`: CMake, Release, Ninja | as in the release job |
+| TypeScript (dist/) | 5.9.3, `npm ci` in `js/`, then `tsc -p tsconfig.build.json && node scripts/declarations.mjs` | smlibpy's `js/package-lock.json` and `npm run build` |
+
+All 119 files are in `BUILD-PROVENANCE.json`; the two of the module:
 
 | File | sha256 (npm `@classcad/smlibwasm@0.6.2`, smlibpy's v0.6.2 release assets, and this build) |
 |---|---|

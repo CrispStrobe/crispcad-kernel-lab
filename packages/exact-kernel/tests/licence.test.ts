@@ -5,6 +5,7 @@
 // and fail on any file that is not MIT or Apache-2.0: unknown files, OFL or (L/A)GPL licence
 // text, the upstream font's data, runtime dependencies, and replicad / OpenCASCADE references.
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
@@ -19,6 +20,7 @@ const RULES: [RegExp, string][] = [
   [/^README\.md$/, 'MIT'],
   [/^LICENSE$/, 'MIT'],
   [/^NOTICE$/, 'MIT AND Apache-2.0'],
+  [/^BUILD-PROVENANCE\.json$/, 'MIT'],
   [/^licenses\/(smlibwasm|emscripten)-LICENSE$/, 'MIT'],
   [/^licenses\/usd-brep-LICENSE$/, 'Apache-2.0'],
   [/^dist\/(index|exact-kernel|smlib-kernel|polytope|validate)\.d\.ts$/, 'MIT'],
@@ -31,9 +33,10 @@ const LICENCE_TEXT: [string, RegExp][] = [
   ['GPL', /\b[LA]?GPL(-[0-9])?\b|GNU (Lesser |Library |Affero )?General Public License/],
 ];
 /** The only places "OpenCASCADE" may appear: smlibwasm's .brep file-format reader/writer
- * (version banners, messages about the file format, and that module's file name dist/occt.js),
+ * (version banners, messages about the file format, and that module's file name dist/occt.js,
+ * also as a key of BUILD-PROVENANCE.json's file hashes),
  * not OpenCASCADE code. */
-const BREP_FORMAT = [/Open CASCADE Topology/g, /CASCADE Topology/g, /\(c\) Open Cascade/g, /an OpenCASCADE \.brep file/g, /as OpenCASCADE reads (such files|them)/g, /for OCCT export/g, /smlibwasm(@[0-9.]+)?\/dist\/occt\.js/g];
+const BREP_FORMAT = [/Open CASCADE Topology/g, /CASCADE Topology/g, /\(c\) Open Cascade/g, /an OpenCASCADE \.brep file/g, /as OpenCASCADE reads (such files|them)/g, /for OCCT export/g, /smlibwasm(@[0-9.]+)?\/dist\/occt\.js/g, /"dist\/occt\.(d\.ts|js)"/g];
 
 let dir: string, files: string[];
 const walk = (d: string): string[] => readdirSync(d).flatMap(n => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));
@@ -66,6 +69,16 @@ describe('packed tarball licence closure: MIT and Apache-2.0 only', () => {
     for (const i of inputs) expect(ALLOWED.has(i.licence), i.file).toBe(true);
     expect(inputs.filter(i => /_fonts|\/fonts\//.test(i.file))).toEqual([]);
     expect(inputs.filter(i => /replicad|opencascade/i.test(i.file))).toEqual([]);
+  });
+  it('ships the provenance of its smlibwasm build, and the module it pins', () => {
+    const prov = JSON.parse(read('BUILD-PROVENANCE.json').toString('utf8'));
+    expect(prov.sources.smlibpy.commit).toMatch(/^[0-9a-f]{40}$/);
+    expect(prov.sources['usd-brep'].commit).toMatch(/^[0-9a-f]{40}$/);
+    expect(prov.sources.emsdk.version).toBe('6.0.12');
+    expect(createHash('sha256').update(read('dist/smlibwasm.wasm')).digest('hex')).toBe(prov.files['wasm/smlibwasm.wasm']);
+    const { smlibwasm, wasmSha256 } = JSON.parse(read('dist/bundle-inputs.json').toString('utf8'));
+    expect([smlibwasm, wasmSha256]).toEqual([prov.version, prov.files['wasm/smlibwasm.wasm']]);
+    expect(read('NOTICE').toString('utf8')).toContain('BUILD-PROVENANCE.json');
   });
   it('contains no OFL or GPL licence text', () => {
     for (const f of files) {

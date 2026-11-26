@@ -18,7 +18,8 @@ import {
   ExactKernelError,
   type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type MassProperties, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
-import { call, createContext, outlineOf, partOf, sketchOf, solidOf, vec, type Ctx, type Part } from './smlib-context.ts';
+import { call, createContext, outlineOf, partOf, polygonOf, sketchOf, solidOf, vec, type Ctx, type Part } from './smlib-context.ts';
+import { compatibleSections } from './compatible-sections.ts';
 import { exactBoundingBox } from './bbox.ts';
 import { planarFaces } from './polytope.ts';
 import { createProfileOps } from './smlib-profile.ts';
@@ -106,6 +107,15 @@ function sweeps({ sm, solid }: Ctx): Pick<ExactKernel, 'extrude' | 'revolve' | '
       if (!Array.isArray(sections) || sections.length < 2) invalid('A loft needs at least two sections.');
       for (const s of sections) finite('Loft section position', ...s.at);
       return call('loft', () => sm.scope(() => {
+        // Straight-edged single outlines are paired as OCCT's ThruSections pairs them: vertices
+        // inserted where the counts differ, each section re-started where it lies closest
+        // otherwise (compatible-sections.ts).
+        if (sections.every(s => polygonOf(s.profile))) {
+          const matched = compatibleSections(sections.map(s => polygonOf(s.profile)!.map(p => [p[0] + s.at[0], p[1] + s.at[1], p[2] + s.at[2]] as const)))
+            ?? invalid('The loft sections cannot be matched vertex to vertex.');
+          const wires = matched.map(pts => new sm.Wire(pts.map((p, k) => sm.Line(vec(p), vec(pts[(k + 1) % pts.length]!)))));
+          return solid('loft', sm.loft(wires, { ruled: !!options.ruled }));
+        }
         // Path profiles loft through their outlines as drawn, so vertex i joins vertex i (ProfileHandle).
         const outlines = sections.every(s => outlineOf(s.profile)) ? sections.map(s => outlineOf(s.profile)!.translate(vec(s.at))) : undefined;
         const profiles = outlines ?? sections.map(s => sketchOf(s.profile).translate(vec(s.at)));

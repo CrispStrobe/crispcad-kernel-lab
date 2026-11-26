@@ -62,7 +62,8 @@ export function createProfileOps(sm: Smlib): ExactProfileOps {
         // Even-odd fill: the symmetric difference of the contour regions, largest first (SMLib's
         // xor of a hole with its outer region, in that order, inverts the solid's faces).
         const regions = contours.map(c => sm.Polygon(c.map((p: Vec2) => [p[0], p[1]] as [number, number]))).sort((a, b) => b.area - a.area);
-        return profileOf(regions.length === 1 ? regions[0] : sm.xor(regions[0], ...regions.slice(1)));
+        const single = contours.length === 1 ? contours[0]!.filter((p: Vec2, i: number, c: readonly Vec2[]) => i < c.length - 1 || p[0] !== c[0]![0] || p[1] !== c[0]![1]) : undefined;
+        return profileOf(regions.length === 1 ? regions[0] : sm.xor(regions[0], ...regions.slice(1)), undefined, single?.map((p: Vec2) => [p[0], p[1], 0] as const));
       });
     },
     circle(radius) { positive('Circle radius', radius); return call('Circle', () => profileOf(sm.Circle(radius))); },
@@ -80,8 +81,10 @@ export function createProfileOps(sm: Smlib): ExactProfileOps {
       finite('Path start', ...(Array.isArray(start) ? start : [NaN]));
       return call('path', () => {
         const edges = pathEdges(sm, start, segments);
-        refuseCrossing('path outline', loopOutline(edges));
-        return profileOf(sm.makeFace(new sm.Wire(edges)), new sm.Wire(edges));
+        const outline = loopOutline(edges);
+        refuseCrossing('path outline', outline);
+        const polygon = outline.length === edges.length ? outline.map(([x, y]) => [x, y, 0] as const) : undefined;
+        return profileOf(sm.makeFace(new sm.Wire(edges)), new sm.Wire(edges), polygon);
       });
     },
     text(content, size) {

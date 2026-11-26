@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 CrispCAD contributors
 //
-// Prebundles this package with @classcad/smlibwasm into dist/, so the published tarball has no
+// Prebundles this package with smlibwasm 0.6.2 into dist/, so the published tarball has no
 // runtime dependencies:
 // - dist/index.js (+ shared chunks): this package and smlibwasm's JavaScript (MIT);
 // - dist/_defeature_supervisor.js, dist/_defeature_worker.js: smlibwasm's probe workers, which
@@ -9,31 +9,40 @@
 // - dist/smlibwasm.wasm: SMLib / USD BRep (Apache-2.0) with AWV's bindings (MIT), loaded from next
 //   to the bundle;
 // - dist/*.d.ts: this package's types;
-// - dist/bundle-inputs.json: every source file inside the bundle, with its licence.
+// - dist/bundle-inputs.json: every source file inside the bundle, with its licence, and where the
+//   smlibwasm build came from.
 // smlibwasm's dist/_fonts.js (the Lato font, OFL-1.1) is replaced by an empty module: modeling
 // and STEP do not use it, and Text() without a font then fails cleanly.
+//
+// smlibwasm is taken from the nearest node_modules/@classcad/smlibwasm: for a release, the tree
+// scripts/build-smlibwasm.sh builds from source, which scripts/release.sh puts in this package's
+// node_modules (it carries a `.source-build.json`); otherwise the lab's npm install. Either way
+// every smlibwasm file the bundle uses must have the sha256 pinned in BUILD-PROVENANCE.json, so
+// both give the same bytes.
 import esbuild from 'esbuild';
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertPinned, provenance } from './smlibwasm-provenance.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 const require = createRequire(join(root, 'package.json'));
-// The installed package as seen from here (not its real path), so bundle paths stay relative.
+// The installed tree as seen from here (not its real path), so bundle paths stay relative.
 const smlibDir = (() => {
   for (let dir = root; ; dir = dirname(dir)) {
     const candidate = join(dir, 'node_modules/@classcad/smlibwasm');
     if (existsSync(join(candidate, 'package.json'))) return candidate;
-    if (dirname(dir) === dir) throw new Error('@classcad/smlibwasm is not installed');
+    if (dirname(dir) === dir) throw new Error('No smlibwasm tree found: run scripts/build-smlibwasm.sh (or npm install in the lab).');
   }
 })();
 const smlib = JSON.parse(readFileSync(join(smlibDir, 'package.json'), 'utf8'));
-const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-const pinned = pkg.devDependencies['@classcad/smlibwasm'];
-if (smlib.version !== pinned) throw new Error(`@classcad/smlibwasm ${smlib.version} is installed; this package pins ${pinned}.`);
+if (smlib.version !== provenance.version) throw new Error(`smlibwasm ${smlib.version} is at ${smlibDir}; this package pins ${provenance.version}.`);
+// Everything the bundle reads: the JavaScript (not the font), the loader and the module.
+assertPinned(smlibDir, smlibDir, f => f.startsWith('wasm/') || (f.startsWith('dist/') && f.endsWith('.js') && f !== 'dist/_fonts.js'));
+const sourceBuild = existsSync(join(smlibDir, '.source-build.json')) ? JSON.parse(readFileSync(join(smlibDir, '.source-build.json'), 'utf8')) : undefined;
 
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
@@ -84,7 +93,10 @@ const licenceOf = input => {
 };
 const inputs = Object.keys(result.metafile.inputs).sort().map(licenceOf);
 inputs.push({ file: `@classcad/smlibwasm@${smlib.version}/wasm/smlibwasm.wasm`, licence: 'Apache-2.0 AND MIT', note: 'SMLib / USD BRep (NVIDIA, Apache-2.0) with AWV bindings (MIT); copied as dist/smlibwasm.wasm' });
-writeFileSync(join(dist, 'bundle-inputs.json'), JSON.stringify({ smlibwasm: smlib.version, fontReplaced: 'dist/_fonts.js', inputs }, null, 2) + '\n');
+const built = sourceBuild
+  ? { from: 'source', smlibpy: provenance.sources.smlibpy.commit, 'usd-brep': provenance.sources['usd-brep'].commit, emsdk: provenance.sources.emsdk.version, builtAt: sourceBuild.builtAt, host: sourceBuild.host }
+  : { from: 'npm', note: 'the lab\'s npm install of @classcad/smlibwasm, byte-identical to the source build (BUILD-PROVENANCE.json)' };
+writeFileSync(join(dist, 'bundle-inputs.json'), JSON.stringify({ smlibwasm: smlib.version, build: built, wasmSha256: provenance.files['wasm/smlibwasm.wasm'], fontReplaced: 'dist/_fonts.js', inputs }, null, 2) + '\n');
 
 // Types: only the public modules (the adapter internals reference smlibwasm's own types).
 const typesDir = join(root, '.types');
