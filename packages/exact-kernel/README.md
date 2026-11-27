@@ -21,6 +21,7 @@ const k = await createSmlibKernel(); // loads the 9.4 MB WebAssembly once
 const part = k.scope(() => k.shell(k.fillet(k.box([60, 40, 30]), 4), 2, [0, 0, 1]));
 k.volume(part);        // 14950.678… mm³
 k.exportStep(part);    // AP214 STEP text
+k.exportStep([{ solid: part, name: 'Bracket', color: [1, 0, 0] }], { product: 'Assembly' }); // named bodies (0.1.10)
 part.dispose();
 ```
 
@@ -76,7 +77,7 @@ about world Z.
 | Topology (0.1.9) | `topology(solid)`: faces (name, surface kind, area, a point and its outward normal, radius and axis of round faces) and edges (curve kind, the faces each bounds, length, sample points from start to end, circle radius/centre/axis); `nameFaces(solid, names)`: names faces, and SMLib keeps a name on the face and its pieces through Booleans, transforms, fillets, chamfers and shells (new faces such as a fillet's round have none). A host that keeps references to edges stores face names and resolves them to `edgeIndices` on the solid it fillets. |
 | Features | `fillet`, `chamfer` (all edges, one planar face's edges, or chosen edges by index: `{ edgeIndices }`, since 0.1.8), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
 | Measures | `volume`, `area`, `bbox` (exact, see below), `massProperties` (centroid, inertia, principal moments/axes), `isValid`, `solidCount`, `components` |
-| Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep`, `importStep` (exact, lenient, bodies joined), `importStepBodies` (exact, strict, one solid per body; below) |
+| Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep` (one solid, or since 0.1.10 a list of `{ solid, name, color }` bodies, each written under its own name and colour in one product named by `{ product }`), `importStep` (exact, lenient, bodies joined), `importStepBodies` (exact, strict, one solid per body; below) |
 | Runtime | `memory`, `scope`, `name`, `version`, `licence` (`MIT AND Apache-2.0`); on the SMLib kernel (`SmlibKernel`) also `setGuardSeconds`, `guardSeconds`, `maxMemoryBytes` |
 
 Also exported: `convexHull` (exact hull as planar faces, up to `MAX_HULL_POINTS` = 1024 distinct
@@ -141,6 +142,7 @@ Nothing falls back to a mesh.
 | `tests/limits.test.ts` | `maxMemoryBytes` (80 MiB) ends a 261,124-triangle tessellation with an out-of-memory error without growing past it, and the kernel builds afterwards; `guardSeconds`; one ceiling per process; the shipped module is the pinned build. |
 | `tests/limits-minified.test.ts` | The same ceiling on every `dist/*.js` minified by esbuild (the loader's function names gone), as an app's production build bundles it. |
 | `tests/loft-pairing.test.ts` | `'authored'` keeps vertex i → i (the beacon lamp's ruled volume, the 0.1.4 smooth surfaces); `'closest'` re-starts straight and curved sections (an arch with an arc, drawn from another vertex or clockwise, equals the arch drawn from the closest vertex; circles and rounded rectangles stay as drawn; a rectangle pairs as a polygon) and refuses curved sections with different edge counts, holes and splines run backward. |
+| `tests/step-export.test.ts` | `exportStep` with named bodies: names (non-ASCII and quotes included) and colours on each solid, read back by `importStepBodies` in order with their volumes; the single-solid form writes `part` as before; nothing left behind; bad names, colours and lists are `invalid-input`. |
 | `tests/step-import.test.ts` | `importStepBodies`: round trips of filleted, shelled, drilled, revolved and rotated solids (volume, area at 1e-9, box at 1e-6 mm, twice through the kernel's own STEP); several bodies kept apart in file order; bytes; an inch file in millimetres; OpenCASCADE 7.6 seed parts and an AP242 file with names and colours; refusal of non-STEP, malformed and truncated text, a file without a solid, an unknown surface entity in one of two bodies, a sheet, a solid with a missing face and `maxBodies`, with no kernel objects left behind. |
 | `tests/licence.test.ts` | `npm pack`s the package, unpacks the tarball and fails on any file without a known MIT or Apache-2.0 licence, on copyleft or font licence texts, on any of the upstream font's data, on runtime dependencies, and on any reference to OpenCASCADE or its JavaScript bindings outside smlibwasm's `.brep` file-format strings. |
 
@@ -148,6 +150,14 @@ Results with `@classcad/smlibwasm` 0.6.2 (Apple M1, Node 26.4): 27/27 parts, wor
 volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
+
+- **0.1.10**: `exportStep` takes a list of bodies, `{ solid, name?, color? }`, and `{ product }`: one
+  product holding one solid per body, each solid named after its body (unnamed: the product's name
+  numbered by position) and coloured, so a host's body names survive a STEP round trip; the
+  product is named `product`, or after the body when there is one. `exportStep(solid)` is
+  unchanged (product and solid `part`). Names are at most 1,000 characters without control
+  characters (`invalid-input`); non-ASCII is written with STEP's `\X2\` encoding. For CrispCAD's STEP
+  export, which wrote every body as `part`. `tests/step-export.test.ts`.
 
 - **0.1.9**: `topology(solid)` and `nameFaces(solid, names)`, and `fillet`/`chamfer` of chosen edges
   (`{ edgeIndices }` into `topology(solid).edges`). What CrispCAD needs for stable edge references

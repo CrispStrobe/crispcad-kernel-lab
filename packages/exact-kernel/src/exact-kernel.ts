@@ -103,6 +103,20 @@ export type LoftPairing = 'authored' | 'closest';
 export interface LoftOptions { ruled?: boolean; pairing?: LoftPairing }
 export interface LoftSection { profile: ExactProfile; /** Where the XY profile is placed. */ at: Vec3 }
 
+/** One body of a STEP file written by `exportStep` (since 0.1.10). */
+export interface StepExportBody {
+  solid: ExactSolid;
+  /** Written as the name of the body's solid (MANIFOLD_SOLID_BREP), which `importStepBodies` and
+   * other readers report as the body's name. Default: the product's name. */
+  name?: string;
+  /** The body's colour, [r, g, b] from 0 to 1 (STYLED_ITEM on the solid). Default: none. */
+  color?: readonly [number, number, number];
+}
+export interface StepExportOptions {
+  /** The file's product name (PRODUCT): default `part`, or the body's name for one named body. */
+  product?: string;
+}
+
 export interface StepImportOptions {
   /** Refuse files with more bodies than this (default 1,000). Counted after reading. */
   maxBodies?: number;
@@ -249,8 +263,14 @@ export interface ExactKernel {
   tessellate(solid: ExactSolid, options?: { tolerance?: number; angleDeg?: number }): TriangleMesh;
   /** Binary STL at the same tolerances as `tessellate`. */
   exportStl(solid: ExactSolid, options?: { tolerance?: number; angleDeg?: number }): Uint8Array;
-  /** AP214 STEP text, millimetres. */
-  exportStep(solid: ExactSolid): string;
+  /**
+   * AP214 STEP text, millimetres: one product holding one solid per body. A single solid is written
+   * as before (product and solid `part`); a list writes each body under its own name and colour
+   * (since 0.1.10), in list order, so a reader gets the host's body names back. Names are at most
+   * 1,000 characters without control characters (`invalid-input` otherwise); non-ASCII is written
+   * with STEP's \X2\ encoding.
+   */
+  exportStep(solid: ExactSolid | readonly StepExportBody[], options?: StepExportOptions): string;
   /** Exact STEP import (the kernel's own reader); several bodies are joined into one solid.
    * Lenient: a body the reader cannot build is left out. Use `importStepBodies` to refuse that. */
   importStep(text: string): ExactSolid;
