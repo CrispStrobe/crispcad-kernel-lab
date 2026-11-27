@@ -16,7 +16,7 @@
 // lazily in createSmlibKernel and never at module load.
 import {
   ExactKernelError,
-  type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type TriangleMesh, type Vec3,
+  type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type StepImport, type StepImportBody, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
 import { call, createContext, outlineOf, partOf, polygonOf, sketchOf, solidOf, vec, type Ctx, type Part, type Smlib } from './smlib-context.ts';
 import { compatibleSections, originOrders, type LoftPairing, type P3 } from './compatible-sections.ts';
@@ -451,7 +451,81 @@ function measures({ sm }: Ctx): Pick<ExactKernel, 'volume' | 'area' | 'bbox' | '
   };
 }
 
-function exchange({ sm, solid }: Ctx): Pick<ExactKernel, 'tessellate' | 'exportStl' | 'exportStep' | 'importStep'> {
+/** Warnings are not failures (results are checked by measure); `importStepBodies` collects the
+ * reader's own while it runs. */
+const ignoreWarning = (): void => { /* see above */ };
+export const DEFAULT_MAX_STEP_BODIES = 1000;
+const STEP_MAGIC = 'ISO-10303-21';
+const END_MARK = /END-ISO-10303-21;\s*$/;
+/** The text without the NUL and SUB bytes some writers pad files with after the end marker. */
+function unpadded(text: string): string {
+  let end = text.length;
+  while (end > 0 && (text.charCodeAt(end - 1) === 0 || text.charCodeAt(end - 1) === 26)) end--;
+  return text.slice(0, end);
+}
+
+function stepText(data: string | Uint8Array): string {
+  if (typeof data === 'string') return data;
+  if (data instanceof Uint8Array) {
+    let text = '';
+    for (let i = 0; i < data.length; i += 0x8000) text += String.fromCharCode(...data.subarray(i, i + 0x8000));
+    return text;
+  }
+  return invalid('STEP input must be text or bytes (a Uint8Array).');
+}
+
+function importStepBodies(sm: Smlib, data: string | Uint8Array, maxBodies: number): StepImport {
+  const text = stepText(data);
+  if (!text.length) invalid('STEP input must not be empty.');
+  // A STEP file (ISO 10303-21) starts with its magic, after an optional byte-order mark.
+  if (!text.replace(/^\uFEFF|^\xEF\xBB\xBF/, '').trimStart().startsWith(STEP_MAGIC)) invalid('This is not a STEP file: it does not start with ISO-10303-21.');
+  // A file cut short (a partial download, a size limit) misses its end marker; refuse it as such
+  // rather than reading the entities that happen to be complete.
+  if (!END_MARK.test(unpadded(text))) invalid('The STEP file is incomplete: it does not end with END-ISO-10303-21; (was it cut short?).');
+  const notes: string[] = [];
+  let result: unknown;
+  sm.setWarningHandler(message => { notes.push(String(message)); });
+  try {
+    result = sm.fromStep(text, { strict: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (error instanceof sm.KernelError) throw new ExactKernelError('kernel-failure', `SMLib fromStep failed: ${message}`, { cause: error });
+    if (error instanceof sm.ModelingError) {
+      // Strict reading: a body the reader cannot build, or a file without bodies.
+      throw new ExactKernelError('unsupported', /holds no B-rep/.test(message) ? 'The STEP file holds no solid (no B-rep body).' : `The STEP file cannot be read exactly: ${message.replace(/^import STEP: /, '')}`, { cause: error });
+    }
+    // The parser's own errors (bad syntax, truncated text, entities that do not resolve).
+    throw new ExactKernelError('invalid-input', `The STEP file is malformed: ${message}`, { cause: error });
+  } finally {
+    sm.setWarningHandler(ignoreWarning);
+  }
+  const found: unknown[] = Array.isArray(result) ? [...result] : [result];
+  const dispose = () => found.forEach(b => (b as { dispose?: () => void })?.dispose?.());
+  try {
+    if (!found.length) throw new ExactKernelError('unsupported', 'The STEP file holds no solid (no B-rep body).');
+    if (found.length > maxBodies) throw new ExactKernelError('unsupported', `The STEP file holds ${found.length} bodies; at most ${maxBodies} can be imported.`);
+    const label = (b: { name?: string | null }, i: number) => b.name ? `body ${i + 1} ('${b.name}')` : `body ${i + 1}`;
+    found.forEach((b, i) => {
+      if (!(b instanceof sm.Part)) {
+        const kind = b instanceof sm.Shell ? 'an open surface (a sheet), not a closed solid' : `not a solid (${(b as object | null)?.constructor?.name ?? typeof b})`;
+        throw new ExactKernelError('unsupported', `The STEP file's ${label(b as { name?: string }, i)} is ${kind}.`);
+      }
+      const valid = call('isValid', () => b.isValid());
+      const volume = valid ? call('volume', () => b.volume) : 0;
+      if (!valid || !(volume > 0)) throw new ExactKernelError('unsupported', `The STEP file's ${label(b, i)} is not a valid closed solid, even after repair.`);
+    });
+  } catch (error) {
+    dispose();
+    throw error;
+  }
+  const bodies: StepImportBody[] = (found as Part[]).map(part => {
+    const color = part.color as readonly number[] | null;
+    return { solid: solidOf(part), name: typeof part.name === 'string' && part.name ? part.name : null, color: color ? [Number(color[0]), Number(color[1]), Number(color[2])] : null };
+  });
+  return { bodies, notes };
+}
+
+function exchange({ sm, solid }: Ctx): Pick<ExactKernel, 'tessellate' | 'exportStl' | 'exportStep' | 'importStep' | 'importStepBodies'> {
   return {
     tessellate: (s, options = {}): TriangleMesh => {
       const { tolerance, angle } = tolerances(options);
@@ -478,6 +552,11 @@ function exchange({ sm, solid }: Ctx): Pick<ExactKernel, 'tessellate' | 'exportS
         return solid('fromStep', result);
       });
     },
+    importStepBodies: (data, options = {}) => {
+      const maxBodies = options.maxBodies ?? DEFAULT_MAX_STEP_BODIES;
+      if (!Number.isInteger(maxBodies) || maxBodies < 1) invalid('maxBodies must be a positive whole number.');
+      return importStepBodies(sm, data, maxBodies);
+    },
   };
 }
 
@@ -488,7 +567,7 @@ export async function createSmlibKernel(options: SmlibLoadOptions = {}): Promise
     if (!(options.guardSeconds >= 0)) invalid('guardSeconds must be 0 or more.');
     sm.setGuardSeconds(options.guardSeconds);
   }
-  sm.setWarningHandler(() => { /* warnings are not failures; results are checked by measure */ });
+  sm.setWarningHandler(ignoreWarning);
   const ctx = createContext(sm);
   return {
     name: '@classcad/smlibwasm',

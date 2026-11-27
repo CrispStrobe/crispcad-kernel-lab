@@ -62,6 +62,24 @@ export type LoftPairing = 'authored' | 'closest';
 export interface LoftOptions { ruled?: boolean; pairing?: LoftPairing }
 export interface LoftSection { profile: ExactProfile; /** Where the XY profile is placed. */ at: Vec3 }
 
+export interface StepImportOptions {
+  /** Refuse files with more bodies than this (default 1,000). Counted after reading. */
+  maxBodies?: number;
+}
+/** One body of a STEP file, read by `importStepBodies`. */
+export interface StepImportBody {
+  solid: ExactSolid;
+  /** The body's (or its product's) name in the file, or null. */
+  name: string | null;
+  /** The body's colour in the file, [r, g, b] from 0 to 1, or null. */
+  color: [number, number, number] | null;
+}
+export interface StepImport {
+  bodies: StepImportBody[];
+  /** The reader's notes on bodies it repaired while reading (healed or stitched faces). */
+  notes: string[];
+}
+
 export type ExactKernelErrorCode =
   /** The request is well formed but this backend has no exact construction for it. */
   | 'unsupported'
@@ -183,8 +201,19 @@ export interface ExactKernel {
   exportStl(solid: ExactSolid, options?: { tolerance?: number; angleDeg?: number }): Uint8Array;
   /** AP214 STEP text, millimetres. */
   exportStep(solid: ExactSolid): string;
-  /** Exact STEP import (the kernel's own reader); several bodies are joined into one solid. */
+  /** Exact STEP import (the kernel's own reader); several bodies are joined into one solid.
+   * Lenient: a body the reader cannot build is left out. Use `importStepBodies` to refuse that. */
   importStep(text: string): ExactSolid;
+  /**
+   * Strict exact STEP import (since 0.1.8): every body of the file as its own closed solid, in
+   * file order, in millimetres, with assembly placements applied and nothing joined. The file is
+   * refused as a whole, never read in part: `invalid-input` for input that is not STEP text,
+   * `unsupported` for a file with no solid, a body the reader cannot build, a body that is an open
+   * surface (sheet) instead of a closed solid, a body that stays invalid after healing, or more
+   * bodies than `maxBodies`; `kernel-failure` for anything else the kernel reports. Bodies the
+   * reader had to repair (heal or stitch) are read, and each repair is listed in `notes`.
+   */
+  importStepBodies(data: string | Uint8Array, options?: StepImportOptions): StepImport;
 
   memory(): KernelMemory;
   /** Run `fn`, freeing every kernel object it made that its result does not hold. */
