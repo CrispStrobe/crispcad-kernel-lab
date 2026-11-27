@@ -32,9 +32,14 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   on `smlib-native` within the scorecard tolerances
   (`src/modeling/backends/smlib/nativeLowerer.test.ts`).
 - All 2402 catalog models, built on `smlib-native` with OpenCASCADE blocked from
-  loading (2026-11-26, commit `763f97d2d`, `experiments/kernel-qualification/catalogCoverage.ts`,
-  results in `results-catalog-native.json`): **2402 (100%)** built without an error,
-  70,745 parts. No model crashed the process and none reached for OpenCASCADE. Build time at
+  loading (2026-11-27, commit `4bd3ee9c9`, `experiments/kernel-qualification/catalogCoverage.ts`,
+  results in `results-catalog-native.json`): **2402 of 2402 (100%)** built without an error,
+  70,745 parts. No model crashed the process and none reached for OpenCASCADE. Every volume, area
+  and box equals the `763f97d2d` run (volume and area to 1.1e-15, box to 6e-14 mm; the native
+  lowering is unchanged since). This run took 7 h of build time (median 1.6 s per model; the
+  slowest, `fire-rescue/aerial-ladder-fire-engine`, 106 min) at a load average of 60 to 180 from
+  other sessions, so its times say nothing about the kernel. The 11 models that last failed, at
+  `c4bea5b93`, are in "The last 11 catalog models" below. Build time at
   `6005ce246`: median 0.09 s per model, 19 min of build time over 4 workers (9.3 min wall) on an
   M1 shared with other sessions; the slowest, `fire-rescue/quint-fire-apparatus` (210 parts),
   took 3.6 min. (The `763f97d2d` run took 2.7 h wall, median 1.3 s per model, on the same
@@ -81,6 +86,40 @@ rejects any import of OpenCASCADE: native runs succeed, the same commands on
   native build was faster (15.3 s against 21 s in total).
 - Kernel selection for the 27 parts, with timings, against WASMLib:
   `experiments/kernel-qualification/`.
+
+## The last 11 catalog models
+
+At `c4bea5b93` (2026-11-24) 11 of the 2402 models did not build on `smlib-native`. `b24fe9b95`
+closed all of them in the native lowerer; the exact-kernel package needed only the region order of
+its even-odd polygon profile (shipped in 0.1.1). Re-measured against OCCT at `4bd3ee9c9`
+(2026-11-27, `experiments/kernel-qualification/partVolumes.ts`, which now also compares area and
+box; per part in `results-gap-models-vs-occt.json`). The columns are the worst part of the model,
+relative for volume and area, in mm for the box.
+
+| model | failure at `c4bea5b93` | root cause | fix | volume | area | box |
+|---|---|---|---|---:|---:|---:|
+| `amusement-park/miniature-park-tram-engine` | extrude `SM_ERR` | a chevron whose arms meet in one vertex: SMLib's `Polygon` rejects an outline that touches itself | self-touching outlines split into simple loops, largest first (`polygonLoops.ts`) | 2.4e-11 | 1.9e-11 | 5e-13 |
+| `retail-store/impulse-merchandiser` | extrude `SM_ERR` | upright side whose closing edge runs back 40 mm along the first edge | same split; the zero-width fin is dropped | 2.4e-11 | −1.4e-3 | 40 |
+| `sports/batting-helmet` | extrude `SM_ERR` | full-circle `arcBand` bands (foam liner): outer and inner arc joined by a zero-width slit | same split: an annulus | 2.9e-15 | −7.2e-3 | 3e-14 |
+| `construction-equipment/skid-steer-loader` | sketch `SM_ERR_NULL_POINTER` | door frame drawn as one outline with a zero-width slit | same split | −4.1e-15 | −4.0e-3 | 2e-13 |
+| `construction-equipment/pipe-roller-stand` | holes from top or bottom only | holes drilled into side faces | holes on left, right, front and back faces in OCCT's (u, v) face frame | 2.7e-11 | 1.7e-11 | 3e-14 |
+| `industrial-plant/plate-heat-exchanger` | holes from top or bottom only | as above | as above | −1.1e-15 | −2.2e-15 | 1e-14 |
+| `hydroponics/hydroponic-grow-rack` | several loops not supported | a sketch whose `moveTo` after drawn edges starts a second loop; lettuce lofts to an `endPoint` | loops fill even-odd; ruled lofts to `startPoint` / `endPoint` (an apex pyramid fused on; was ignored, 25 % short) | 7.6e-15 | 3.5e-15 | 3e-13 |
+| `nature/rock-arch` | loft sections on XY only | span lofted between YZ sections | sections on YZ and XZ in replicad's plane frames; paired as ThruSections pairs them | 2.8e-16 | −1.3e-14 | 5e-13 |
+| `mining/spiral-concentrator` | polyline rails only | `spine: 'helix'` sweep of a transverse section (trough, slurry, band) | transverse helix as SMLib's twist deformation, placed as OCCT places it | −1.2e-8 | −6.4e-9 | 4e-4 |
+| `water-treatment/grit-classifier` | polyline rails only | `spine: 'helix'` screw flight, transverse | as above | −1.5e-8 | −4.9e-8 | 1.5e-4 |
+| `standard-components/beam-coupling` | polyline rails only | `spine: 'helix'` sweep of an axial slot profile, three turns, cut from the sleeve | axial helix as a smooth loft through 48 screw-moved sections per turn | 7.2e-6 | 3.0e-6 | 1e-7 |
+
+The three helical models are as close as two approximations get: OCCT sweeps along a fitted
+B-spline spine, the native build uses SMLib's exact twist (transverse) or a 48-per-turn loft
+(axial, within 1e-6 of the closed form in `nativeGaps.test.ts`). The transverse volumes are on the
+native side of the closed form (trough 51,744,000.013 mm³ against OCCT's 51,744,000.596), and the
+box differences on them are OCCT's loose B-spline box. The four self-touching outlines agree in
+volume to 2.4e-11; their area and box differ only by the zero-width parts, which OCCT keeps as
+fins and slit walls of no thickness (BRepCheck-invalid there) and the native build removes, so the
+native solid is the regularised one. The impulse merchandiser's 40 mm is that fin's length along
+the upright's base. Nothing of the 11 is refused, so none needs an `unsupported-feature`
+diagnostic; the refusals that remain are the ones listed in "What still needs `occt`".
 
 ## Outlines that cross themselves
 
