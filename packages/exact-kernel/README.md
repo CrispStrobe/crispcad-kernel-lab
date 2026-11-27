@@ -75,7 +75,7 @@ about world Z.
 | Booleans, transforms | `union`, `subtract`, `intersect`, `splitByPlane`, `translate`, `rotate` (axis, pivot), `mirror` (normal, origin), `scale` (per axis, signed) |
 | Features | `fillet`, `chamfer` (all edges or one planar face's edges), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
 | Measures | `volume`, `area`, `bbox` (exact, see below), `massProperties` (centroid, inertia, principal moments/axes), `isValid`, `solidCount`, `components` |
-| Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep`, `importStep` (exact) |
+| Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep`, `importStep` (exact, lenient, bodies joined), `importStepBodies` (exact, strict, one solid per body; below) |
 | Runtime | `memory`, `scope`, `name`, `version`, `licence` (`MIT AND Apache-2.0`); on the SMLib kernel (`SmlibKernel`) also `setGuardSeconds`, `guardSeconds`, `maxMemoryBytes` |
 
 Also exported: `convexHull` (exact hull as planar faces, up to `MAX_HULL_POINTS` = 1024 distinct
@@ -139,12 +139,22 @@ Nothing falls back to a mesh.
 | `tests/limits.test.ts` | `maxMemoryBytes` (80 MiB) ends a 261,124-triangle tessellation with an out-of-memory error without growing past it, and the kernel builds afterwards; `guardSeconds`; one ceiling per process; the shipped module is the pinned build. |
 | `tests/limits-minified.test.ts` | The same ceiling on every `dist/*.js` minified by esbuild (the loader's function names gone), as an app's production build bundles it. |
 | `tests/loft-pairing.test.ts` | `'authored'` keeps vertex i → i (the beacon lamp's ruled volume, the 0.1.4 smooth surfaces); `'closest'` re-starts straight and curved sections (an arch with an arc, drawn from another vertex or clockwise, equals the arch drawn from the closest vertex; circles and rounded rectangles stay as drawn; a rectangle pairs as a polygon) and refuses curved sections with different edge counts, holes and splines run backward. |
+| `tests/step-import.test.ts` | `importStepBodies`: round trips of filleted, shelled, drilled, revolved and rotated solids (volume, area at 1e-9, box at 1e-6 mm, twice through the kernel's own STEP); several bodies kept apart in file order; bytes; an inch file in millimetres; OpenCASCADE 7.6 seed parts and an AP242 file with names and colours; refusal of non-STEP, malformed and truncated text, a file without a solid, an unknown surface entity in one of two bodies, a sheet, a solid with a missing face and `maxBodies`, with no kernel objects left behind. |
 | `tests/licence.test.ts` | `npm pack`s the package, unpacks the tarball and fails on any file without a known MIT or Apache-2.0 licence, on copyleft or font licence texts, on any of the upstream font's data, on runtime dependencies, and on any reference to OpenCASCADE or its JavaScript bindings outside smlibwasm's `.brep` file-format strings. |
 
 Results with `@classcad/smlibwasm` 0.6.2 (Apple M1, Node 26.4): 27/27 parts, worst relative
 volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
+
+- **0.1.8**: `importStepBodies(data, { maxBodies })`, a strict STEP import for hosts that must not
+  import a file in part. It returns every body of the file as its own solid (file order,
+  millimetres, assembly placements applied, nothing joined) with its name and colour, and the
+  reader's repair notes; `importStep` is unchanged (lenient: a body it cannot build is left out,
+  and the rest are joined into one solid). Refused as a whole: text that is not STEP, malformed or
+  cut short (`invalid-input`); a file with no solid, a body the reader cannot build, an open surface
+  (sheet), a body that is still invalid after the reader's repair, more than `maxBodies` bodies
+  (default 1,000) (`unsupported`). Input may be the text or the file's bytes (Latin-1).
 
 - **0.1.7**: the memory ceiling works in minified bundles. 0.1.6 found the loader's
   `_emscripten_resize_heap` import by the function's name, which a minifier renames: in
