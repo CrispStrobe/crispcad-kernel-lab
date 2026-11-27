@@ -26,8 +26,49 @@ export interface ExactProfile { readonly [profileBrand]: true; dispose(): void }
  * `outermost` is set: then the matching face furthest along the normal is taken (the lab's
  * canonical `top`/`bottom`/... selectors). */
 export interface FaceSelector { faceNormal: Vec3; outermost?: boolean }
-/** Edges selected for fillet/chamfer: every edge, or the edges of one planar face. */
-export type EdgeSelector = 'all' | FaceSelector;
+/** Edges by their positions in `topology(solid).edges` (since 0.1.9). The indices hold for that
+ * solid only: a host that keeps a reference to an edge stores names, e.g. of the faces it bounds
+ * (`nameFaces`), and resolves them to indices on the solid it is about to fillet. */
+export interface EdgeIndexSelector { edgeIndices: readonly number[] }
+/** Edges selected for fillet/chamfer: every edge, the edges of one planar face, or chosen edges. */
+export type EdgeSelector = 'all' | FaceSelector | EdgeIndexSelector;
+
+/** One face of a solid (see `ExactKernel.topology`). */
+export interface ExactFaceInfo {
+  /** Position in `topology(solid).faces` (and in the order `nameFaces` takes names). */
+  index: number;
+  /** The face's name (`nameFaces`), kept through later operations; null when it has none. */
+  name: string | null;
+  /** SMLib's surface kind: 'plane', 'cylinder', 'cone', 'sphere', 'torus', 'revolution',
+   * 'extrusion', 'bspline', 'offset' or 'other'. */
+  surface: string;
+  area: number;
+  /** A point on the face, and the outward unit normal there. */
+  point: Vec3;
+  normal: Vec3;
+  /** Cylinder, cone (base), sphere and torus (minor) radius, and the surface's axis. */
+  radius?: number;
+  axis?: { origin: Vec3; direction: Vec3 };
+}
+/** One edge of a solid (see `ExactKernel.topology`). */
+export interface ExactEdgeInfo {
+  /** Position in `topology(solid).edges`: what `{ edgeIndices }` selects. */
+  index: number;
+  /** SMLib's curve kind: 'line', 'circle', 'ellipse', 'bspline' or 'other'. */
+  curve: string;
+  /** The faces the edge bounds (indices into `faces`): two for an ordinary edge. */
+  faces: number[];
+  length: number;
+  closed: boolean;
+  /** Points along the edge from its start to its end (both included): the two ends of a line,
+   * up to 48 points on a curve. For display and picking, not for measuring. */
+  points: Vec3[];
+  /** Circular edges: radius, centre and axis. */
+  radius?: number;
+  center?: Vec3;
+  axis?: Vec3;
+}
+export interface ExactTopology { faces: ExactFaceInfo[]; edges: ExactEdgeInfo[] }
 
 export interface BoundingBox { min: [number, number, number]; max: [number, number, number] }
 /** Triangle mesh; `normals` are per vertex (area-weighted). */
@@ -178,6 +219,15 @@ export interface ExactKernel {
   mirror(solid: ExactSolid, normal: Vec3, origin?: Vec3): ExactSolid;
   /** Per-axis scale about the origin; negative factors mirror. */
   scale(solid: ExactSolid, factors: Vec3): ExactSolid;
+
+  /** Faces and edges with their names, kinds, sample points and adjacency (since 0.1.9). Edge
+   * indices are what `fillet` and `chamfer` take as `{ edgeIndices }`. */
+  topology(solid: ExactSolid): ExactTopology;
+  /** The same solid with face i (of `topology(solid).faces`) named `names[i]`: null keeps a
+   * face's name, '' takes it off. A name stays with the face and with its pieces through
+   * Booleans, transforms, fillets, chamfers and shells (faces an operation makes anew, such as a
+   * fillet's round, have none) and is written to STEP on the face (since 0.1.9). */
+  nameFaces(solid: ExactSolid, names: readonly (string | null)[]): ExactSolid;
 
   fillet(solid: ExactSolid, radius: number, edges?: EdgeSelector): ExactSolid;
   chamfer(solid: ExactSolid, distance: number, edges?: EdgeSelector): ExactSolid;

@@ -73,7 +73,8 @@ about world Z.
 | Profiles (`k.profile`) | `polygon` (even-odd, holes; a contour that crosses itself is refused), `circle`, `rectangle`, `roundedRectangle`, `path` (lines, three-point / radius / sagitta arcs, splines; refused if it crosses itself), `text` (always `unsupported`: no font), 2D `union`/`subtract`/`intersect`/`hull`/`offset`, `translate`/`rotate`/`scale`, `bounds`, `area` |
 | Solids from profiles | `extrude`, `revolve`, `loft` (smooth or ruled, XY sections; `pairing`, below), `sweep` (polyline rail) |
 | Booleans, transforms | `union`, `subtract`, `intersect`, `splitByPlane`, `translate`, `rotate` (axis, pivot), `mirror` (normal, origin), `scale` (per axis, signed) |
-| Features | `fillet`, `chamfer` (all edges or one planar face's edges), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
+| Topology (0.1.9) | `topology(solid)`: faces (name, surface kind, area, a point and its outward normal, radius and axis of round faces) and edges (curve kind, the faces each bounds, length, sample points from start to end, circle radius/centre/axis); `nameFaces(solid, names)`: names faces, and SMLib keeps a name on the face and its pieces through Booleans, transforms, fillets, chamfers and shells (new faces such as a fillet's round have none). A host that keeps references to edges stores face names and resolves them to `edgeIndices` on the solid it fillets. |
+| Features | `fillet`, `chamfer` (all edges, one planar face's edges, or chosen edges by index: `{ edgeIndices }`, since 0.1.8), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
 | Measures | `volume`, `area`, `bbox` (exact, see below), `massProperties` (centroid, inertia, principal moments/axes), `isValid`, `solidCount`, `components` |
 | Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep`, `importStep` (exact, lenient, bodies joined), `importStepBodies` (exact, strict, one solid per body; below) |
 | Runtime | `memory`, `scope`, `name`, `version`, `licence` (`MIT AND Apache-2.0`); on the SMLib kernel (`SmlibKernel`) also `setGuardSeconds`, `guardSeconds`, `maxMemoryBytes` |
@@ -132,6 +133,7 @@ Nothing falls back to a mesh.
 | Test | Gate |
 | --- | --- |
 | `tests/reference-parts.test.ts` | The lab's 27 reference parts (`assets/reference-parts/scorecard.json`) at 1e-6 relative volume and area (1e-8 where the scorecard asks), bbox within 1e-6 mm, valid, expected component count; every part round-trips STEP exactly (1e-9); no kernel handles leak. |
+| `tests/topology.test.ts` | Box and cylinder topology (adjacency, lengths, circle data, samples); face names through cut, move and fillet; fillet and chamfer of chosen edges against closed forms (1e-9); bad indices refused as `invalid-input`. |
 | `tests/kernel.test.ts` | Fillet, chamfer, shell, cylinder-rim fillet against closed forms (1e-8); mass properties, path profiles, loft, sweep, split, components, mirror, STL; malformed input and kernel failures; recovery afterwards. |
 | `tests/bbox.test.ts` | `bbox` of spheres, tori, cylinders, cones and ellipsoids turned about six axes against closed forms (1e-9 of the size; ellipsoids 1e-7), and of a turned hemisphere. |
 | `tests/polyhedra.test.ts` | Loft polyhedra as CrispCAD lowers them (six-decimal points, hull for convex ones): the chandelier canopy frustum and 4-section 10/12/16-gon rollers 30 mm to 10 m long against closed-form volume and area (1e-6); non-planar polyhedron faces; hull closure, planarity, Euler characteristic and budget. |
@@ -146,6 +148,10 @@ Results with `@classcad/smlibwasm` 0.6.2 (Apple M1, Node 26.4): 27/27 parts, wor
 volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
+
+- **0.1.9**: `topology(solid)` and `nameFaces(solid, names)`, and `fillet`/`chamfer` of chosen edges
+  (`{ edgeIndices }` into `topology(solid).edges`). What CrispCAD needs for stable edge references
+  (fillets of individual edges that survive upstream parameter edits). `tests/topology.test.ts`.
 
 - **0.1.8**: `importStepBodies(data, { maxBodies })`, a strict STEP import for hosts that must not
   import a file in part. It returns every body of the file as its own solid (file order,
