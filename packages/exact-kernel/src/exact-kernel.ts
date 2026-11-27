@@ -117,6 +117,8 @@ export interface StepExportOptions {
   product?: string;
 }
 
+import type { StepOccurrence } from './step-structure.ts';
+export type { StepOccurrence } from './step-structure.ts';
 export interface StepImportOptions {
   /** Refuse files with more bodies than this (default 1,000). Counted after reading. */
   maxBodies?: number;
@@ -128,11 +130,21 @@ export interface StepImportBody {
   name: string | null;
   /** The body's colour in the file, [r, g, b] from 0 to 1, or null. */
   color: [number, number, number] | null;
+  /** Since 0.1.11: where the body sits in the file's product structure, from the top product down
+   * to the product that holds the solid (each with its occurrence name), or null when the
+   * structure could not be read (see `StepImport.structure`). A file without assemblies gives
+   * every body one level, its product. */
+  occurrence: StepOccurrence[] | null;
 }
 export interface StepImport {
   bodies: StepImportBody[];
-  /** The reader's notes on bodies it repaired while reading (healed or stitched faces). */
+  /** The reader's notes on bodies it repaired while reading (healed or stitched faces), and since
+   * 0.1.11 a note when the product structure could not be matched to the bodies. */
   notes: string[];
+  /** Since 0.1.11: `assembly` when bodies sit in assemblies (at least one occurrence below the
+   * top product), `flat` when the file has products but no assembly, `unknown` when the structure
+   * could not be read or did not match the bodies the reader built (every `occurrence` is null). */
+  structure: 'assembly' | 'flat' | 'unknown';
 }
 
 export type ExactKernelErrorCode =

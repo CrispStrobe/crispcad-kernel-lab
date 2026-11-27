@@ -7,3 +7,4 @@ export * from './exact-kernel.ts';
 export { createSmlibKernel, EXACT_KERNEL_LICENCE, SMLIB_MESH_ANGLE, SMLIB_MESH_TOLERANCE, type SmlibKernel, type SmlibLoadOptions } from './smlib-kernel.ts';
 export { convexHull, isConvexPolyhedron, MAX_HULL_POINTS, planarFaces, type Polytope } from './polytope.ts';
 export { symmetricEigen } from './validate.ts';
+export { readStepStructure, type StepStructure } from './step-structure.ts';

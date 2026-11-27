@@ -18,6 +18,7 @@ import {
   ExactKernelError,
   type BoundingBox, type EdgeSelector, type ExactKernel, type ExactSolid, type ExactTopology, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type StepExportBody, type StepExportOptions, type StepImport, type StepImportBody, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
+import { readStepStructure } from './step-structure.ts';
 import { call, createContext, outlineOf, partOf, polygonOf, sketchOf, solidOf, vec, type Ctx, type Part, type Smlib } from './smlib-context.ts';
 import { compatibleSections, originOrders, type LoftPairing, type P3 } from './compatible-sections.ts';
 import { exactBoundingBox } from './bbox.ts';
@@ -535,9 +536,21 @@ function importStepBodies(sm: Smlib, data: string | Uint8Array, maxBodies: numbe
   }
   const bodies: StepImportBody[] = (found as Part[]).map(part => {
     const color = part.color as readonly number[] | null;
-    return { solid: solidOf(part), name: typeof part.name === 'string' && part.name ? part.name : null, color: color ? [Number(color[0]), Number(color[1]), Number(color[2])] : null };
+    return { solid: solidOf(part), name: typeof part.name === 'string' && part.name ? part.name : null, color: color ? [Number(color[0]), Number(color[1]), Number(color[2])] : null, occurrence: null };
   });
-  return { bodies, notes };
+  // The product structure is read from the text separately (the reader does not return it) and
+  // kept only when it matches the reader's bodies one for one, in count and names.
+  let structure: StepImport['structure'] = 'unknown';
+  try {
+    const read = readStepStructure(text);
+    if (read.bodies.length === bodies.length && read.names.every((name, i) => name === bodies[i].name)) {
+      bodies.forEach((body, i) => { body.occurrence = read.bodies[i]; });
+      structure = read.assembly ? 'assembly' : 'flat';
+    } else notes.push(`The product structure was not kept: it lists ${read.bodies.length} bodies where the reader built ${bodies.length}, or names them differently; the bodies are imported without it.`);
+  } catch (error) {
+    notes.push(`The product structure was not kept: ${error instanceof Error ? error.message : String(error)}.`);
+  }
+  return { bodies, notes, structure };
 }
 
 const MAX_STEP_NAME = 1000;
