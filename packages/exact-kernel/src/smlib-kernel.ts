@@ -16,7 +16,7 @@
 // lazily in createSmlibKernel and never at module load.
 import {
   ExactKernelError,
-  type BoundingBox, type EdgeSelector, type ExactKernel, type ExactTopology, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type StepImport, type StepImportBody, type TriangleMesh, type Vec3,
+  type BoundingBox, type EdgeSelector, type ExactKernel, type ExactSolid, type ExactTopology, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type StepExportBody, type StepExportOptions, type StepImport, type StepImportBody, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
 import { call, createContext, outlineOf, partOf, polygonOf, sketchOf, solidOf, vec, type Ctx, type Part, type Smlib } from './smlib-context.ts';
 import { compatibleSections, originOrders, type LoftPairing, type P3 } from './compatible-sections.ts';
@@ -540,6 +540,41 @@ function importStepBodies(sm: Smlib, data: string | Uint8Array, maxBodies: numbe
   return { bodies, notes };
 }
 
+const MAX_STEP_NAME = 1000;
+function stepName(value: unknown, what: string): string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || !value.length || value.length > MAX_STEP_NAME || [...value].some(c => c.charCodeAt(0) < 32 || c.charCodeAt(0) === 127))
+    invalid(`${what} must be a non-empty string of at most ${MAX_STEP_NAME} characters without control characters.`);
+  return value as string;
+}
+function exportStep(sm: Smlib, input: ExactSolid | readonly StepExportBody[], options: StepExportOptions): string {
+  if (!options || typeof options !== 'object') invalid('exportStep options must be an object.');
+  const product = stepName(options.product, 'The STEP product name');
+  if (!Array.isArray(input)) {
+    const part = partOf(input as ExactSolid);
+    return call('toStep', () => sm.toStep(part, product === undefined ? {} : { name: product }));
+  }
+  const bodies = input as readonly StepExportBody[];
+  if (!bodies.length) invalid('exportStep needs at least one body.');
+  const prepared = bodies.map((body, i) => {
+    if (!body || typeof body !== 'object') invalid(`exportStep body ${i + 1} must be { solid, name?, color? }.`);
+    const part = partOf(body.solid), name = stepName(body.name, `The name of STEP body ${i + 1}`), color = body.color;
+    if (color !== undefined && (!Array.isArray(color) || color.length !== 3 || color.some(c => typeof c !== 'number' || !(c >= 0 && c <= 1))))
+      invalid(`The colour of STEP body ${i + 1} must be [r, g, b] with each from 0 to 1.`);
+    return { part, name, color: color as readonly [number, number, number] | undefined };
+  });
+  return call('toStep', () => sm.scope(() => {
+    // `named` and `colored` return new shapes that share the B-rep; the scope frees them.
+    const items = prepared.map(({ part, name, color }) => {
+      let item = name === undefined ? part : part.named(name);
+      if (color !== undefined) item = item.colored([color[0], color[1], color[2]]);
+      return item;
+    });
+    const name = product ?? (prepared.length === 1 ? prepared[0].name : undefined);
+    return sm.toStep(items, name === undefined ? {} : { name });
+  }));
+}
+
 function exchange({ sm, solid }: Ctx): Pick<ExactKernel, 'tessellate' | 'exportStl' | 'exportStep' | 'importStep' | 'importStepBodies'> {
   return {
     tessellate: (s, options = {}): TriangleMesh => {
@@ -554,7 +589,7 @@ function exchange({ sm, solid }: Ctx): Pick<ExactKernel, 'tessellate' | 'exportS
       const { tolerance, angle } = tolerances(options);
       return call('toStl', () => sm.toStl(partOf(s), { tolerance, angle }));
     },
-    exportStep: s => call('toStep', () => sm.toStep(partOf(s))),
+    exportStep: (s, options = {}) => exportStep(sm, s, options),
     importStep: text => {
       if (typeof text !== 'string' || !text.length) invalid('STEP input must be non-empty text.');
       return call('fromStep', () => {
