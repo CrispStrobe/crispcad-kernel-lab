@@ -16,13 +16,14 @@
 // lazily in createSmlibKernel and never at module load.
 import {
   ExactKernelError,
-  type BoundingBox, type ExactKernel, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type StepImport, type StepImportBody, type TriangleMesh, type Vec3,
+  type BoundingBox, type EdgeSelector, type ExactKernel, type ExactTopology, type FaceSelector, type KernelMemory, type LoftSection, type MassProperties, type StepImport, type StepImportBody, type TriangleMesh, type Vec3,
 } from './exact-kernel.ts';
 import { call, createContext, outlineOf, partOf, polygonOf, sketchOf, solidOf, vec, type Ctx, type Part, type Smlib } from './smlib-context.ts';
 import { compatibleSections, originOrders, type LoftPairing, type P3 } from './compatible-sections.ts';
 import { exactBoundingBox } from './bbox.ts';
 import { planarFaces } from './polytope.ts';
 import { createProfileOps } from './smlib-profile.ts';
+import { edgesAt, namedFaces, topologyOf } from './topology.ts';
 import { finite, invalid, positive, symmetricEigen, unitVector, vertexNormals } from './validate.ts';
 
 /** Default display tessellation: 0.01 mm chord, 10 degrees. */
@@ -407,9 +408,16 @@ function booleansAndTransforms({ sm, solid }: Ctx): Pick<ExactKernel, 'union' | 
   };
 }
 
-function features(ctx: Ctx): Pick<ExactKernel, 'fillet' | 'chamfer' | 'shell'> {
+function features(ctx: Ctx): Pick<ExactKernel, 'fillet' | 'chamfer' | 'shell' | 'topology' | 'nameFaces'> {
   const { sm, solid, face } = ctx;
-  const edgesOf = (part: Part, selector: 'all' | FaceSelector) => (selector === 'all' ? part.edges() : face(part, selector).edges());
+  const edgesOf = (part: Part, selector: EdgeSelector) => {
+    if (selector === 'all') return part.edges();
+    if (selector && typeof selector === 'object' && 'edgeIndices' in selector) {
+      if (!Array.isArray(selector.edgeIndices)) invalid('edgeIndices must be an array of edge indices.');
+      try { return edgesAt(part, selector.edgeIndices); } catch (error) { if (error instanceof RangeError) invalid(error.message); throw error; }
+    }
+    return face(part, selector as FaceSelector).edges();
+  };
   const isSelector = (v: unknown): v is Vec3 | FaceSelector => (Array.isArray(v) && typeof v[0] === 'number') || (!!v && typeof v === 'object' && 'faceNormal' in v);
   return {
     fillet: (s, radius, edges = 'all') => {
@@ -419,6 +427,13 @@ function features(ctx: Ctx): Pick<ExactKernel, 'fillet' | 'chamfer' | 'shell'> {
     chamfer: (s, distance, edges = 'all') => {
       positive('Chamfer distance', distance);
       return call('chamfer', () => solid('chamfer', sm.chamfer(edgesOf(partOf(s), edges), distance)));
+    },
+    topology: (s): ExactTopology => call('topology', () => sm.scope(() => topologyOf(partOf(s)))),
+    nameFaces: (s, names) => {
+      if (!Array.isArray(names) || names.some(n => n !== null && typeof n !== 'string')) invalid('Face names must be strings or null.');
+      return call('named', () => {
+        try { return solid('named', namedFaces(partOf(s), names)); } catch (error) { if (error instanceof RangeError) invalid(error.message); throw error; }
+      });
     },
     shell: (s, thickness, openFaces) => {
       positive('Shell thickness', thickness);
