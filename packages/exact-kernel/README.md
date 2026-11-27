@@ -77,7 +77,7 @@ about world Z.
 | Topology (0.1.9) | `topology(solid)`: faces (name, surface kind, area, a point and its outward normal, radius and axis of round faces) and edges (curve kind, the faces each bounds, length, sample points from start to end, circle radius/centre/axis); `nameFaces(solid, names)`: names faces, and SMLib keeps a name on the face and its pieces through Booleans, transforms, fillets, chamfers and shells (new faces such as a fillet's round have none). A host that keeps references to edges stores face names and resolves them to `edgeIndices` on the solid it fillets. |
 | Features | `fillet`, `chamfer` (all edges, one planar face's edges, or chosen edges by index: `{ edgeIndices }`, since 0.1.8), `shell` (one or more open faces); faces by outward normal, `outermost` to pick among parallel faces |
 | Measures | `volume`, `area`, `bbox` (exact, see below), `massProperties` (centroid, inertia, principal moments/axes), `isValid`, `solidCount`, `components` |
-| Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep` (one solid, or since 0.1.10 a list of `{ solid, name, color }` bodies, each written under its own name and colour in one product named by `{ product }`), `importStep` (exact, lenient, bodies joined), `importStepBodies` (exact, strict, one solid per body; below) |
+| Exchange | `tessellate` (positions, vertex normals, indices), `exportStl` (binary), `exportStep` (one solid, or since 0.1.10 a list of `{ solid, name, color }` bodies, each written under its own name and colour in one product named by `{ product }`), `importStep` (exact, lenient, bodies joined), `importStepBodies` (exact, strict, one solid per body, since 0.1.11 with each body's place in the product structure; below) |
 | Runtime | `memory`, `scope`, `name`, `version`, `licence` (`MIT AND Apache-2.0`); on the SMLib kernel (`SmlibKernel`) also `setGuardSeconds`, `guardSeconds`, `maxMemoryBytes` |
 
 Also exported: `convexHull` (exact hull as planar faces, up to `MAX_HULL_POINTS` = 1024 distinct
@@ -143,6 +143,7 @@ Nothing falls back to a mesh.
 | `tests/limits-minified.test.ts` | The same ceiling on every `dist/*.js` minified by esbuild (the loader's function names gone), as an app's production build bundles it. |
 | `tests/loft-pairing.test.ts` | `'authored'` keeps vertex i → i (the beacon lamp's ruled volume, the 0.1.4 smooth surfaces); `'closest'` re-starts straight and curved sections (an arch with an arc, drawn from another vertex or clockwise, equals the arch drawn from the closest vertex; circles and rounded rectangles stay as drawn; a rectangle pairs as a polygon) and refuses curved sections with different edge counts, holes and splines run backward. |
 | `tests/step-export.test.ts` | `exportStep` with named bodies: names (non-ASCII and quotes included) and colours on each solid, read back by `importStepBodies` in order with their volumes; the single-solid form writes `part` as before; nothing left behind; bad names, colours and lists are `invalid-input`. |
+| `tests/step-structure.test.ts` | The product structure of `importStepBodies`: an OpenCASCADE assembly with repeated parts, each instance under its own occurrence name at the placement the reader used; one product per body in files without assemblies and in the kernel's own STEP; nested occurrences and STEP string escapes from text (`readStepStructure`), and text that is not STEP refused. |
 | `tests/step-import.test.ts` | `importStepBodies`: round trips of filleted, shelled, drilled, revolved and rotated solids (volume, area at 1e-9, box at 1e-6 mm, twice through the kernel's own STEP); several bodies kept apart in file order; bytes; an inch file in millimetres; OpenCASCADE 7.6 seed parts and an AP242 file with names and colours; refusal of non-STEP, malformed and truncated text, a file without a solid, an unknown surface entity in one of two bodies, a sheet, a solid with a missing face and `maxBodies`, with no kernel objects left behind. |
 | `tests/licence.test.ts` | `npm pack`s the package, unpacks the tarball and fails on any file without a known MIT or Apache-2.0 licence, on copyleft or font licence texts, on any of the upstream font's data, on runtime dependencies, and on any reference to OpenCASCADE or its JavaScript bindings outside smlibwasm's `.brep` file-format strings. |
 
@@ -150,6 +151,20 @@ Results with `@classcad/smlibwasm` 0.6.2 (Apple M1, Node 26.4): 27/27 parts, wor
 volume error 2.5e-15, area 1.2e-11, bbox 1.8e-14 mm.
 
 ## Changes
+
+- **0.1.11**: `importStepBodies` reports the file's product structure. Each body has `occurrence`,
+  the chain from the top product down to the product that holds the solid, each level with its
+  product name and its occurrence name in the parent (`NEXT_ASSEMBLY_USAGE_OCCURRENCE`, or a
+  `MAPPED_ITEM`'s name), and the import has `structure`: `assembly`, `flat` (products, no
+  assembly) or `unknown`. smlibwasm's reader places bodies through the assembly but returns only
+  their own names, so the package reads the product entities from the text again
+  (`src/step-structure.ts`, also exported as `readStepStructure`) and walks the representation
+  graph in the reader's order; the result is kept only when it lists the reader's bodies one for
+  one with the same names, otherwise every `occurrence` is null, `structure` is `unknown` and a
+  note says so. Bodies and their order are unchanged. Matched on OpenCASCADE 7.6 (9 bodies, three
+  instances of one product), Fusion (Adafruit MPM3610, 23 bodies; Feather RP2040, 58; Metro Mini,
+  55; SO-100 arm, 19) files. For CrispCAD's STEP import, which keeps the assembly as named groups.
+  `tests/step-structure.test.ts`.
 
 - **0.1.10**: `exportStep` takes a list of bodies, `{ solid, name?, color? }`, and `{ product }`: one
   product holding one solid per body, each solid named after its body (unnamed: the product's name
